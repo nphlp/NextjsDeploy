@@ -1,0 +1,27 @@
+services:
+    nextjs:
+        container_name: nextjs
+        build:
+            context: ./
+            dockerfile: ./Dockerfile
+            target: runner
+        restart: unless-stopped
+        volumes:
+            - nextjs-volume:/app/.next/cache
+        networks:
+            - traefik
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.nextjs.rule=Host(`app.${VPS_DOMAIN}`)"
+            - "traefik.http.routers.nextjs.entrypoints=websecure"
+            - "traefik.http.services.nextjs.loadbalancer.server.port=3000"
+            - "traefik.http.routers.nextjs.tls.certresolver=leresolver"
+
+volumes:
+    nextjs-volume:
+        driver: local
+
+networks:
+    traefik:
+        external: true
+        name: traefik
