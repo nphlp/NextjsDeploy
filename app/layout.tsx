@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "@/public/globals.css";
 import { combo } from "@/lib/combo";
 import { ReactNode } from "react";
 
