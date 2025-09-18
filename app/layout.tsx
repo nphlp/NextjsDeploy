@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "@/public/globals.css";
-import { combo } from "@/lib/combo";
 import { ReactNode } from "react";
+import { combo } from "@/lib/combo";
+import "@/public/globals.css";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -26,15 +26,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className="h-full">
-            <body
-                className={combo(
-                    geistSans.variable,
-                    geistMono.variable,
-                    "h-full"
-                )}
-            >
-                {children}
-            </body>
+            <body className={combo(geistSans.variable, geistMono.variable, "h-full")}>{children}</body>
         </html>
     );
 }

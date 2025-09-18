@@ -22,13 +22,14 @@ const eslintConfig = [
             "prettier.config.mjs",
             "postcss.config.mjs",
             "prisma/client/**",
-            "next-env.d.ts"
+            "next-env.d.ts",
         ],
     },
     {
+        files: ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
         languageOptions: {
             parser: tsParser,
-            parserOptions: { project: true },
+            parserOptions: { project: true, tsconfigRootDir: __dirname },
         },
         plugins: {
             "react-refresh": reactRefresh,

@@ -1,6 +1,6 @@
-# .github/actions/setup-base/action.yml
 name: Setup base environment
 description: Setup Node.js, pnpm and install dependencies with optimized caching
+
 runs:
     using: "composite"
     steps:

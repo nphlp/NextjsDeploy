@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const isStandalone = process.env.NEXTJS_STANDALONE === "true"
+const isStandalone = process.env.NEXTJS_STANDALONE === "true";
 
 const nextConfig: NextConfig = {
     // Build output mode
@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
 
     // Typed routes for links
     typedRoutes: true,
-    
+
     experimental: {
         // View transition API
         viewTransition: true,

@@ -1,18 +1,14 @@
-# .github/actions/quality-check/action.yml
 name: Quality check
 description: Run code quality checks (lint, format, or type)
+
 inputs:
     check-type:
         description: "Type of check to run (lint, format, type)"
         required: true
+
 runs:
     using: "composite"
     steps:
-        - name: Generate Prisma client
-          if: inputs.check-type == 'type'
-          run: pnpm prisma:generate
-          shell: bash
-
         - name: Run lint check
           if: inputs.check-type == 'lint'
           run: pnpm lint
