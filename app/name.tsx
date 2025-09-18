@@ -31,7 +31,7 @@ export default function Name() {
                 onChange={handleChange}
                 value={name}
             />
-            <span className="absolute translate-x-1">{name === "Clara" ? "❤️" : "👋"}</span>
+            <span className="relative translate-x-1">{name === "Clara" ? "❤️" : "👋"}</span>
         </h1>
     );
 }

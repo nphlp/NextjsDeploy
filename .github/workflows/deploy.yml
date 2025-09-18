@@ -50,24 +50,22 @@ jobs:
               with:
                   check-type: type
 
-#     deploy-production:
-#         name: Deploy Production
-#         runs-on: ubuntu-latest
-#         needs: [lint, format, type]
-#         environment: production
-#         steps:
-#             # Setup
-#             - uses: actions/checkout@v4
-#             - uses: ./.github/actions/setup-base
-            
-#             # Release avec semantic-release
-#             - name: Create release
-#               run: pnpm dlx semantic-release
-#               env:
-#                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            
-#             # Deploy vers Coolify
-#             - name: Trigger Coolify Deploy Production
-#               run: |
-#                   curl -X GET "${{ secrets.COOLIFY_API_URL }}/api/v1/deploy?uuid=${{ secrets.COOLIFY_ECO_SERVICE_UUID }}&force=false&branch=main" \
-#                       -H "Authorization: Bearer ${{ secrets.COOLIFY_API_TOKEN }}"
+    deploy-production:
+        name: Deploy Production
+        runs-on: ubuntu-latest
+        needs: [lint, format, type]
+        environment: production
+        steps:
+            # # Setup
+            # - uses: actions/checkout@v4
+            # - uses: ./.github/actions/setup-base
+
+            # # Release avec semantic-release
+            # - name: Create release
+            #   run: pnpm dlx semantic-release
+            #   env:
+            #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            # Deploy vers Portainer
+            - name: Trigger Portainer Deploy Production
+              run: curl -X POST "${{ secrets.PORTAINER_WEBHOOK_PRODUCTION }}"

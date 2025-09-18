@@ -23,28 +23,41 @@
 
 4. Répéter l'opération pour chaque environnement (preview / production)
 
+> [!NOTE]
+> Récupérer le token API
+
+1. Se rendre sur : `portainer.domain.com`
+
+2. Home > User icon (top-right) > My account > Access tokens > Add access token
+
+3. Renseigner les champs :
+    - Current password : `******`
+    - Nom du token : `Github Action for Nextjs Deploy`
+    - Cliquer sur **Add access token** et **copier le token** (il n'est visible qu'une seule fois)
+
 ## GitHub Setup
 
--> Ajouter les GitHub Actions Secrets
+> [!NOTE]
+> Ajouter des `GitHub Action Secrets`
 
-Pour cela : GitHub > Repository > Settings > Secrets and Variables > Actions
+Pour cela : GitHub > Repository > Settings > Secrets and Variables > Actions > New repository secrets
 
-1. PORTAINER_API_URL (ex: https://PORTAINER.domain.com)
-2. PORTAINER_API_TOKEN (ex: 34|tXirjfk5gzUUpAMqppaLZnC2OfjkoitmTvcHakjfs646889)
-3. PORTAINER_PROJECT_NAME_PREVIEW_UUID (UUID environnement preview)
-4. PORTAINER_PROJECT_NAME_PRODUCTION_UUID (UUID environnement production)
+1. PORTAINER_API_TOKEN (ex: `ptr_8lksjdfklu/udjfkMYr/mjflfskozujUmxskjfUMTHM=`)
+2. PORTAINER_WEBHOOK_PREVIEW (ex: `https://portainer.nansp.dev/api/stacks/webhooks/1b45dlsj-bji2-4li9-fkdf-j48aa3jfke62`)
+3. PORTAINER_WEBHOOK_PRODUCTION (ex: `https://portainer.nansp.dev/api/stacks/webhooks/4ifsof4i-jfs8-sli7-sj87-fu8kdjfjfke7`)
 
--> Ajouter la Deploy Key
+<!-- -> Ajouter la Deploy Key
 Pour cela : Github > Your Repository > Settings > Deploy keys
 
 1. Ajouter la Deploy Key
-2. Etc.
+2. Etc. -->
 
--> Configurer un environnement "production" et "preview"
+> [!NOTE]
+> Configurer un environnement "production" et "preview"
 
 Pour cela : Github > Your Respository > Settings > Environments
 
 1. Créer un environnement "production" / "preview"
 2. Cocher "Required reviewers"
-3. Ajouter un reviewer
+3. S'ajouter soi-même en tant que reviewer
 4. Valider avec "Save protection rules"
