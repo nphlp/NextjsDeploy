@@ -11,25 +11,27 @@ export default function Name() {
     };
 
     return (
-        <h1 className="text-2xl font-bold">
-            <span>Hello </span>
+        <h1 className="text-2xl font-bold space-x-2">
+            <span>Hello</span>
             <input
+                type="text"
+                name="name"
+                autoComplete="name"
                 className={combo(
-                    "w-fit field-sizing-content",
-                    "px-1 focus:outline-none",
+                    "border w-fit field-sizing-content",
+                    "focus:px-1 focus:outline-none",
                     // Rounded corners
                     "rounded-t-md focus:rounded-b-md",
                     // Borders
-                    "border-b-black",
-                    "border-x-transparent border-t-transparent",
-                    "focus:border-x-black focus:border-t-black",
+                    "border-b-black border-x-transparent border-t-transparent",
+                    "focus:border-gray-500",
                     // Transitions
                     "transition-all duration-200",
                 )}
                 onChange={handleChange}
                 value={name}
             />
-            <span> 👋</span>
+            <span className="absolute translate-x-1">{name === "Clara" ? "❤️":"👋"}</span>
         </h1>
     );
 }
