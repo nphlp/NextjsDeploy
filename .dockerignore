@@ -1,3 +1,8 @@
+# git
+.git/
+.gitignore
+.github/
+
 # dependencies
 node_modules/
 .pnpm-store
@@ -10,22 +15,22 @@ node_modules/
 *.pem
 
 # env files
-.env
+.env.example
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# docker
+docker/
+Dockerfile*
+compose*.yml
 
 # editor
 .vscode/
 .cursor/
 .idea/
 
-# prisma
-prisma/client/
+# docs
+README.md
+TODO.md
+docs/
 
-# docker ssl certs
-.dev-certs/
-
-# husky
-.husky/_/
+# Misc
+.husky/

@@ -12,7 +12,7 @@ services:
             - traefik
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.nextjs.rule=Host(`app.${VPS_DOMAIN}`)"
+            - "traefik.http.routers.nextjs.rule=Host(`${SUB_DOMAIN}.${VPS_DOMAIN}`)"
             - "traefik.http.routers.nextjs.entrypoints=websecure"
             - "traefik.http.services.nextjs.loadbalancer.server.port=3000"
             - "traefik.http.routers.nextjs.tls.certresolver=leresolver"

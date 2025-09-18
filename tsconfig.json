@@ -5,13 +5,14 @@
         "allowJs": true,
         "skipLibCheck": true,
         "strict": true,
+        "strictNullChecks": true, // differentiate between null and undefined
         "noEmit": true,
         "esModuleInterop": true,
         "module": "esnext",
         "moduleResolution": "bundler",
         "resolveJsonModule": true,
         "isolatedModules": true,
-        "jsx": "preserve",
+        "jsx": "react-jsx",
         "incremental": true,
         "plugins": [
             {
@@ -19,9 +20,20 @@
             }
         ],
         "paths": {
+            "@actions/*": ["./services/actions/*"],
+            "@app/*": ["./app/*"],
+            "@api/*": ["./app/api/*"],
+            "@comps/*": ["./components/*"],
+            "@core/*": ["./components/CORE/*"],
+            "@lib/*": ["./lib/*"],
+            "@prisma/*": ["./prisma/*"],
+            "@public/*": ["./public/*"],
+            "@ui/*": ["./components/UI/*"],
+            "@utils/*": ["./utils/*"],
+            "@services/*": ["./services/*"],
             "@/*": ["./*"]
         }
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+    "include": ["**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next-env.d.ts", "**/*.mts"],
     "exclude": ["node_modules"]
 }
