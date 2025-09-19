@@ -1,0 +1,113 @@
+generator client {
+    provider = "prisma-client-js"
+    output   = "./client"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id            String  @id @default(nanoid())
+    name          String
+    lastname      String?
+    email         String  @unique
+    emailVerified Boolean
+    image         String? @db.LongText
+
+    role Role @default(USER)
+
+    Task Task[]
+
+    Session Session[]
+    Account Account[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([id])
+    @@index([email])
+}
+
+enum Role {
+    USER
+    ADMIN
+}
+
+model Session {
+    id        String   @id @default(nanoid())
+    token     String   @unique
+    expiresAt DateTime
+    ipAddress String?
+    userAgent String?
+
+    userId String
+    User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([id])
+    @@index([userId])
+    @@index([token])
+}
+
+model Account {
+    id         String @id @default(nanoid())
+    accountId  String
+    providerId String
+
+    userId String
+    User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    accessToken  String?
+    refreshToken String?
+
+    accessTokenExpiresAt  DateTime?
+    refreshTokenExpiresAt DateTime?
+
+    scope    String?
+    idToken  String?
+    password String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([id])
+    @@index([userId])
+    @@index([accountId])
+    @@index([providerId])
+    @@index([accessToken])
+    @@index([refreshToken])
+    @@index([idToken])
+}
+
+model Verification {
+    id         String   @id @default(nanoid())
+    identifier String
+    value      String
+    expiresAt  DateTime
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([id])
+    @@index([identifier])
+}
+
+model Task {
+    id    String @id @default(nanoid())
+    title String @unique
+    slug  String @unique
+
+    authorId String
+    Author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([id])
+    @@index([title])
+    @@index([authorId])
+}
