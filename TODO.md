@@ -52,8 +52,9 @@
 
 ## Permissions
 
-- [ ] Middleware
 - [ ] Permission system
+- [ ] Middleware
+- [ ] Template Action to restore
 
 ## Tests
 
