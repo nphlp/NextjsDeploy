@@ -1,5 +1,6 @@
 .next/
 .github/
+templates/
 prisma/client/
 node_modules/
 pnpm-lock.yaml
