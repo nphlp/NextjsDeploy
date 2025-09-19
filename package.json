@@ -25,7 +25,10 @@
         "prisma:reset": "pnpm dlx prisma migrate reset",
         "fixtures:setup": "tsx scripts/fixtures.ts setup",
         "fixtures:reset": "tsx scripts/fixtures.ts reset",
-        "fixtures:reload": "tsx scripts/fixtures.ts reload"
+        "fixtures:reload": "tsx scripts/fixtures.ts reload",
+        "generate:list": "tsx scripts/generator.ts list",
+        "generate:clear": "tsx scripts/generator.ts clear",
+        "generate:all": "tsx scripts/generator.ts all"
     },
     "dependencies": {
         "@prisma/client": "6.16.2",
