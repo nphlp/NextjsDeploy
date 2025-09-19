@@ -6,8 +6,8 @@ services:
             dockerfile: ./Dockerfile
             target: runner
         restart: unless-stopped
-        volumes:
-            - nextjs-volume:/app/.next/cache
+        # volumes:
+        #     - nextjs-volume:/app/.next/cache
         networks:
             - traefik
         labels:
@@ -17,10 +17,10 @@ services:
             - "traefik.http.services.nextjs-${VPS_SUB_DOMAIN}.loadbalancer.server.port=3000"
             - "traefik.http.routers.nextjs-${VPS_SUB_DOMAIN}.tls.certresolver=leresolver"
 
-volumes:
-    nextjs-volume:
-        name: nextjs-volume-${VPS_SUB_DOMAIN}
-        driver: local
+# volumes:
+#     nextjs-volume:
+#         name: nextjs-volume-${VPS_SUB_DOMAIN}
+#         driver: local
 
 networks:
     traefik:

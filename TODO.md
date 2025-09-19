@@ -2,7 +2,12 @@
 
 ## Portainer
 
-- [ ] Webhook : `https://portainer.nansp.dev/api/stacks/webhooks/12790f1b-bdd2-4c09-a21f-aa35b280e62b`
+- [ ] Database
+
+## Caching
+
+- [ ] Build Cache
+- [ ] ISR Cache -> Redis
 
 ## Frontend
 
