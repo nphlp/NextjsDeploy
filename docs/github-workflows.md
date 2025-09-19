@@ -58,6 +58,6 @@ Pour cela : Github > Your Repository > Settings > Deploy keys
 Pour cela : Github > Your Respository > Settings > Environments
 
 1. Créer un environnement "production" / "preview"
-2. Cocher "Required reviewers"
-3. S'ajouter soi-même en tant que reviewer
-4. Valider avec "Save protection rules"
+    <!-- 2. Cocher "Required reviewers" -->
+    <!-- 3. S'ajouter soi-même en tant que reviewer -->
+2. Valider avec "Save protection rules"
