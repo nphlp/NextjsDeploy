@@ -51,11 +51,11 @@ RUN adduser --system --uid 1001 nextjs
 
 # Switch to non-root user
 USER nextjs
-EXPOSE 3000
+# EXPOSE 3000
 
 # Set prod env
 ENV NODE_ENV=production
-ENV PORT=3000
+# ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 CMD ["node", "server.js"]

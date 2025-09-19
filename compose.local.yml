@@ -1,6 +1,6 @@
 services:
     nextjs:
-        container_name: nextjs
+        container_name: nextjs-${VPS_SUB_DOMAIN}
         build:
             context: ./
             dockerfile: ./Dockerfile
@@ -12,13 +12,14 @@ services:
             - traefik
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.nextjs-local.rule=Host(`front.local.dev`)"
-            - "traefik.http.routers.nextjs-local.entrypoints=websecure"
-            - "traefik.http.services.nextjs-local.loadbalancer.server.port=3000"
-            - "traefik.http.routers.nextjs-local.tls=true"
+            - "traefik.http.routers.nextjs-${VPS_SUB_DOMAIN}.rule=Host(`${VPS_SUB_DOMAIN}.${VPS_DOMAIN}`)"
+            - "traefik.http.routers.nextjs-${VPS_SUB_DOMAIN}.entrypoints=websecure"
+            - "traefik.http.services.nextjs-${VPS_SUB_DOMAIN}.loadbalancer.server.port=${TRAEFIK_NETWORK_FRONT_PORT}"
+            - "traefik.http.routers.nextjs-${VPS_SUB_DOMAIN}.tls=true"
 
 volumes:
     nextjs-volume:
+        name: nextjs-volume-${VPS_SUB_DOMAIN}
         driver: local
 
 networks:

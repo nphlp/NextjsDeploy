@@ -11,6 +11,8 @@ node_modules/
 
 # env files
 .env
+.env.prod
+.env.preview
 
 # typescript
 *.tsbuildinfo
