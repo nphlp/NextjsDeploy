@@ -101,6 +101,8 @@ model Task {
     title String @unique
     slug  String @unique
 
+    status Status @default(TODO)
+
     authorId String
     Author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
@@ -110,4 +112,10 @@ model Task {
     @@index([id])
     @@index([title])
     @@index([authorId])
+}
+
+enum Status {
+    TODO
+    IN_PROGRESS
+    DONE
 }

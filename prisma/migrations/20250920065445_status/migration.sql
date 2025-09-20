@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Task` ADD COLUMN `status` ENUM('TODO', 'IN_PROGRESS', 'DONE') NOT NULL DEFAULT 'TODO';
