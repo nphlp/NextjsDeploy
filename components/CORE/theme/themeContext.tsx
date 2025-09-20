@@ -3,8 +3,8 @@
 import { createContext } from "react";
 import { UseTheme } from "./themeUtils";
 
-export type ContextType = UseTheme;
+export type ThemeContextType = UseTheme;
 
-const initialContextData: ContextType = {} as ContextType;
+const initialContextData: ThemeContextType = {} as ThemeContextType;
 
-export const Context = createContext<ContextType>(initialContextData);
+export const ThemeContext = createContext<ThemeContextType>(initialContextData);

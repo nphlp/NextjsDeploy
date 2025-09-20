@@ -19,6 +19,7 @@ const Button = () => {
         setSelected,
         buttonRef,
         optionListRef,
+        buttonProps,
     } = useContext(Context);
 
     // Get the selected option
@@ -105,6 +106,7 @@ const Button = () => {
                 onBlur={handleBlur}
                 onKeyDown={handleKeyDown}
                 className={combo(theme[variant].button, className?.button)}
+                {...buttonProps}
             >
                 {hasSelection ? (
                     <span className={combo(theme[variant].displayedValue, className?.displayedValue)}>

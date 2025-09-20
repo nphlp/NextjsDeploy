@@ -14,7 +14,17 @@ type OptionProps = {
 const Option = (props: OptionProps) => {
     const { option } = props;
 
-    const { setIsOpen, buttonRef, options, selected, setSelected, variant, className } = useContext(Context);
+    const {
+        setIsOpen,
+        buttonRef,
+        options,
+        selected,
+        setSelected,
+        variant,
+        className,
+        optionsButtonProps,
+        onSelectChange,
+    } = useContext(Context);
 
     // Get the selected option
     const selectedOption = getOptionFromSlug(selected, options);
@@ -25,7 +35,10 @@ const Option = (props: OptionProps) => {
         e.stopPropagation();
 
         const slug = e.currentTarget.getAttribute("data-options-slug");
-        if (slug) setSelected(slug);
+        if (slug) {
+            setSelected(slug);
+            onSelectChange?.(slug);
+        }
         setIsOpen(false);
     };
 
@@ -85,6 +98,7 @@ const Option = (props: OptionProps) => {
                 className?.optionButton,
                 selectedOption?.slug === option.slug && "font-semibold",
             )}
+            {...optionsButtonProps}
         >
             <Check
                 className={combo(

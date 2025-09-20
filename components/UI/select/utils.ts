@@ -1,5 +1,7 @@
+import { ReactNode } from "react";
+
 export type SelectOptionType = {
-    label: string;
+    label: string | ReactNode;
     slug: string;
 };
 

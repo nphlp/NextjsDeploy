@@ -9,6 +9,8 @@
 - [ ] Build Cache
 - [ ] ISR Cache -> Redis
 
+## Baser le Select sur un vrai select !
+
 ## Frontend
 
 - [ ] Components

@@ -14,6 +14,13 @@ export type FetchHookProps<
     initialData?: FetchResponse<Input, R, P>;
 };
 
+export type FetchHookResponse<Input, R extends Route<Input>, P extends Params<Input, R>> = {
+    data: FetchResponse<Input, R, P> | undefined;
+    isLoading: boolean;
+    error: string | undefined;
+    refetch: (offsetTime?: number) => void;
+};
+
 export const useFetch = <
     Input,
     R extends Route<Input>,
@@ -22,7 +29,7 @@ export const useFetch = <
     B extends Body<Input, R>,
 >(
     props: FetchHookProps<Input, R, P, M, B>,
-) => {
+): FetchHookResponse<Input, R, P> => {
     const { route, params, fetchOnFirstRender = false, initialData } = props;
 
     const stringifiedParams = JSON.stringify(params);
@@ -43,6 +50,7 @@ export const useFetch = <
     const [data, setData] = useState<FetchResponse<Input, R, P> | undefined>(initialData);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string>();
+    const [renderTime, setRenderTime] = useState(new Date().getTime());
 
     useEffect(() => {
         const controller = new AbortController();
@@ -79,7 +87,13 @@ export const useFetch = <
         fetchOnFirstRenderRef.current = true;
 
         return () => controller.abort();
-    }, [memoizedProps]);
+    }, [memoizedProps, renderTime]);
 
-    return { data, isLoading, error };
+    const refetch = (offsetTime: number = 100) => {
+        setTimeout(() => {
+            setRenderTime(new Date().getTime());
+        }, offsetTime);
+    };
+
+    return { data, isLoading, error, refetch };
 };

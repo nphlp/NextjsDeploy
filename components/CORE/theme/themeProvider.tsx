@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { getSystemTheme, setThemeClass, setThemeCookie } from "./themeClient";
-import { Context } from "./themeContext";
+import { ThemeContext } from "./themeContext";
 import { SystemTheme, Theme, defaultTheme } from "./themeUtils";
 
 type ContextProviderProps = {
@@ -69,5 +69,5 @@ export default function ThemeProvider(props: ContextProviderProps) {
 
     const value = { theme, systemTheme: resolvedThemeRef.current, setTheme, toggleTheme };
 
-    return <Context.Provider value={value}>{children}</Context.Provider>;
+    return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

@@ -2,11 +2,10 @@
 
 import Button from "@comps/UI/button/button";
 import { Moon, Sun, SunMoon } from "lucide-react";
-import { useContext } from "react";
-import { Context } from "./themeContext";
+import useTheme from "./useTheme";
 
 export default function ThemeToggle() {
-    const { theme, toggleTheme } = useContext(Context);
+    const { theme, toggleTheme } = useTheme();
 
     return (
         <div className="flex gap-2">
