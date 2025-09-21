@@ -33,11 +33,10 @@ DC = COMPOSE_BAKE=true docker compose
 ENV_MERGED = --env-file .env.merged
 
 BASIC = compose.basic.yml
-BASIC_MYSQL = compose.basic-mysql.yml
 LOCAL = compose.local.yml
 VPS = compose.vps.yml
 
-.PHONY: basic basic-stop basic-mysql basic-mysql-stop local local-stop vps vps-stop
+.PHONY: basic basic-stop local local-stop vps vps-stop
 
 # Build (without portainer)
 basic:
@@ -46,14 +45,6 @@ basic:
 
 basic-stop:
 	$(DC) $(ENV_MERGED) -f $(BASIC) down
-
-# Build (without portainer)
-basic-mysql:
-	@make merge-env
-	$(DC) $(ENV_MERGED) -f $(BASIC_MYSQL) up -d --build
-
-basic-mysql-stop:
-	$(DC) $(ENV_MERGED) -f $(BASIC_MYSQL) down
 
 # Build (for portainer local)
 local:
