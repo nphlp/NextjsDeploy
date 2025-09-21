@@ -3,7 +3,7 @@
 set -e
 
 # === CONFIGURATION ===
-CERTS_DIR="./docker/certs"
+CERTS_DIR="./certs"
 
 # === FONCTIONS ===
 

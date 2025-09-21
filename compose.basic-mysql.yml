@@ -1,0 +1,75 @@
+services:
+    mysql:
+        image: mysql:9.3
+        container_name: mysql
+        ports:
+            - "3306:3306"
+        restart: unless-stopped
+        environment:
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        volumes:
+            # MySQL data (persistent volume)
+            - mysql-volume:/var/lib/mysql
+            # SSL server certs (read-only)
+            - ./certs:/etc/mysql/certs:ro
+        command:
+            [
+                "mysqld",
+                "--ssl-ca=/etc/mysql/certs/ca.pem",
+                "--ssl-cert=/etc/mysql/certs/server-cert.pem",
+                "--ssl-key=/etc/mysql/certs/server-key.pem",
+            ]
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "mysqladmin",
+                    "ping",
+                    "-h",
+                    "localhost",
+                    "-u",
+                    "root",
+                    "-p${MYSQL_ROOT_PASSWORD}",
+                    "--ssl-ca=/etc/mysql/certs/ca.pem",
+                ]
+            interval: 2s
+            timeout: 1s
+            retries: 30
+            start_period: 10s
+        networks:
+            - nextjs-network
+
+    nextjs:
+        container_name: nextjs
+        build:
+            context: ./
+            dockerfile: ./Dockerfile.mysql
+            target: runner
+        ports:
+            - "3000:3000"
+        restart: unless-stopped
+        volumes:
+            # SSL client certs (read-only)
+            - ./certs:/app/certs:ro
+            # Next.js cache (persistent volume)
+            # - nextjs-volume:/app/.next/cache
+        depends_on:
+            mysql:
+                condition: service_healthy
+        networks:
+            - nextjs-network
+
+volumes:
+    mysql-volume:
+        name: mysql-volume
+        driver: local
+    # nextjs-volume:
+    #     name: nextjs-volume
+    #     driver: local
+
+networks:
+    nextjs-network:
+        driver: bridge

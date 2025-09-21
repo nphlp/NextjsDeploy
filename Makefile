@@ -1,3 +1,21 @@
+####################
+#    Certificates  #
+####################
+
+.PHONY: certs-setup certs-reset certs-reload
+
+# Generate SSL certificates if needed
+certs-setup:
+	@./scripts/ssl-certs.sh setup
+
+# Reset the certs
+certs-reset:
+	@./scripts/ssl-certs.sh reset
+
+# Reload the certs
+certs-reload:
+	@./scripts/ssl-certs.sh reload
+
 #####################
 #   Nextjs server   #
 #####################
@@ -5,10 +23,11 @@
 DC = COMPOSE_BAKE=true docker compose
 
 BASIC = compose.basic.yml
+BASIC_MYSQL = compose.basic-mysql.yml
 LOCAL = compose.local.yml
 VPS = compose.vps.yml
 
-.PHONY: basic basic-stop local local-stop vps vps-stop
+.PHONY: basic basic-stop basic-mysql basic-mysql-stop local local-stop vps vps-stop
 
 # Build (without portainer)
 basic:
@@ -16,6 +35,13 @@ basic:
 
 basic-stop:
 	$(DC) -f $(BASIC) down
+
+# Build (without portainer)
+basic-mysql:
+	$(DC) -f $(BASIC_MYSQL) up -d --build
+
+basic-mysql-stop:
+	$(DC) -f $(BASIC_MYSQL) down
 
 # Build (for portainer local)
 local:

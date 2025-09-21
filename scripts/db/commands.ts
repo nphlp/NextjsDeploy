@@ -1,4 +1,8 @@
+import dotenv from "dotenv";
 import { databaseExists, executeSqlFile } from "./utils";
+
+// Chargement automatique des variables d'environnement (.env)
+dotenv.config({ quiet: true });
 
 /**
  * Configure la base de données en exécutant le fichier setup.sql
@@ -6,13 +10,16 @@ import { databaseExists, executeSqlFile } from "./utils";
  */
 export async function setupDb(isDocker: boolean = false, isSSL: boolean = false, password: string): Promise<void> {
     try {
+        const mysql_db_name = process.env.MYSQL_DATABASE;
+        if (!mysql_db_name) throw new Error("MYSQL_DATABASE environment variable is not defined");
+
         const sqlFileName = isDocker ? "setup-docker.sql" : "setup.sql";
 
         // Vérifier l'existence de la base de données
-        const dbExistsResult = await databaseExists(password, "eco-service-db", isSSL);
+        const dbExistsResult = await databaseExists(password, mysql_db_name, isSSL);
 
         if (dbExistsResult === true) {
-            console.log("ℹ️ Base de données 'eco-service-db' existe déjà");
+            console.log(`ℹ️ Base de données ${mysql_db_name} existe déjà`);
             return;
         }
 
@@ -32,13 +39,16 @@ export async function setupDb(isDocker: boolean = false, isSSL: boolean = false,
  */
 export async function resetDb(isDocker: boolean = false, isSSL: boolean = false, password: string): Promise<void> {
     try {
+        const mysql_db_name = process.env.MYSQL_DATABASE;
+        if (!mysql_db_name) throw new Error("MYSQL_DATABASE environment variable is not defined");
+
         const sqlFileName = isDocker ? "reset-docker.sql" : "reset.sql";
 
         // Vérifier l'existence de la base de données
-        const dbExistsResult = await databaseExists(password, "eco-service-db", isSSL);
+        const dbExistsResult = await databaseExists(password, mysql_db_name, isSSL);
 
         if (dbExistsResult !== true) {
-            console.log("ℹ️ Base de données 'eco-service-db' n'existe pas, rien à réinitialiser");
+            console.log(`ℹ️ Base de données ${mysql_db_name} n'existe pas, rien à réinitialiser`);
             return;
         }
 
@@ -58,8 +68,11 @@ export async function resetDb(isDocker: boolean = false, isSSL: boolean = false,
  */
 export async function reloadDb(isDocker: boolean = false, isSSL: boolean = false, password: string): Promise<void> {
     try {
+        const mysql_db_name = process.env.MYSQL_DATABASE;
+        if (!mysql_db_name) throw new Error("MYSQL_DATABASE environment variable is not defined");
+
         // Vérifier l'existence et l'accessibilité de la base de données
-        const dbExistsResult = await databaseExists(password, "eco-service-db", isSSL);
+        const dbExistsResult = await databaseExists(password, mysql_db_name, isSSL);
 
         // Gestion des erreurs d'accès
         if (dbExistsResult === "ACCESS_DENIED") {
@@ -123,11 +136,14 @@ export async function customSqlFile(
     password: string,
 ): Promise<void> {
     try {
+        const mysql_db_name = process.env.MYSQL_DATABASE;
+        if (!mysql_db_name) throw new Error("MYSQL_DATABASE environment variable is not defined");
+
         // S'assurer que la base de données est accessible
-        const dbExistsResult = await databaseExists(password, "eco-service-db", isSSL);
+        const dbExistsResult = await databaseExists(password, mysql_db_name, isSSL);
 
         if (dbExistsResult !== true) {
-            console.log("❌ Base de données 'eco-service-db' n'existe pas");
+            console.log(`❌ Base de données ${mysql_db_name} n'existe pas`);
             return;
         }
 

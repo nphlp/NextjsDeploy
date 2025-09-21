@@ -67,11 +67,7 @@ export async function databaseExists(
 
     // Ajout des certificats SSL pour l'environnement Docker
     if (isSSL) {
-        args.push(
-            "--ssl-ca=./docker/certs/ca.pem",
-            "--ssl-cert=./docker/certs/client-cert.pem",
-            "--ssl-key=./docker/certs/client-key.pem",
-        );
+        args.push("--ssl-ca=./certs/ca.pem", "--ssl-cert=./certs/client-cert.pem", "--ssl-key=./certs/client-key.pem");
     }
 
     // Exécution de la requête SHOW DATABASES
@@ -131,9 +127,9 @@ export async function executeSqlFile(filename: string, password: string, isSSL: 
         // Ajout des certificats SSL pour l'environnement Docker
         if (isSSL) {
             args.push(
-                "--ssl-ca=./docker/certs/ca.pem",
-                "--ssl-cert=./docker/certs/client-cert.pem",
-                "--ssl-key=./docker/certs/client-key.pem",
+                "--ssl-ca=./certs/ca.pem",
+                "--ssl-cert=./certs/client-cert.pem",
+                "--ssl-key=./certs/client-key.pem",
             );
         }
 
