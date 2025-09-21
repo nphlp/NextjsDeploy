@@ -5,7 +5,23 @@ FROM node:24-alpine AS base
 
 WORKDIR /app
 
+# Import ENV variables for build time
+ARG NODE_ENV
+ARG NEXTJS_STANDALONE
+ARG DATABASE_URL
+ARG MYSQL_HOST
+
+# Check import
+# RUN echo "=====> Build Arguments <====="
+# RUN echo "NODE_ENV -> $NODE_ENV"
+# RUN echo "NEXTJS_STANDALONE -> $NEXTJS_STANDALONE"
+# RUN echo "DATABASE_URL -> $DATABASE_URL"
+# RUN echo "MYSQL_HOST -> $MYSQL_HOST"
+# RUN echo "============================="
+
 RUN npm install -g pnpm
+
+# Recommended by NextJS
 RUN apk add --no-cache libc6-compat
 
 ########################
@@ -28,8 +44,6 @@ RUN pnpm install --prod --frozen-lockfile
 #     Builder      #
 ####################
 FROM dev-deps AS builder
-
-ENV NEXTJS_STANDALONE=true
 
 COPY . .
 
@@ -56,7 +70,6 @@ USER nextjs
 # EXPOSE 3000
 
 # Set prod env
-ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 

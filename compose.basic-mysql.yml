@@ -44,8 +44,17 @@ services:
 
     nextjs:
         container_name: nextjs
+        # Provide ENVs to runtime
+        env_file:
+            - ./.env.merged
         build:
             context: ./
+            # Provide ARGs to buildtime
+            args:
+                - NODE_ENV=${NODE_ENV}
+                - NEXTJS_STANDALONE=${NEXTJS_STANDALONE}
+                - DATABASE_URL=${DATABASE_URL}
+                - MYSQL_HOST=${MYSQL_HOST}
             dockerfile: ./Dockerfile.mysql
             target: runner
         ports:

@@ -1,3 +1,12 @@
+########################
+#    Merge Env Files   #
+########################
+
+.PHONY: merge-env
+
+merge-env:
+	@./scripts/merge-env.sh --base .env --override .env.override --output .env.merged
+
 ####################
 #    Certificates  #
 ####################
@@ -21,6 +30,7 @@ certs-reload:
 #####################
 
 DC = COMPOSE_BAKE=true docker compose
+ENV_MERGED = --env-file .env.merged
 
 BASIC = compose.basic.yml
 BASIC_MYSQL = compose.basic-mysql.yml
@@ -31,14 +41,16 @@ VPS = compose.vps.yml
 
 # Build (without portainer)
 basic:
-	$(DC) -f $(BASIC) up -d --build
+	@make merge-env
+	$(DC) $(ENV_MERGED) -f $(BASIC) up -d --build
 
 basic-stop:
 	$(DC) -f $(BASIC) down
 
 # Build (without portainer)
 basic-mysql:
-	$(DC) -f $(BASIC_MYSQL) up -d --build
+	@make merge-env
+	$(DC) $(ENV_MERGED) -f $(BASIC_MYSQL) up -d --build
 
 basic-mysql-stop:
 	$(DC) -f $(BASIC_MYSQL) down
