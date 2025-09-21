@@ -2,7 +2,25 @@
 
 ## Portainer
 
-- [ ] Database
+- [ ] Script SSL
+    - Argument certs directory : `/certs`
+    - Argument certs CN domain : `mysql-preview`
+    - Ajouter le type de permission
+
+- [ ] Re-tester le Dockerfile en local
+
+- [ ] Certificats HTTPS non fonctionnels/intermittents pour `nansp.dev` mais toujours valide pour les sous-domaines
+
+- [ ] Documenter le setup
+    - Attention le webhook de déploiement github ne refraichis pas le cache des images docker -> lors d'une mise à jour du Dockerfile ou Compose -> il faut "Pull and redeploy" sur Portainer pour être sûr de re-builder l'image
+
+- [ ] Nextjs Build Cache
+    - Redis enfin fonctionnel avec useCache ?
+    - Un service build (runtime) et un service production (runtime) ?
+
+- [ ] Revoir les scripts
+
+- [ ] Webhook de déploiement git "without cache" ? Forcer le rebuild de l'image ?
 
 ## Caching
 
@@ -14,9 +32,17 @@
 ## Frontend
 
 - [ ] Components
+    - Select -> Baser sur le <select> natif -> "onSelectChange" et le fallback dropdown natif
+    - Combobox -> Dégager Headless UI
+    - Adapter les composants au dark mode
+    - Fournir les props natives en "nativeProps"
+    - Pilotage des radius, shadows, borders dans le thème
+
 - [ ] Skeleton
-- [ ] Dark Mode
+    - Créer des composants Skeletons
+
 - [ ] View Transition
+    - Ajouter les View Transitions pour les changements de pages
 
 ## Accessibility
 
@@ -26,17 +52,6 @@
 - [ ] Vérifier le contraste des couleurs
 - [ ] Désactiver les animations
 - [ ] Scrolling fonctionnel avec doigt, pavé tactile, molette, barre de défilement
-
-## Utils
-
-- [ ] Fetch et useFetch
-
-## Database
-
-- [ ] Prisma
-- [ ] Database script
-- [ ] Fixtures script
-- [ ] Services script
 
 ## Rendering
 

@@ -10,6 +10,7 @@ ARG NODE_ENV
 ARG NEXTJS_STANDALONE
 ARG DATABASE_URL
 ARG MYSQL_HOST
+ARG NEXT_PUBLIC_BASE_URL
 
 # Check import
 # RUN echo "=====> Build Arguments <====="
@@ -48,6 +49,9 @@ FROM dev-deps AS builder
 
 COPY . .
 
+# Important to set "NEXT_PUBLIC_*" ENVs before nextjs build
+ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
+
 RUN pnpm prisma:generate
 RUN pnpm build
 
@@ -79,6 +83,17 @@ ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 CMD ["/bin/sh", "-c", "\
+    echo '🚀 Starting Next.js application...' && \
+    # echo '🔗 Connecting to database at: ' $DATABASE_URL && \
+    # echo '🌐 NEXT_PUBLIC_BASE_URL: ' $NEXT_PUBLIC_BASE_URL && \
+    # echo '🧑 Show nextjs user permissions:' && \
+    # echo 'uid:' $(id -u) && \
+    # echo 'gid:' $(id -g) && \
+    # echo '📝 Show app directory:' && \
+    # ls -la /app | grep 'certs' && \
+    # echo '🔐 Show certs directory permissions...' && \
+    # ls -la /app/certs && \
+    # echo '📦 Installing production dependencies...' && \
     pnpm db:setup --docker --ssl && \
     pnpm prisma:deploy && \
     pnpm fixtures:setup && \

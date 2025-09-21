@@ -4,13 +4,19 @@ set -e
 
 # === CONFIGURATION ===
 CERTS_DIR="./certs"
+MYSQL_HOST="${2:-mysql}"
 
 # === FONCTIONS ===
 
 # Génère tous les certificats SSL pour MySQL
 generate_certs() {
+    # if [ -d "$CERTS_DIR" ] && [ -f "$CERTS_DIR/ca.pem" ] && [ -f "$CERTS_DIR/server-cert.pem" ] && [ -f "$CERTS_DIR/client-cert.pem" ]; then
+    #     echo "✅ SSL certificates already exist, skipping generation"
+    #     return 0
+    # fi
+
     echo "🔐 Generating SSL certificates for MySQL..."
-    
+
     mkdir -p "$CERTS_DIR"
     cd "$CERTS_DIR"
     
@@ -20,8 +26,8 @@ generate_certs() {
     openssl req -new -x509 -nodes -days 3650 -key ca-key.pem -out ca.pem -subj "/CN=mysql-ca" 2>/dev/null
     
     # Générer la clé et le certificat du serveur
-    echo "🖥️ Generating server certificate..."
-    openssl req -newkey rsa:2048 -days 3650 -nodes -keyout server-key.pem -out server-req.pem -subj "/CN=mysql" 2>/dev/null
+    echo "🖥️ Generating server certificate for $MYSQL_HOST..."
+    openssl req -newkey rsa:2048 -days 3650 -nodes -keyout server-key.pem -out server-req.pem -subj "/CN=$MYSQL_HOST" 2>/dev/null
     openssl x509 -req -in server-req.pem -days 3650 -CA ca.pem -CAkey ca-key.pem -set_serial 01 -out server-cert.pem 2>/dev/null
     
     # Générer la clé et le certificat du client
@@ -61,11 +67,13 @@ case "$1" in
         reload_certs
         ;;
     *)
-        echo "Usage: $0 {setup|reset|reload}"
+        echo "Usage: $0 {setup|reset|reload} [mysql_host]"
         echo ""
         echo "  setup  - Génère les certificats SSL pour MySQL"
         echo "  reset  - Supprime tous les certificats"
         echo "  reload - Reset + setup (recrée complètement)"
+        echo ""
+        echo "  mysql_host - Nom du serveur MySQL (défaut: mysql)"
         exit 1
         ;;
 esac

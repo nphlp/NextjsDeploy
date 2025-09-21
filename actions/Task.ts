@@ -34,10 +34,7 @@ export const AddTask = async (props: AddTaskProps) => {
             },
         });
 
-        console.log("Task created:", createdTask);
-
         revalidateTag(hashParamsForCacheKey("task-findMany", { orderBy: { updatedAt: "desc" } }));
-        // revalidateTag("task-findMany");
 
         return createdTask;
     } catch (error) {
@@ -66,8 +63,6 @@ export const UpdateTask = async (props: UpdateTaskProps) => {
     try {
         const { id, title, status } = updateTaskSchema.parse(props);
 
-        console.log("Updating task:", { id, title, status });
-
         const existingTask = await TaskFindUniqueAction({ where: { id } });
         if (!existingTask) return;
 
@@ -82,10 +77,7 @@ export const UpdateTask = async (props: UpdateTaskProps) => {
             },
         });
 
-        console.log("Task updated:", updatedTask);
-
         revalidateTag(hashParamsForCacheKey("task-findMany", { orderBy: { updatedAt: "desc" } }));
-        // revalidateTag("task-findMany");
 
         return updatedTask;
     } catch (error) {
@@ -113,10 +105,7 @@ export const DeleteTask = async (props: DeleteTaskProps) => {
             where: { id },
         });
 
-        console.log("Task deleted:", deletedTask);
-
         revalidateTag(hashParamsForCacheKey("task-findMany", { orderBy: { updatedAt: "desc" } }));
-        // revalidateTag("task-findMany");
 
         return deletedTask;
     } catch (error) {

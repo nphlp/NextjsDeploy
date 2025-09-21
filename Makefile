@@ -2,28 +2,19 @@
 #    Merge Env Files   #
 ########################
 
-.PHONY: merge-env
+BASE = .env
+OUTPUT = .env.merged
 
-merge-env:
-	@./scripts/merge-env.sh --base .env --override .env.override --output .env.merged
+OVERRIDE_BASIC = .env.override.basic
+OVERRIDE_LOCAL = .env.override.local
 
-####################
-#    Certificates  #
-####################
+.PHONY: merge-env-basic merge-env-local
 
-.PHONY: certs-setup certs-reset certs-reload
+merge-env-basic:
+	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_BASIC) --output $(OUTPUT)
 
-# Generate SSL certificates if needed
-certs-setup:
-	@./scripts/ssl-certs.sh setup
-
-# Reset the certs
-certs-reset:
-	@./scripts/ssl-certs.sh reset
-
-# Reload the certs
-certs-reload:
-	@./scripts/ssl-certs.sh reload
+merge-env-local:
+	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_LOCAL) --output $(OUTPUT)
 
 #####################
 #   Nextjs server   #
@@ -36,28 +27,24 @@ BASIC = compose.basic.yml
 LOCAL = compose.local.yml
 VPS = compose.vps.yml
 
-.PHONY: basic basic-stop local local-stop vps vps-stop
+.PHONY: basic basic-stop local local-stop
 
 # Build (without portainer)
 basic:
-	@make merge-env
+	@make merge-env-basic
 	$(DC) $(ENV_MERGED) -f $(BASIC) up -d --build
+	@echo "🚀 Access the app at: http://localhost:3000 ✅"
 
 basic-stop:
+	@make merge-env-basic
 	$(DC) $(ENV_MERGED) -f $(BASIC) down
 
 # Build (for portainer local)
 local:
-	@make merge-env
+	@make merge-env-local
 	$(DC) $(ENV_MERGED) -f $(LOCAL) up -d --build
+	@echo "🚀 Access the app at: https://front.local.dev ✅"
 
 local-stop:
-	@make merge-env
+	@make merge-env-local
 	$(DC) $(ENV_MERGED) -f $(LOCAL) down
-
-# Build (for portainer vps)
-vps:
-	$(DC) -f $(VPS) up -d --build
-
-vps-stop:
-	$(DC) -f $(VPS) down

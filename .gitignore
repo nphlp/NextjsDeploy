@@ -11,8 +11,13 @@ node_modules/
 
 # env files
 .env
-.env.override
+.env.override.basic
+.env.override.local
+
+# env auto generated
 .env.merged
+
+# saved env for real deploy
 .env.prod
 .env.preview
 

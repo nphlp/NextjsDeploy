@@ -1,8 +1,23 @@
 services:
+    ssl-manager:
+        container_name: ssl-manager
+        image: alpine:latest
+        volumes:
+            - ./certs:/certs
+            - ./scripts:/scripts:ro
+        command: |
+            sh -c "
+                apk add --no-cache openssl
+                sh /scripts/ssl-certs.sh setup mysql-${VPS_SUB_DOMAIN}
+            "
+
     mysql:
         container_name: mysql-${VPS_SUB_DOMAIN}
         image: mysql:9.3
         restart: unless-stopped
+        depends_on:
+            ssl-manager:
+                condition: service_completed_successfully
         environment:
             - MYSQL_DATABASE=${MYSQL_DATABASE}
             - MYSQL_USER=${MYSQL_USER}
@@ -38,7 +53,7 @@ services:
             retries: 30
             start_period: 10s
         networks:
-            - nextjs-network
+            - app-network
 
     nextjs:
         container_name: nextjs-${VPS_SUB_DOMAIN}
@@ -53,7 +68,8 @@ services:
                 - NEXTJS_STANDALONE=${NEXTJS_STANDALONE}
                 - DATABASE_URL=${DATABASE_URL}
                 - MYSQL_HOST=${MYSQL_HOST}
-            dockerfile: ./Dockerfile.mysql
+                - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
+            dockerfile: ./Dockerfile
             target: runner
         restart: unless-stopped
         volumes:
@@ -65,10 +81,11 @@ services:
             mysql:
                 condition: service_healthy
         networks:
-            - nextjs-network
+            - app-network
             - traefik
         labels:
             - "traefik.enable=true"
+            - "traefik.docker.network=traefik"
             - "traefik.http.routers.nextjs-${VPS_SUB_DOMAIN}.rule=Host(`${VPS_SUB_DOMAIN}.${VPS_DOMAIN}`)"
             - "traefik.http.routers.nextjs-${VPS_SUB_DOMAIN}.entrypoints=websecure"
             - "traefik.http.services.nextjs-${VPS_SUB_DOMAIN}.loadbalancer.server.port=3000"
@@ -83,8 +100,8 @@ volumes:
     #     driver: local
 
 networks:
-    nextjs-network:
-        name: nextjs-network-${VPS_SUB_DOMAIN}
+    app-network:
+        name: app-network-${VPS_SUB_DOMAIN}
         driver: bridge
     traefik:
         name: traefik

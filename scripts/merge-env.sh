@@ -125,7 +125,6 @@ for file in "${OVERRIDE_FILES[@]}"; do
     fi
 done
 echo "Output file: $OUTPUT_FILE"
-echo
 
 # Create temporary file
 TEMP_FILE=$(mktemp)
@@ -135,7 +134,7 @@ trap "rm -f $TEMP_FILE" EXIT
 OVERRIDE_VARS=""
 for override_file in "${OVERRIDE_FILES[@]}"; do
     if [[ -f "$override_file" ]]; then
-        while IFS= read -r line; do
+        while IFS= read -r line || [[ -n "$line" ]]; do
             cleaned_line=$(clean_env_line "$line")
             if [[ -n "$cleaned_line" ]]; then
                 var_name=$(get_var_name "$cleaned_line")
@@ -154,7 +153,7 @@ echo "" >> "$TEMP_FILE"
 
 # Process base file
 echo "# From base file $BASE_FILE" >> "$TEMP_FILE"
-while IFS= read -r line; do
+while IFS= read -r line || [[ -n "$line" ]]; do
     cleaned_line=$(clean_env_line "$line")
     if [[ -n "$cleaned_line" ]]; then
         var_name=$(get_var_name "$cleaned_line")
@@ -174,7 +173,7 @@ for override_file in "${OVERRIDE_FILES[@]}"; do
     echo "" >> "$TEMP_FILE"
     echo "# From override file: $override_file" >> "$TEMP_FILE"
 
-    while IFS= read -r line; do
+    while IFS= read -r line || [[ -n "$line" ]]; do
         cleaned_line=$(clean_env_line "$line")
         if [[ -n "$cleaned_line" ]]; then
             echo "$cleaned_line" >> "$TEMP_FILE"
@@ -186,3 +185,4 @@ done
 mv "$TEMP_FILE" "$OUTPUT_FILE"
 
 echo -e "${GREEN}✓ Successfully merged environment files to $OUTPUT_FILE${NC}"
+echo

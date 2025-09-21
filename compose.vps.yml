@@ -1,28 +1,129 @@
 services:
+    ssl-manager:
+        container_name: ssl-manager
+        image: alpine:latest
+        volumes:
+            - ./certs:/certs
+            - ./scripts:/scripts:ro
+        command: |
+            sh -c "
+                echo '🔧 Installing OpenSSL...'
+                apk add --no-cache openssl
+                echo '🧹 Cleaning up old certificates...'
+                rm -rf /certs/*
+                echo '🔐 Generating SSL certificates for MySQL...'
+                mkdir -p /certs
+                cd /certs
+                echo '📋 Generating CA certificate...'
+                openssl genrsa 2048 > ca-key.pem 2>/dev/null
+                openssl req -new -x509 -nodes -days 3650 -key ca-key.pem -out ca.pem -subj '/CN=mysql-ca' 2>/dev/null
+                echo '🖥️ Generating server certificate for ${MYSQL_HOST}...'
+                openssl req -newkey rsa:2048 -days 3650 -nodes -keyout server-key.pem -out server-req.pem -subj '/CN=${MYSQL_HOST}' 2>/dev/null
+                openssl x509 -req -in server-req.pem -days 3650 -CA ca.pem -CAkey ca-key.pem -set_serial 01 -out server-cert.pem 2>/dev/null
+                echo '👤 Generating client certificate...'
+                openssl req -newkey rsa:2048 -days 3650 -nodes -keyout client-key.pem -out client-req.pem -subj '/CN=client' 2>/dev/null
+                openssl x509 -req -in client-req.pem -days 3650 -CA ca.pem -CAkey ca-key.pem -set_serial 02 -out client-cert.pem 2>/dev/null
+                rm server-req.pem client-req.pem
+                echo '✅ Certs successfully generated'
+                echo '🔐 Setting permissions for both MySQL and Next.js...'
+                chmod 644 /certs/*.pem
+                chmod 644 /certs/*-key.pem
+                chown -R 999:999 /certs
+                echo '🔥 Permissions set successfully.'
+            "
+
+    mysql:
+        container_name: mysql-${VPS_SUB_DOMAIN}
+        image: mysql:9.3
+        restart: unless-stopped
+        depends_on:
+            ssl-manager:
+                condition: service_completed_successfully
+        environment:
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        volumes:
+            # MySQL data (persistent volume)
+            - mysql-volume:/var/lib/mysql
+            # SSL server certs (read-only)
+            - ./certs:/etc/mysql/certs:ro
+        command:
+            [
+                "mysqld",
+                "--ssl-ca=/etc/mysql/certs/ca.pem",
+                "--ssl-cert=/etc/mysql/certs/server-cert.pem",
+                "--ssl-key=/etc/mysql/certs/server-key.pem",
+            ]
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "mysqladmin",
+                    "ping",
+                    "-h",
+                    "localhost",
+                    "-u",
+                    "root",
+                    "-p${MYSQL_ROOT_PASSWORD}",
+                    "--ssl-ca=/etc/mysql/certs/ca.pem",
+                ]
+            interval: 2s
+            timeout: 1s
+            retries: 30
+            start_period: 10s
+        networks:
+            - app-network
+
     nextjs:
         container_name: nextjs-${VPS_SUB_DOMAIN}
+        # Provide ENVs to runtime
+        env_file:
+            - ./stack.env
         build:
             context: ./
+            # Provide ARGs to buildtime
+            args:
+                - NODE_ENV=${NODE_ENV}
+                - NEXTJS_STANDALONE=${NEXTJS_STANDALONE}
+                - DATABASE_URL=${DATABASE_URL}
+                - MYSQL_HOST=${MYSQL_HOST}
+                - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
             dockerfile: ./Dockerfile
             target: runner
         restart: unless-stopped
-        # volumes:
-        #     - nextjs-volume:/app/.next/cache
+        volumes:
+            # SSL client certs (read-only)
+            - ./certs:/app/certs:ro
+            # Next.js cache (persistent volume)
+            # - nextjs-volume:/app/.next/cache
+        depends_on:
+            mysql:
+                condition: service_healthy
         networks:
+            - app-network
             - traefik
         labels:
             - "traefik.enable=true"
+            - "traefik.docker.network=traefik"
             - "traefik.http.routers.nextjs-${VPS_SUB_DOMAIN}.rule=Host(`${VPS_SUB_DOMAIN}.${VPS_DOMAIN}`)"
             - "traefik.http.routers.nextjs-${VPS_SUB_DOMAIN}.entrypoints=websecure"
             - "traefik.http.services.nextjs-${VPS_SUB_DOMAIN}.loadbalancer.server.port=3000"
             - "traefik.http.routers.nextjs-${VPS_SUB_DOMAIN}.tls.certresolver=leresolver"
 
-# volumes:
-#     nextjs-volume:
-#         name: nextjs-volume-${VPS_SUB_DOMAIN}
-#         driver: local
+volumes:
+    mysql-volume:
+        name: mysql-volume-${VPS_SUB_DOMAIN}
+        driver: local
+    # nextjs-volume:
+    #     name: nextjs-volume-${VPS_SUB_DOMAIN}
+    #     driver: local
 
 networks:
+    app-network:
+        name: app-network-${VPS_SUB_DOMAIN}
+        driver: bridge
     traefik:
-        external: true
         name: traefik
+        external: true

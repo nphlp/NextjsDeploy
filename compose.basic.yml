@@ -1,8 +1,23 @@
 services:
+    ssl-manager:
+        container_name: ssl-manager
+        image: alpine:latest
+        volumes:
+            - ./certs:/certs
+            - ./scripts:/scripts:ro
+        command: |
+            sh -c "
+                apk add --no-cache openssl
+                sh /scripts/ssl-certs.sh setup
+            "
+
     mysql:
         image: mysql:9.3
         container_name: mysql
         restart: unless-stopped
+        depends_on:
+            ssl-manager:
+                condition: service_completed_successfully
         environment:
             - MYSQL_DATABASE=${MYSQL_DATABASE}
             - MYSQL_USER=${MYSQL_USER}
@@ -38,7 +53,7 @@ services:
             retries: 30
             start_period: 10s
         networks:
-            - nextjs-network
+            - app-network
 
     nextjs:
         container_name: nextjs
@@ -53,6 +68,7 @@ services:
                 - NEXTJS_STANDALONE=${NEXTJS_STANDALONE}
                 - DATABASE_URL=${DATABASE_URL}
                 - MYSQL_HOST=${MYSQL_HOST}
+                - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
             dockerfile: ./Dockerfile
             target: runner
         ports:
@@ -67,7 +83,7 @@ services:
             mysql:
                 condition: service_healthy
         networks:
-            - nextjs-network
+            - app-network
 
 volumes:
     mysql-volume:
@@ -78,6 +94,6 @@ volumes:
     #     driver: local
 
 networks:
-    nextjs-network:
-        name: nextjs-network
+    app-network:
+        name: app-network
         driver: bridge

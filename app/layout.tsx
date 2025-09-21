@@ -37,7 +37,7 @@ export default async function Layout(props: LayoutProps) {
             lang="fr"
             className={combo(
                 // Layout
-                "h-full",
+                "h-full antialiased",
                 // Apply theme from server
                 themeCookie?.themeClass,
             )}
