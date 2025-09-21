@@ -2,8 +2,6 @@ services:
     mysql:
         image: mysql:9.3
         container_name: mysql
-        ports:
-            - "3306:3306"
         restart: unless-stopped
         environment:
             - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -81,4 +79,5 @@ volumes:
 
 networks:
     nextjs-network:
+        name: nextjs-network
         driver: bridge

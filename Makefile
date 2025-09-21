@@ -45,7 +45,7 @@ basic:
 	$(DC) $(ENV_MERGED) -f $(BASIC) up -d --build
 
 basic-stop:
-	$(DC) -f $(BASIC) down
+	$(DC) $(ENV_MERGED) -f $(BASIC) down
 
 # Build (without portainer)
 basic-mysql:
@@ -53,14 +53,16 @@ basic-mysql:
 	$(DC) $(ENV_MERGED) -f $(BASIC_MYSQL) up -d --build
 
 basic-mysql-stop:
-	$(DC) -f $(BASIC_MYSQL) down
+	$(DC) $(ENV_MERGED) -f $(BASIC_MYSQL) down
 
 # Build (for portainer local)
 local:
-	$(DC) -f $(LOCAL) up -d --build
+	@make merge-env
+	$(DC) $(ENV_MERGED) -f $(LOCAL) up -d --build
 
 local-stop:
-	$(DC) -f $(LOCAL) down
+	@make merge-env
+	$(DC) $(ENV_MERGED) -f $(LOCAL) down
 
 # Build (for portainer vps)
 vps:
