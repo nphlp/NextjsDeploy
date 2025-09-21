@@ -5,8 +5,6 @@ FROM node:24-alpine AS base
 
 WORKDIR /app
 
-ENV NEXTJS_STANDALONE=true
-
 RUN npm install -g pnpm
 RUN apk add --no-cache libc6-compat
 
@@ -31,8 +29,11 @@ RUN pnpm install --prod --frozen-lockfile
 ####################
 FROM dev-deps AS builder
 
+ENV NEXTJS_STANDALONE=true
+
 COPY . .
 
+RUN pnpm prisma:generate
 RUN pnpm build
 
 ####################
@@ -44,6 +45,7 @@ FROM prod-deps AS runner
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs

@@ -13,7 +13,7 @@ export default function AddTodoItem() {
     const { refetch } = useContext(Context);
 
     const handleSubmit = async () => {
-        await AddTask(title);
+        await AddTask({ title });
         setTitle("");
         refetch();
     };

@@ -14,8 +14,9 @@ services:
             - nextjs-network
 
 # volumes:
-#     nextjs-volume:
-#         driver: local
+# nextjs-volume:
+#     name: nextjs-volume
+#     driver: local
 
 networks:
     nextjs-network:
