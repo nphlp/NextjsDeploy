@@ -34,16 +34,10 @@ CMD ["/bin/sh", "-c", "\
     rm -rf /certs/* && \
     # Generate new certs
     sh /scripts/ssl-certs.sh setup mysql-$VPS_SUB_DOMAIN && \
-    # Root for CA
-    chown -R root:root /certs /certs/ca.pem && \
-    chmod 755 /certs && \
-    chmod 644 /certs/ca.pem && \
-    # Mysql for server
-    chown 999:999 /certs/server-cert.pem /certs/server-key.pem && \
-    chmod 644 /certs/server-cert.pem /certs/server-key.pem && \
-    # Nextjs for client
-    chown 1001:1001 /certs/client-cert.pem /certs/client-key.pem && \
-    chmod 644 /certs/client-cert.pem /certs/client-key.pem && \
+    # Permissions
+    chmod 644 /certs/*.pem && \
+    chmod 644 /certs/*-key.pem && \
+    chown -R 999:999 /certs && \
     # Sleep to have time to log it before a crash
     sleep 5 && \
     echo '🔥 Permissions set successfully.' \
