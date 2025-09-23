@@ -1,7 +1,7 @@
 "use client";
 
 import { combo } from "@lib/combo";
-import { ChangeEvent, InputHTMLAttributes, MouseEvent, RefObject } from "react";
+import { ChangeEvent, InputHTMLAttributes, MouseEvent } from "react";
 import { InputVariant, theme } from "./theme";
 
 export type InputClassName = {
@@ -13,22 +13,19 @@ export type InputClassName = {
 /** Input props */
 export type InputProps = {
     label: string;
+    autoComplete: InputHTMLAttributes<HTMLInputElement>["autoComplete"];
+    setValue: (value: string) => void;
+    value: string;
 
     // Styles
     variant?: InputVariant;
     className?: InputClassName;
     noLabel?: boolean;
 
-    // States
-    setValue: (value: string) => void;
-
-    // Ref
-    ref?: RefObject<HTMLInputElement | null>;
-
-    /** Custom execution after input change */
-    afterChange?: () => void;
+    // Optional
+    onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
     required?: boolean;
-} & Omit<InputHTMLAttributes<HTMLInputElement>, "className" | "label" | "onChange" | "required">;
+} & Omit<InputHTMLAttributes<HTMLInputElement>, "className" | "label" | "value" | "onChange" | "required">;
 
 /**
  * Input component
@@ -49,10 +46,12 @@ export type InputProps = {
 export default function Input(props: InputProps) {
     const {
         label,
+        autoComplete,
+        setValue,
+        value,
         variant = "default",
         noLabel = false,
-        setValue,
-        afterChange,
+        onChange,
         required = true,
         className,
         ...others
@@ -60,7 +59,7 @@ export default function Input(props: InputProps) {
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.value);
-        afterChange?.();
+        onChange?.(e);
     };
 
     /** Prevent a clic on the label to focus the input */
@@ -76,9 +75,12 @@ export default function Input(props: InputProps) {
 
             {/* Input */}
             <input
+                name={label}
+                autoComplete={autoComplete}
                 onChange={handleChange}
                 className={combo(theme[variant].input, className?.input)}
                 required={required}
+                value={value}
                 {...others}
             />
         </label>

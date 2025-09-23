@@ -31,6 +31,9 @@
             "@ui/*": ["./components/UI/*"],
             "@utils/*": ["./utils/*"],
             "@services/*": ["./services/*"],
+            "@fixtures/*": ["./fixtures/*"],
+            "@class/*": ["./services/class/*"],
+            "@permissions/*": ["./permissions/*"],
             "@/*": ["./*"]
         }
     },

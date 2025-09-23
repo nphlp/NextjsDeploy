@@ -41,6 +41,7 @@ export type CommonProps = {
     variant: VariantType;
     className?: SelectClassName;
     dropdownGap: number;
+    noLabel?: boolean;
 
     canNotBeEmpty?: boolean;
     required?: boolean;
@@ -49,16 +50,20 @@ export type CommonProps = {
     options: SelectOptionType[];
     setSelected: (value: SelectOptionType["slug"]) => void;
     selected: SelectOptionType["slug"];
+
+    // Additional Callbacks
+    onSelectChange?: (value: SelectOptionType["slug"]) => void;
+
+    // Components Props
+    buttonProps?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, "label" | "placeholder" | "required" | "className">;
+    optionsButtonProps?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, "label" | "className" | "onClick">;
 };
 
 type SelectProps = Omit<CommonProps, "variant" | "dropdownGap"> & {
     // Override this props to set a default value
     variant?: VariantType;
     dropdownGap?: number;
-} & Omit<
-        ButtonHTMLAttributes<HTMLButtonElement>,
-        "label" | "placeholder" | "required" | "className" | "options" | "value"
-    >;
+};
 
 /**
  * Select component
@@ -94,10 +99,10 @@ type SelectProps = Omit<CommonProps, "variant" | "dropdownGap"> & {
  */
 export default function Select(props: SelectProps) {
     // Define default values
-    const { options, variant = "default", dropdownGap = 8, ...others } = props;
+    const { options, variant = "default", noLabel = false, dropdownGap = 8, ...others } = props;
 
     return (
-        <Provider {...{ options, variant, dropdownGap, ...others }}>
+        <Provider {...{ options, variant, noLabel, dropdownGap, ...others }}>
             <Component>
                 <Label />
                 <Button />

@@ -1,3 +1,4 @@
+import bundleAnalyzer from "@next/bundle-analyzer";
 import type { NextConfig } from "next";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -31,4 +32,8 @@ const nextConfig: NextConfig = {
     },
 };
 
-export default nextConfig;
+const bundleAnalyzerWrapper = bundleAnalyzer({ enabled: process.env.ANALYZE === "true" });
+
+const nextConfigExport = bundleAnalyzerWrapper(nextConfig);
+
+export default nextConfigExport;

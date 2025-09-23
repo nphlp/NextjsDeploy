@@ -1,0 +1,36 @@
+# SSL Certificate Manager Dockerfile
+#
+# This container generates SSL certificates for MySQL connections before the app starts.
+#
+# Objective:
+#   -> Use `/scripts/ssl-certs.sh` to generate SSL certificates into `certs/` directory
+#   -> Share `certs/` directory with `nextjs` and `mysql` containers
+# 
+# Problem:
+#   -> Use shared volumes for `certs/` is only possible at `runtime`
+#   -> Import `scripts/` at `runtime` is not possible because:
+#      1. Portainer CE doesn't support relative path mapping for volumes with local cloned Git repositories
+#      2. Portainer clones Github repositories into deep volume paths like:
+#      /var/lib/docker/volumes/{portainer_stack_name}_{portainer_volume_data}/_data/compose/{project_stack_id}/
+#
+# Solution:
+#   -> Copy the `scripts/` directory during `build time`
+#   -> Generate SSL `certs/` at `runtime` when shared volumes are mounted
+
+FROM alpine:latest
+
+WORKDIR /
+
+ARG VPS_SUB_DOMAIN
+
+RUN apk add --no-cache openssl
+
+# Copy when project repository is accessible (buildtime)
+COPY scripts /scripts
+
+# Execute commands when volumes are mounted (runtime)
+CMD ["/bin/sh", "-c", "\
+    sh /scripts/ssl-certs.sh reset && \
+    sh /scripts/ssl-certs.sh setup mysql-$VPS_SUB_DOMAIN && \
+    sh /scripts/ssl-certs.sh permissions \
+"]
