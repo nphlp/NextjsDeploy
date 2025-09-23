@@ -1,6 +1,6 @@
 services:
     ssl-manager:
-        container_name: ssl-manager
+        container_name: ssl-manager-${VPS_SUB_DOMAIN}
         build:
             context: ./
             args:
