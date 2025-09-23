@@ -3,17 +3,17 @@
 set -e
 
 # === CONFIGURATION ===
-CERTS_DIR="./certs"
+CERTS_DIR="/certs"
 MYSQL_HOST="${2:-mysql}"
 
 # === FONCTIONS ===
 
 # Génère tous les certificats SSL pour MySQL
 generate_certs() {
-    # if [ -d "$CERTS_DIR" ] && [ -f "$CERTS_DIR/ca.pem" ] && [ -f "$CERTS_DIR/server-cert.pem" ] && [ -f "$CERTS_DIR/client-cert.pem" ]; then
-    #     echo "✅ SSL certificates already exist, skipping generation"
-    #     return 0
-    # fi
+    if [ -d "$CERTS_DIR" ] && [ -f "$CERTS_DIR/ca.pem" ] && [ -f "$CERTS_DIR/server-cert.pem" ] && [ -f "$CERTS_DIR/client-cert.pem" ]; then
+        echo "✅ SSL certificates already exist, skipping generation"
+        return 0
+    fi
 
     echo "🔐 Generating SSL certificates for MySQL..."
 
@@ -37,14 +37,13 @@ generate_certs() {
     
     # Nettoyer les fichiers temporaires
     rm server-req.pem client-req.pem
-    
     echo "✅ Certs successfully generated"
 }
 
 # Supprime tous les certificats existants
 reset_certs() {
     echo "🧹 Resetting certs..."
-    rm -rf "$CERTS_DIR"
+    rm -rf "$CERTS_DIR/*"
     echo "🫧 Certs reset"
 }
 
@@ -54,11 +53,22 @@ reload_certs() {
     generate_certs
 }
 
+permissions() {
+    echo '🔐 Setting permissions for both MySQL and Next.js...'
+    chmod 644 /certs/*.pem
+    chmod 644 /certs/*-key.pem
+    chown -R 999:999 /certs
+    echo '🔥 Permissions set successfully.'
+}
+
 # === MAIN ===
 
 case "$1" in
     setup)
         generate_certs
+        ;;
+    permissions)
+        permissions
         ;;
     reset)
         reset_certs
@@ -67,13 +77,14 @@ case "$1" in
         reload_certs
         ;;
     *)
-        echo "Usage: $0 {setup|reset|reload} [mysql_host]"
+        echo "Usage: $0 {setup|reset|reload|permissions} [mysql_host]"
         echo ""
-        echo "  setup  - Génère les certificats SSL pour MySQL"
-        echo "  reset  - Supprime tous les certificats"
-        echo "  reload - Reset + setup (recrée complètement)"
+        echo "  setup       - Génère les certificats SSL pour MySQL"
+        echo "  reset       - Supprime tous les certificats"
+        echo "  reload      - Reset + setup (recrée complètement)"
+        echo "  permissions - Définit les permissions pour MySQL et Next.js"
         echo ""
-        echo "  mysql_host - Nom du serveur MySQL (défaut: mysql)"
+        echo "  mysql_host  - Nom du serveur MySQL (défaut: mysql)"
         exit 1
         ;;
 esac

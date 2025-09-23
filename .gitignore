@@ -13,6 +13,7 @@ node_modules/
 .env
 .env.override.basic
 .env.override.local
+.env.override.vps
 
 # env auto generated
 .env.merged

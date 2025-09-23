@@ -1,36 +1,15 @@
 services:
     ssl-manager:
         container_name: ssl-manager
-        image: alpine:latest
+        build:
+            context: ./
+            args:
+                - VPS_SUB_DOMAIN=${VPS_SUB_DOMAIN}
+            dockerfile: ./Dockerfile.ssl
+        labels:
+            - traefik.enable=false
         volumes:
             - ./certs:/certs
-            - ./scripts:/scripts:ro
-        command: |
-            sh -c "
-                echo '🔧 Installing OpenSSL...'
-                apk add --no-cache openssl
-                echo '🧹 Cleaning up old certificates...'
-                rm -rf /certs/*
-                echo '🔐 Generating SSL certificates for MySQL...'
-                mkdir -p /certs
-                cd /certs
-                echo '📋 Generating CA certificate...'
-                openssl genrsa 2048 > ca-key.pem 2>/dev/null
-                openssl req -new -x509 -nodes -days 3650 -key ca-key.pem -out ca.pem -subj '/CN=mysql-ca' 2>/dev/null
-                echo '🖥️ Generating server certificate for ${MYSQL_HOST}...'
-                openssl req -newkey rsa:2048 -days 3650 -nodes -keyout server-key.pem -out server-req.pem -subj '/CN=${MYSQL_HOST}' 2>/dev/null
-                openssl x509 -req -in server-req.pem -days 3650 -CA ca.pem -CAkey ca-key.pem -set_serial 01 -out server-cert.pem 2>/dev/null
-                echo '👤 Generating client certificate...'
-                openssl req -newkey rsa:2048 -days 3650 -nodes -keyout client-key.pem -out client-req.pem -subj '/CN=client' 2>/dev/null
-                openssl x509 -req -in client-req.pem -days 3650 -CA ca.pem -CAkey ca-key.pem -set_serial 02 -out client-cert.pem 2>/dev/null
-                rm server-req.pem client-req.pem
-                echo '✅ Certs successfully generated'
-                echo '🔐 Setting permissions for both MySQL and Next.js...'
-                chmod 644 /certs/*.pem
-                chmod 644 /certs/*-key.pem
-                chown -R 999:999 /certs
-                echo '🔥 Permissions set successfully.'
-            "
 
     mysql:
         container_name: mysql-${VPS_SUB_DOMAIN}

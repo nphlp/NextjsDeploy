@@ -7,6 +7,7 @@ OUTPUT = .env.merged
 
 OVERRIDE_BASIC = .env.override.basic
 OVERRIDE_LOCAL = .env.override.local
+OVERRIDE_VPS = .env.override.vps
 
 .PHONY: merge-env-basic merge-env-local
 
@@ -15,6 +16,9 @@ merge-env-basic:
 
 merge-env-local:
 	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_LOCAL) --output $(OUTPUT)
+
+merge-env-vps:
+	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_LOCAL) --override $(OVERRIDE_VPS) --output .env.override.vps
 
 #####################
 #   Nextjs server   #
