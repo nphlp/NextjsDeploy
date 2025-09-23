@@ -67,18 +67,13 @@ export async function databaseExists(
 
     // Ajout des certificats SSL pour l'environnement Docker
     if (isSSL) {
-        args.push(
-            "--protocol=TCP",
-            "--ssl-ca=./certs/ca.pem",
-            "--ssl-cert=./certs/client-cert.pem",
-            "--ssl-key=./certs/client-key.pem",
-        );
+        args.push("--ssl-ca=./certs/ca.pem", "--ssl-cert=./certs/client-cert.pem", "--ssl-key=./certs/client-key.pem");
     }
 
     // Exécution de la requête SHOW DATABASES
     args.push("-e", "SHOW DATABASES LIKE '" + dbName + "'");
 
-    const mysql = spawn("mysql", args, {
+    const mysql = spawn("mariadb", args, {
         stdio: ["pipe", "pipe", "pipe"],
     });
 
@@ -132,7 +127,6 @@ export async function executeSqlFile(filename: string, password: string, isSSL: 
         // Ajout des certificats SSL pour l'environnement Docker
         if (isSSL) {
             args.push(
-                "--protocol=TCP",
                 "--ssl-ca=./certs/ca.pem",
                 "--ssl-cert=./certs/client-cert.pem",
                 "--ssl-key=./certs/client-key.pem",
@@ -141,7 +135,7 @@ export async function executeSqlFile(filename: string, password: string, isSSL: 
 
         args.push("-e", fileContent);
 
-        const mysql = spawn("mysql", args, {
+        const mysql = spawn("mariadb", args, {
             stdio: ["pipe", "pipe", "pipe"],
         });
 

@@ -24,7 +24,7 @@ merge-env-vps:
 #   Nextjs server   #
 #####################
 
-DC = COMPOSE_BAKE=true docker compose
+DC = BUILDKIT_PROGRESS=plain COMPOSE_BAKE=true docker compose
 ENV_MERGED = --env-file .env.merged
 
 BASIC = compose.basic.yml

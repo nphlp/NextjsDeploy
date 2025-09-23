@@ -53,22 +53,11 @@ reload_certs() {
     generate_certs
 }
 
-permissions() {
-    echo '🔐 Setting permissions for both MySQL and Next.js...'
-    chmod 644 /certs/*.pem
-    chmod 644 /certs/*-key.pem
-    chown -R 999:999 /certs
-    echo '🔥 Permissions set successfully.'
-}
-
 # === MAIN ===
 
 case "$1" in
     setup)
         generate_certs
-        ;;
-    permissions)
-        permissions
         ;;
     reset)
         reset_certs
@@ -77,12 +66,11 @@ case "$1" in
         reload_certs
         ;;
     *)
-        echo "Usage: $0 {setup|reset|reload|permissions} [mysql_host]"
+        echo "Usage: $0 {setup|reset|reload} [mysql_host]"
         echo ""
         echo "  setup       - Génère les certificats SSL pour MySQL"
         echo "  reset       - Supprime tous les certificats"
         echo "  reload      - Reset + setup (recrée complètement)"
-        echo "  permissions - Définit les permissions pour MySQL et Next.js"
         echo ""
         echo "  mysql_host  - Nom du serveur MySQL (défaut: mysql)"
         exit 1
