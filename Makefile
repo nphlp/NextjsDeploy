@@ -46,6 +46,19 @@ postgres-stop:
 postgres-clear:
 	$(DC) -f $(POSTGRES) down -v
 
+# Dev shortcut (nextjs in terminal + postgres in docker)
+.PHONY: dev dev-stop dev-clear
+
+dev:
+	@make postgres
+	@pnpm auto
+
+dev-stop:
+	@make postgres-stop
+
+dev-clear:
+	@make postgres-clear
+
 # Build (without portainer)
 .PHONY: basic basic-stop basic-clear
 

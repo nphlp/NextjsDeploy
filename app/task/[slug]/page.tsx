@@ -1,4 +1,5 @@
 import Link from "@comps/UI/button/link";
+import { combo } from "@lib/combo";
 import { TaskFindManyServer, TaskFindUniqueServer } from "@services/server";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
 import { notFound } from "next/navigation";
@@ -28,7 +29,14 @@ export default async function Page(props: PageProps) {
             <h1 className="text-2xl font-bold">{task.title}</h1>
             <div className="flex items-center gap-4">
                 <span>Status: </span>
-                <span className="flex items-center gap-2 font-bold">
+                <span
+                    className={combo(
+                        "flex items-center gap-2 font-bold",
+                        task.status === "TODO" && "text-blue-400",
+                        task.status === "IN_PROGRESS" && "text-orange-400",
+                        task.status === "DONE" && "text-green-500",
+                    )}
+                >
                     {task.status === "TODO" && (
                         <>
                             <CircleDashed className="size-4" />
