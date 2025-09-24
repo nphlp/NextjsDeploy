@@ -1,14 +1,46 @@
 "use client";
 
 import Button from "@comps/UI/button/button";
+import Link from "@comps/UI/button/link";
 import Input from "@comps/UI/input/input";
 import Select from "@comps/UI/select/select";
 import { combo } from "@lib/combo";
 import { TaskModel } from "@services/types";
-import { CircleCheckBig, CircleDashed, LoaderCircle, X } from "lucide-react";
+import { CircleCheckBig, CircleDashed, LoaderCircle, Pencil, X } from "lucide-react";
+import { Route } from "next";
 import { useContext, useState } from "react";
 import { DeleteTask, UpdateTask } from "@/actions/Task";
 import { Context } from "./context";
+
+const options = [
+    {
+        slug: "TODO",
+        label: (
+            <div className="flex items-center gap-2">
+                <CircleDashed className="size-4" />
+                <span>À faire</span>
+            </div>
+        ),
+    },
+    {
+        slug: "IN_PROGRESS",
+        label: (
+            <div className="flex items-center gap-2">
+                <LoaderCircle className="size-4" />
+                <span>En cours</span>
+            </div>
+        ),
+    },
+    {
+        slug: "DONE",
+        label: (
+            <div className="flex items-center gap-2">
+                <CircleCheckBig className="size-4" />
+                <span>Terminé</span>
+            </div>
+        ),
+    },
+];
 
 type TodoItemProps = {
     task: TaskModel;
@@ -64,38 +96,18 @@ export default function TodoItem(props: TodoItemProps) {
                 onSelectChange={handleStatusUpdate}
                 setSelected={setStatus}
                 selected={status}
-                options={[
-                    {
-                        slug: "TODO",
-                        label: (
-                            <div className="flex items-center gap-2">
-                                <CircleDashed className="size-4" />
-                                <span>À faire</span>
-                            </div>
-                        ),
-                    },
-                    {
-                        slug: "IN_PROGRESS",
-                        label: (
-                            <div className="flex items-center gap-2">
-                                <LoaderCircle className="size-4" />
-                                <span>En cours</span>
-                            </div>
-                        ),
-                    },
-                    {
-                        slug: "DONE",
-                        label: (
-                            <div className="flex items-center gap-2">
-                                <CircleCheckBig className="size-4" />
-                                <span>Terminé</span>
-                            </div>
-                        ),
-                    },
-                ]}
+                options={options}
                 canNotBeEmpty
                 noLabel
             />
+            <Link
+                label={`Edit ${task.title}`}
+                variant="outline"
+                href={`/task/${task.slug}` as Route}
+                className="bg-background text-foreground border-gray-low px-1.5"
+            >
+                <Pencil />
+            </Link>
             <Button
                 label={`Status ${task.status}`}
                 variant="outline"
