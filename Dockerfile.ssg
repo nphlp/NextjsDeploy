@@ -42,9 +42,12 @@ RUN pnpm install --prod --frozen-lockfile
 FROM dev-deps AS postgres
 
 # Install Postgres server for Nextjs SSG
-RUN apk add --no-cache postgresql
-# Start Postgres server
-# ...
+RUN apk add --no-cache postgresql postgresql-contrib
+
+# Initialize postgres database (user already exists in Alpine)
+RUN mkdir -p /var/lib/postgresql/data /run/postgresql && \
+    chown -R postgres:postgres /var/lib/postgresql /run/postgresql && \
+    su postgres -c 'initdb -D /var/lib/postgresql/data'
 
 ####################
 #     Builder      #
@@ -58,8 +61,16 @@ ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
 
 RUN pnpm prisma:generate
 
-# Start Postgres server and launch Nextjs build (containing SSG)
-RUN psql --user postgres --password ${POSTGRES_PASSWORD} --db ${POSTGRES_DB} \
+# Env for the database connection
+ENV DATABASE_URL="postgresql://postgres@localhost/db?schema=public"
+ENV POSTGRES_HOST=localhost
+
+# Start Postgres
+RUN su postgres -c 'postgres -D /var/lib/postgresql/data' & \
+    # Wait until Postgres is ready
+    until pg_isready -U postgres; do sleep 1; done && \
+    createdb -U postgres db && \
+    # Run migrations, seed database, and build Nextjs (with SSG)
     pnpm prisma:deploy && \
     pnpm fixtures:setup && \
     pnpm build
