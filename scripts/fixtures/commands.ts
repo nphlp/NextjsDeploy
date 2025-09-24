@@ -19,12 +19,12 @@ import { insertTasks } from "./index";
 const checkExistingData = async () => {
     try {
         // Récupérer toutes les tables de la base de données
-        const tables = await PrismaInstance.$queryRaw<Array<{ TABLE_NAME: string }>>`
-            SELECT TABLE_NAME 
-            FROM INFORMATION_SCHEMA.TABLES 
-            WHERE TABLE_SCHEMA = DATABASE() 
-            AND TABLE_TYPE = 'BASE TABLE'
-            AND TABLE_NAME NOT LIKE '_prisma%'
+        const tables = await PrismaInstance.$queryRaw<Array<{ table_name: string }>>`
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+            AND table_type = 'BASE TABLE'
+            AND table_name NOT LIKE '_prisma%'
         `;
 
         const tableData: Record<string, number> = {};
@@ -32,11 +32,11 @@ const checkExistingData = async () => {
 
         // Pour chaque table, compter le nombre d'enregistrements
         for (const table of tables) {
-            const tableName = table.TABLE_NAME;
+            const tableName = table.table_name;
 
             try {
                 const count = await PrismaInstance.$queryRawUnsafe<Array<{ count: bigint }>>(
-                    `SELECT COUNT(*) as count FROM \`${tableName}\``,
+                    `SELECT COUNT(*) as count FROM "${tableName}"`,
                 );
 
                 const recordCount = Number(count[0].count);

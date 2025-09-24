@@ -9,19 +9,11 @@ WORKDIR /app
 ARG NODE_ENV
 ARG NEXTJS_STANDALONE
 ARG DATABASE_URL
-ARG MYSQL_HOST
+ARG POSTGRES_HOST
 ARG NEXT_PUBLIC_BASE_URL
 
-# Check import
-# RUN echo "=====> Build Arguments <====="
-# RUN echo "NODE_ENV -> $NODE_ENV"
-# RUN echo "NEXTJS_STANDALONE -> $NEXTJS_STANDALONE"
-# RUN echo "DATABASE_URL -> $DATABASE_URL"
-# RUN echo "MYSQL_HOST -> $MYSQL_HOST"
-# RUN echo "============================="
-
 RUN npm install -g pnpm
-RUN apk add --no-cache mysql-client mariadb-connector-c
+RUN apk add --no-cache postgresql-client
 
 # Recommended by NextJS
 RUN apk add --no-cache libc6-compat
@@ -76,25 +68,13 @@ RUN adduser --system --uid 1001 nextjs
 
 # Switch to non-root user
 USER nextjs
-# EXPOSE 3000
 
 # Set prod env
 ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
+ENV HOSTNAME=0.0.0.0
 
 CMD ["/bin/sh", "-c", "\
     echo '🚀 Starting Next.js application...' && \
-    # echo '🔗 Connecting to database at: ' $DATABASE_URL && \
-    # echo '🌐 NEXT_PUBLIC_BASE_URL: ' $NEXT_PUBLIC_BASE_URL && \
-    # echo '🧑 Show nextjs user permissions:' && \
-    # echo 'uid:' $(id -u) && \
-    # echo 'gid:' $(id -g) && \
-    # echo '📝 Show app directory:' && \
-    # ls -la /app | grep 'certs' && \
-    # echo '🔐 Show certs directory permissions...' && \
-    # ls -la /app/certs && \
-    # echo '📦 Installing production dependencies...' && \
-    pnpm db:setup --docker --ssl && \
     pnpm prisma:deploy && \
     pnpm fixtures:setup && \
     node server.js \
