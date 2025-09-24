@@ -10,44 +10,48 @@ services:
             - traefik.enable=false
         volumes:
             - ./certs-${VPS_SUB_DOMAIN}:/certs
+    # ssl-manager:
+    #     container_name: ssl-manager
+    #     image: alpine:latest
+    #     volumes:
+    #         - ./certs-${VPS_SUB_DOMAIN}:/certs
+    #         - ./scripts:/scripts:ro
+    #     command: |
+    #         sh -c "
+    #             apk add --no-cache openssl
+    #             sh /scripts/ssl-certs.sh clear
+    #             sh /scripts/ssl-certs.sh generate_safe postgres-${VPS_SUB_DOMAIN}
+    #         "
 
-    mysql:
-        container_name: mysql-${VPS_SUB_DOMAIN}
-        image: mysql:9.3
+    postgres:
+        container_name: postgres-${VPS_SUB_DOMAIN}
+        image: postgres:16-alpine
         restart: unless-stopped
         depends_on:
             ssl-manager:
                 condition: service_completed_successfully
         environment:
-            - MYSQL_DATABASE=${MYSQL_DATABASE}
-            - MYSQL_USER=${MYSQL_USER}
-            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - POSTGRES_DB=${POSTGRES_DB}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
         volumes:
-            # MySQL data (persistent volume)
-            - mysql-volume:/var/lib/mysql
+            # PostgreSQL data (persistent volume)
+            - postgres-volume:/var/lib/postgresql/data
             # SSL server certs (read-only)
-            - ./certs-${VPS_SUB_DOMAIN}:/etc/mysql/certs:ro
+            - ./certs-${VPS_SUB_DOMAIN}:/etc/ssl/certs:ro
         command:
             [
-                "mysqld",
-                "--ssl-ca=/etc/mysql/certs/ca.pem",
-                "--ssl-cert=/etc/mysql/certs/server-cert.pem",
-                "--ssl-key=/etc/mysql/certs/server-key.pem",
+                "postgres",
+                "-c",
+                "ssl=on",
+                "-c",
+                "ssl_cert_file=/etc/ssl/certs/server-cert.pem",
+                "-c",
+                "ssl_key_file=/etc/ssl/certs/server-key.pem",
+                "-c",
+                "ssl_ca_file=/etc/ssl/certs/ca.pem",
             ]
         healthcheck:
-            test:
-                [
-                    "CMD",
-                    "mysqladmin",
-                    "ping",
-                    "-h",
-                    "localhost",
-                    "-u",
-                    "root",
-                    "-p${MYSQL_ROOT_PASSWORD}",
-                    "--ssl-ca=/etc/mysql/certs/ca.pem",
-                ]
+            test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
             interval: 2s
             timeout: 1s
             retries: 30
@@ -67,7 +71,7 @@ services:
                 - NODE_ENV=${NODE_ENV}
                 - NEXTJS_STANDALONE=${NEXTJS_STANDALONE}
                 - DATABASE_URL=${DATABASE_URL}
-                - MYSQL_HOST=${MYSQL_HOST}
+                - POSTGRES_HOST=${POSTGRES_HOST}
                 - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
             dockerfile: ./Dockerfile
             target: runner
@@ -78,7 +82,7 @@ services:
             # Next.js cache (persistent volume)
             # - nextjs-volume:/app/.next/cache
         depends_on:
-            mysql:
+            postgres:
                 condition: service_healthy
         networks:
             - app-network
@@ -92,8 +96,8 @@ services:
             - "traefik.http.routers.nextjs-${VPS_SUB_DOMAIN}.tls.certresolver=leresolver"
 
 volumes:
-    mysql-volume:
-        name: mysql-volume-${VPS_SUB_DOMAIN}
+    postgres-volume:
+        name: postgres-volume-${VPS_SUB_DOMAIN}
         driver: local
     # nextjs-volume:
     #     name: nextjs-volume-${VPS_SUB_DOMAIN}

@@ -1,10 +1,10 @@
 # SSL Certificate Manager Dockerfile
 #
-# This container generates SSL certificates for MySQL connections before the app starts.
+# This container generates SSL certificates for PostgreSQL connections before the app starts.
 #
 # Objective:
 #   -> Use `/scripts/ssl-certs.sh` to generate SSL certificates into `certs/` directory
-#   -> Share `certs/` directory with `nextjs` and `mysql` containers
+#   -> Share `certs/` directory with `nextjs` and `postgres` containers
 # 
 # Problem:
 #   -> Use shared volumes for `certs/` is only possible at `runtime`
@@ -30,7 +30,14 @@ COPY scripts /scripts
 
 # Execute commands when volumes are mounted (runtime)
 CMD ["/bin/sh", "-c", "\
-    sh /scripts/ssl-certs.sh reset && \
-    sh /scripts/ssl-certs.sh setup mysql-$VPS_SUB_DOMAIN && \
-    sh /scripts/ssl-certs.sh permissions \
+    echo '🔐 Setting up SSL certificates for PostgreSQL...' && \
+    # Remove old certs
+    rm -rf /certs/* && \
+    # Generate new certs
+    sh /scripts/ssl-certs.sh generate postgres-${VPS_SUB_DOMAIN} && \
+    # Postgres permissions
+    chmod 644 /certs/*.pem && \
+    chmod 600 /certs/*-key.pem && \
+    chown -R 70:70 /certs && \
+    echo '🔥 Permissions set successfully.' \
 "]

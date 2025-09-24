@@ -18,22 +18,37 @@ merge-env-local:
 	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_LOCAL) --output $(OUTPUT)
 
 merge-env-vps:
-	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_LOCAL) --override $(OVERRIDE_VPS) --output .env.override.vps
+	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_VPS) --output .env.vps
 
 #####################
 #   Nextjs server   #
 #####################
 
-DC = COMPOSE_BAKE=true docker compose
+DC = BUILDKIT_PROGRESS=plain COMPOSE_BAKE=true docker compose
 ENV_MERGED = --env-file .env.merged
 
+POSTGRES = compose.postgres.yml
 BASIC = compose.basic.yml
 LOCAL = compose.local.yml
 VPS = compose.vps.yml
 
-.PHONY: basic basic-stop local local-stop
+# Postgres standalone (for dev with nextjs terminal server)
+.PHONY: postgres postgres-stop postgres-clear
+
+postgres:
+	$(DC) -f $(POSTGRES) up -d --build
+	@echo "🚀 Postgres is running on port 5432 ✅"
+	@echo "📝 Now start Nextjs with 'pnpm auto'"
+
+postgres-stop:
+	$(DC) -f $(POSTGRES) down
+
+postgres-clear:
+	$(DC) -f $(POSTGRES) down -v
 
 # Build (without portainer)
+.PHONY: basic basic-stop basic-clear
+
 basic:
 	@make merge-env-basic
 	$(DC) $(ENV_MERGED) -f $(BASIC) up -d --build
@@ -43,7 +58,13 @@ basic-stop:
 	@make merge-env-basic
 	$(DC) $(ENV_MERGED) -f $(BASIC) down
 
+basic-clear:
+	@make merge-env-basic
+	$(DC) $(ENV_MERGED) -f $(BASIC) down -v
+
 # Build (for portainer local)
+.PHONY: local local-stop local-clear
+
 local:
 	@make merge-env-local
 	$(DC) $(ENV_MERGED) -f $(LOCAL) up -d --build
@@ -52,3 +73,7 @@ local:
 local-stop:
 	@make merge-env-local
 	$(DC) $(ENV_MERGED) -f $(LOCAL) down
+
+local-clear:
+	@make merge-env-local
+	$(DC) $(ENV_MERGED) -f $(LOCAL) down -v
