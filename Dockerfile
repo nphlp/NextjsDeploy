@@ -75,6 +75,7 @@ ENV HOSTNAME=0.0.0.0
 
 CMD ["/bin/sh", "-c", "\
     echo '🚀 Starting Next.js application...' && \
+    sleep 5 && \
     pnpm prisma:deploy && \
     pnpm fixtures:setup && \
     node server.js \

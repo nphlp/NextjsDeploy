@@ -4,7 +4,6 @@
 
 BASE = .env
 OUTPUT = .env.merged
-OUTPUT_VPS = .env.override.vps
 
 OVERRIDE_BASIC = .env.override.basic
 OVERRIDE_LOCAL = .env.override.local
@@ -19,7 +18,7 @@ merge-env-local:
 	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_LOCAL) --output $(OUTPUT)
 
 merge-env-vps:
-	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_VPS) --output $(OUTPUT_VPS)
+	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_VPS) --output .env.vps
 
 #####################
 #   Nextjs server   #
@@ -34,7 +33,7 @@ LOCAL = compose.local.yml
 VPS = compose.vps.yml
 
 # Postgres standalone (for dev with nextjs terminal server)
-.PHONY: postgres postgres-stop postgres-clean
+.PHONY: postgres postgres-stop postgres-clear
 
 postgres:
 	$(DC) -f $(POSTGRES) up -d --build
@@ -44,11 +43,11 @@ postgres:
 postgres-stop:
 	$(DC) -f $(POSTGRES) down
 
-postgres-clean:
+postgres-clear:
 	$(DC) -f $(POSTGRES) down -v
 
 # Build (without portainer)
-.PHONY: basic basic-stop basic-clean
+.PHONY: basic basic-stop basic-clear
 
 basic:
 	@make merge-env-basic
@@ -59,12 +58,12 @@ basic-stop:
 	@make merge-env-basic
 	$(DC) $(ENV_MERGED) -f $(BASIC) down
 
-basic-clean:
+basic-clear:
 	@make merge-env-basic
 	$(DC) $(ENV_MERGED) -f $(BASIC) down -v
 
 # Build (for portainer local)
-.PHONY: local local-stop local-clean
+.PHONY: local local-stop local-clear
 
 local:
 	@make merge-env-local
@@ -75,6 +74,6 @@ local-stop:
 	@make merge-env-local
 	$(DC) $(ENV_MERGED) -f $(LOCAL) down
 
-local-clean:
+local-clear:
 	@make merge-env-local
 	$(DC) $(ENV_MERGED) -f $(LOCAL) down -v
