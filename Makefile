@@ -51,7 +51,7 @@ postgres-clear:
 
 dev:
 	@make postgres
-	@pnpm auto
+	@pnpm auto && make postgres-stop
 
 dev-stop:
 	@make postgres-stop

@@ -120,9 +120,16 @@ export default function TodoItem(props: TodoItemProps) {
     );
 }
 
-export function TodoItemSkeleton() {
-    const width = (min: number, max: number) => {
-        const widthInRange = Math.floor(Math.random() * (max - min + 1)) + min;
+type TodoItemSkeletonProps = {
+    key?: number;
+};
+
+export function TodoItemSkeleton(props: TodoItemSkeletonProps) {
+    const { key } = props;
+
+    const width = (min: number, max: number, index: number = 0) => {
+        const random = [0.8, 0.2, 0.95, 0.6, 0.3];
+        const widthInRange = Math.floor(random[index % random.length] * (max - min + 1)) + min;
         return `${widthInRange}%`;
     };
 
@@ -135,7 +142,7 @@ export function TodoItemSkeleton() {
                 )}
             >
                 <div
-                    style={{ width: width(50, 90) }}
+                    style={{ width: width(50, 90, key) }}
                     className={combo("h-5", "relative top-1/2 -translate-y-1/2", "bg-gray-low animate-pulse rounded")}
                 />
             </div>
@@ -146,7 +153,7 @@ export function TodoItemSkeleton() {
                 )}
             >
                 <div
-                    style={{ width: width(65, 75) }}
+                    style={{ width: width(65, 75, key) }}
                     className={combo("h-5", "relative top-1/2 -translate-y-1/2", "bg-gray-low animate-pulse rounded")}
                 />
                 <div
