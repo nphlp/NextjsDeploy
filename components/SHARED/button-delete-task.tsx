@@ -52,12 +52,12 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
             <Modal
                 className={{
                     cardContainer: "px-5 py-16",
-                    card: "max-w-[400px] min-w-[200px] space-y-5",
+                    card: "max-w-[500px] min-w-[250px] space-y-5",
                 }}
                 setIsModalOpen={setIsModalOpen}
                 isModalOpen={isModalOpen}
                 focusToRef={buttonRef}
-                withCross
+                withCloseButton
             >
                 <h2 className="text-lg font-bold">Confirmer la suppression</h2>
                 <p>Êtes-vous sûr de vouloir supprimer cette tâche ?</p>

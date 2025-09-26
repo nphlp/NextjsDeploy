@@ -30,7 +30,7 @@ type ModalProps = {
     noBackgroundBlur?: boolean;
     noBackgroundColor?: boolean;
     noBackgroundButton?: boolean;
-    withCross?: boolean;
+    withCloseButton?: boolean;
     fixedToTop?: boolean;
 
     // Animation
@@ -61,13 +61,13 @@ type ModalProps = {
  *     setIsModalOpen={setIsModalOpen}
  *     isModalOpen={isModalOpen}
  *     focusToRef={buttonRef}
- *     withCross
+ *     withCloseButton
  * >
  *     <div>
  *         <h1>Title</h1>
  *         <p>Description</p>
  *     </div>
- *     <Button label="Close" onClick={() => setIsModalOpen(false)} focusToRef={buttonRef} />
+ *     <Button label="Close" ref={buttonRef} onClick={() => setIsModalOpen(false)} />
  * </Modal>
  * ```
  */
@@ -79,7 +79,7 @@ export default function Modal(props: ModalProps) {
         noBackgroundBlur = false,
         noBackgroundButton = false,
         noBackgroundColor = false,
-        withCross = false,
+        withCloseButton = false,
         fixedToTop = false,
         noAnimation = false,
         duration = 0.3,
@@ -156,7 +156,7 @@ export default function Modal(props: ModalProps) {
                     >
                         <CrossButton
                             setIsModalOpen={setIsModalOpen}
-                            withCross={withCross}
+                            withCloseButton={withCloseButton}
                             className={className}
                             variant={variant}
                         />
@@ -170,7 +170,7 @@ export default function Modal(props: ModalProps) {
 
 type CrossButtonProps = {
     setIsModalOpen: (visible: boolean) => void;
-    withCross: boolean;
+    withCloseButton: boolean;
     variant: ModalVariant;
     className?: {
         crossButton?: string;
@@ -179,9 +179,9 @@ type CrossButtonProps = {
 };
 
 const CrossButton = (props: CrossButtonProps) => {
-    const { className, setIsModalOpen, withCross, variant } = props;
+    const { className, setIsModalOpen, withCloseButton, variant } = props;
 
-    if (!withCross) return null;
+    if (!withCloseButton) return null;
 
     return (
         <button

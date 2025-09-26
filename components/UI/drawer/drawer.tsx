@@ -3,7 +3,7 @@
 import { combo } from "@lib/combo";
 import { X } from "lucide-react";
 import { motion } from "motion/react";
-import { ReactNode } from "react";
+import { ReactNode, RefObject, useEffect } from "react";
 import { DrawerVariant, theme } from "./theme";
 
 export type DrawerClassName = {
@@ -21,6 +21,7 @@ export type DrawerClassName = {
 type DrawerProps = {
     setIsDrawerOpen: (visible: boolean) => void;
     isDrawerOpen: boolean;
+    focusToRef?: RefObject<HTMLElement | null>;
 
     // Config
     noBackgroundBlur?: boolean;
@@ -43,6 +44,7 @@ export default function Drawer(props: DrawerProps) {
     const {
         isDrawerOpen,
         setIsDrawerOpen,
+        focusToRef,
         noBackgroundBlur = false,
         noBackgroundButton = false,
         noBackgroundColor = false,
@@ -55,6 +57,13 @@ export default function Drawer(props: DrawerProps) {
     } = props;
 
     const animationDuration = noAnimation ? 0 : duration;
+
+    // Auto focus to the given ref when modal is opened
+    useEffect(() => {
+        if (isDrawerOpen && focusToRef?.current) {
+            requestAnimationFrame(() => focusToRef.current?.focus());
+        }
+    }, [isDrawerOpen, focusToRef]);
 
     return (
         <div
