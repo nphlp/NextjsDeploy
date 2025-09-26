@@ -14,11 +14,13 @@ export type FetchHookProps<
     initialData?: FetchResponse<Input, R, P>;
 };
 
+export type RefetchType = (offsetTime?: number) => void;
+
 export type FetchHookResponse<Input, R extends Route<Input>, P extends Params<Input, R>> = {
     data: FetchResponse<Input, R, P> | undefined;
     isLoading: boolean;
     error: string | undefined;
-    refetch: (offsetTime?: number) => void;
+    refetch: RefetchType;
 };
 
 export const useFetch = <

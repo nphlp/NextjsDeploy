@@ -1,46 +1,16 @@
 "use client";
 
-import Button from "@comps/UI/button/button";
+import ButtonDeleteTask from "@comps/SHARED/button-delete-task";
+import SelectUpdateTaskStatus from "@comps/SHARED/select-update-task-status";
 import Link from "@comps/UI/button/link";
 import Input from "@comps/UI/input/input";
-import Select from "@comps/UI/select/select";
 import { combo } from "@lib/combo";
 import { TaskModel } from "@services/types";
-import { CircleCheckBig, CircleDashed, LoaderCircle, Pencil, X } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { Route } from "next";
 import { useContext, useState } from "react";
-import { DeleteTask, UpdateTask } from "@/actions/Task";
+import { UpdateTask } from "@/actions/Task";
 import { Context } from "./context";
-
-const options = [
-    {
-        slug: "TODO",
-        label: (
-            <div className="flex items-center gap-2">
-                <CircleDashed className="size-4" />
-                <span>À faire</span>
-            </div>
-        ),
-    },
-    {
-        slug: "IN_PROGRESS",
-        label: (
-            <div className="flex items-center gap-2">
-                <LoaderCircle className="size-4" />
-                <span>En cours</span>
-            </div>
-        ),
-    },
-    {
-        slug: "DONE",
-        label: (
-            <div className="flex items-center gap-2">
-                <CircleCheckBig className="size-4" />
-                <span>Terminé</span>
-            </div>
-        ),
-    },
-];
 
 type TodoItemProps = {
     task: TaskModel;
@@ -48,28 +18,16 @@ type TodoItemProps = {
 
 export default function TodoItem(props: TodoItemProps) {
     const { task } = props;
-    const { id } = task;
+    const { slug } = task;
 
     const [title, setTitle] = useState<string>(task.title);
-    const [status, setStatus] = useState<string>(task.status);
 
     const { refetch } = useContext(Context);
 
     const handleTitleUpdate = async () => {
         if (title === task.title) return;
         if (!title.length) return refetch();
-        await UpdateTask({ id, title });
-        refetch();
-    };
-
-    const handleStatusUpdate = async (statusChange: string) => {
-        if (statusChange === task.status) return;
-        await UpdateTask({ id, status: statusChange });
-        refetch();
-    };
-
-    const handleDelete = async () => {
-        await DeleteTask({ id });
+        await UpdateTask({ slug, title });
         refetch();
     };
 
@@ -87,18 +45,10 @@ export default function TodoItem(props: TodoItemProps) {
                 }}
                 noLabel
             />
-            <Select
-                label={`Status ${task.status}`}
-                className={{
-                    component: "w-[220px] whitespace-nowrap",
-                    button: "bg-background text-foreground border-gray-low",
-                }}
-                onSelectChange={handleStatusUpdate}
-                setSelected={setStatus}
-                selected={status}
-                options={options}
-                canNotBeEmpty
-                noLabel
+            <SelectUpdateTaskStatus
+                task={task}
+                refetch={refetch}
+                className={{ component: "w-[150px] shrink-0 max-md:hidden" }}
             />
             <Link
                 label={`Edit ${task.title}`}
@@ -108,14 +58,11 @@ export default function TodoItem(props: TodoItemProps) {
             >
                 <Pencil />
             </Link>
-            <Button
-                label={`Status ${task.status}`}
-                variant="outline"
-                className={{ button: "bg-background text-foreground border-gray-low px-1.5" }}
-                onClick={handleDelete}
-            >
-                <X />
-            </Button>
+            <ButtonDeleteTask
+                task={task}
+                refetch={refetch}
+                className={{ button: "max-xs:hidden bg-background text-foreground border-gray-low px-1.5" }}
+            />
         </div>
     );
 }
@@ -148,6 +95,7 @@ export function TodoItemSkeleton(props: TodoItemSkeletonProps) {
             </div>
             <div
                 className={combo(
+                    "max-md:hidden",
                     "relative h-[38px] w-[220px] px-4",
                     "text-foreground bg-background border-gray-low animate-pulse rounded-lg border",
                 )}
@@ -166,6 +114,21 @@ export function TodoItemSkeleton(props: TodoItemSkeletonProps) {
             </div>
             <div
                 className={combo(
+                    "relative size-[38px] shrink-0",
+                    "text-foreground bg-background border-gray-low animate-pulse rounded-lg border",
+                )}
+            >
+                <div
+                    className={combo(
+                        "size-5",
+                        "relative top-1/2 left-1/2 -translate-1/2",
+                        "bg-gray-low animate-pulse rounded",
+                    )}
+                />
+            </div>
+            <div
+                className={combo(
+                    "max-xs:hidden",
                     "relative size-[38px] shrink-0",
                     "text-foreground bg-background border-gray-low animate-pulse rounded-lg border",
                 )}

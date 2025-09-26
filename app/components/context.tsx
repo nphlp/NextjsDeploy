@@ -1,12 +1,13 @@
 "use client";
 
 import { TaskModel } from "@services/types";
+import { RefetchType } from "@utils/FetchHook";
 import { createContext } from "react";
 
 export type ContextType = {
     data: TaskModel[] | undefined;
     isLoading: boolean;
-    refetch: (offsetTime?: number) => void;
+    refetch: RefetchType;
 };
 
 const initialContextData: ContextType = {

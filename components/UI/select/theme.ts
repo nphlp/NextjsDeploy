@@ -2,7 +2,7 @@ import { combo } from "@lib/combo";
 import { mergeStylesAndStructure } from "@lib/mergeStyles";
 import { SelectClassName } from "./select";
 
-export type VariantType = "default" | "dark" | "none";
+export type VariantType = "default" | "none";
 
 type StructureType = {
     [key in keyof SelectClassName]-?: SelectClassName[key];
@@ -22,7 +22,7 @@ const structure: StructureType = {
     buttonGroup: combo("relative"),
     button: combo(
         // Text
-        "text-black text-left",
+        "text-foreground text-left whitespace-nowrap",
         // Size and padding
         "w-full",
         // Outline
@@ -63,7 +63,7 @@ const structure: StructureType = {
         // Border and radius
         "rounded",
         // Text
-        "text-black text-sm",
+        "text-foreground text-sm",
         // Size and padding
         "w-full px-2 py-1",
         // Accessibility
@@ -76,10 +76,10 @@ const structure: StructureType = {
 const styles: StylesType = {
     default: {
         component: combo(""),
-        label: combo("text-gray-700 text-sm font-semibold"),
+        label: combo("text-gray-middle text-sm font-semibold"),
 
-        displayedValue: combo("text-black"),
-        placeholder: combo("text-gray-400"),
+        displayedValue: combo("text-foreground"),
+        placeholder: combo("text-gray-middle"),
 
         buttonGroup: combo(""),
         button: combo(
@@ -88,9 +88,9 @@ const styles: StylesType = {
             // Size and padding
             "px-4 py-1.5 w-full",
             // Border and radius
-            "border border-gray-300 focus:border-gray-500 rounded-lg",
+            "border border-gray-low focus:border-gray-high rounded-lg",
             // Background
-            "bg-white",
+            "bg-background",
         ),
 
         subButton: combo(
@@ -99,7 +99,7 @@ const styles: StylesType = {
             // Border and radius
             "rounded",
         ),
-        subCross: combo("stroke-gray-600"),
+        subCross: combo("stroke-gray-high"),
 
         subDiv: combo(
             // Position
@@ -107,7 +107,7 @@ const styles: StylesType = {
             // Accessibility
             "pointer-events-none",
         ),
-        subChevron: combo("stroke-gray-600 translate-y-px"),
+        subChevron: combo("stroke-gray-high translate-y-px"),
 
         optionList: combo(
             // Position
@@ -115,73 +115,17 @@ const styles: StylesType = {
             // Size and padding
             "w-full p-1",
             // Border and radius
-            "border border-gray-300 rounded-lg",
+            "border border-gray-low rounded-lg",
             // Background
-            "bg-white",
+            "bg-background",
         ),
         optionButton: combo(
             // Text
-            "text-black",
+            "text-foreground",
             // Background
-            "bg-white hover:bg-gray-200",
+            "bg-background hover:bg-gray-low",
             // Outline
-            "outline-none focus:bg-gray-200",
-        ),
-        optionIcon: combo(""),
-        optionLabel: combo(""),
-    },
-    dark: {
-        component: combo(""),
-        label: combo("text-gray-200 text-sm font-semibold"),
-
-        displayedValue: combo("text-white"),
-        placeholder: combo("text-gray-400"),
-
-        buttonGroup: combo(""),
-        button: combo(
-            // Text
-            "text-white text-left",
-            // Size and padding
-            "px-4 py-1.5 w-full",
-            // Border and radius
-            "border border-gray-500 focus:border-gray-300 rounded-lg",
-            // Background
-            "bg-black",
-        ),
-
-        subButton: combo(
-            // Position
-            "absolute right-2 top-1/2 -translate-y-1/2",
-            // Border and radius
-            "rounded",
-        ),
-        subCross: combo("stroke-gray-300"),
-
-        subDiv: combo(
-            // Position
-            "absolute right-2 top-1/2 -translate-y-1/2",
-            // Accessibility
-            "pointer-events-none",
-        ),
-        subChevron: combo("stroke-gray-300 translate-y-px"),
-
-        optionList: combo(
-            // Position
-            "absolute",
-            // Size and padding
-            "w-full p-1",
-            // Border and radius
-            "border border-gray-500 rounded-lg",
-            // Background
-            "bg-black",
-        ),
-        optionButton: combo(
-            // Text
-            "text-white",
-            // Background
-            "bg-black hover:bg-gray-700",
-            // Outline
-            "outline-none focus:bg-gray-700",
+            "outline-none focus:bg-gray-low",
         ),
         optionIcon: combo(""),
         optionLabel: combo(""),
