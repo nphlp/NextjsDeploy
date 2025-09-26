@@ -1,3 +1,5 @@
+include .env
+
 ########################
 #    Merge Env Files   #
 ########################
@@ -46,33 +48,42 @@ postgres-stop:
 postgres-clear:
 	$(DC) -f $(POSTGRES) down -v
 
-# Dev shortcut (nextjs in terminal + postgres in docker)
-.PHONY: dev dev-stop dev-clear
+# Dev and prod shortcut (nextjs in terminal + postgres in docker)
+.PHONY: dev prod ngrok
 
 dev:
 	@make postgres
 	@pnpm auto && make postgres-stop && make postgres-stop
 	@echo "🚀 Access the app at: http://localhost:3000 ✅"
 
-dev-stop:
-	@make postgres-stop
-
-dev-clear:
-	@make postgres-clear
-
-# Prod shortcut (nextjs in terminal + postgres in docker)
-.PHONY: prod prod-stop prod-clear
-
 prod:
 	@make postgres
 	@pnpm auto:prod && make postgres-stop && make postgres-stop
 	@echo "🚀 Access the app at: http://localhost:3000 ✅"
 
-prod-stop:
-	@make postgres-stop
-
-prod-clear:
-	@make postgres-clear
+ngrok:
+	@if [ -z "$(NGROK_URL)" ]; then \
+		echo "ℹ️ NGROK_URL is not set in .env file"; \
+		echo; \
+		echo "1. Create an account at https://ngrok.com/"; \
+		echo "2. Setup your authtoken from https://dashboard.ngrok.com/get-started/setup"; \
+		echo "3. Get a static URL for free at https://dashboard.ngrok.com/domains"; \
+		echo "4. Add the NGROK_URL to your .env file"; \
+		echo "5. Run 'make ngrok' to start the tunnel 🌐"; \
+		exit 1; \
+	fi
+	@if curl -s http://localhost:3000 > /dev/null 2>&1; then \
+		echo "🚀 Starting ngrok tunnel for: $(NGROK_URL)"; \
+		ngrok http --url="$(NGROK_URL)" http://localhost:3000; \
+	else \
+		echo; \
+		echo "👋 Please, start the Nextjs server first with the following command"; \
+		echo; \
+		echo "NEXT_PUBLIC_BASE_URL=$(NGROK_URL) make dev"; \
+		echo; \
+		echo "🔥 Then, restart Ngrok Tunnel in another terminal instance with : make ngrok"; \
+		echo; \
+	fi
 
 # Build (without portainer)
 .PHONY: basic basic-stop basic-clear
