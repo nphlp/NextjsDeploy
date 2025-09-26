@@ -1,16 +1,18 @@
 import Link from "@comps/UI/button/link";
 import { combo } from "@lib/combo";
-import { TaskFindManyServer, TaskFindUniqueServer } from "@services/server";
+import { TaskFindUniqueServer } from "@services/server";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
 import { notFound } from "next/navigation";
 
-export const generateStaticParams = async () => {
-    const articles = await TaskFindManyServer({
-        select: { slug: true },
-    });
+// export const generateStaticParams = async () => {
+//     const articles = await TaskFindManyServer({
+//         select: { slug: true },
+//     });
 
-    return articles.map((article) => ({ slug: article.slug }));
-};
+//     return articles.map((article) => ({ slug: article.slug }));
+// };
+
+export const dynamic = "force-dynamic";
 
 type PageProps = {
     params: Promise<{ slug: string }>;

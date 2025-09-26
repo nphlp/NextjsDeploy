@@ -51,12 +51,27 @@ postgres-clear:
 
 dev:
 	@make postgres
-	@pnpm auto && make postgres-stop
+	@pnpm auto && make postgres-stop && make postgres-stop
+	@echo "🚀 Access the app at: http://localhost:3000 ✅"
 
 dev-stop:
 	@make postgres-stop
 
 dev-clear:
+	@make postgres-clear
+
+# Prod shortcut (nextjs in terminal + postgres in docker)
+.PHONY: prod prod-stop prod-clear
+
+prod:
+	@make postgres
+	@pnpm auto:prod && make postgres-stop && make postgres-stop
+	@echo "🚀 Access the app at: http://localhost:3000 ✅"
+
+prod-stop:
+	@make postgres-stop
+
+prod-clear:
 	@make postgres-clear
 
 # Build (without portainer)
