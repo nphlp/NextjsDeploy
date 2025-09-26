@@ -12,7 +12,7 @@ export default function TodoList() {
         return (
             <div className="space-y-2">
                 {Array.from({ length }, (_, index) => (
-                    <TodoItemSkeleton key={index} />
+                    <TodoItemSkeleton key={index} index={index} />
                 ))}
             </div>
         );

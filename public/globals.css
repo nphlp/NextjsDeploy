@@ -7,6 +7,7 @@
 */
 
 @import "tailwindcss";
+@source "../components"
 
 @custom-variant dark (&:is(.dark *));
 
@@ -52,8 +53,9 @@
 /* Theme extensions */
 @theme {
     /* Breakpoints Extension */
-    --breakpoint-xxs: 34rem;
-    --breakpoint-xs: 36rem;
+    --breakpoint-3xs: 28rem;
+    --breakpoint-2xs: 28rem;
+    --breakpoint-xs: 32rem;
     --breakpoint-3xl: 120rem;
 
     /* Font Size Extension */

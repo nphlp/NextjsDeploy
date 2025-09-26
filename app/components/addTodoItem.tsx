@@ -31,6 +31,7 @@ export default function AddTodoItem() {
                     input: "text-foreground bg-background border-gray-low",
                 }}
                 noLabel
+                autoFocus
             />
             <Button
                 type="submit"

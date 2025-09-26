@@ -2,7 +2,7 @@
 
 import Loader from "@comps/UI/loader";
 import { combo } from "@lib/combo";
-import { ButtonHTMLAttributes } from "react";
+import { ButtonHTMLAttributes, Ref } from "react";
 import { ButtonVariant, theme } from "./theme";
 
 export type ButtonClassName = {
@@ -24,6 +24,9 @@ export type ButtonProps = {
     noPointer?: boolean;
     noRing?: boolean;
     focusVisible?: boolean;
+
+    // Optional
+    ref?: Ref<HTMLButtonElement | null>;
 } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className">;
 
 /**

@@ -1,7 +1,7 @@
 "use client";
 
 import { combo } from "@lib/combo";
-import { ChangeEvent, InputHTMLAttributes, MouseEvent } from "react";
+import { ChangeEvent, InputHTMLAttributes, MouseEvent, RefObject } from "react";
 import { InputVariant, theme } from "./theme";
 
 export type InputClassName = {
@@ -23,6 +23,7 @@ export type InputProps = {
     noLabel?: boolean;
 
     // Optional
+    ref?: RefObject<HTMLInputElement | null>;
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
     required?: boolean;
 } & Omit<InputHTMLAttributes<HTMLInputElement>, "className" | "label" | "value" | "onChange" | "required">;

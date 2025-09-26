@@ -2,7 +2,7 @@ import { combo } from "@lib/combo";
 import { mergeStylesAndStructure } from "../../../lib/mergeStyles";
 import { ButtonClassName } from "./button";
 
-export type ButtonVariant = "default" | "outline" | "ghost" | "underline" | "none";
+export type ButtonVariant = "default" | "destructive" | "outline" | "ghost" | "underline" | "none";
 
 type StructureType = {
     [key in keyof ButtonClassName]-?: ButtonClassName[key];
@@ -31,6 +31,21 @@ export const styles: StylesType = {
             "text-white bg-black",
             // Hover
             "hover:bg-gray-700",
+            // Padding
+            "px-4 py-1.5",
+            // Rounded
+            "rounded-lg",
+        ),
+        isLoading: combo("hover:bg-black"),
+        isDisabled: combo("bg-gray-700 text-gray-300", "hover:bg-gray-700 hover:text-gray-300"),
+        loader: combo("bg-white"),
+    },
+    destructive: {
+        button: combo(
+            // Normal
+            "text-white bg-red-600",
+            // Hover
+            "hover:bg-red-700",
             // Padding
             "px-4 py-1.5",
             // Rounded

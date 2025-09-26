@@ -1,43 +1,14 @@
 services:
-    ssl-manager:
-        container_name: ssl-manager-${VPS_SUB_DOMAIN}
-        build:
-            context: ./
-            args:
-                - VPS_SUB_DOMAIN=${VPS_SUB_DOMAIN}
-            dockerfile: ./Dockerfile.ssl
-        labels:
-            - traefik.enable=false
-        volumes:
-            - ./certs-${VPS_SUB_DOMAIN}:/certs
-
     postgres:
         container_name: postgres-${VPS_SUB_DOMAIN}
         image: postgres:16-alpine
         restart: unless-stopped
-        depends_on:
-            ssl-manager:
-                condition: service_completed_successfully
         environment:
             - POSTGRES_DB=${POSTGRES_DB}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
         volumes:
             # PostgreSQL data (persistent volume)
             - postgres-volume:/var/lib/postgresql/data
-            # SSL server certs (read-only)
-            - ./certs-${VPS_SUB_DOMAIN}:/etc/ssl/certs:ro
-        command:
-            [
-                "postgres",
-                "-c",
-                "ssl=on",
-                "-c",
-                "ssl_cert_file=/etc/ssl/certs/server-cert.pem",
-                "-c",
-                "ssl_key_file=/etc/ssl/certs/server-key.pem",
-                "-c",
-                "ssl_ca_file=/etc/ssl/certs/ca.pem",
-            ]
         healthcheck:
             test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
             interval: 2s
@@ -63,14 +34,9 @@ services:
                 - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
                 - POSTGRES_DB=${POSTGRES_DB}
                 - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
-            dockerfile: ./Dockerfile.ssg
+            dockerfile: ./Dockerfile
             target: runner
         restart: unless-stopped
-        volumes:
-            # SSL client certs (read-only)
-            - ./certs-${VPS_SUB_DOMAIN}:/app/certs:ro
-            # Next.js cache (persistent volume)
-            # - nextjs-volume:/app/.next/cache
         depends_on:
             postgres:
                 condition: service_healthy
@@ -89,9 +55,6 @@ volumes:
     postgres-volume:
         name: postgres-volume-${VPS_SUB_DOMAIN}
         driver: local
-    # nextjs-volume:
-    #     name: nextjs-volume-${VPS_SUB_DOMAIN}
-    #     driver: local
 
 networks:
     app-network:
