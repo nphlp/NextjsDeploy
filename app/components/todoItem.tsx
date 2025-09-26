@@ -1,15 +1,14 @@
 "use client";
 
 import ButtonDeleteTask from "@comps/SHARED/button-delete-task";
+import InputUpdateTaskTitle from "@comps/SHARED/input-update-task-title";
 import SelectUpdateTaskStatus from "@comps/SHARED/select-update-task-status";
 import Link from "@comps/UI/button/link";
-import Input from "@comps/UI/input/input";
 import { combo } from "@lib/combo";
 import { TaskModel } from "@services/types";
 import { Pencil } from "lucide-react";
 import { Route } from "next";
-import { useContext, useState } from "react";
-import { UpdateTask } from "@/actions/Task";
+import { useContext } from "react";
 import { Context } from "./context";
 
 type TodoItemProps = {
@@ -18,32 +17,18 @@ type TodoItemProps = {
 
 export default function TodoItem(props: TodoItemProps) {
     const { task } = props;
-    const { slug } = task;
-
-    const [title, setTitle] = useState<string>(task.title);
 
     const { refetch } = useContext(Context);
 
-    const handleTitleUpdate = async () => {
-        if (title === task.title) return;
-        if (!title.length) return refetch();
-        await UpdateTask({ slug, title });
-        refetch();
-    };
-
     return (
         <div className="flex flex-row gap-2">
-            <Input
-                label={`Task ${task.title}`}
-                autoComplete="off"
-                onBlur={handleTitleUpdate}
-                setValue={setTitle}
-                value={title}
+            <InputUpdateTaskTitle
+                task={task}
+                refetch={refetch}
                 className={{
                     component: "w-full",
                     input: "text-foreground bg-background border-gray-low",
                 }}
-                noLabel
             />
             <SelectUpdateTaskStatus
                 task={task}
@@ -60,8 +45,8 @@ export default function TodoItem(props: TodoItemProps) {
             </Link>
             <ButtonDeleteTask
                 task={task}
-                refetch={refetch}
                 className={{ button: "max-xs:hidden bg-background text-foreground border-gray-low px-1.5" }}
+                refetch={refetch}
             />
         </div>
     );

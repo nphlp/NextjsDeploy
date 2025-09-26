@@ -1,8 +1,8 @@
 import Link from "@comps/UI/button/link";
 import { TaskFindUniqueServer } from "@services/server";
 import { notFound } from "next/navigation";
-import Form from "./components/form";
 import Provider from "./components/provider";
+import TodoEdition from "./components/todoEdition";
 
 // export const generateStaticParams = async () => {
 //     const articles = await TaskFindManyServer({
@@ -27,10 +27,9 @@ export default async function Page(props: PageProps) {
     if (!task) notFound();
 
     return (
-        <div className="space-y-4 p-4">
-            <h1 className="text-2xl font-bold">{task.title}</h1>
+        <div className="w-full max-w-[600px] space-y-8 px-4 py-4 sm:px-12">
             <Provider initialData={task}>
-                <Form />
+                <TodoEdition />
             </Provider>
             <Link label="Retour à la liste" href="/" />
         </div>

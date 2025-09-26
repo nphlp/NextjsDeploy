@@ -3,7 +3,7 @@
 import { combo } from "@lib/combo";
 import { X } from "lucide-react";
 import { motion } from "motion/react";
-import { ReactNode } from "react";
+import { ReactNode, RefObject, useEffect } from "react";
 import { ModalVariant, theme } from "./theme";
 
 export type ModalClassName = {
@@ -24,6 +24,7 @@ export type ModalClassName = {
 type ModalProps = {
     setIsModalOpen: (visible: boolean) => void;
     isModalOpen: boolean;
+    focusToRef?: RefObject<HTMLElement | null>;
 
     // Config
     noBackgroundBlur?: boolean;
@@ -49,6 +50,7 @@ type ModalProps = {
  * ```tsx
  * // Define the state
  * const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+ * const buttonRef = useRef<HTMLButtonElement>(null);
  *
  * // Use the component
  * <Modal
@@ -58,13 +60,14 @@ type ModalProps = {
  *     }}
  *     setIsModalOpen={setIsModalOpen}
  *     isModalOpen={isModalOpen}
+ *     focusToRef={buttonRef}
  *     withCross
  * >
  *     <div>
  *         <h1>Title</h1>
  *         <p>Description</p>
  *     </div>
- *     <Button label="Close" onClick={() => setIsModalOpen(false)} />
+ *     <Button label="Close" onClick={() => setIsModalOpen(false)} focusToRef={buttonRef} />
  * </Modal>
  * ```
  */
@@ -72,6 +75,7 @@ export default function Modal(props: ModalProps) {
     const {
         isModalOpen,
         setIsModalOpen,
+        focusToRef,
         noBackgroundBlur = false,
         noBackgroundButton = false,
         noBackgroundColor = false,
@@ -85,6 +89,13 @@ export default function Modal(props: ModalProps) {
     } = props;
 
     const animationDuration = noAnimation ? 0 : duration;
+
+    // Auto focus to the given ref when modal is opened
+    useEffect(() => {
+        if (isModalOpen && focusToRef?.current) {
+            requestAnimationFrame(() => focusToRef.current?.focus());
+        }
+    }, [isModalOpen, focusToRef]);
 
     return (
         <div className={combo(!isModalOpen && "pointer-events-none", theme[variant].component, className?.component)}>
