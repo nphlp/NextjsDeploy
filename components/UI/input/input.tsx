@@ -83,6 +83,14 @@ export default function Input(props: InputProps) {
                 required={required}
                 value={value}
                 {...others}
+                {...(autoComplete === "off" && {
+                    // 1Password
+                    "data-1p-ignore": "true",
+                    // LastPass
+                    "data-lpignore": "true",
+                    // ProtonPass
+                    "data-protonpass-ignore": "true",
+                })}
             />
         </label>
     );

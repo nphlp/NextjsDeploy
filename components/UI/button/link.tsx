@@ -3,7 +3,7 @@
 import { combo } from "@lib/combo";
 import { Route } from "next";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
-import { AnchorHTMLAttributes, MouseEvent } from "react";
+import { AnchorHTMLAttributes, MouseEvent, ReactNode } from "react";
 import { ButtonVariant, theme } from "./theme";
 
 export type LinkProps<T extends string> = {
@@ -17,11 +17,16 @@ export type LinkProps<T extends string> = {
     noPointer?: boolean;
     noRing?: boolean;
     noPadding?: boolean;
+
+    // Events
+    onClick?: (e: MouseEvent<HTMLAnchorElement>) => void;
+
+    // Optional
+    children?: ReactNode;
+    legacyProps?: AnchorHTMLAttributes<HTMLAnchorElement>;
 } &
     // Nextjs Link props
-    Pick<NextLinkProps<T>, "replace" | "scroll" | "prefetch" | "onNavigate"> &
-    // Legacy Link props
-    Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href">;
+    Pick<NextLinkProps<T>, "replace" | "scroll" | "prefetch" | "onNavigate">;
 
 /**
  * Button component
@@ -67,10 +72,10 @@ const Link = <T extends string>(props: LinkProps<T>) => {
                     !noPointer && "cursor-not-allowed",
                     !noRing && "transition-all duration-150",
                     noPadding && "p-0",
-                    // Is loading or disabled styles
-                    theme[variant].isDisabled,
                     // Variant styles
                     theme[variant].button,
+                    // Is loading or disabled styles
+                    theme[variant].isDisabled,
                     className,
                 )}
             >

@@ -19,8 +19,8 @@ const structure: StructureType = {
         // Width
         "w-fit",
     ),
-    isLoading: combo(""),
-    isDisabled: combo(""),
+    isLoading: combo("disabled:cursor-progress"),
+    isDisabled: combo("disabled:cursor-not-allowed"),
     loader: combo(""),
 };
 
@@ -28,76 +28,79 @@ export const styles: StylesType = {
     default: {
         button: combo(
             // Normal
-            "text-white bg-black",
+            "text-background bg-foreground",
             // Hover
-            "hover:bg-gray-700",
+            "hover:bg-gray-high",
             // Padding
             "px-4 py-1.5",
             // Rounded
             "rounded-lg",
         ),
-        isLoading: combo("hover:bg-black"),
-        isDisabled: combo("bg-gray-700 text-gray-300", "hover:bg-gray-700 hover:text-gray-300"),
-        loader: combo("bg-white"),
-    },
-    destructive: {
-        button: combo(
-            // Normal
-            "text-white bg-red-600",
-            // Hover
-            "hover:bg-red-700",
-            // Padding
-            "px-4 py-1.5",
-            // Rounded
-            "rounded-lg",
-        ),
-        isLoading: combo("hover:bg-black"),
-        isDisabled: combo("bg-gray-700 text-gray-300", "hover:bg-gray-700 hover:text-gray-300"),
-        loader: combo("bg-white"),
+        isLoading: combo("hover:bg-foreground"),
+        isDisabled: combo("bg-gray-low text-gray-light", "hover:bg-gray-low hover:text-gray-light"),
+        loader: combo("bg-foreground"),
     },
     outline: {
         button: combo(
             // Normal
-            "border border-gray-300 bg-white text-gray-800",
+            "border border-gray-low bg-background text-gray-high",
             // Hover
-            "hover:border-gray-500 hover:bg-gray-100",
+            "hover:border-gray-middle hover:bg-gray-light",
             // Focus
-            "focus:border-gray-500",
+            "focus:border-gray-middle",
             // Padding
             "px-4 py-1.5",
             // Rounded
             "rounded-lg",
         ),
-        isLoading: combo("hover:border-gray-300 hover:bg-white"),
-        isDisabled: combo("border-gray-100 text-gray-300", "hover:bg-white hover:text-gray-300"),
+        isLoading: combo("hover:border-gray-low hover:bg-background"),
+        isDisabled: combo(
+            "border-gray-low text-gray-low",
+            "hover:border-gray-low hover:bg-background hover:text-gray-low",
+        ),
         loader: combo(""),
     },
     ghost: {
         button: combo(
             // Normal
-            "bg-white text-gray-800",
+            "bg-background text-gray-high",
             // Hover
-            "hover:bg-gray-100 hover:text-black",
+            "hover:bg-gray-light hover:text-foreground",
             // Padding
             "px-4 py-1.5",
             // Rounded
             "rounded-lg",
         ),
-        isLoading: combo("hover:bg-white hover:text-gray-800"),
-        isDisabled: combo("bg-white text-gray-400", "hover:bg-white hover:text-gray-400"),
+        isLoading: combo("hover:bg-background hover:text-gray-high"),
+        isDisabled: combo("bg-background text-gray-low", "hover:bg-background hover:text-gray-low"),
         loader: combo(""),
+    },
+    destructive: {
+        button: combo(
+            // Normal
+            "text-white bg-destructive",
+            // Hover
+            "hover:bg-destructive-hover",
+            // Padding
+            "px-4 py-1.5",
+            // Rounded
+            "rounded-lg",
+        ),
+        isLoading: combo("hover:bg-destructive"),
+        isDisabled: combo("bg-destructive-disabled dark:text-black", "hover:bg-bg-destructive-disabled"),
+        loader: combo("bg-foreground"),
     },
     underline: {
         button: combo(
             // Normal
-            "text-black",
+            "text-foreground",
             // Hover
             "hover:underline",
             // Rounded
             "rounded px-1",
         ),
-        isLoading: combo("hover:text-black hover:underline"),
-        isDisabled: combo("text-gray-400 hover:no-underline"),
+        isLoading: combo("hover:no-underline"),
+        isDisabled: combo("text-gray-low hover:no-underline"),
         loader: combo(""),
     },
     none: {

@@ -28,17 +28,11 @@ export default function AddTodoItem() {
                 value={title}
                 className={{
                     component: "w-full",
-                    input: "text-foreground bg-background border-gray-low",
                 }}
                 noLabel
                 autoFocus
             />
-            <Button
-                type="submit"
-                label="Ajouter"
-                variant="outline"
-                className={{ button: "bg-background text-foreground border-gray-low p-1.5" }}
-            >
+            <Button type="submit" label="Ajouter" variant="outline" className={{ button: "p-1.5" }}>
                 <ArrowUp />
             </Button>
         </form>

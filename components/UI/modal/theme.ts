@@ -2,7 +2,7 @@ import { combo } from "@lib/combo";
 import { mergeStylesAndStructure } from "@lib/mergeStyles";
 import { ModalClassName } from "./modal";
 
-export type ModalVariant = "default" | "dark" | "none";
+export type ModalVariant = "default" | "none";
 
 type StructureType = {
     [key in keyof ModalClassName]-?: ModalClassName[key];
@@ -56,31 +56,15 @@ export const styles: StylesType = {
         cardContainer: combo(""),
         card: combo(
             // Background and backdrop
-            "bg-white text-black shadow-md",
+            "bg-background text-foreground shadow-md",
             // Border and radius
-            "rounded-xl border border-gray-300",
+            "rounded-xl border border-gray-low",
         ),
         backgroundButton: combo(""),
         backgroundBlur: combo("backdrop-blur-[1.5px]"),
         backgroundColor: combo("bg-black/50"),
-        crossButton: combo("bg-transparent hover:bg-gray-200 focus:bg-gray-100"),
-        crossIcon: combo("stroke-[2.2px] text-black"),
-    },
-    dark: {
-        component: combo(""),
-        subComponent: combo(""),
-        cardContainer: combo(""),
-        card: combo(
-            // Background and backdrop
-            "bg-black text-white shadow-md",
-            // Border and radius
-            "rounded-xl border border-gray-700",
-        ),
-        backgroundButton: combo(""),
-        backgroundBlur: combo("backdrop-blur-[1.5px]"),
-        backgroundColor: combo("bg-black/50"),
-        crossButton: combo("bg-transparent hover:bg-gray-700 focus:bg-gray-800"),
-        crossIcon: combo("stroke-[2.2px] text-white"),
+        crossButton: combo("bg-transparent hover:bg-gray-low focus:bg-gray-low"),
+        crossIcon: combo("stroke-[2.2px] text-foreground"),
     },
     none: {
         component: combo(""),

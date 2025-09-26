@@ -27,8 +27,8 @@ const structure: StructureType = {
 export const styles: StylesType = {
     default: {
         component: combo(""),
-        label: combo("text-black"),
-        input: combo("text-black", "bg-white", "border-gray-300 focus:border-gray-500"),
+        label: combo("text-foreground"),
+        input: combo("text-foreground", "bg-background", "border-gray-low focus:border-gray-middle"),
     },
     none: {
         component: combo(""),

@@ -16,17 +16,14 @@ export default function TodoEdition() {
                 refetch={refetch}
                 className={{
                     component: "w-full",
-                    input: "text-foreground bg-background border-gray-low focus:border-gray-high rounded-none border-x-0 border-t-0 px-0.5 text-xl font-bold ring-transparent",
+                    input: "rounded-none border-x-0 border-t-0 px-0.5 text-xl font-bold ring-transparent",
                 }}
+                autoRedirection
                 autoFocus
             />
             <div className="flex justify-between gap-2">
                 <SelectUpdateTaskStatus task={data} refetch={refetch} className={{ component: "w-full" }} />
-                <ButtonDeleteTask
-                    task={data}
-                    className={{ button: "bg-background text-foreground border-gray-low px-1.5" }}
-                    redirectTo="/"
-                />
+                <ButtonDeleteTask task={data} className={{ button: "px-1.5" }} redirectTo="/" />
             </div>
         </div>
     );

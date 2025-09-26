@@ -7,9 +7,10 @@
 */
 
 @import "tailwindcss";
-@source "../components"
 
-@custom-variant dark (&:is(.dark *));
+@source "../components";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* Light theme */
 :root {
@@ -18,9 +19,14 @@
     --background: var(--color-white);
     --foreground: var(--color-black);
 
+    --gray-light: var(--color-gray-100);
     --gray-low: var(--color-gray-300);
     --gray-middle: var(--color-gray-500);
     --gray-high: var(--color-gray-700);
+
+    --destructive: var(--color-red-600);
+    --destructive-hover: var(--color-red-500);
+    --destructive-disabled: var(--color-red-200);
 }
 
 /* Dark theme */
@@ -30,9 +36,14 @@
     --background: var(--color-black);
     --foreground: var(--color-white);
 
+    --gray-light: var(--color-gray-900);
     --gray-low: var(--color-gray-700);
     --gray-middle: var(--color-gray-500);
     --gray-high: var(--color-gray-300);
+
+    --destructive: var(--color-red-500);
+    --destructive-hover: var(--color-red-600);
+    --destructive-disabled: var(--color-red-950);
 }
 
 /* Dark and light theme mapping */
@@ -42,9 +53,14 @@
     --color-background: var(--background);
     --color-foreground: var(--foreground);
 
+    --color-gray-light: var(--gray-light);
     --color-gray-low: var(--gray-low);
     --color-gray-middle: var(--gray-middle);
     --color-gray-high: var(--gray-high);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-hover: var(--destructive-hover);
+    --color-destructive-disabled: var(--destructive-disabled);
 
     --font-sans: var(--font-geist-sans);
     --font-mono: var(--font-geist-mono);

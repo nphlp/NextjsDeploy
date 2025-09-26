@@ -27,7 +27,6 @@ export default function TodoItem(props: TodoItemProps) {
                 refetch={refetch}
                 className={{
                     component: "w-full",
-                    input: "text-foreground bg-background border-gray-low",
                 }}
             />
             <SelectUpdateTaskStatus
@@ -39,15 +38,11 @@ export default function TodoItem(props: TodoItemProps) {
                 label={`Edit ${task.title}`}
                 variant="outline"
                 href={`/task/${task.slug}` as Route}
-                className="bg-background text-foreground border-gray-low px-1.5"
+                className="px-1.5"
             >
                 <Pencil />
             </Link>
-            <ButtonDeleteTask
-                task={task}
-                className={{ button: "max-xs:hidden bg-background text-foreground border-gray-low px-1.5" }}
-                refetch={refetch}
-            />
+            <ButtonDeleteTask task={task} className={{ button: "max-xs:hidden px-1.5" }} refetch={refetch} />
         </div>
     );
 }

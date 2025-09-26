@@ -11,8 +11,8 @@ export default function ThemeToggle() {
         <div className="flex gap-2">
             <Button
                 label="toggle-mode"
-                variant="outline"
-                className={{ button: "text-foreground hover:bg-gray-low border-gray-low bg-background p-1.5" }}
+                variant="ghost"
+                className={{ button: "p-1.5" }}
                 onClick={toggleTheme}
                 focusVisible
             >
