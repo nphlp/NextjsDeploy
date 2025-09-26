@@ -45,7 +45,7 @@ type ModalProps = {
 };
 
 /**
- * Input image with preview
+ * Modal
  * @example
  * ```tsx
  * // Define the state
@@ -55,19 +55,23 @@ type ModalProps = {
  * // Use the component
  * <Modal
  *     className={{
+ *         // Outside the modal
  *         cardContainer: "px-5 py-16",
- *         card: "max-w-[400px] space-y-4"
+ *         // Inside the modal
+ *         card: "max-w-[500px] w-[400px] space-y-4",
  *     }}
  *     setIsModalOpen={setIsModalOpen}
  *     isModalOpen={isModalOpen}
  *     focusToRef={buttonRef}
  *     withCloseButton
  * >
- *     <div>
- *         <h1>Title</h1>
- *         <p>Description</p>
- *     </div>
- *     <Button label="Close" ref={buttonRef} onClick={() => setIsModalOpen(false)} />
+ *     <div className="text-xl font-bold">Title</div>
+ *     <div>Description</div>
+ *     <Button
+ *         label="Close"
+ *         ref={buttonRef}
+ *         onClick={() => setIsModalOpen(false)}
+ *     />
  * </Modal>
  * ```
  */

@@ -40,6 +40,34 @@ type DrawerProps = {
     children: ReactNode;
 };
 
+/**
+ * Drawer
+ * @example
+ * ```tsx
+ * // Define the state
+ * const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+ * const drawerRef = useRef<HTMLButtonElement>(null);
+ *
+ * // Use the component
+ * <Drawer
+ *     className={{
+ *         drawer: "space-y-4",
+ *     }}
+ *     setIsDrawerOpen={setIsDrawerOpen}
+ *     isDrawerOpen={isDrawerOpen}
+ *     focusToRef={drawerButtonRef}
+ *     withCloseButton
+ * >
+ *     <div className="text-xl font-bold">Title</div>
+ *     <div>Description</div>
+ *     <Button
+ *         label="Close"
+ *         ref={drawerButtonRef}
+ *         onClick={() => setIsDrawerOpen(false)}
+ *     />
+ * </Drawer>
+ * ```
+ */
 export default function Drawer(props: DrawerProps) {
     const {
         isDrawerOpen,
@@ -58,21 +86,18 @@ export default function Drawer(props: DrawerProps) {
 
     const animationDuration = noAnimation ? 0 : duration;
 
+    const minimalTimoutToFocus = noAnimation ? 30 : animationDuration * 1000;
+
     // Auto focus to the given ref when modal is opened
     useEffect(() => {
         if (isDrawerOpen && focusToRef?.current) {
-            requestAnimationFrame(() => focusToRef.current?.focus());
+            // Can not use requestAnimationFrame with translateX animation
+            setTimeout(() => focusToRef.current?.focus(), minimalTimoutToFocus);
         }
-    }, [isDrawerOpen, focusToRef]);
+    }, [isDrawerOpen, focusToRef, minimalTimoutToFocus]);
 
     return (
-        <div
-            className={combo(
-                theme[variant].component,
-                className?.component,
-                isDrawerOpen ? "pointer-events-auto" : "pointer-events-none",
-            )}
-        >
+        <div className={combo(!isDrawerOpen && "pointer-events-none", theme[variant].component, className?.component)}>
             {/* Background Blur */}
             {!noBackgroundBlur && (
                 <motion.div
@@ -115,9 +140,12 @@ export default function Drawer(props: DrawerProps) {
                 }}
                 animate={{
                     display: isDrawerOpen ? "" : "none",
-                    translateX: isDrawerOpen ? "0" : "100%",
+                    translateX: isDrawerOpen ? "0px" : "100%",
                 }}
-                transition={{ duration: animationDuration }}
+                transition={{
+                    duration: animationDuration,
+                    ease: "easeInOut",
+                }}
                 className={combo("w-full sm:w-[400px]", theme[variant].drawer, className?.drawer)}
             >
                 <CloseButton

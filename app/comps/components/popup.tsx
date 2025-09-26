@@ -33,7 +33,7 @@ export default function PopupSection(props: PopupSectionProps) {
                     onClick={() => setIsModalOpen(true)}
                 >
                     <span>Open Modal</span>
-                    <SquareSquare className="scale-x-120 scale-y-90" />
+                    <SquareSquare className="size-5 stroke-[1.4px]" />
                 </Button>
                 <Button
                     label="Open Drawer"
@@ -43,14 +43,16 @@ export default function PopupSection(props: PopupSectionProps) {
                     onClick={() => setIsDrawerOpen(true)}
                 >
                     <span>Open Drawer</span>
-                    <PanelRight className="scale-x-120 scale-y-90" />
+                    <PanelRight className="size-5 stroke-[1.4px]" />
                 </Button>
             </div>
 
             <Modal
                 className={{
+                    // Outside the modal
                     cardContainer: "px-5 py-16",
-                    card: "max-w-[500px] space-y-4",
+                    // Inside the modal
+                    card: "w-[400px] max-w-[500px] space-y-4",
                 }}
                 setIsModalOpen={setIsModalOpen}
                 isModalOpen={isModalOpen}
@@ -63,6 +65,9 @@ export default function PopupSection(props: PopupSectionProps) {
             </Modal>
 
             <Drawer
+                className={{
+                    drawer: "space-y-4",
+                }}
                 setIsDrawerOpen={setIsDrawerOpen}
                 isDrawerOpen={isDrawerOpen}
                 focusToRef={drawerButtonRef}

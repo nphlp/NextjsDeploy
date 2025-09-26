@@ -28,7 +28,7 @@ const structure: StructureType = {
         // Position
         "relative z-50",
         // Size and padding
-        "px-12 py-5",
+        "px-12 py-8",
     ),
     backgroundButton: combo("absolute inset-0"),
     backgroundBlur: combo("absolute inset-0"),
@@ -62,7 +62,7 @@ export const styles: StylesType = {
         ),
         backgroundButton: combo(""),
         backgroundBlur: combo("backdrop-blur-[1.5px]"),
-        backgroundColor: combo("bg-black/50"),
+        backgroundColor: combo("bg-foreground/50 dark:bg-foreground/20"),
         crossButton: combo("bg-transparent hover:bg-gray-low focus:bg-gray-low"),
         crossIcon: combo("stroke-[2.2px] text-foreground"),
     },

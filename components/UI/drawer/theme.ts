@@ -2,7 +2,7 @@ import { combo } from "@lib/combo";
 import { mergeStylesAndStructure } from "@lib/mergeStyles";
 import { DrawerClassName } from "./drawer";
 
-export type DrawerVariant = "default" | "dark" | "none";
+export type DrawerVariant = "default" | "none";
 
 type StructureType = {
     [key in keyof DrawerClassName]-?: DrawerClassName[key];
@@ -16,16 +16,14 @@ const structure: StructureType = {
     component: combo(
         // Position
         "absolute top-0 left-0 z-50 h-screen w-screen",
-        // Layout
-        "flex flex-row",
         // Scroll
         "overflow-hidden",
     ),
     drawer: combo(
         // Position
-        "absolute top-0 right-0 bottom-0",
+        "absolute h-full right-0 z-50",
         // Spacing
-        "p-5",
+        "px-8 py-10",
     ),
     backgroundButton: combo("absolute inset-0"),
     backgroundBlur: combo("absolute inset-0"),
@@ -51,25 +49,13 @@ export const styles: StylesType = {
         component: combo(""),
         drawer: combo(
             // Background
-            "bg-gray-100",
+            "bg-background",
         ),
         backgroundButton: combo(""),
         backgroundBlur: combo("backdrop-blur-[1.5px]"),
-        backgroundColor: combo("bg-black/50"),
-        closeButton: combo("bg-transparent hover:bg-gray-200 focus:bg-gray-100"),
+        backgroundColor: combo("bg-foreground/50 dark:bg-foreground/20"),
+        closeButton: combo("bg-transparent hover:bg-gray-low focus:bg-gray-low"),
         closeIcon: combo("stroke-[2.2px] text-black"),
-    },
-    dark: {
-        component: combo(""),
-        drawer: combo(
-            // Background and backdrop
-            "bg-gray-800",
-        ),
-        backgroundButton: combo(""),
-        backgroundBlur: combo("backdrop-blur-[1.5px]"),
-        backgroundColor: combo("bg-black/50"),
-        closeButton: combo("bg-transparent hover:bg-gray-700 focus:bg-gray-800"),
-        closeIcon: combo("stroke-[2.2px] text-white"),
     },
     none: {
         component: combo(""),
