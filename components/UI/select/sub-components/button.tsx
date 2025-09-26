@@ -28,12 +28,20 @@ const Button = () => {
     // Check if there is a selection
     const hasSelection = !!selectedOption;
 
-    // Handle focus
+    // Handle focus (for tab navigation or mouse click)
     const handleFocus = (e: FocusEvent<HTMLButtonElement>) => {
         e.preventDefault();
         e.stopPropagation();
 
         setIsOpen(true);
+    };
+
+    // Handle touch (required to ensure touch on mobile devices)
+    const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        buttonRef.current?.focus();
     };
 
     // Handle blur
@@ -104,6 +112,7 @@ const Button = () => {
                 type="button"
                 onFocus={handleFocus}
                 onBlur={handleBlur}
+                onClick={handleClick}
                 onKeyDown={handleKeyDown}
                 className={combo(theme[variant].button, className?.button)}
                 {...buttonProps}

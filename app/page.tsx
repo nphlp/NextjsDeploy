@@ -3,6 +3,8 @@ import AddTodoItem from "./components/addTodoItem";
 import Provider from "./components/provider";
 import TodoList from "./components/todoList";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
     const taskList = await TaskFindManyServer({ orderBy: { updatedAt: "desc" } });
 
