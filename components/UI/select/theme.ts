@@ -101,12 +101,7 @@ const styles: StylesType = {
         ),
         subCross: combo("stroke-gray-high"),
 
-        subDiv: combo(
-            // Position
-            "absolute right-2 top-1/2 -translate-y-1/2",
-            // Accessibility
-            "pointer-events-none",
-        ),
+        subDiv: combo(""),
         subChevron: combo("stroke-gray-high translate-y-px"),
 
         optionList: combo(

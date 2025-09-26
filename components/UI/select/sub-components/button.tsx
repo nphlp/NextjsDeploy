@@ -51,7 +51,9 @@ const Button = () => {
 
         // On click outside, not on an option
         if (!e.relatedTarget?.hasAttribute("data-options-slug")) {
-            setIsOpen(false);
+            // Make sure to close the dropdown after click
+            // This is required on mobile devices
+            requestAnimationFrame(() => setIsOpen(false));
         }
     };
 
