@@ -1,43 +1,52 @@
 "use client";
 
+import { Context } from "@app/components/context";
+import { TaskType } from "@app/components/fetch";
 import Input, { InputClassName } from "@comps/UI/input/input";
-import { TaskModel } from "@services/types";
-import { RefetchType } from "@utils/FetchHook";
-import { useRef, useState } from "react";
+import { startTransition, useContext, useState } from "react";
 import { UpdateTask } from "@/actions/Task";
 
 type InputUpdateTaskTitleProps = {
-    task: TaskModel;
-    refetch?: RefetchType;
+    task: TaskType;
     className?: InputClassName;
 };
 
 export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
-    const { task, refetch, className } = props;
-    const { id } = task;
+    const { task, className } = props;
+    const { id, status } = task;
 
-    const inputRef = useRef<HTMLInputElement>(null);
+    const { setData, setOptimisticData, optimisticMutations } = useContext(Context);
+
     const [title, setTitle] = useState<string>(task.title);
 
     const handleTitleUpdate = async () => {
-        if (title === task.title) return;
-        if (!title.length && refetch) return refetch();
-        focusBlink();
-        UpdateTask({ id, title });
-    };
+        if (title.length === 0) return setTitle(task.title);
 
-    // For Enter key press
-    const focusBlink = () => {
-        inputRef.current?.classList.add("ring-transparent");
-        setTimeout(() => {
-            inputRef.current?.classList.remove("ring-transparent");
-        }, 100);
+        startTransition(async () => {
+            // New item
+            const newItem: TaskType = { id, title, status };
+
+            // Set optimistic state
+            setOptimisticData({ type: "update", newItem });
+
+            // Do mutation
+            const validatedItem = await UpdateTask({ id, status });
+
+            // If failed, the optimistic state is rolled back at the end of the transition
+            if (!validatedItem) return console.log("❌ Update failed");
+
+            // If success, update the real state in a new transition to prevent key conflict
+            startTransition(() =>
+                setData((current) => optimisticMutations(current, { type: "update", newItem: validatedItem })),
+            );
+
+            console.log("✅ Update succeeded");
+        });
     };
 
     return (
         <form action={handleTitleUpdate} className="w-full">
             <Input
-                ref={inputRef}
                 label="Tâche"
                 onBlur={handleTitleUpdate}
                 setValue={setTitle}

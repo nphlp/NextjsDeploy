@@ -1,9 +1,11 @@
 "use client";
 
+import { Context } from "@app/components/context";
+import { TaskType } from "@app/components/fetch";
 import Select, { SelectClassName } from "@comps/UI/select/select";
 import { TaskModel } from "@services/types";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
-import { useState } from "react";
+import { startTransition, useContext, useState } from "react";
 import { UpdateTask } from "@/actions/Task";
 
 const options = [
@@ -37,19 +39,39 @@ const options = [
 ];
 
 type SelectUpdateTaskStatusProps = {
-    task: TaskModel;
+    task: TaskType;
     className?: SelectClassName;
 };
 
 export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProps) {
     const { task, className } = props;
-    const { id } = task;
+    const { id, title } = task;
+
+    const { setData, setOptimisticData, optimisticMutations } = useContext(Context);
 
     const [status, setStatus] = useState<string>(task.status);
 
-    const handleStatusUpdate = async (statusChange: string) => {
-        if (statusChange === task.status) return;
-        UpdateTask({ id, status: statusChange });
+    const handleStatusUpdate = async () => {
+        startTransition(async () => {
+            // New item
+            const newItem: TaskType = { id, title, status: status as TaskModel["status"] };
+
+            // Set optimistic state
+            setOptimisticData({ type: "update", newItem });
+
+            // Do mutation
+            const validatedItem = await UpdateTask({ id, status });
+
+            // If failed, the optimistic state is rolled back at the end of the transition
+            if (!validatedItem) return console.log("❌ Update failed");
+
+            // If success, update the real state in a new transition to prevent key conflict
+            startTransition(() =>
+                setData((current) => optimisticMutations(current, { type: "update", newItem: validatedItem })),
+            );
+
+            console.log("✅ Update succeeded");
+        });
     };
 
     return (

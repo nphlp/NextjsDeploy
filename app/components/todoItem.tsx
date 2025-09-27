@@ -3,38 +3,30 @@
 import ButtonDeleteTask from "@comps/SHARED/button-delete-task";
 import InputUpdateTaskTitle from "@comps/SHARED/input-update-task-title";
 import SelectUpdateTaskStatus from "@comps/SHARED/select-update-task-status";
-import Link from "@comps/UI/button/link";
 import { combo } from "@lib/combo";
-import { TaskModel } from "@services/types";
-import { Pencil } from "lucide-react";
-import { Route } from "next";
-import { useContext } from "react";
-import { Context } from "./context";
+import { TaskType } from "./fetch";
 
 type TodoItemProps = {
-    task: TaskModel;
+    task: TaskType;
 };
 
 export default function TodoItem(props: TodoItemProps) {
     const { task } = props;
 
-    const { refetch } = useContext(Context);
-
     return (
         <div className="flex flex-row gap-2">
             <InputUpdateTaskTitle
                 task={task}
-                refetch={refetch}
                 className={{
                     component: "w-full",
                     input: "rounded-none border-x-0 border-t-transparent px-0 py-1 text-lg focus:border-t-transparent focus:ring-0",
                 }}
             />
             <SelectUpdateTaskStatus task={task} className={{ component: "w-[150px] shrink-0 max-md:hidden" }} />
-            <Link label={`Edit ${task.title}`} variant="outline" href={`/task/${task.id}` as Route} className="px-1.5">
+            {/* <Link label={`Edit ${task.title}`} variant="outline" href={`/task/${task.id}` as Route} className="px-1.5">
                 <Pencil />
-            </Link>
-            <ButtonDeleteTask task={task} className={{ button: "max-xs:hidden px-1.5" }} refetch={refetch} />
+            </Link> */}
+            <ButtonDeleteTask task={task} className={{ button: "max-xs:hidden px-1.5" }} />
         </div>
     );
 }
@@ -73,7 +65,7 @@ export function TodoItemSkeleton(props: TodoItemSkeletonProps) {
                 )}
             >
                 <div
-                    style={{ width: width(65, 75, index) }}
+                    style={{ width: width(50, 75, index) }}
                     className={combo("h-5", "relative top-1/2 -translate-y-1/2", "bg-gray-low animate-pulse rounded")}
                 />
                 <div

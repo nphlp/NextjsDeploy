@@ -1,42 +1,47 @@
 "use client";
 
+import { Context } from "@app/components/context";
+import { TaskType } from "@app/components/fetch";
 import Button, { ButtonClassName } from "@comps/UI/button/button";
 import Modal from "@comps/UI/modal/modal";
-import { TaskModel } from "@services/types";
-import { RefetchType } from "@utils/FetchHook";
 import { Trash2 } from "lucide-react";
-import { Route } from "next";
-import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { startTransition, useContext, useRef, useState } from "react";
 import { DeleteTask } from "@/actions/Task";
 
 type SelectUpdateTaskStatusProps = {
-    task: TaskModel;
+    task: TaskType;
     className?: ButtonClassName;
-} & (
-    | {
-          redirectTo: Route;
-          refetch?: undefined;
-      }
-    | {
-          refetch: RefetchType;
-          redirectTo?: undefined;
-      }
-);
+};
 
 export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
-    const { task, className, redirectTo, refetch } = props;
-    const { id } = task;
+    const { task, className } = props;
 
-    const router = useRouter();
+    const { setData, setOptimisticData, optimisticMutations } = useContext(Context);
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const buttonRef = useRef<HTMLButtonElement>(null);
 
-    const handleDelete = async () => {
-        DeleteTask({ id });
-        if (redirectTo) return router.push(redirectTo);
-        if (refetch) refetch();
+    const handleDelete = () => {
+        startTransition(async () => {
+            // New item
+            const newItem: TaskType = task;
+
+            // Set optimistic state
+            setOptimisticData({ type: "delete", newItem });
+
+            // Do mutation
+            const validatedItem = await DeleteTask({ id: newItem.id });
+
+            // If failed, the optimistic state is rolled back at the end of the transition
+            if (!validatedItem) return console.log("❌ Deletion failed");
+
+            // If success, update the real state in a new transition to prevent key conflict
+            startTransition(() =>
+                setData((current) => optimisticMutations(current, { type: "delete", newItem: validatedItem })),
+            );
+
+            console.log("✅ Deletion succeeded");
+        });
     };
 
     return (

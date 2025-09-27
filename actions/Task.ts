@@ -2,6 +2,7 @@
 
 import { TaskCreateAction, TaskDeleteAction, TaskFindUniqueAction, TaskUpdateAction } from "@actions/TaskAction";
 import { $Enums } from "@prisma/client";
+import { TaskModel } from "@services/types";
 import { hashParamsForCacheKey } from "@utils/FetchConfig";
 import { stringToSlug } from "@utils/stringToSlug";
 import { revalidateTag } from "next/cache";
@@ -15,12 +16,12 @@ const addTaskSchema: ZodType<AddTaskProps> = z.object({
     title: z.string().min(2).max(100),
 });
 
-export const AddTask = async (props: AddTaskProps) => {
+export const AddTask = async (props: AddTaskProps): Promise<TaskModel | null> => {
     try {
         const { title } = addTaskSchema.parse(props);
 
         const existingTask = await TaskFindUniqueAction({ where: { title } });
-        if (existingTask) return;
+        if (existingTask) return null;
 
         const createdTask = await TaskCreateAction({
             data: {
@@ -39,7 +40,7 @@ export const AddTask = async (props: AddTaskProps) => {
         return createdTask;
     } catch (error) {
         console.error("Failed to create task:", error);
-        return undefined;
+        return null;
     }
 };
 
@@ -59,12 +60,12 @@ const updateTaskSchema: ZodType<UpdateTaskParsedProps> = z.object({
     status: z.enum($Enums.Status).optional(),
 });
 
-export const UpdateTask = async (props: UpdateTaskProps) => {
+export const UpdateTask = async (props: UpdateTaskProps): Promise<TaskModel | null> => {
     try {
         const { id, title, status } = updateTaskSchema.parse(props);
 
         const existingTask = await TaskFindUniqueAction({ where: { id } });
-        if (!existingTask) return;
+        if (!existingTask) return null;
 
         const slug = title ? stringToSlug(title) : undefined;
 
@@ -83,7 +84,7 @@ export const UpdateTask = async (props: UpdateTaskProps) => {
         return updatedTask;
     } catch (error) {
         console.error("Failed to update task:", error);
-        return undefined;
+        return null;
     }
 };
 
@@ -95,12 +96,12 @@ const deleteTaskSchema: ZodType<DeleteTaskProps> = z.object({
     id: z.nanoid(),
 });
 
-export const DeleteTask = async (props: DeleteTaskProps) => {
+export const DeleteTask = async (props: DeleteTaskProps): Promise<TaskModel | null> => {
     try {
         const { id } = deleteTaskSchema.parse(props);
 
         const existingTask = await TaskFindUniqueAction({ where: { id } });
-        if (!existingTask) return;
+        if (!existingTask) return null;
 
         const deletedTask = await TaskDeleteAction({
             where: { id },
@@ -111,6 +112,6 @@ export const DeleteTask = async (props: DeleteTaskProps) => {
         return deletedTask;
     } catch (error) {
         console.error("Failed to delete task:", error);
-        return undefined;
+        return null;
     }
 };
