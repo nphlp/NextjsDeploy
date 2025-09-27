@@ -3,51 +3,30 @@
 import ButtonDeleteTask from "@comps/SHARED/button-delete-task";
 import InputUpdateTaskTitle from "@comps/SHARED/input-update-task-title";
 import SelectUpdateTaskStatus from "@comps/SHARED/select-update-task-status";
-import Link from "@comps/UI/button/link";
 import { combo } from "@lib/combo";
-import { TaskModel } from "@services/types";
-import { Pencil } from "lucide-react";
-import { Route } from "next";
-import { useContext } from "react";
-import { Context } from "./context";
+import { TaskType } from "./fetch";
 
 type TodoItemProps = {
-    task: TaskModel;
+    task: TaskType;
 };
 
 export default function TodoItem(props: TodoItemProps) {
     const { task } = props;
 
-    const { refetch } = useContext(Context);
-
     return (
         <div className="flex flex-row gap-2">
             <InputUpdateTaskTitle
                 task={task}
-                refetch={refetch}
                 className={{
                     component: "w-full",
-                    input: "text-foreground bg-background border-gray-low",
+                    input: "rounded-none border-x-0 border-t-transparent px-0 py-1 text-lg focus:border-t-transparent focus:ring-0",
                 }}
             />
-            <SelectUpdateTaskStatus
-                task={task}
-                refetch={refetch}
-                className={{ component: "w-[150px] shrink-0 max-md:hidden" }}
-            />
-            <Link
-                label={`Edit ${task.title}`}
-                variant="outline"
-                href={`/task/${task.slug}` as Route}
-                className="bg-background text-foreground border-gray-low px-1.5"
-            >
+            <SelectUpdateTaskStatus task={task} className={{ component: "w-[150px] shrink-0 max-md:hidden" }} />
+            {/* <Link label={`Edit ${task.title}`} variant="outline" href={`/task/${task.id}` as Route} className="px-1.5">
                 <Pencil />
-            </Link>
-            <ButtonDeleteTask
-                task={task}
-                className={{ button: "max-xs:hidden bg-background text-foreground border-gray-low px-1.5" }}
-                refetch={refetch}
-            />
+            </Link> */}
+            <ButtonDeleteTask task={task} className={{ button: "max-xs:hidden px-1.5" }} />
         </div>
     );
 }
@@ -69,8 +48,8 @@ export function TodoItemSkeleton(props: TodoItemSkeletonProps) {
         <div className="flex w-full items-center gap-2">
             <div
                 className={combo(
-                    "relative h-[38px] w-full px-4",
-                    "text-foreground bg-background border-gray-low animate-pulse rounded-lg border",
+                    "relative h-[38px] w-full",
+                    "text-foreground bg-background border-b-gray-low animate-pulse border-y border-t-transparent",
                 )}
             >
                 <div
@@ -81,12 +60,12 @@ export function TodoItemSkeleton(props: TodoItemSkeletonProps) {
             <div
                 className={combo(
                     "max-md:hidden",
-                    "relative h-[38px] w-[220px] px-4",
+                    "relative h-[38px] w-[150px] shrink-0 px-4",
                     "text-foreground bg-background border-gray-low animate-pulse rounded-lg border",
                 )}
             >
                 <div
-                    style={{ width: width(65, 75, index) }}
+                    style={{ width: width(50, 75, index) }}
                     className={combo("h-5", "relative top-1/2 -translate-y-1/2", "bg-gray-low animate-pulse rounded")}
                 />
                 <div

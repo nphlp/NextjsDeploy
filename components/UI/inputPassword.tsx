@@ -1,39 +1,52 @@
 "use client";
 
 import { combo } from "@lib/combo";
+import { merge } from "lodash";
 import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 import Button from "./button/button";
-import Input, { InputProps } from "./input/input";
+import Input, { InputClassName, InputProps } from "./input/input";
+
+export type ButtonClassName = {
+    component?: string;
+    input?: InputClassName;
+    button?: ButtonClassName;
+};
 
 type InputPasswordProps = {
-    classPasswordComponent?: string;
+    label: string;
+    autoComplete: InputProps["autoComplete"];
+    placeholder?: string;
+    className?: ButtonClassName;
     setValue: (value: string) => void;
     value: string;
-} & Omit<InputProps, "onChange" | "value">;
+};
 
 export default function InputPassword(props: InputPasswordProps) {
-    const { setValue, value, classPasswordComponent, ...others } = props;
+    const { setValue, value, label, placeholder, autoComplete, className } = props;
+
     const [toggleVisibility, setToggleVisibility] = useState(false);
 
     return (
-        <div className={combo("flex flex-row items-end gap-1.5", classPasswordComponent)}>
+        <div className={combo("flex flex-row items-end gap-1.5", className?.component)}>
             <Input
+                label={label}
+                placeholder={placeholder}
+                autoComplete={autoComplete}
                 type={toggleVisibility ? "text" : "password"}
-                className={{ component: "w-full" }}
+                className={merge({ component: "w-full" }, className?.input)}
                 setValue={setValue}
                 value={value}
-                {...others}
             />
             <Button
                 type="button"
                 label="toggle-password-visibility"
-                className={{ button: "p-2 hover:border-gray-300" }}
+                className={merge({ button: "hover:border-gray-low p-2" }, className?.button)}
                 variant="outline"
                 onClick={() => setToggleVisibility(!toggleVisibility)}
             >
-                {toggleVisibility && <Eye className="size-5" />}
-                {!toggleVisibility && <EyeClosed className="size-5" />}
+                {toggleVisibility && <Eye className="stroke-gray-high size-5" />}
+                {!toggleVisibility && <EyeClosed className="stroke-gray-high size-5" />}
             </Button>
         </div>
     );

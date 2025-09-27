@@ -254,8 +254,8 @@ export default function ComboboxMulti<T extends ComboOptionType | MultiSourceCom
     const displayedOptions = options
         // The following line is usefull when options are static (not connected to an API)
         // When options are dynamic (connected to the API), this filter is done for nothing
-        // But the code and usage is easier and cleaner with more conditions
-        .filter((option) => option.slug.includes(stringToSlug(query)))
+        // But the code and usage is easier and cleaner without more conditions
+        .filter((option) => stringToSlug(option.name).includes(stringToSlug(query)))
         // Include or exclude the selected options from the dropdown options
         .filter((option) => {
             // If true, show all options
@@ -281,7 +281,7 @@ export default function ComboboxMulti<T extends ComboOptionType | MultiSourceCom
 
     return (
         <div className={combo(classComponent)}>
-            <label className="text-sm font-medium text-black">{label}</label>
+            <label className={combo("text-foreground text-sm font-semibold")}>{label}</label>
             <ComboboxHeadlessUI
                 as="div"
                 value={selected}
@@ -290,7 +290,10 @@ export default function ComboboxMulti<T extends ComboOptionType | MultiSourceCom
                 multiple
                 immediate
             >
+                {/* Display chips */}
                 <ComboboxDisplay className="mt-1" selected={selected} setSelected={setSelected} />
+
+                {/* Input button */}
                 <div className={combo("relative", selected.length > 0 ? "mt-2.5" : "mt-0")}>
                     <ComboboxInput
                         aria-label={label}
@@ -298,12 +301,14 @@ export default function ComboboxMulti<T extends ComboOptionType | MultiSourceCom
                         value={query}
                         placeholder={placeholder ?? "Search and select multiple options..."}
                         className={combo(
+                            // Text
+                            "text-foreground placeholder-gray-middle",
                             // Size and padding
                             "w-full px-4 py-1.5",
                             // Border and radius
-                            "rounded-lg border border-gray-300 focus:border-gray-500",
-                            // Backgrounde
-                            "bg-white",
+                            "border-gray-low focus:border-gray-middle rounded-lg border",
+                            // Background
+                            "bg-background",
                             // Accessibility
                             "ring-0 outline-none focus:ring-2 focus:ring-teal-300",
                             "transition-all duration-150",
@@ -319,7 +324,7 @@ export default function ComboboxMulti<T extends ComboOptionType | MultiSourceCom
                 <ComboboxOptions
                     anchor="bottom"
                     className={combo(
-                        "rounded-lg border border-gray-300 bg-white p-1",
+                        "border-gray-low bg-background rounded-lg border p-1",
                         // HeadlessUI styles
                         "w-(--input-width) [--anchor-gap:6px] empty:invisible",
                     )}
@@ -329,10 +334,16 @@ export default function ComboboxMulti<T extends ComboOptionType | MultiSourceCom
                             key={index}
                             value={option}
                             className={combo(
-                                "group bg-white data-focus:bg-gray-100",
+                                "group",
+                                // Text
+                                "text-foreground text-sm",
+                                // Background
+                                "bg-background data-focus:bg-gray-light",
                                 "flex items-center gap-2",
                                 "rounded-sm px-2 py-1",
-                                "cursor-pointer text-sm",
+                                // Accessibility
+                                "cursor-pointer",
+                                // Selected state
                                 selected.some((selectedOption) => selectedOption.slug === option.slug) &&
                                     "font-semibold",
                             )}
@@ -403,19 +414,19 @@ const ComboboxDisplay = <T extends ComboOptionType | MultiSourceComboOptionType>
             className={className}
         >
             <div ref={heightRef} className="flex flex-row flex-wrap gap-1">
-                {selected.map((option, index) => (
+                {selected.map((option) => (
                     <div
-                        key={index}
-                        id={`tag-${option.slug}-${index}`}
+                        key={option.slug}
+                        id={`tag-${option.slug}`}
                         className={combo(
-                            "h-fit rounded-full border border-gray-300 py-0.5 pr-0.5 pl-2",
+                            "border-gray-low h-fit rounded-full border py-0.5 pr-0.5 pl-2",
                             "flex items-center gap-1",
                             "relative",
                             "select-none",
                         )}
                     >
                         <Popover
-                            idToTrack={`tag-${option.slug}-${index}`}
+                            idToTrack={`tag-${option.slug}`}
                             name={option.name}
                             needsEllipsis={needsEllipsis(option.name)}
                         />
@@ -425,7 +436,7 @@ const ComboboxDisplay = <T extends ComboOptionType | MultiSourceComboOptionType>
                                     "absolute",
                                     "pointer-events-none",
                                     "right-0 h-full w-[12px] text-transparent",
-                                    needsEllipsis(option.name) && "bg-linear-to-r from-transparent to-white",
+                                    needsEllipsis(option.name) && "to-background bg-linear-to-r from-transparent",
                                 )}
                             >
                                 {ellipsis(option.name)}
@@ -435,9 +446,14 @@ const ComboboxDisplay = <T extends ComboOptionType | MultiSourceComboOptionType>
                         <button
                             type="button"
                             onClick={() => handleRemove(option)}
-                            className="cursor-pointer rounded-full p-1 hover:bg-gray-100"
+                            className={combo(
+                                "hover:bg-gray-light cursor-pointer rounded-full p-1",
+                                // Ring and focus
+                                "ring-0 ring-teal-300 outline-none focus:ring-2",
+                                "transition-all duration-150",
+                            )}
                         >
-                            <X className="size-4" />
+                            <X className="stroke-gray-high size-4" />
                         </button>
                     </div>
                 ))}

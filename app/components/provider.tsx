@@ -1,25 +1,23 @@
 "use client";
 
-import { TaskModel } from "@services/types";
-import { useFetch } from "@utils/FetchHook";
-import { ReactNode } from "react";
+import { ReactNode, useOptimistic, useState } from "react";
 import { Context } from "./context";
+import { TaskType } from "./fetch";
+import { optimisticMutations } from "./optimistic";
 
 type ContextProviderProps = {
-    initialData: TaskModel[];
+    initialData: TaskType[];
     children: ReactNode;
 };
 
 export default function Provider(props: ContextProviderProps) {
     const { initialData, children } = props;
 
-    const { data, isLoading, refetch } = useFetch({
-        route: "/internal/task/findMany",
-        params: { orderBy: { updatedAt: "desc" } },
-        initialData,
-    });
+    const [data, setData] = useState(initialData);
 
-    const value = { data, isLoading, refetch };
+    const [optimisticData, setOptimisticData] = useOptimistic(data, optimisticMutations);
+
+    const value = { optimisticData, setData, setOptimisticData, optimisticMutations };
 
     return <Context.Provider value={value}>{children}</Context.Provider>;
 }

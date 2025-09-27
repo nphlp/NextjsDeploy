@@ -1,19 +1,14 @@
 "use client";
 
-import { TaskModel } from "@services/types";
-import { RefetchType } from "@utils/FetchHook";
-import { createContext } from "react";
+import { Dispatch, SetStateAction, createContext } from "react";
+import { TaskType } from "./fetch";
+import { OptimisticAction } from "./optimistic";
 
 export type ContextType = {
-    data: TaskModel[] | undefined;
-    isLoading: boolean;
-    refetch: RefetchType;
+    optimisticData: TaskType[];
+    setData: Dispatch<SetStateAction<TaskType[]>>;
+    setOptimisticData: (action: OptimisticAction<TaskType>) => void;
+    optimisticMutations: (currentItems: TaskType[], action: OptimisticAction<TaskType>) => TaskType[];
 };
 
-const initialContextData: ContextType = {
-    data: undefined,
-    isLoading: false,
-    refetch: () => {},
-};
-
-export const Context = createContext<ContextType>(initialContextData);
+export const Context = createContext<ContextType>({} as ContextType);

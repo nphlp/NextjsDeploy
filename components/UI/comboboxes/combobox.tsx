@@ -235,8 +235,8 @@ export default function Combobox<T extends ComboOptionType | MultiSourceComboOpt
 
     // The following line is usefull when options are static (not connected to an API)
     // When options are dynamic (connected to the API), this filter is done for nothing
-    // But the code and usage is easier and cleaner with more conditions
-    const displayedOptions = options.filter((option) => option.slug.includes(stringToSlug(query)));
+    // But the code and usage is easier and cleaner without more conditions
+    const displayedOptions = options.filter((option) => stringToSlug(option.name).includes(stringToSlug(query)));
 
     const handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
@@ -260,7 +260,7 @@ export default function Combobox<T extends ComboOptionType | MultiSourceComboOpt
 
     return (
         <div className={combo(classComponent)}>
-            <label className="text-sm font-medium text-black">{label}</label>
+            <label className={combo("text-foreground text-sm font-semibold")}>{label}</label>
             <ComboboxHeadlessUI
                 as="div"
                 className="mt-1"
@@ -269,6 +269,7 @@ export default function Combobox<T extends ComboOptionType | MultiSourceComboOpt
                 onClose={handleDropdownClosing}
                 immediate
             >
+                {/* Input button */}
                 <div className="relative">
                     <ComboboxInput
                         aria-label={label}
@@ -277,12 +278,14 @@ export default function Combobox<T extends ComboOptionType | MultiSourceComboOpt
                         // value={query} // Disable query value to allow "displayValue" to work properly
                         placeholder={placeholder ?? "Search and select an option..."}
                         className={combo(
+                            // Text
+                            "text-foreground placeholder-gray-middle",
                             // Size and padding
                             "w-full px-4 py-1.5",
                             // Border and radius
-                            "rounded-lg border border-gray-300 focus:border-gray-500",
-                            // Backgrounde
-                            "bg-white",
+                            "border-gray-low focus:border-gray-middle rounded-lg border",
+                            // Background
+                            "bg-background",
                             // Accessibility
                             "ring-0 outline-none focus:ring-2 focus:ring-teal-300",
                             "transition-all duration-150",
@@ -298,20 +301,28 @@ export default function Combobox<T extends ComboOptionType | MultiSourceComboOpt
                 <ComboboxOptions
                     anchor="bottom"
                     className={combo(
-                        "rounded-lg border border-gray-300 bg-white p-1",
+                        "border-gray-low bg-background rounded-lg border p-1",
                         // HeadlessUI styles
                         "w-(--input-width) [--anchor-gap:6px] empty:invisible",
                     )}
                 >
-                    {displayedOptions.map((option, index) => (
+                    {displayedOptions.map((option) => (
                         <ComboboxOption
-                            key={index}
+                            key={option.slug}
                             value={option}
                             className={combo(
-                                "group bg-white data-focus:bg-gray-100",
+                                "group",
+                                // Text
+                                "text-foreground text-sm",
+                                // Background
+                                "bg-background data-focus:bg-gray-light",
+                                // Layout
                                 "flex items-center gap-2",
+                                // Radius and padding
                                 "rounded-sm px-2 py-1",
-                                "cursor-pointer text-sm",
+                                // Accessibility
+                                "cursor-pointer",
+                                // Selected state
                                 selected?.slug === option.slug && "font-semibold",
                             )}
                         >

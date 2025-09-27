@@ -23,10 +23,15 @@ export type InputProps = {
     noLabel?: boolean;
 
     // Optional
+    placeholder?: string;
+    autoFocus?: boolean;
+    type?: InputHTMLAttributes<HTMLInputElement>["type"];
     ref?: RefObject<HTMLInputElement | null>;
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+    onBlur?: (e: ChangeEvent<HTMLInputElement>) => void;
     required?: boolean;
-} & Omit<InputHTMLAttributes<HTMLInputElement>, "className" | "label" | "value" | "onChange" | "required">;
+    legacyProps?: InputHTMLAttributes<HTMLInputElement>;
+};
 
 /**
  * Input component
@@ -52,9 +57,10 @@ export default function Input(props: InputProps) {
         value,
         variant = "default",
         noLabel = false,
-        onChange,
         required = true,
         className,
+        placeholder,
+        onChange,
         ...others
     } = props;
 
@@ -78,11 +84,20 @@ export default function Input(props: InputProps) {
             <input
                 name={label}
                 autoComplete={autoComplete}
+                placeholder={placeholder ?? label}
                 onChange={handleChange}
                 className={combo(theme[variant].input, className?.input)}
                 required={required}
                 value={value}
                 {...others}
+                {...(autoComplete === "off" && {
+                    // 1Password
+                    "data-1p-ignore": "true",
+                    // LastPass
+                    "data-lpignore": "true",
+                    // ProtonPass
+                    "data-protonpass-ignore": "true",
+                })}
             />
         </label>
     );
