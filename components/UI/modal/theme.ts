@@ -33,7 +33,7 @@ const structure: StructureType = {
     backgroundButton: combo("absolute inset-0"),
     backgroundBlur: combo("absolute inset-0"),
     backgroundColor: combo("absolute inset-0"),
-    crossButton: combo(
+    closeButton: combo(
         // Position
         "absolute top-2 right-2",
         // Spacing
@@ -46,7 +46,7 @@ const structure: StructureType = {
         // Border and radius
         "rounded-lg",
     ),
-    crossIcon: combo(""),
+    closeIcon: combo(""),
 };
 
 export const styles: StylesType = {
@@ -63,8 +63,8 @@ export const styles: StylesType = {
         backgroundButton: combo(""),
         backgroundBlur: combo("backdrop-blur-[1.5px]"),
         backgroundColor: combo("bg-foreground/50 dark:bg-foreground/20"),
-        crossButton: combo("bg-transparent hover:bg-gray-low focus:bg-gray-low"),
-        crossIcon: combo("stroke-[2.2px] text-foreground"),
+        closeButton: combo("bg-transparent hover:bg-gray-low focus:bg-gray-low"),
+        closeIcon: combo("stroke-[2.2px] text-foreground"),
     },
     none: {
         component: combo(""),
@@ -74,8 +74,8 @@ export const styles: StylesType = {
         backgroundButton: combo(""),
         backgroundBlur: combo(""),
         backgroundColor: combo(""),
-        crossButton: combo(""),
-        crossIcon: combo(""),
+        closeButton: combo(""),
+        closeIcon: combo(""),
     },
 };
 

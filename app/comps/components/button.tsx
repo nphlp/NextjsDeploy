@@ -18,7 +18,7 @@ export default function ButtonSection(props: ButtonSectionProps) {
             {variants.map((variant, index) => (
                 <div className="grid grid-cols-3 gap-x-4" key={index}>
                     <div className="text-gray-high col-span-3 py-2 font-bold">{firstLetterUppercase(variant)}</div>
-                    <Button label="Button" variant={variant} className={{ button: "w-full" }} />
+                    <Button label="Button black" variant={variant} className={{ button: "w-full" }} />
                     <Button label="Loading" variant={variant} className={{ button: "w-full" }} isLoading />
                     <Button label="Disabled" variant={variant} className={{ button: "w-full" }} isDisabled />
                 </div>

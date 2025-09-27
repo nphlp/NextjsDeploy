@@ -13,8 +13,8 @@ export type StylesType = {
 };
 
 const structure: StructureType = {
-    component: combo("block"),
-    label: combo(""),
+    component: combo("block space-y-1"),
+    label: combo("text-sm font-semibold"),
 
     displayedValue: combo(""),
     placeholder: combo(""),
@@ -76,7 +76,7 @@ const structure: StructureType = {
 const styles: StylesType = {
     default: {
         component: combo(""),
-        label: combo("text-gray-middle text-sm font-semibold"),
+        label: combo("text-foreground"),
 
         displayedValue: combo("text-foreground"),
         placeholder: combo("text-gray-middle"),
@@ -116,9 +116,9 @@ const styles: StylesType = {
         ),
         optionButton: combo(
             // Text
-            "text-foreground",
+            "text-foreground text-sm",
             // Background
-            "bg-background hover:bg-gray-low",
+            "bg-background hover:bg-gray-light",
             // Outline
             "outline-none focus:bg-gray-low",
         ),

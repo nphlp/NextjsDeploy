@@ -35,7 +35,7 @@ type InputFileProps = {
  * />
  * ```
  */
-export default function InputFile(props: InputFileProps) {
+export default function InputImage(props: InputFileProps) {
     const {
         label,
         variant = "default",

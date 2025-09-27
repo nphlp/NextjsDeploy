@@ -28,7 +28,7 @@ export default function PopupSection(props: PopupSectionProps) {
                 <Button
                     label="Open Modal"
                     variant="outline"
-                    className={{ button: "w-full gap-4" }}
+                    className={{ button: "w-full", text: "flex items-center gap-4" }}
                     ref={modalButtonRef}
                     onClick={() => setIsModalOpen(true)}
                 >
@@ -38,7 +38,7 @@ export default function PopupSection(props: PopupSectionProps) {
                 <Button
                     label="Open Drawer"
                     variant="outline"
-                    className={{ button: "w-full gap-4" }}
+                    className={{ button: "w-full", text: "flex items-center gap-4" }}
                     ref={drawerButtonRef}
                     onClick={() => setIsDrawerOpen(true)}
                 >
@@ -60,7 +60,11 @@ export default function PopupSection(props: PopupSectionProps) {
                 withCloseButton
             >
                 <div className="text-xl font-bold">Title</div>
-                <div>Description</div>
+                <div>
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsa excepturi odit quaerat similique
+                    debitis laborum qui quisquam id nostrum? Omnis sequi distinctio rem nulla officia voluptatibus quis,
+                    odio laborum? Nihil!
+                </div>
                 <Button label="Close" ref={modalButtonRef} onClick={() => setIsModalOpen(false)} />
             </Modal>
 
@@ -74,7 +78,11 @@ export default function PopupSection(props: PopupSectionProps) {
                 withCloseButton
             >
                 <div className="text-xl font-bold">Title</div>
-                <div>Description</div>
+                <div>
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsa excepturi odit quaerat similique
+                    debitis laborum qui quisquam id nostrum? Omnis sequi distinctio rem nulla officia voluptatibus quis,
+                    odio laborum? Nihil!
+                </div>
                 <Button label="Close" ref={drawerButtonRef} onClick={() => setIsDrawerOpen(false)} />
             </Drawer>
         </section>

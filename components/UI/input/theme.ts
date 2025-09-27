@@ -28,7 +28,11 @@ export const styles: StylesType = {
     default: {
         component: combo(""),
         label: combo("text-foreground"),
-        input: combo("text-foreground", "bg-background", "border-gray-low focus:border-gray-middle"),
+        input: combo(
+            "text-foreground placeholder:text-gray-middle",
+            "bg-background",
+            "border-gray-low focus:border-gray-middle",
+        ),
     },
     none: {
         component: combo(""),

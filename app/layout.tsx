@@ -2,6 +2,7 @@ import Footer from "@comps/CORE/Footer";
 import Header from "@comps/CORE/Header";
 import ThemeProvider from "@comps/CORE/theme/themeProvider";
 import { getTheme } from "@comps/CORE/theme/themeServer";
+import ArrowToTop from "@comps/UI/arrowToTop";
 import Breakpoints from "@comps/UI/breakpoints";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -62,6 +63,7 @@ export default async function Layout(props: LayoutProps) {
                     </div>
                     <Breakpoints mode="onResize" />
                 </ThemeProvider>
+                <ArrowToTop />
             </body>
         </html>
     );

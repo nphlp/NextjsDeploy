@@ -23,6 +23,7 @@ export type InputProps = {
     noLabel?: boolean;
 
     // Optional
+    placeholder?: string;
     ref?: RefObject<HTMLInputElement | null>;
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
     required?: boolean;
@@ -52,9 +53,10 @@ export default function Input(props: InputProps) {
         value,
         variant = "default",
         noLabel = false,
-        onChange,
         required = true,
         className,
+        placeholder,
+        onChange,
         ...others
     } = props;
 
@@ -78,6 +80,7 @@ export default function Input(props: InputProps) {
             <input
                 name={label}
                 autoComplete={autoComplete}
+                placeholder={placeholder ?? label}
                 onChange={handleChange}
                 className={combo(theme[variant].input, className?.input)}
                 required={required}

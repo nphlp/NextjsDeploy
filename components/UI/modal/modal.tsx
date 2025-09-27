@@ -17,8 +17,8 @@ export type ModalClassName = {
     backgroundColor?: string;
     backgroundButton?: string;
 
-    crossButton?: string;
-    crossIcon?: string;
+    closeButton?: string;
+    closeIcon?: string;
 };
 
 type ModalProps = {
@@ -177,8 +177,8 @@ type CrossButtonProps = {
     withCloseButton: boolean;
     variant: ModalVariant;
     className?: {
-        crossButton?: string;
-        crossIcon?: string;
+        closeButton?: string;
+        closeIcon?: string;
     };
 };
 
@@ -192,9 +192,9 @@ const CrossButton = (props: CrossButtonProps) => {
             type="button"
             aria-label="Close modal"
             onClick={() => setIsModalOpen(false)}
-            className={combo(theme[variant].crossButton, className?.crossButton)}
+            className={combo(theme[variant].closeButton, className?.closeButton)}
         >
-            <X className={combo(theme[variant].crossIcon, className?.crossIcon)} />
+            <X className={combo(theme[variant].closeIcon, className?.closeIcon)} />
         </button>
     );
 };

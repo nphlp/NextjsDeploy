@@ -55,7 +55,7 @@ export const styles: StylesType = {
         backgroundBlur: combo("backdrop-blur-[1.5px]"),
         backgroundColor: combo("bg-foreground/50 dark:bg-foreground/20"),
         closeButton: combo("bg-transparent hover:bg-gray-low focus:bg-gray-low"),
-        closeIcon: combo("stroke-[2.2px] text-black"),
+        closeIcon: combo("stroke-[2.2px] text-foreground"),
     },
     none: {
         component: combo(""),

@@ -9,6 +9,7 @@ export type ButtonClassName = {
     button?: string;
     isLoading?: string;
     isDisabled?: string;
+    text?: string;
     loader?: string;
 };
 
@@ -90,14 +91,8 @@ export default function Button(props: ButtonProps) {
             disabled={isLoading || isDisabled}
             {...others}
         >
-            {isLoading ? (
-                <>
-                    <Loader className={combo(theme[variant].loaderColor, className?.loader)} />
-                    {loadingLabel ?? label}
-                </>
-            ) : (
-                (children ?? label)
-            )}
+            {isLoading && <Loader className={combo(theme[variant].loader, className?.loader)} />}
+            <span className={combo(theme[variant].text, className?.text)}>{loadingLabel ?? children ?? label}</span>
         </button>
     );
 }
