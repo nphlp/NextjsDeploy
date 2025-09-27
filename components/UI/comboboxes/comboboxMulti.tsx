@@ -450,6 +450,7 @@ const ComboboxDisplay = <T extends ComboOptionType | MultiSourceComboOptionType>
                                 "hover:bg-gray-light cursor-pointer rounded-full p-1",
                                 // Ring and focus
                                 "ring-0 ring-teal-300 outline-none focus:ring-2",
+                                "transition-all duration-150",
                             )}
                         >
                             <X className="stroke-gray-high size-4" />

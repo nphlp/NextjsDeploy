@@ -52,7 +52,7 @@ export default function PopupSection(props: PopupSectionProps) {
                     // Outside the modal
                     cardContainer: "px-5 py-16",
                     // Inside the modal
-                    card: "w-[400px] max-w-[500px] space-y-4",
+                    card: "max-w-[500px] min-w-[200px] space-y-4",
                 }}
                 setIsModalOpen={setIsModalOpen}
                 isModalOpen={isModalOpen}

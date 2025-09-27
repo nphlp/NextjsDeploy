@@ -13,8 +13,8 @@ export type StylesType = {
 };
 
 const structure: StructureType = {
-    component: combo("block space-y-1"),
-    label: combo("text-sm font-semibold"),
+    component: combo("block"),
+    label: combo("text-sm font-semibold mb-1"),
 
     displayedValue: combo(""),
     placeholder: combo(""),

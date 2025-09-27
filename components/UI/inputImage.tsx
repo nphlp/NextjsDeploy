@@ -90,20 +90,13 @@ export default function InputImage(props: InputFileProps) {
 
     const theme = {
         default: {
-            component: combo("block space-y-1"),
-            label: combo("text-sm font-medium text-black"),
+            component: combo("block"),
+            label: combo("text-sm mb-1 font-semibold text-foreground"),
             content: combo(
-                "rounded-xl border-[1.4px] border-dashed border-black/20 bg-white",
-                "outline-none ring-0 focus:ring-2 focus:ring-teal-300",
-                "transition-all duration-150",
-            ),
-        },
-        dark: {
-            component: combo("block space-y-1"),
-            label: combo("text-sm font-medium text-white"),
-            content: combo(
-                "rounded-xl border-[1.4px] border-dashed border-white/20 bg-white/10",
-                "outline-none ring-0 focus:ring-2 focus:ring-teal-300",
+                "rounded-xl bg-background",
+                "border-[1.5px] border-dashed border-gray-low focus:border-gray-medium",
+                // Accessibility
+                "outline-none ring-0 focus:ring-2 ring-teal-300",
                 "transition-all duration-150",
             ),
         },
@@ -167,8 +160,8 @@ export default function InputImage(props: InputFileProps) {
                 ) : (
                     // Placeholder
                     <div className="m-5 flex flex-col items-center gap-2">
-                        <ImageTemplate className="size-10 stroke-[1.5px] text-gray-400" />
-                        <div className="text-center text-sm text-gray-400">
+                        <ImageTemplate className="text-gray-middle size-10 stroke-[1.5px]" />
+                        <div className="text-gray-middle text-center text-sm">
                             <div>Glissez une image</div>
                             <div>ou cliquez pour sélectionner</div>
                         </div>

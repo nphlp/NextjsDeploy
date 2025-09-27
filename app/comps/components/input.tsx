@@ -6,6 +6,7 @@ import ComboboxMulti from "@comps/UI/comboboxes/comboboxMulti";
 import { ComboOptionType, MultiSourceComboOptionType } from "@comps/UI/comboboxes/utils";
 import Input from "@comps/UI/input/input";
 import InputImage from "@comps/UI/inputImage";
+import InputPassword from "@comps/UI/inputPassword";
 import Select from "@comps/UI/select/select";
 import { SelectOptionType } from "@comps/UI/select/utils";
 import { useState } from "react";
@@ -24,6 +25,7 @@ export default function InputSection(props: InputSectionProps) {
     const { taskSelectOptions, userComboOptions, mergedMultiComboOptions } = initialData;
 
     const [name, setName] = useState("");
+    const [password, setPassword] = useState("");
     const [task, setTask] = useState("");
     const [image, setImage] = useState<File | null>(null);
     const comboboxStates = useComboboxStates(null, userComboOptions);
@@ -33,6 +35,13 @@ export default function InputSection(props: InputSectionProps) {
         <section className={className}>
             <h2 className="border-gray-middle border-b pb-2 text-2xl font-bold">Fields</h2>
             <Input label="Input" placeholder="Entrez votre nom" setValue={setName} value={name} autoComplete="name" />
+            <InputPassword
+                label="Mot de passe"
+                placeholder="Entrez votre mot de passe"
+                autoComplete="current-password"
+                setValue={setPassword}
+                value={password}
+            />
             <Select
                 label="Catégorie"
                 placeholder="Sélectionnez une catégorie"
@@ -40,7 +49,7 @@ export default function InputSection(props: InputSectionProps) {
                 setSelected={setTask}
                 selected={task}
                 className={{ component: "w-full" }}
-                // canNotBeEmpty
+                canNotBeEmpty
             />
             <Combobox
                 label="Un seul article"

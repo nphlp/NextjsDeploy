@@ -24,10 +24,12 @@ export type InputProps = {
 
     // Optional
     placeholder?: string;
+    type?: InputHTMLAttributes<HTMLInputElement>["type"];
     ref?: RefObject<HTMLInputElement | null>;
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
     required?: boolean;
-} & Omit<InputHTMLAttributes<HTMLInputElement>, "className" | "label" | "value" | "onChange" | "required">;
+    legacyProps?: InputHTMLAttributes<HTMLInputElement>;
+};
 
 /**
  * Input component
