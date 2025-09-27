@@ -2,7 +2,6 @@
 
 import Select, { SelectClassName } from "@comps/UI/select/select";
 import { TaskModel } from "@services/types";
-import { RefetchType } from "@utils/FetchHook";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { UpdateTask } from "@/actions/Task";
@@ -39,20 +38,18 @@ const options = [
 
 type SelectUpdateTaskStatusProps = {
     task: TaskModel;
-    refetch: RefetchType;
     className?: SelectClassName;
 };
 
 export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProps) {
-    const { task, refetch, className } = props;
-    const { slug } = task;
+    const { task, className } = props;
+    const { id } = task;
 
     const [status, setStatus] = useState<string>(task.status);
 
     const handleStatusUpdate = async (statusChange: string) => {
         if (statusChange === task.status) return;
-        await UpdateTask({ slug, status: statusChange });
-        refetch();
+        UpdateTask({ id, status: statusChange });
     };
 
     return (

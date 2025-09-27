@@ -4,7 +4,7 @@ import Button, { ButtonClassName } from "@comps/UI/button/button";
 import Modal from "@comps/UI/modal/modal";
 import { TaskModel } from "@services/types";
 import { RefetchType } from "@utils/FetchHook";
-import { X } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Route } from "next";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -34,7 +34,7 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
     const buttonRef = useRef<HTMLButtonElement>(null);
 
     const handleDelete = async () => {
-        await DeleteTask({ id });
+        DeleteTask({ id });
         if (redirectTo) return router.push(redirectTo);
         if (refetch) refetch();
     };
@@ -47,7 +47,7 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
                 className={className}
                 onClick={() => setIsModalOpen(true)}
             >
-                <X />
+                <Trash2 />
             </Button>
             <Modal
                 className={{

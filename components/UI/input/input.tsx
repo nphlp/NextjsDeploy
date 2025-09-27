@@ -24,9 +24,11 @@ export type InputProps = {
 
     // Optional
     placeholder?: string;
+    autoFocus?: boolean;
     type?: InputHTMLAttributes<HTMLInputElement>["type"];
     ref?: RefObject<HTMLInputElement | null>;
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+    onBlur?: (e: ChangeEvent<HTMLInputElement>) => void;
     required?: boolean;
     legacyProps?: InputHTMLAttributes<HTMLInputElement>;
 };

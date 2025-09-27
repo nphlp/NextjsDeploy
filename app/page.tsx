@@ -11,13 +11,13 @@ export default async function Home() {
     return (
         <div className="w-full max-w-[900px] space-y-4 px-4 py-4 sm:px-12">
             <h1 className="text-2xl font-bold">Ma liste de tâches 📝</h1>
-            <Provider initialData={taskList}>
-                <section className="space-y-4">
+            <section className="space-y-4">
+                <Provider initialData={taskList}>
                     <AddTodoItem />
                     <hr className="border-gray-low mx-2" />
                     <TodoList />
-                </section>
-            </Provider>
+                </Provider>
+            </section>
         </div>
     );
 }

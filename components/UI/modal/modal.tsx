@@ -3,7 +3,7 @@
 import { combo } from "@lib/combo";
 import { X } from "lucide-react";
 import { motion } from "motion/react";
-import { ReactNode, RefObject, useEffect } from "react";
+import { KeyboardEvent, ReactNode, RefObject, useEffect } from "react";
 import { ModalVariant, theme } from "./theme";
 
 export type ModalClassName = {
@@ -101,8 +101,15 @@ export default function Modal(props: ModalProps) {
         }
     }, [isModalOpen, focusToRef]);
 
+    const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === "Escape") setIsModalOpen(false);
+    };
+
     return (
-        <div className={combo(!isModalOpen && "pointer-events-none", theme[variant].component, className?.component)}>
+        <div
+            className={combo(!isModalOpen && "pointer-events-none", theme[variant].component, className?.component)}
+            onKeyDown={handleKeyDown}
+        >
             {/* Sub Component */}
             <div className={combo(theme[variant].subComponent, className?.subComponent)}>
                 {/* Background Blur */}
@@ -135,6 +142,7 @@ export default function Modal(props: ModalProps) {
                         type="button"
                         aria-label="close-modal"
                         onClick={() => setIsModalOpen(false)}
+                        tabIndex={-1} // Make the button not focusable
                         className={combo(theme[variant].backgroundButton, className?.backgroundButton)}
                     />
                 )}

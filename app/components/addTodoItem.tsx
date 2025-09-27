@@ -30,7 +30,6 @@ export default function AddTodoItem() {
                     component: "w-full",
                 }}
                 noLabel
-                autoFocus
             />
             <Button type="submit" label="Ajouter" variant="outline" className={{ button: "p-1.5" }}>
                 <ArrowUp />

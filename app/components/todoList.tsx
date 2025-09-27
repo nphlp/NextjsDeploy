@@ -2,20 +2,14 @@
 
 import { useContext } from "react";
 import { Context } from "./context";
-import TodoItem, { TodoItemSkeleton } from "./todoItem";
+import TodoItem from "./todoItem";
+import TodoListSkeleton from "./todoListSkeleton";
 
 export default function TodoList() {
     const { data, isLoading } = useContext(Context);
 
     if (isLoading) {
-        const length = data?.length ?? 5;
-        return (
-            <div className="space-y-2">
-                {Array.from({ length }, (_, index) => (
-                    <TodoItemSkeleton key={index} index={index} />
-                ))}
-            </div>
-        );
+        return <TodoListSkeleton number={data?.length} />;
     }
 
     return (

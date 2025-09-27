@@ -27,19 +27,11 @@ export default function TodoItem(props: TodoItemProps) {
                 refetch={refetch}
                 className={{
                     component: "w-full",
+                    input: "rounded-none border-x-0 border-t-transparent px-0 py-1 text-lg focus:border-t-transparent focus:ring-0",
                 }}
             />
-            <SelectUpdateTaskStatus
-                task={task}
-                refetch={refetch}
-                className={{ component: "w-[150px] shrink-0 max-md:hidden" }}
-            />
-            <Link
-                label={`Edit ${task.title}`}
-                variant="outline"
-                href={`/task/${task.slug}` as Route}
-                className="px-1.5"
-            >
+            <SelectUpdateTaskStatus task={task} className={{ component: "w-[150px] shrink-0 max-md:hidden" }} />
+            <Link label={`Edit ${task.title}`} variant="outline" href={`/task/${task.id}` as Route} className="px-1.5">
                 <Pencil />
             </Link>
             <ButtonDeleteTask task={task} className={{ button: "max-xs:hidden px-1.5" }} refetch={refetch} />
@@ -64,8 +56,8 @@ export function TodoItemSkeleton(props: TodoItemSkeletonProps) {
         <div className="flex w-full items-center gap-2">
             <div
                 className={combo(
-                    "relative h-[38px] w-full px-4",
-                    "text-foreground bg-background border-gray-low animate-pulse rounded-lg border",
+                    "relative h-[38px] w-full",
+                    "text-foreground bg-background border-b-gray-low animate-pulse border-y border-t-transparent",
                 )}
             >
                 <div
@@ -76,7 +68,7 @@ export function TodoItemSkeleton(props: TodoItemSkeletonProps) {
             <div
                 className={combo(
                     "max-md:hidden",
-                    "relative h-[38px] w-[220px] px-4",
+                    "relative h-[38px] w-[150px] shrink-0 px-4",
                     "text-foreground bg-background border-gray-low animate-pulse rounded-lg border",
                 )}
             >

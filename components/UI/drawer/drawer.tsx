@@ -3,7 +3,7 @@
 import { combo } from "@lib/combo";
 import { X } from "lucide-react";
 import { motion } from "motion/react";
-import { ReactNode, RefObject, useEffect } from "react";
+import { KeyboardEvent, ReactNode, RefObject, useEffect } from "react";
 import { DrawerVariant, theme } from "./theme";
 
 export type DrawerClassName = {
@@ -96,8 +96,15 @@ export default function Drawer(props: DrawerProps) {
         }
     }, [isDrawerOpen, focusToRef, minimalTimoutToFocus]);
 
+    const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === "Escape") setIsDrawerOpen(false);
+    };
+
     return (
-        <div className={combo(!isDrawerOpen && "pointer-events-none", theme[variant].component, className?.component)}>
+        <div
+            className={combo(!isDrawerOpen && "pointer-events-none", theme[variant].component, className?.component)}
+            onKeyDown={handleKeyDown}
+        >
             {/* Background Blur */}
             {!noBackgroundBlur && (
                 <motion.div
@@ -127,6 +134,7 @@ export default function Drawer(props: DrawerProps) {
                 <motion.button
                     type="button"
                     aria-label="close-modal"
+                    tabIndex={-1} // Make the button not focusable
                     onClick={() => setIsDrawerOpen(false)}
                     className={combo(theme[variant].backgroundButton, className?.backgroundButton)}
                 />

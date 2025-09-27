@@ -44,7 +44,7 @@ export const AddTask = async (props: AddTaskProps) => {
 };
 
 type UpdateTaskProps = {
-    slug: string;
+    id: string;
     title?: string;
     status?: string;
 };
@@ -54,31 +54,31 @@ type UpdateTaskParsedProps = UpdateTaskProps & {
 };
 
 const updateTaskSchema: ZodType<UpdateTaskParsedProps> = z.object({
-    slug: z.string(),
+    id: z.string(),
     title: z.string().min(2).max(100).optional(),
     status: z.enum($Enums.Status).optional(),
 });
 
 export const UpdateTask = async (props: UpdateTaskProps) => {
     try {
-        const { slug, title, status } = updateTaskSchema.parse(props);
+        const { id, title, status } = updateTaskSchema.parse(props);
 
-        const existingTask = await TaskFindUniqueAction({ where: { slug } });
+        const existingTask = await TaskFindUniqueAction({ where: { id } });
         if (!existingTask) return;
 
-        const newSlug = title ? stringToSlug(title) : undefined;
+        const slug = title ? stringToSlug(title) : undefined;
 
         const updatedTask = await TaskUpdateAction({
-            where: { slug },
+            where: { id },
             data: {
                 title,
-                slug: newSlug,
+                slug,
                 status,
             },
         });
 
         revalidateTag(hashParamsForCacheKey("task-findMany", { orderBy: { updatedAt: "desc" } }));
-        revalidateTag(hashParamsForCacheKey("task-findUnique", { where: { slug } }));
+        revalidateTag(hashParamsForCacheKey("task-findUnique", { where: { id } }));
 
         return updatedTask;
     } catch (error) {

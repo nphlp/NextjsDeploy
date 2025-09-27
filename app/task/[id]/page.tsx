@@ -1,36 +1,33 @@
 import Link from "@comps/UI/button/link";
 import { TaskFindUniqueServer } from "@services/server";
 import { notFound } from "next/navigation";
-import Provider from "./components/provider";
 import TodoEdition from "./components/todoEdition";
 
 // export const generateStaticParams = async () => {
 //     const articles = await TaskFindManyServer({
-//         select: { slug: true },
+//         select: { id: true },
 //     });
 
-//     return articles.map((article) => ({ slug: article.slug }));
+//     return articles.map((article) => ({ id: article.id }));
 // };
 
 export const dynamic = "force-dynamic";
 
 type PageProps = {
-    params: Promise<{ slug: string }>;
+    params: Promise<{ id: string }>;
 };
 
 export default async function Page(props: PageProps) {
     const { params } = props;
-    const { slug } = await params;
+    const { id } = await params;
 
-    const task = await TaskFindUniqueServer({ where: { slug } });
+    const task = await TaskFindUniqueServer({ where: { id } });
 
     if (!task) notFound();
 
     return (
         <div className="w-full max-w-[600px] space-y-8 px-4 py-4 sm:px-12">
-            <Provider initialData={task}>
-                <TodoEdition />
-            </Provider>
+            <TodoEdition task={task} />
             <Link label="Retour à la liste" href="/" />
         </div>
     );

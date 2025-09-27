@@ -5,6 +5,9 @@ import { ArrowUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Button from "./button/button";
 
+const env = process.env.NODE_ENV;
+if (!env) throw new Error("NODE_ENV environment variable is not defined");
+
 type BreakpointsProps = {
     timeToDesappear?: number;
 };
@@ -55,6 +58,8 @@ export default function ArrowToTop(props: BreakpointsProps) {
         const mainId = document.getElementById("main");
         if (mainId) mainId.scrollTo({ top: 0, behavior: "smooth" });
     };
+
+    if (env === "development") return null;
 
     return (
         <Button
