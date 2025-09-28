@@ -12,13 +12,13 @@ export default function ThemeToggle() {
             <Button
                 label="toggle-mode"
                 variant="ghost"
-                className={{ button: "p-1.5" }}
+                className={{ button: "p-2" }}
                 onClick={toggleTheme}
                 focusVisible
             >
-                {theme === "system" && <SunMoon />}
-                {theme === "dark" && <Moon />}
-                {theme === "light" && <Sun />}
+                {theme === "system" && <SunMoon className="size-6" />}
+                {theme === "dark" && <Moon className="size-6" />}
+                {theme === "light" && <Sun className="size-6" />}
             </Button>
         </div>
     );

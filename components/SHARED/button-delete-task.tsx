@@ -54,7 +54,7 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
                 className={className}
                 onClick={() => setIsModalOpen(true)}
             >
-                <Trash2 />
+                <Trash2 className="size-6" />
             </Button>
             <Modal
                 className={{

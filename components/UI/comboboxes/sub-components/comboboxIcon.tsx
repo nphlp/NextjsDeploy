@@ -86,7 +86,7 @@ export default function ComboboxIcon<T extends ComboOptionType | MultiSourceComb
                     "cursor-pointer",
                 )}
             >
-                <ChevronDown className="stroke-gray-high translate-y-px" />
+                <ChevronDown className="stroke-gray-high size-6 translate-y-px" />
             </ComboboxButton>
         );
     }
@@ -108,7 +108,7 @@ export default function ComboboxIcon<T extends ComboOptionType | MultiSourceComb
                 "cursor-pointer",
             )}
         >
-            <X className="stroke-gray-high" />
+            <X className="stroke-gray-high size-6" />
         </button>
     );
 }

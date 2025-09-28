@@ -74,7 +74,7 @@ export default function ArrowToTop(props: BreakpointsProps) {
             }}
             onClick={handleClick}
         >
-            <ArrowUp />
+            <ArrowUp className="size-6" />
         </Button>
     );
 }

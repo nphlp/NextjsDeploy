@@ -15,7 +15,7 @@ export default async function Home() {
             <section className="space-y-4">
                 <Provider initialData={taskList}>
                     <InputAddTask />
-                    <hr className="border-gray-low mx-2" />
+                    <hr className="border-gray-low" />
                     <List />
                 </Provider>
             </section>

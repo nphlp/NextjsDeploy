@@ -56,7 +56,7 @@ export default function InputAddTask() {
                 noLabel
             />
             <Button type="submit" label="Ajouter" variant="outline" className={{ button: "p-1.5" }}>
-                <ArrowUp />
+                <ArrowUp className="size-6" />
             </Button>
         </form>
     );

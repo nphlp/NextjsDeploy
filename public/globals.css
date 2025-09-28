@@ -66,15 +66,36 @@
     --font-mono: var(--font-geist-mono);
 }
 
+:root {
+    /* Base (over 640px) */
+    font-size: 16px;
+
+    /* Breakpoints SM */
+    @media (width <= 640px) {
+        font-size: 15px;
+    }
+
+    /* Breakpoints SM */
+    @media (width <= 416px) {
+        font-size: 14px;
+    }
+}
+
 /* Theme extensions */
 @theme {
-    /* Breakpoints Extension */
-    --breakpoint-3xs: 28rem;
-    --breakpoint-2xs: 28rem;
-    --breakpoint-xs: 32rem;
-    --breakpoint-3xl: 120rem;
+    /* Breakpoints extension for mobile  */
+    --breakpoint-3xs: 320px; /* - 96px */
+    --breakpoint-2xs: 416px; /* - 96px */
+    --breakpoint-xs: 512px; /* - 128px */
+    /* Breakpoints default based on absolute units */
+    --breakpoint-sm: 640px; /* Base */
+    --breakpoint-md: 768px; /* + 128px */
+    --breakpoint-lg: 1024px; /* + 256px */
+    --breakpoint-xl: 1280px; /* + 256px */
+    --breakpoint-2xl: 1536px; /* + 256px */
+    /* Breakpoints extension for larger screens */
+    --breakpoint-3xl: 1920px; /* + 384px */
 
-    /* Font Size Extension */
     --text-3xs: 0.625rem; /* 10px */
     --text-3xs--line-height: calc(1 / var(--text-3xs));
     --text-2xs: 0.5rem; /* 8px */

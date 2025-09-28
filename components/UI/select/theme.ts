@@ -41,7 +41,7 @@ const structure: StructureType = {
         // Accessibility
         "cursor-pointer",
     ),
-    subCross: combo(""),
+    subCross: combo("size-6"),
 
     subDiv: combo(
         // Position
@@ -49,7 +49,7 @@ const structure: StructureType = {
         // Accessibility
         "pointer-events-none",
     ),
-    subChevron: combo(""),
+    subChevron: combo("size-6"),
 
     optionList: combo(
         // Position

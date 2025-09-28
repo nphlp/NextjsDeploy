@@ -37,7 +37,7 @@ const structure: StructureType = {
         // Position
         "absolute top-2 right-2",
         // Spacing
-        "p-0.5",
+        "p-1",
         // Outline
         "outline-none focus:ring-2 ring-teal-300",
         "transition-all duration-150",
@@ -46,7 +46,7 @@ const structure: StructureType = {
         // Border and radius
         "rounded-lg",
     ),
-    closeIcon: combo(""),
+    closeIcon: combo("size-6"),
 };
 
 export const styles: StylesType = {

@@ -41,7 +41,7 @@ const structure: StructureType = {
         // Border and radius
         "rounded-lg",
     ),
-    closeIcon: combo("size-7"),
+    closeIcon: combo("size-6"),
 };
 
 export const styles: StylesType = {
