@@ -2,7 +2,7 @@
 
 import { useContext } from "react";
 import { Context } from "./context";
-import Item from "./item";
+import Item, { ItemSkeleton } from "./item";
 
 export default function List() {
     const { optimisticData } = useContext(Context);
@@ -15,3 +15,13 @@ export default function List() {
         </div>
     );
 }
+
+export const ListSkeleton = () => {
+    return (
+        <div className="space-y-2">
+            {Array.from({ length: 5 }).map((_, index) => (
+                <ItemSkeleton key={index} index={index} />
+            ))}
+        </div>
+    );
+};

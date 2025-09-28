@@ -1,9 +1,9 @@
 import { TaskFindManyProps, TaskFindManyResponse } from "@services/types";
 
-export const tasksParams = () =>
+export const homePageParams = () =>
     ({
         select: { id: true, title: true, status: true },
         orderBy: { updatedAt: "desc" },
     }) satisfies TaskFindManyProps;
 
-export type TaskType = TaskFindManyResponse<ReturnType<typeof tasksParams>>[number];
+export type TaskType = TaskFindManyResponse<ReturnType<typeof homePageParams>>[number];

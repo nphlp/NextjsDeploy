@@ -1,38 +1,54 @@
-export default function Page() {
-    return <></>;
+import Link from "@comps/UI/button/link";
+import { TaskFindUniqueServer } from "@services/server";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import z, { ZodType } from "zod";
+import Edition from "./components/edition";
+import { taskIdPageParams } from "./components/fetch";
+import Provider from "./components/provider";
+
+type Params = {
+    id: string;
+};
+
+const paramsSchema: ZodType<Params> = z.strictObject({ id: z.nanoid() });
+
+type PageProps = {
+    params: Promise<Params>;
+};
+
+export default async function Page(props: PageProps) {
+    const { params } = props;
+
+    const { id } = paramsSchema.parse(await params);
+
+    return (
+        <div className="w-full max-w-[600px] space-y-6 px-4 py-4 sm:px-12">
+            <h1 className="text-2xl font-bold">Édition de la tâche 📝</h1>
+            <Suspense fallback={<TaskSkeleton />}>
+                <Task id={id} />
+            </Suspense>
+            <Link label="Retour" href="/" />
+        </div>
+    );
 }
 
-// import Link from "@comps/UI/button/link";
-// import { TaskFindUniqueServer } from "@services/server";
-// import { notFound } from "next/navigation";
-// import TodoEdition from "./components/todoEdition";
+type TaskProps = Params;
 
-// // export const generateStaticParams = async () => {
-// //     const articles = await TaskFindManyServer({
-// //         select: { id: true },
-// //     });
+const Task = async (props: TaskProps) => {
+    const { id } = props;
 
-// //     return articles.map((article) => ({ id: article.id }));
-// // };
+    const task = await TaskFindUniqueServer(taskIdPageParams(id));
 
-// export const dynamic = "force-dynamic";
+    if (!task) notFound();
 
-// type PageProps = {
-//     params: Promise<{ id: string }>;
-// };
+    return (
+        <Provider initialData={task}>
+            <Edition task={task} />
+        </Provider>
+    );
+};
 
-// export default async function Page(props: PageProps) {
-//     const { params } = props;
-//     const { id } = await params;
-
-//     const task = await TaskFindUniqueServer({ where: { id } });
-
-//     if (!task) notFound();
-
-//     return (
-//         <div className="w-full max-w-[600px] space-y-8 px-4 py-4 sm:px-12">
-//             <TodoEdition task={task} />
-//             <Link label="Retour à la liste" href="/" />
-//         </div>
-//     );
-// }
+const TaskSkeleton = () => {
+    return <></>;
+};

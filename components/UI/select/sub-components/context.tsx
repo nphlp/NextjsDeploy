@@ -12,4 +12,4 @@ export type ContextType = CommonProps & {
     optionListRef: RefObject<HTMLDivElement | null>;
 };
 
-export const Context = createContext<ContextType>({} as ContextType);
+export const Context = createContext({} as ContextType);

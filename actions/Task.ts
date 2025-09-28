@@ -1,6 +1,8 @@
 "use server";
 
 import { TaskCreateAction, TaskDeleteAction, TaskFindUniqueAction, TaskUpdateAction } from "@actions/TaskAction";
+import { homePageParams } from "@app/components/fetch";
+import { taskIdPageParams } from "@app/task/[id]/components/fetch";
 import { $Enums } from "@prisma/client";
 import { TaskModel } from "@services/types";
 import { hashParamsForCacheKey } from "@utils/FetchConfig";
@@ -35,7 +37,10 @@ export const AddTask = async (props: AddTaskProps): Promise<TaskModel | null> =>
             },
         });
 
-        revalidateTag(hashParamsForCacheKey("task-findMany", { orderBy: { updatedAt: "desc" } }));
+        // Reset specific cache tags
+        revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
+
+        console.log("Creation succeeded", createdTask.title, createdTask.status);
 
         return createdTask;
     } catch (error) {
@@ -67,6 +72,8 @@ export const UpdateTask = async (props: UpdateTaskProps): Promise<TaskModel | nu
         const existingTask = await TaskFindUniqueAction({ where: { id } });
         if (!existingTask) return null;
 
+        console.log("Task found:", existingTask.title, existingTask.status);
+
         const slug = title ? stringToSlug(title) : undefined;
 
         const updatedTask = await TaskUpdateAction({
@@ -78,8 +85,11 @@ export const UpdateTask = async (props: UpdateTaskProps): Promise<TaskModel | nu
             },
         });
 
-        revalidateTag(hashParamsForCacheKey("task-findMany", { orderBy: { updatedAt: "desc" } }));
-        revalidateTag(hashParamsForCacheKey("task-findUnique", { where: { id } }));
+        // Reset specific cache tags
+        revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
+        revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id)));
+
+        console.log("Update succeeded", updatedTask.title, updatedTask.status);
 
         return updatedTask;
     } catch (error) {
@@ -107,7 +117,11 @@ export const DeleteTask = async (props: DeleteTaskProps): Promise<TaskModel | nu
             where: { id },
         });
 
-        revalidateTag(hashParamsForCacheKey("task-findMany", { orderBy: { updatedAt: "desc" } }));
+        // Reset specific cache tags
+        revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
+        revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id)));
+
+        console.log("Deletion succeeded", deletedTask.title, deletedTask.status);
 
         return deletedTask;
     } catch (error) {

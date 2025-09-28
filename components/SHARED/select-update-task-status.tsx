@@ -3,14 +3,14 @@
 import { Context } from "@app/components/context";
 import { TaskType } from "@app/components/fetch";
 import Select, { SelectClassName } from "@comps/UI/select/select";
+import { SelectOptionType } from "@comps/UI/select/utils";
 import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
 import { combo } from "@lib/combo";
-import { TaskModel } from "@services/types";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
 import { startTransition, useContext, useState } from "react";
 import { UpdateTask } from "@/actions/Task";
 
-const options = [
+const options: SelectOptionType[] = [
     {
         slug: "TODO",
         label: (
@@ -53,16 +53,17 @@ export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProp
 
     const [status, setStatus] = useState<string>(task.status);
 
-    const handleStatusUpdate = async () => {
+    const handleStatusUpdate = (newStatus: string) => {
+        const newStatusConst = newStatus as TaskType["status"];
         startTransition(async () => {
             // New item
-            const newItem: TaskType = { id, title, status: status as TaskModel["status"] };
+            const newItem: TaskType = { id, title, status: newStatusConst };
 
             // Set optimistic state
             setOptimisticData({ type: "update", newItem });
 
             // Do mutation
-            const validatedItem = await UpdateTask({ id, status });
+            const validatedItem = await UpdateTask({ id, status: newStatusConst });
 
             // If failed, the optimistic state is rolled back at the end of the transition
             if (!validatedItem) return console.log("❌ Update failed");

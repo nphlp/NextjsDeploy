@@ -32,7 +32,7 @@ export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
             setOptimisticData({ type: "update", newItem });
 
             // Do mutation
-            const validatedItem = await UpdateTask({ id, status });
+            const validatedItem = await UpdateTask({ id, title });
 
             // If failed, the optimistic state is rolled back at the end of the transition
             if (!validatedItem) return console.log("❌ Update failed");
