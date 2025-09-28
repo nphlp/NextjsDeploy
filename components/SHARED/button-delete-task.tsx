@@ -1,7 +1,8 @@
 "use client";
 
-import { Context } from "@app/components/context";
+import { ContextType as HomePageContextType } from "@app/components/context";
 import { TaskType } from "@app/components/fetch";
+import { ContextType as TaskPageContextType } from "@app/task/[id]/components/context";
 import Button, { ButtonClassName } from "@comps/UI/button/button";
 import Modal from "@comps/UI/modal/modal";
 import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
@@ -9,20 +10,21 @@ import { combo } from "@lib/combo";
 import { Trash2 } from "lucide-react";
 import { Route } from "next";
 import { useRouter } from "next/navigation";
-import { startTransition, useContext, useRef, useState } from "react";
+import { Context, startTransition, useContext, useRef, useState } from "react";
 import { DeleteTask } from "@/actions/Task";
 
 type SelectUpdateTaskStatusProps = {
     task: TaskType;
     className?: ButtonClassName;
     redirectTo?: Route;
+    context: Context<HomePageContextType> | Context<TaskPageContextType>;
 };
 
 export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
-    const { task, className, redirectTo } = props;
+    const { task, className, redirectTo, context } = props;
 
     const router = useRouter();
-    const { setData, setOptimisticData, optimisticMutations } = useContext(Context);
+    const { setData, setOptimisticData, optimisticMutations } = useContext(context as Context<HomePageContextType>);
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const buttonRef = useRef<HTMLButtonElement>(null);

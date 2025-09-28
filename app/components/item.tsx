@@ -6,6 +6,7 @@ import SelectUpdateTaskStatus, { SelectUpdateTaskStatusSkeleton } from "@comps/S
 import Link from "@comps/UI/button/link";
 import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
 import { Pencil } from "lucide-react";
+import { Context } from "./context";
 import { TaskType } from "./fetch";
 
 type TodoItemProps = {
@@ -23,12 +24,17 @@ export default function Item(props: TodoItemProps) {
                     component: "w-full",
                     input: "rounded-none border-x-0 border-t-transparent px-0 focus:border-t-transparent focus:ring-0",
                 }}
+                context={Context}
             />
-            <SelectUpdateTaskStatus task={task} className={{ component: "w-[150px] shrink-0 max-md:hidden" }} />
+            <SelectUpdateTaskStatus
+                task={task}
+                className={{ component: "w-[150px] shrink-0 max-md:hidden" }}
+                context={Context}
+            />
             <Link label={`Edit ${task.title}`} variant="outline" href={`/task/${task.id}`} className="px-1.5">
                 <Pencil className="size-6" />
             </Link>
-            <ButtonDeleteTask task={task} className={{ button: "max-xs:hidden px-1.5" }} />
+            <ButtonDeleteTask task={task} className={{ button: "max-xs:hidden px-1.5" }} context={Context} />
         </div>
     );
 }

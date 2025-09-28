@@ -1,23 +1,25 @@
 "use client";
 
-import { Context } from "@app/components/context";
+import { ContextType as HomePageContextType } from "@app/components/context";
 import { TaskType } from "@app/components/fetch";
+import { ContextType as TaskPageContextType } from "@app/task/[id]/components/context";
 import Input, { InputClassName } from "@comps/UI/input/input";
 import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
 import { combo } from "@lib/combo";
-import { startTransition, useContext, useState } from "react";
+import { Context, startTransition, useContext, useState } from "react";
 import { UpdateTask } from "@/actions/Task";
 
 type InputUpdateTaskTitleProps = {
     task: TaskType;
     className?: InputClassName;
+    context: Context<HomePageContextType> | Context<TaskPageContextType>;
 };
 
 export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
-    const { task, className } = props;
+    const { task, className, context } = props;
     const { id, status } = task;
 
-    const { setData, setOptimisticData, optimisticMutations } = useContext(Context);
+    const { setData, setOptimisticData, optimisticMutations } = useContext(context as Context<HomePageContextType>);
 
     const [title, setTitle] = useState<string>(task.title);
 

@@ -44,7 +44,7 @@ const Task = async (props: TaskProps) => {
 
     return (
         <Provider initialData={task}>
-            <Edition task={task} />
+            <Edition />
         </Provider>
     );
 };

@@ -6,4 +6,6 @@ export const taskIdPageParams = (id: string) =>
         where: { id },
     }) satisfies TaskFindUniqueProps;
 
-export type TaskType = TaskFindUniqueResponse<ReturnType<typeof taskIdPageParams>>;
+export type TaskTypeNullable = TaskFindUniqueResponse<ReturnType<typeof taskIdPageParams>>;
+
+export type TaskType = NonNullable<TaskTypeNullable>;

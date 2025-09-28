@@ -1,13 +1,14 @@
 "use client";
 
-import { Context } from "@app/components/context";
+import { ContextType as HomePageContextType } from "@app/components/context";
 import { TaskType } from "@app/components/fetch";
+import { ContextType as TaskPageContextType } from "@app/task/[id]/components/context";
 import Select, { SelectClassName } from "@comps/UI/select/select";
 import { SelectOptionType } from "@comps/UI/select/utils";
 import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
 import { combo } from "@lib/combo";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
-import { startTransition, useContext, useState } from "react";
+import { Context, startTransition, useContext, useState } from "react";
 import { UpdateTask } from "@/actions/Task";
 
 const options: SelectOptionType[] = [
@@ -43,13 +44,14 @@ const options: SelectOptionType[] = [
 type SelectUpdateTaskStatusProps = {
     task: TaskType;
     className?: SelectClassName;
+    context: Context<HomePageContextType> | Context<TaskPageContextType>;
 };
 
 export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProps) {
-    const { task, className } = props;
+    const { task, className, context } = props;
     const { id, title } = task;
 
-    const { setData, setOptimisticData, optimisticMutations } = useContext(Context);
+    const { setData, setOptimisticData, optimisticMutations } = useContext(context as Context<HomePageContextType>);
 
     const [status, setStatus] = useState<string>(task.status);
 
