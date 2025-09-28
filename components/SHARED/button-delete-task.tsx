@@ -1,8 +1,6 @@
 "use client";
 
-import { ContextType as HomePageContextType } from "@app/components/context";
 import { TaskType } from "@app/components/fetch";
-import { ContextType as TaskPageContextType } from "@app/task/[id]/components/context";
 import Button, { ButtonClassName } from "@comps/UI/button/button";
 import Modal from "@comps/UI/modal/modal";
 import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
@@ -10,21 +8,21 @@ import { combo } from "@lib/combo";
 import { Trash2 } from "lucide-react";
 import { Route } from "next";
 import { useRouter } from "next/navigation";
-import { Context, startTransition, useContext, useRef, useState } from "react";
+import { startTransition, useRef, useState } from "react";
 import { DeleteTask } from "@/actions/Task";
+import useInstant from "./useInstant";
 
 type SelectUpdateTaskStatusProps = {
     task: TaskType;
     className?: ButtonClassName;
     redirectTo?: Route;
-    context: Context<HomePageContextType> | Context<TaskPageContextType>;
 };
 
 export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
-    const { task, className, redirectTo, context } = props;
+    const { task, className, redirectTo } = props;
 
     const router = useRouter();
-    const { setData, setOptimisticData, optimisticMutations } = useContext(context as Context<HomePageContextType>);
+    const { setData, setOptimisticData } = useInstant(task);
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const buttonRef = useRef<HTMLButtonElement>(null);
@@ -35,7 +33,7 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
             const newItem: TaskType = task;
 
             // Set optimistic state
-            setOptimisticData({ type: "delete", newItem });
+            setOptimisticData(newItem);
 
             // Do mutation
             const validatedItem = await DeleteTask({ id: newItem.id });
@@ -44,9 +42,7 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
             if (!validatedItem) return console.log("❌ Deletion failed");
 
             // If success, update the real state in a new transition to prevent key conflict
-            startTransition(() =>
-                setData((current) => optimisticMutations(current, { type: "delete", newItem: validatedItem })),
-            );
+            startTransition(() => setData(validatedItem));
 
             // If redirection, do it after the real state change
             if (redirectTo) router.push(redirectTo);

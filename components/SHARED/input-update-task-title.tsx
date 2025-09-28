@@ -1,25 +1,23 @@
 "use client";
 
-import { ContextType as HomePageContextType } from "@app/components/context";
 import { TaskType } from "@app/components/fetch";
-import { ContextType as TaskPageContextType } from "@app/task/[id]/components/context";
 import Input, { InputClassName } from "@comps/UI/input/input";
 import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
 import { combo } from "@lib/combo";
-import { Context, startTransition, useContext, useState } from "react";
+import { startTransition, useState } from "react";
 import { UpdateTask } from "@/actions/Task";
+import useInstant from "./useInstant";
 
 type InputUpdateTaskTitleProps = {
     task: TaskType;
     className?: InputClassName;
-    context: Context<HomePageContextType> | Context<TaskPageContextType>;
 };
 
 export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
-    const { task, className, context } = props;
+    const { task, className } = props;
     const { id, status } = task;
 
-    const { setData, setOptimisticData, optimisticMutations } = useContext(context as Context<HomePageContextType>);
+    const { setData, setOptimisticData } = useInstant(task);
 
     const [title, setTitle] = useState<string>(task.title);
 
@@ -31,7 +29,7 @@ export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
             const newItem: TaskType = { id, title, status };
 
             // Set optimistic state
-            setOptimisticData({ type: "update", newItem });
+            setOptimisticData(newItem);
 
             // Do mutation
             const validatedItem = await UpdateTask({ id, title });
@@ -40,9 +38,7 @@ export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
             if (!validatedItem) return console.log("❌ Update failed");
 
             // If success, update the real state in a new transition to prevent key conflict
-            startTransition(() =>
-                setData((current) => optimisticMutations(current, { type: "update", newItem: validatedItem })),
-            );
+            startTransition(() => setData(validatedItem));
 
             console.log("✅ Update succeeded");
         });

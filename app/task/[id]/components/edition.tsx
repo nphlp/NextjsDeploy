@@ -3,11 +3,14 @@
 import ButtonDeleteTask, { ButtonDeleteTaskSkeleton } from "@comps/SHARED/button-delete-task";
 import InputUpdateTaskTitle, { InputUpdateTaskTitleSkeleton } from "@comps/SHARED/input-update-task-title";
 import SelectUpdateTaskStatus, { SelectUpdateTaskStatusSkeleton } from "@comps/SHARED/select-update-task-status";
-import { useContext } from "react";
-import { Context } from "./context";
+import { TaskType } from "./fetch";
 
-export default function Edition() {
-    const { optimisticData: task } = useContext(Context);
+type EditionProps = {
+    task: TaskType;
+};
+
+export default function Edition(props: EditionProps) {
+    const { task } = props;
 
     return (
         <div className="space-y-4">
@@ -17,11 +20,10 @@ export default function Edition() {
                     component: "w-full",
                     input: "rounded-none border-x-0 border-t-transparent px-0 py-1 text-lg focus:border-t-transparent focus:ring-0",
                 }}
-                context={Context}
             />
             <div className="flex justify-between gap-2">
-                <SelectUpdateTaskStatus task={task} className={{ component: "w-full" }} context={Context} />
-                <ButtonDeleteTask task={task} className={{ button: "px-1.5" }} redirectTo="/" context={Context} />
+                <SelectUpdateTaskStatus task={task} className={{ component: "w-full" }} />
+                <ButtonDeleteTask task={task} className={{ button: "px-1.5" }} redirectTo="/" />
             </div>
         </div>
     );

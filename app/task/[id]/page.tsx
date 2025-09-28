@@ -5,7 +5,6 @@ import { Suspense } from "react";
 import z, { ZodType } from "zod";
 import Edition, { EditionSkeleton } from "./components/edition";
 import { taskIdPageParams } from "./components/fetch";
-import Provider from "./components/provider";
 
 type Params = {
     id: string;
@@ -42,11 +41,7 @@ const Task = async (props: TaskProps) => {
 
     if (!task) notFound();
 
-    return (
-        <Provider initialData={task}>
-            <Edition />
-        </Provider>
-    );
+    return <Edition task={task} />;
 };
 
 const TaskSkeleton = () => {

@@ -1,15 +1,14 @@
 "use client";
 
-import { ContextType as HomePageContextType } from "@app/components/context";
 import { TaskType } from "@app/components/fetch";
-import { ContextType as TaskPageContextType } from "@app/task/[id]/components/context";
 import Select, { SelectClassName } from "@comps/UI/select/select";
 import { SelectOptionType } from "@comps/UI/select/utils";
 import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
 import { combo } from "@lib/combo";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
-import { Context, startTransition, useContext, useState } from "react";
+import { startTransition, useState } from "react";
 import { UpdateTask } from "@/actions/Task";
+import useInstant from "./useInstant";
 
 const options: SelectOptionType[] = [
     {
@@ -44,14 +43,13 @@ const options: SelectOptionType[] = [
 type SelectUpdateTaskStatusProps = {
     task: TaskType;
     className?: SelectClassName;
-    context: Context<HomePageContextType> | Context<TaskPageContextType>;
 };
 
 export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProps) {
-    const { task, className, context } = props;
+    const { task, className } = props;
     const { id, title } = task;
 
-    const { setData, setOptimisticData, optimisticMutations } = useContext(context as Context<HomePageContextType>);
+    const { setData, setOptimisticData } = useInstant(task);
 
     const [status, setStatus] = useState<string>(task.status);
 
@@ -62,7 +60,7 @@ export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProp
             const newItem: TaskType = { id, title, status: newStatusConst };
 
             // Set optimistic state
-            setOptimisticData({ type: "update", newItem });
+            setOptimisticData(newItem);
 
             // Do mutation
             const validatedItem = await UpdateTask({ id, status: newStatusConst });
@@ -71,9 +69,7 @@ export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProp
             if (!validatedItem) return console.log("❌ Update failed");
 
             // If success, update the real state in a new transition to prevent key conflict
-            startTransition(() =>
-                setData((current) => optimisticMutations(current, { type: "update", newItem: validatedItem })),
-            );
+            startTransition(() => setData(validatedItem));
 
             console.log("✅ Update succeeded");
         });
