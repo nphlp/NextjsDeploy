@@ -96,13 +96,14 @@ export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProp
 type SelectUpdateTaskStatusSkeletonProps = {
     className?: string;
     index?: number;
+    noShrink?: boolean;
 };
 
 export const SelectUpdateTaskStatusSkeleton = (props: SelectUpdateTaskStatusSkeletonProps) => {
-    const { index = 0, className } = props;
+    const { index = 0, className, noShrink = false } = props;
 
     return (
-        <SkeletonContainer className={combo("flex w-[150px] gap-3 pr-2 pl-3", className)} noShrink>
+        <SkeletonContainer className={combo("flex gap-3 pr-2 pl-3", className)} noShrink={noShrink}>
             <SkeletonText index={index} />
             <SkeletonText width="20px" noShrink />
         </SkeletonContainer>

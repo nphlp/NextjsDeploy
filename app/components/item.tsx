@@ -49,7 +49,7 @@ export function ItemSkeleton(props: TodoItemSkeletonProps) {
     return (
         <div className="flex w-full items-center gap-2">
             <InputUpdateTaskTitleSkeleton index={index} />
-            <SelectUpdateTaskStatusSkeleton index={index} className="max-md:hidden" />
+            <SelectUpdateTaskStatusSkeleton index={index} className="w-[150px] max-md:hidden" noShrink />
             <SkeletonContainer className="w-fit px-2" noShrink>
                 <SkeletonText width="20px" />
             </SkeletonContainer>

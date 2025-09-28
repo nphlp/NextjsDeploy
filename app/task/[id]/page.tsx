@@ -3,7 +3,7 @@ import { TaskFindUniqueServer } from "@services/server";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import z, { ZodType } from "zod";
-import Edition from "./components/edition";
+import Edition, { EditionSkeleton } from "./components/edition";
 import { taskIdPageParams } from "./components/fetch";
 import Provider from "./components/provider";
 
@@ -50,5 +50,5 @@ const Task = async (props: TaskProps) => {
 };
 
 const TaskSkeleton = () => {
-    return <></>;
+    return <EditionSkeleton />;
 };

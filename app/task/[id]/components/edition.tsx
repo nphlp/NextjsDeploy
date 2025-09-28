@@ -1,8 +1,8 @@
 "use client";
 
-import ButtonDeleteTask from "@comps/SHARED/button-delete-task";
-import InputUpdateTaskTitle from "@comps/SHARED/input-update-task-title";
-import SelectUpdateTaskStatus from "@comps/SHARED/select-update-task-status";
+import ButtonDeleteTask, { ButtonDeleteTaskSkeleton } from "@comps/SHARED/button-delete-task";
+import InputUpdateTaskTitle, { InputUpdateTaskTitleSkeleton } from "@comps/SHARED/input-update-task-title";
+import SelectUpdateTaskStatus, { SelectUpdateTaskStatusSkeleton } from "@comps/SHARED/select-update-task-status";
 import { useContext } from "react";
 import { Context } from "./context";
 
@@ -28,5 +28,13 @@ export default function Edition() {
 }
 
 export const EditionSkeleton = () => {
-    return <></>;
+    return (
+        <div className="space-y-4">
+            <InputUpdateTaskTitleSkeleton />
+            <div className="flex justify-between gap-2">
+                <SelectUpdateTaskStatusSkeleton />
+                <ButtonDeleteTaskSkeleton />
+            </div>
+        </div>
+    );
 };
