@@ -5,6 +5,7 @@ import Button, { ButtonClassName } from "@comps/UI/button/button";
 import Modal from "@comps/UI/modal/modal";
 import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
 import { combo } from "@lib/combo";
+import { RefetchType } from "@utils/FetchHook";
 import { Trash2 } from "lucide-react";
 import { Route } from "next";
 import { useRouter } from "next/navigation";
@@ -15,11 +16,19 @@ import useInstant from "./useInstant";
 type SelectUpdateTaskStatusProps = {
     task: TaskType;
     className?: ButtonClassName;
-    redirectTo?: Route;
-};
+} & (
+    | {
+          redirectTo: Route;
+          refetch?: undefined;
+      }
+    | {
+          redirectTo?: undefined;
+          refetch?: RefetchType;
+      }
+);
 
 export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
-    const { task, className, redirectTo } = props;
+    const { task, className, redirectTo, refetch } = props;
 
     const router = useRouter();
     const { setData, setOptimisticData } = useInstant(task);
@@ -44,8 +53,9 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
             // If success, update the real state in a new transition to prevent key conflict
             startTransition(() => setData(validatedItem));
 
-            // If redirection, do it after the real state change
+            // If redirection or refetching, do it after the real state change
             if (redirectTo) router.push(redirectTo);
+            if (refetch) refetch();
 
             console.log("✅ Deletion succeeded");
         });

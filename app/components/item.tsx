@@ -6,6 +6,8 @@ import SelectUpdateTaskStatus, { SelectUpdateTaskStatusSkeleton } from "@comps/S
 import Link from "@comps/UI/button/link";
 import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
 import { Pencil } from "lucide-react";
+import { useContext } from "react";
+import { Context } from "./context";
 import { TaskType } from "./fetch";
 
 type TodoItemProps = {
@@ -14,6 +16,8 @@ type TodoItemProps = {
 
 export default function Item(props: TodoItemProps) {
     const { task } = props;
+
+    const { refetch } = useContext(Context);
 
     return (
         <div className="flex flex-row gap-2">
@@ -28,7 +32,7 @@ export default function Item(props: TodoItemProps) {
             <Link label={`Edit ${task.title}`} variant="outline" href={`/task/${task.id}`} className="px-1.5">
                 <Pencil className="size-6" />
             </Link>
-            <ButtonDeleteTask task={task} className={{ button: "max-xs:hidden px-1.5" }} />
+            <ButtonDeleteTask task={task} refetch={refetch} className={{ button: "max-xs:hidden px-1.5" }} />
         </div>
     );
 }

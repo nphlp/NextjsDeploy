@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import { Body, Fetch, FetchProps, FetchResponse, Method, Params, Route } from "./Fetch";
 
 export type FetchHookProps<
@@ -10,8 +10,8 @@ export type FetchHookProps<
     M extends Method<Input, R>,
     B extends Body<Input, R>,
 > = Omit<FetchProps<Input, R, P, M, B>, "client" | "signal"> & {
+    initialData: FetchResponse<Input, R, P>;
     fetchOnFirstRender?: boolean;
-    initialData?: FetchResponse<Input, R, P>;
 };
 
 export type RefetchType = (offsetTime?: number) => void;
@@ -19,8 +19,9 @@ export type RefetchType = (offsetTime?: number) => void;
 export type FetchHookResponse<Input, R extends Route<Input>, P extends Params<Input, R>> = {
     data: FetchResponse<Input, R, P> | undefined;
     isLoading: boolean;
-    error: string | undefined;
+    setDataBypass: Dispatch<SetStateAction<FetchResponse<Input, R, P> | undefined>>;
     refetch: RefetchType;
+    error: string | undefined;
 };
 
 export const useFetch = <
@@ -51,7 +52,7 @@ export const useFetch = <
 
     const [data, setData] = useState<FetchResponse<Input, R, P> | undefined>(initialData);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string>();
+    const [error, setError] = useState<string | undefined>();
     const [renderTime, setRenderTime] = useState(new Date().getTime());
 
     useEffect(() => {
@@ -97,5 +98,9 @@ export const useFetch = <
         }, offsetTime);
     };
 
-    return { data, isLoading, error, refetch };
+    const setDataBypass: Dispatch<SetStateAction<FetchResponse<Input, R, P> | undefined>> = (value) => {
+        return setData(value);
+    };
+
+    return { data, setDataBypass, isLoading, error, refetch };
 };

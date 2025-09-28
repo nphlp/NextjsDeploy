@@ -43,7 +43,7 @@ export default function InputAddTask() {
     };
 
     return (
-        <form action={handleSubmit} className="flex items-center gap-2">
+        <form action={handleSubmit} className="flex w-full items-center gap-2">
             <Input
                 label="Ajouter une tâche"
                 placeholder="Ajouter une tâche"

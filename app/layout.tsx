@@ -6,6 +6,7 @@ import ArrowToTop from "@comps/UI/arrowToTop";
 import Breakpoints from "@comps/UI/breakpoints";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ReactNode } from "react";
 import { combo } from "@/lib/combo";
 import "@/public/globals.css";
@@ -55,15 +56,17 @@ export default async function Layout(props: LayoutProps) {
                     "flex h-full flex-col",
                 )}
             >
-                <ThemeProvider initialTheme={themeCookie?.theme}>
-                    <Header />
-                    <div id="main" className="flex-1 overflow-y-auto">
-                        <main className="flex min-h-full flex-col items-center justify-center">{children}</main>
-                        <Footer />
-                    </div>
-                    <Breakpoints mode="onResize" />
-                </ThemeProvider>
-                <ArrowToTop />
+                <NuqsAdapter>
+                    <ThemeProvider initialTheme={themeCookie?.theme}>
+                        <Header />
+                        <div id="main" className="flex-1 overflow-y-auto">
+                            <main className="flex min-h-full flex-col items-center justify-center">{children}</main>
+                            <Footer />
+                        </div>
+                        <Breakpoints mode="onResize" />
+                        <ArrowToTop />
+                    </ThemeProvider>
+                </NuqsAdapter>
             </body>
         </html>
     );

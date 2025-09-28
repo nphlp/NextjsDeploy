@@ -1,7 +1,6 @@
 "use server";
 
 import { TaskCreateAction, TaskDeleteAction, TaskFindUniqueAction, TaskUpdateAction } from "@actions/TaskAction";
-import { homePageParams } from "@app/components/fetch";
 import { taskIdPageParams } from "@app/task/[id]/components/fetch";
 import { $Enums } from "@prisma/client";
 import { TaskModel } from "@services/types";
@@ -38,7 +37,8 @@ export const AddTask = async (props: AddTaskProps): Promise<TaskModel | null> =>
         });
 
         // Reset specific cache tags
-        revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
+        // revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
+        revalidateTag("task-findMany");
 
         console.log("Creation succeeded", createdTask.title, createdTask.status);
 
@@ -86,7 +86,8 @@ export const UpdateTask = async (props: UpdateTaskProps): Promise<TaskModel | nu
         });
 
         // Reset specific cache tags
-        revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
+        // revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
+        revalidateTag("task-findMany");
         revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id)));
 
         console.log("Update succeeded", updatedTask.title, updatedTask.status);
@@ -118,7 +119,8 @@ export const DeleteTask = async (props: DeleteTaskProps): Promise<TaskModel | nu
         });
 
         // Reset specific cache tags
-        revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
+        // revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
+        revalidateTag("task-findMany");
         revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id)));
 
         console.log("Deletion succeeded", deletedTask.title, deletedTask.status);

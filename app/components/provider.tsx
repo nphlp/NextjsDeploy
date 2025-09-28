@@ -1,8 +1,10 @@
 "use client";
 
-import { ReactNode, useOptimistic, useState } from "react";
-import { Context } from "./context";
-import { TaskType } from "./fetch";
+import { useSearchQueryParams, useUpdatedAtQueryParams } from "@comps/SHARED/filters/queryParamsClientHooks";
+import { useFetch } from "@utils/FetchHook";
+import { ReactNode, useOptimistic } from "react";
+import { Context, ContextType } from "./context";
+import { TaskType, homePageParams } from "./fetch";
 import { optimisticMutations } from "./optimistic";
 
 type ContextProviderProps = {
@@ -13,11 +15,26 @@ type ContextProviderProps = {
 export default function Provider(props: ContextProviderProps) {
     const { initialData, children } = props;
 
-    const [data, setData] = useState(initialData);
+    const { updatedAt } = useUpdatedAtQueryParams();
+    const { search } = useSearchQueryParams();
 
+    // Reactive fetch
+    const {
+        data,
+        setDataBypass: setData,
+        isLoading,
+        refetch,
+    } = useFetch({
+        route: "/internal/task/findMany",
+        params: homePageParams({ updatedAt, search }),
+        initialData,
+    });
+
+    // Optimistic management
     const [optimisticData, setOptimisticData] = useOptimistic(data, optimisticMutations);
 
-    const value = { optimisticData, setData, setOptimisticData, optimisticMutations };
+    // Context values
+    const value: ContextType = { optimisticData, isLoading, setData, refetch, setOptimisticData, optimisticMutations };
 
     return <Context.Provider value={value}>{children}</Context.Provider>;
 }

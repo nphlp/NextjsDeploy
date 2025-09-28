@@ -5,18 +5,22 @@ export type OptimisticAction<T> = {
     newItem: T;
 };
 
-export const optimisticMutations = (currentItems: TaskType[], action: OptimisticAction<TaskType>): TaskType[] => {
+export const optimisticMutations = (
+    currentItems: TaskType[] | undefined,
+    action: OptimisticAction<TaskType>,
+): TaskType[] => {
+    const currentItemsSafe = currentItems ?? [];
     const { type, newItem } = action;
 
     switch (type) {
         case "add":
-            return [newItem, ...currentItems];
+            return [newItem, ...currentItemsSafe];
         case "update":
-            return currentItems.map((item) => {
+            return currentItemsSafe.map((item) => {
                 if (item.id === newItem.id) return newItem;
                 return item;
             });
         case "delete":
-            return currentItems.filter((item) => item.id !== newItem.id);
+            return currentItemsSafe.filter((item) => item.id !== newItem.id);
     }
 };
