@@ -3,6 +3,8 @@
 import { Context } from "@app/components/context";
 import { TaskType } from "@app/components/fetch";
 import Input, { InputClassName } from "@comps/UI/input/input";
+import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
+import { combo } from "@lib/combo";
 import { startTransition, useContext, useState } from "react";
 import { UpdateTask } from "@/actions/Task";
 
@@ -58,3 +60,18 @@ export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
         </form>
     );
 }
+
+type InputUpdateTaskTitleSkeletonProps = {
+    className?: string;
+    index?: number;
+};
+
+export const InputUpdateTaskTitleSkeleton = (props: InputUpdateTaskTitleSkeletonProps) => {
+    const { index = 0, className } = props;
+
+    return (
+        <SkeletonContainer className={combo("rounded-none border-x-0 border-t-transparent px-0", className)}>
+            <SkeletonText minWidth={30} maxWidth={60} index={index} />
+        </SkeletonContainer>
+    );
+};

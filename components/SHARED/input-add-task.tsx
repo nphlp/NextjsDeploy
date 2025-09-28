@@ -2,14 +2,14 @@
 
 import Button from "@comps/UI/button/button";
 import Input from "@comps/UI/input/input";
-import { combo } from "@lib/combo";
+import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
 import { ArrowUp } from "lucide-react";
 import { startTransition, useContext, useState } from "react";
 import { AddTask } from "@/actions/Task";
-import { Context } from "./context";
-import { TaskType } from "./fetch";
+import { Context } from "../../app/components/context";
+import { TaskType } from "../../app/components/fetch";
 
-export default function AddTodo() {
+export default function InputAddTask() {
     const { setData, setOptimisticData, optimisticMutations } = useContext(Context);
 
     const [title, setTitle] = useState("");
@@ -62,38 +62,15 @@ export default function AddTodo() {
     );
 }
 
-export function AddTodoSkeleton() {
+export function InputAddTaskSkeleton() {
     return (
         <div className="flex w-full items-center gap-2">
-            <div
-                className={combo(
-                    "relative h-[38px] w-full px-4",
-                    "text-foreground bg-background border-gray-low animate-pulse rounded-lg border",
-                )}
-            >
-                <div
-                    className={combo(
-                        "h-5 w-[25%]",
-                        "relative top-1/2 -translate-y-1/2",
-                        "bg-gray-low animate-pulse rounded",
-                    )}
-                />
-            </div>
-            <div
-                className={combo(
-                    "max-xs:hidden",
-                    "relative size-[38px] shrink-0",
-                    "text-foreground bg-background border-gray-low animate-pulse rounded-lg border",
-                )}
-            >
-                <div
-                    className={combo(
-                        "size-5",
-                        "relative top-1/2 left-1/2 -translate-1/2",
-                        "bg-gray-low animate-pulse rounded",
-                    )}
-                />
-            </div>
+            <SkeletonContainer>
+                <SkeletonText width="170px" />
+            </SkeletonContainer>
+            <SkeletonContainer className="w-fit px-2" noShrink>
+                <SkeletonText width="20px" noShrink />
+            </SkeletonContainer>
         </div>
     );
 }

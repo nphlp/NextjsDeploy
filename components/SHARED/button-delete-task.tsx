@@ -4,6 +4,8 @@ import { Context } from "@app/components/context";
 import { TaskType } from "@app/components/fetch";
 import Button, { ButtonClassName } from "@comps/UI/button/button";
 import Modal from "@comps/UI/modal/modal";
+import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
+import { combo } from "@lib/combo";
 import { Trash2 } from "lucide-react";
 import { startTransition, useContext, useRef, useState } from "react";
 import { DeleteTask } from "@/actions/Task";
@@ -74,3 +76,17 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
         </>
     );
 }
+
+type ButtonDeleteTaskSkeletonProps = {
+    className?: string;
+};
+
+export const ButtonDeleteTaskSkeleton = (props: ButtonDeleteTaskSkeletonProps) => {
+    const { className } = props;
+
+    return (
+        <SkeletonContainer className={combo("w-fit px-2", className)}>
+            <SkeletonText width="20px" noShrink />
+        </SkeletonContainer>
+    );
+};

@@ -3,6 +3,8 @@
 import { Context } from "@app/components/context";
 import { TaskType } from "@app/components/fetch";
 import Select, { SelectClassName } from "@comps/UI/select/select";
+import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
+import { combo } from "@lib/combo";
 import { TaskModel } from "@services/types";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
 import { startTransition, useContext, useState } from "react";
@@ -87,3 +89,19 @@ export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProp
         />
     );
 }
+
+type SelectUpdateTaskStatusSkeletonProps = {
+    className?: string;
+    index?: number;
+};
+
+export const SelectUpdateTaskStatusSkeleton = (props: SelectUpdateTaskStatusSkeletonProps) => {
+    const { index = 0, className } = props;
+
+    return (
+        <SkeletonContainer className={combo("flex w-[150px] gap-3 pr-2 pl-3", className)} noShrink>
+            <SkeletonText index={index} />
+            <SkeletonText width="20px" noShrink />
+        </SkeletonContainer>
+    );
+};

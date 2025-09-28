@@ -2,7 +2,7 @@
 
 import { useContext } from "react";
 import { Context } from "./context";
-import TodoItem from "./todoItem";
+import Item from "./item";
 
 export default function List() {
     const { optimisticData } = useContext(Context);
@@ -10,7 +10,7 @@ export default function List() {
     return (
         <div className="space-y-2">
             {optimisticData.map((task) => (
-                <TodoItem key={task.id} task={task} />
+                <Item key={task.id} task={task} />
             ))}
         </div>
     );

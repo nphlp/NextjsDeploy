@@ -7,6 +7,7 @@ export type OptimisticAction<T> = {
 
 export const optimisticMutations = (currentItems: TaskType[], action: OptimisticAction<TaskType>): TaskType[] => {
     const { type, newItem } = action;
+
     switch (type) {
         case "add":
             return [newItem, ...currentItems];
