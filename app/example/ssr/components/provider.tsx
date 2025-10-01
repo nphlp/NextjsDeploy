@@ -2,10 +2,9 @@
 
 import { useSearchQueryParams, useUpdatedAtQueryParams } from "@comps/SHARED/filters/queryParamsClientHooks";
 import { useFetch } from "@utils/FetchHook";
-import { ReactNode, useOptimistic } from "react";
+import { ReactNode } from "react";
 import { Context, ContextType } from "./context";
-import { TaskType, homePageParams } from "./fetch";
-import { optimisticMutations } from "./optimistic";
+import { TaskType, exampleSrrPageParams } from "./fetch";
 
 type ContextProviderProps = {
     initialData: TaskType[];
@@ -19,7 +18,6 @@ export default function Provider(props: ContextProviderProps) {
     const { search } = useSearchQueryParams();
 
     // Reactive fetch
-    // TODO: tester si setDataBypass est provoque qu'un seul render
     const {
         data,
         setDataBypass: setData,
@@ -27,16 +25,12 @@ export default function Provider(props: ContextProviderProps) {
         refetch,
     } = useFetch({
         route: "/internal/task/findMany",
-        params: homePageParams({ updatedAt, search }),
+        params: exampleSrrPageParams({ updatedAt, search }),
         initialData,
     });
 
-    // Optimistic management
-    // TODO: tester combien de refetch sont provoqués par [useFetch + useOptimistic]
-    const [optimisticData, setOptimisticData] = useOptimistic(data, optimisticMutations);
-
     // Context values
-    const value: ContextType = { optimisticData, isLoading, setData, refetch, setOptimisticData, optimisticMutations };
+    const value: ContextType = { data, setData, isLoading, refetch };
 
     return <Context.Provider value={value}>{children}</Context.Provider>;
 }
