@@ -6,7 +6,7 @@ import { TaskType } from "./fetch";
 
 export type ContextType = {
     data: TaskType[] | undefined;
-    setData: Dispatch<SetStateAction<TaskType[] | undefined>>;
+    setDataBypass: Dispatch<SetStateAction<TaskType[] | undefined>>;
     isLoading: boolean;
     refetch: RefetchType;
 };

@@ -18,19 +18,14 @@ export default function Provider(props: ContextProviderProps) {
     const { search } = useSearchQueryParams();
 
     // Reactive fetch
-    const {
-        data,
-        setDataBypass: setData,
-        isLoading,
-        refetch,
-    } = useFetch({
+    const { data, setDataBypass, isLoading, refetch } = useFetch({
         route: "/internal/task/findMany",
         params: exampleSrrPageParams({ updatedAt, search }),
         initialData,
     });
 
     // Context values
-    const value: ContextType = { data, setData, isLoading, refetch };
+    const value: ContextType = { data, setDataBypass, isLoading, refetch };
 
     return <Context.Provider value={value}>{children}</Context.Provider>;
 }

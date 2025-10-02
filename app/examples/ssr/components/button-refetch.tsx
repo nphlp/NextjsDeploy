@@ -7,13 +7,13 @@ import { Context } from "./context";
 import { TaskType } from "./fetch";
 
 export default function ButtonRefetch() {
-    const { setData, refetch } = useContext(Context);
+    const { setDataBypass, refetch } = useContext(Context);
 
     const newData = () => {
         const date = new Date().toISOString();
         const newTask: TaskType = { id: date, status: "DONE", title: date };
 
-        setData((previous) => {
+        setDataBypass((previous) => {
             const previousSafe = isArray(previous) ? previous : [];
             return [newTask, ...previousSafe];
         });

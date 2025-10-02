@@ -13,7 +13,7 @@ type LinkType = {
 const links: LinkType[] = [
     { label: "Home", href: "/" },
     { label: "Comps", href: "/comps" },
-    { label: "SSR", href: "/example/ssr" },
+    { label: "Examples", href: "/examples" },
 ];
 
 type LinksProps = {

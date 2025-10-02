@@ -39,7 +39,6 @@ export const useFetch = <
     const memoizedProps = useMemo(
         () => ({
             route,
-
             // FetchV2
             params: JSON.parse(stringifiedParams),
             // FetchV1
@@ -53,7 +52,7 @@ export const useFetch = <
     const [data, setData] = useState<FetchResponse<Input, R, P> | undefined>(initialData);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | undefined>();
-    const [renderTime, setRenderTime] = useState(new Date().getTime());
+    const [refetchTrigger, setRefetchTrigger] = useState(0);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -63,7 +62,8 @@ export const useFetch = <
             setIsLoading(true);
 
             if (process.env.NODE_ENV === "development") {
-                console.log("useFetch: ", memoizedProps);
+                // console.log("useFetch: ", memoizedProps);
+                console.log("useFetch: ", JSON.stringify(memoizedProps, null, 2));
             }
 
             try {
@@ -84,17 +84,22 @@ export const useFetch = <
             }
         };
 
-        if (fetchOnFirstRenderRef.current) {
-            fetchData();
-        }
-        fetchOnFirstRenderRef.current = true;
+        const debounceTimeout = setTimeout(() => {
+            if (fetchOnFirstRenderRef.current) {
+                fetchData();
+            }
+            fetchOnFirstRenderRef.current = true;
+        }, 50);
 
-        return () => controller.abort();
-    }, [memoizedProps, renderTime]);
+        return () => {
+            clearTimeout(debounceTimeout);
+            controller.abort();
+        };
+    }, [memoizedProps, refetchTrigger]);
 
     const refetch = (offsetTime: number = 100) => {
         setTimeout(() => {
-            setRenderTime(new Date().getTime());
+            setRefetchTrigger((prev) => prev + 1);
         }, offsetTime);
     };
 
@@ -102,5 +107,11 @@ export const useFetch = <
         return setData(value);
     };
 
-    return { data, setDataBypass, isLoading, error, refetch };
+    return {
+        data,
+        setDataBypass,
+        isLoading,
+        error,
+        refetch,
+    };
 };

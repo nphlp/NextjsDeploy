@@ -1,0 +1,16 @@
+import { TaskFindManyServer } from "@services/server";
+import Card from "./card";
+import { exampleBouncyHeightResizerPageParams } from "./fetch";
+
+export default async function Page() {
+    const taskList = await TaskFindManyServer({
+        ...exampleBouncyHeightResizerPageParams(),
+        take: 3,
+    });
+
+    return (
+        <div className="mt-16 flex-1">
+            <Card initialData={taskList} />
+        </div>
+    );
+}
