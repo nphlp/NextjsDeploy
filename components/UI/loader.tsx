@@ -15,5 +15,5 @@ type LoaderProps = {
 export default function Loader(props: LoaderProps) {
     const { className } = props;
 
-    return <LoaderCircle className={combo("size-6 animate-spin border-gray-300 stroke-2", className)} />;
+    return <LoaderCircle className={combo("stroke-foreground size-6 animate-spin stroke-2", className)} />;
 }

@@ -7,5 +7,10 @@ export type CardProps = {
 
 export default function Card(props: CardProps) {
     const { className, ...others } = props;
-    return <div className={combo("rounded-xl border border-gray-300 bg-white p-7 shadow-md", className)} {...others} />;
+    return (
+        <div
+            className={combo("border-gray-low bg-background rounded-xl border p-7 shadow-md", className)}
+            {...others}
+        />
+    );
 }

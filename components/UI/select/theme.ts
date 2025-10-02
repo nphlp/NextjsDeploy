@@ -14,7 +14,7 @@ export type StylesType = {
 
 const structure: StructureType = {
     component: combo("block"),
-    label: combo(""),
+    label: combo("text-sm font-semibold mb-1"),
 
     displayedValue: combo(""),
     placeholder: combo(""),
@@ -41,7 +41,7 @@ const structure: StructureType = {
         // Accessibility
         "cursor-pointer",
     ),
-    subCross: combo(""),
+    subCross: combo("size-6"),
 
     subDiv: combo(
         // Position
@@ -49,7 +49,7 @@ const structure: StructureType = {
         // Accessibility
         "pointer-events-none",
     ),
-    subChevron: combo(""),
+    subChevron: combo("size-6"),
 
     optionList: combo(
         // Position
@@ -76,7 +76,7 @@ const structure: StructureType = {
 const styles: StylesType = {
     default: {
         component: combo(""),
-        label: combo("text-gray-middle text-sm font-semibold"),
+        label: combo("text-foreground"),
 
         displayedValue: combo("text-foreground"),
         placeholder: combo("text-gray-middle"),
@@ -116,9 +116,9 @@ const styles: StylesType = {
         ),
         optionButton: combo(
             // Text
-            "text-foreground",
+            "text-foreground text-sm",
             // Background
-            "bg-background hover:bg-gray-low",
+            "bg-background hover:bg-gray-light",
             // Outline
             "outline-none focus:bg-gray-low",
         ),

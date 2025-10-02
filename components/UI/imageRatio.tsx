@@ -5,11 +5,16 @@ import { Image as ImageTemplate } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
+export type ImageRatioClassName = {
+    /** Define width or height */
+    div?: string;
+    image?: string;
+};
+
 export type ImageRatioProps = {
     src: string | null;
     alt: string;
-    /** Define width or height */
-    className?: string;
+    className?: ImageRatioClassName;
     /**
      * Image loading strategy
      * - "preloaded": l'image est pré-chargée lorsque le lien de la page est visible
@@ -68,7 +73,15 @@ export default function ImageRatio(props: ImageRatioProps) {
     const hasBlurEffect = !noBlur && mode === "whenIsVisible";
 
     return (
-        <div className={combo("relative aspect-[3/2] overflow-hidden", className)}>
+        <div
+            className={combo(
+                // Force a 3/2 ratio
+                "relative aspect-[3/2] overflow-hidden",
+                // Prevent stretching when used in flexbox
+                "shrink-0 grow-0",
+                className?.div,
+            )}
+        >
             {/* Image nette en arrière-plan */}
             <Image
                 src={src}
@@ -76,6 +89,7 @@ export default function ImageRatio(props: ImageRatioProps) {
                 className={combo(
                     "object-cover blur-[0px] transition-all duration-150",
                     hasBlurEffect && !isLoaded && "blur-[10px]",
+                    className?.image,
                 )}
                 // Size based on parent
                 sizes="100%"

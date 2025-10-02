@@ -40,11 +40,11 @@ export default function ComboboxLabel<T extends ComboOptionType | MultiSourceCom
         <div className="flex w-full items-center justify-start gap-2">
             <span>
                 <span>{before}</span>
-                <span className="rounded-sm bg-teal-200 font-bold">{highlighted}</span>
+                <span className="rounded-sm bg-teal-300 font-bold">{highlighted}</span>
                 <span>{after}</span>
             </span>
             {"type" in option && (
-                <span className="text-3xs rounded-full bg-gray-500 px-1.5 pt-[3px] pb-[2px] font-semibold text-white uppercase">
+                <span className="text-3xs bg-gray-high text-background rounded-full px-1.5 pt-[2px] pb-[1px] font-semibold uppercase">
                     {option.type}
                 </span>
             )}

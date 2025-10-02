@@ -1,13 +1,13 @@
 "use client";
 
-import { TaskModel } from "@services/types";
 import { RefetchType } from "@utils/FetchHook";
 import { Dispatch, SetStateAction, createContext } from "react";
+import { TaskType } from "./fetch";
 
 export type ContextType = {
-    data: TaskModel;
+    data: TaskType[] | undefined;
+    setDataBypass: Dispatch<SetStateAction<TaskType[] | undefined>>;
     isLoading: boolean;
-    setSlug?: Dispatch<SetStateAction<string>>;
     refetch: RefetchType;
 };
 

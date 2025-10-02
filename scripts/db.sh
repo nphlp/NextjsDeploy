@@ -175,18 +175,18 @@ setup_db() {
         return 1
     fi
 
-    print_info "Setting up database: $POSTGRES_DB"
+    # print_info "Setting up database: $POSTGRES_DB"
 
     # Check if database already exists
     if database_exists "$password" "$POSTGRES_DB"; then
-        print_info "Database $POSTGRES_DB already exists"
+        # print_info "Database $POSTGRES_DB already exists"
         return 0
     fi
 
     # Create database (PostgreSQL doesn't have IF NOT EXISTS for databases)
     local setup_sql="CREATE DATABASE \"$POSTGRES_DB\";"
 
-    print_info "Creating database..."
+    # print_info "Creating database..."
     if execute_sql_commands "$setup_sql" "$password" "postgres"; then
         print_success "Database setup completed"
         return 0
@@ -205,18 +205,18 @@ reset_db() {
         return 1
     fi
 
-    print_info "Resetting database: $POSTGRES_DB"
+    # print_info "Resetting database: $POSTGRES_DB"
 
     # Check if database exists
     if ! database_exists "$password" "$POSTGRES_DB"; then
-        print_info "Database $POSTGRES_DB does not exist, nothing to reset"
+        # print_info "Database $POSTGRES_DB does not exist, nothing to reset"
         return 0
     fi
 
     # Drop database if it exists
     local reset_sql="DROP DATABASE IF EXISTS \"$POSTGRES_DB\";"
 
-    print_info "Dropping database..."
+    # print_info "Dropping database..."
     if execute_sql_commands "$reset_sql" "$password" "postgres"; then
         print_success "Database reset completed"
         return 0
@@ -239,13 +239,13 @@ reload_db() {
 
     # Check if database exists and reset if it does
     if database_exists "$password" "$POSTGRES_DB"; then
-        print_info "Database exists, resetting..."
+        # print_info "Database exists, resetting..."
         if ! reset_db "$password"; then
             print_error "Failed to reset database"
             return 1
         fi
-    else
-        print_info "Database does not exist, creating directly"
+    # else
+    #     print_info "Database does not exist, creating directly"
     fi
 
     # Setup database
@@ -281,7 +281,7 @@ execute_custom_sql() {
     fi
 
     # Execute the SQL commands
-    print_info "Executing custom SQL commands..."
+    # print_info "Executing custom SQL commands..."
     if execute_sql_commands "$sql_commands" "$password" "$POSTGRES_DB"; then
         print_success "Custom SQL executed successfully"
         return 0
@@ -361,7 +361,7 @@ if [ -z "$POSTGRES_DB" ] || [ -z "$POSTGRES_PASSWORD" ] || [ -z "$POSTGRES_HOST"
     ENV_FILE="$PROJECT_DIR/.env"
     if [ -f "$ENV_FILE" ]; then
         export $(grep -v '^#' "$ENV_FILE" | xargs)
-        print_info "Loaded environment from .env file"
+        # print_info "Loaded environment from .env file"
     else
         print_error "Environment file .env not found and required variables not set"
         exit 1

@@ -3,7 +3,7 @@
 import { combo } from "@lib/combo";
 import { X } from "lucide-react";
 import { motion } from "motion/react";
-import { ReactNode, RefObject, useEffect } from "react";
+import { KeyboardEvent, ReactNode, RefObject, useEffect } from "react";
 import { ModalVariant, theme } from "./theme";
 
 export type ModalClassName = {
@@ -17,8 +17,8 @@ export type ModalClassName = {
     backgroundColor?: string;
     backgroundButton?: string;
 
-    crossButton?: string;
-    crossIcon?: string;
+    closeButton?: string;
+    closeIcon?: string;
 };
 
 type ModalProps = {
@@ -30,7 +30,7 @@ type ModalProps = {
     noBackgroundBlur?: boolean;
     noBackgroundColor?: boolean;
     noBackgroundButton?: boolean;
-    withCross?: boolean;
+    withCloseButton?: boolean;
     fixedToTop?: boolean;
 
     // Animation
@@ -45,7 +45,7 @@ type ModalProps = {
 };
 
 /**
- * Input image with preview
+ * Modal
  * @example
  * ```tsx
  * // Define the state
@@ -55,19 +55,23 @@ type ModalProps = {
  * // Use the component
  * <Modal
  *     className={{
+ *         // Outside the modal
  *         cardContainer: "px-5 py-16",
- *         card: "max-w-[400px] space-y-4"
+ *         // Inside the modal
+ *         card: "max-w-[500px] w-[400px] space-y-4",
  *     }}
  *     setIsModalOpen={setIsModalOpen}
  *     isModalOpen={isModalOpen}
  *     focusToRef={buttonRef}
- *     withCross
+ *     withCloseButton
  * >
- *     <div>
- *         <h1>Title</h1>
- *         <p>Description</p>
- *     </div>
- *     <Button label="Close" onClick={() => setIsModalOpen(false)} focusToRef={buttonRef} />
+ *     <div className="text-xl font-bold">Title</div>
+ *     <div>Description</div>
+ *     <Button
+ *         label="Close"
+ *         ref={buttonRef}
+ *         onClick={() => setIsModalOpen(false)}
+ *     />
  * </Modal>
  * ```
  */
@@ -79,7 +83,7 @@ export default function Modal(props: ModalProps) {
         noBackgroundBlur = false,
         noBackgroundButton = false,
         noBackgroundColor = false,
-        withCross = false,
+        withCloseButton = false,
         fixedToTop = false,
         noAnimation = false,
         duration = 0.3,
@@ -97,8 +101,15 @@ export default function Modal(props: ModalProps) {
         }
     }, [isModalOpen, focusToRef]);
 
+    const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === "Escape") setIsModalOpen(false);
+    };
+
     return (
-        <div className={combo(!isModalOpen && "pointer-events-none", theme[variant].component, className?.component)}>
+        <div
+            className={combo(!isModalOpen && "pointer-events-none", theme[variant].component, className?.component)}
+            onKeyDown={handleKeyDown}
+        >
             {/* Sub Component */}
             <div className={combo(theme[variant].subComponent, className?.subComponent)}>
                 {/* Background Blur */}
@@ -131,6 +142,7 @@ export default function Modal(props: ModalProps) {
                         type="button"
                         aria-label="close-modal"
                         onClick={() => setIsModalOpen(false)}
+                        tabIndex={-1} // Make the button not focusable
                         className={combo(theme[variant].backgroundButton, className?.backgroundButton)}
                     />
                 )}
@@ -156,7 +168,7 @@ export default function Modal(props: ModalProps) {
                     >
                         <CrossButton
                             setIsModalOpen={setIsModalOpen}
-                            withCross={withCross}
+                            withCloseButton={withCloseButton}
                             className={className}
                             variant={variant}
                         />
@@ -170,27 +182,27 @@ export default function Modal(props: ModalProps) {
 
 type CrossButtonProps = {
     setIsModalOpen: (visible: boolean) => void;
-    withCross: boolean;
+    withCloseButton: boolean;
     variant: ModalVariant;
     className?: {
-        crossButton?: string;
-        crossIcon?: string;
+        closeButton?: string;
+        closeIcon?: string;
     };
 };
 
 const CrossButton = (props: CrossButtonProps) => {
-    const { className, setIsModalOpen, withCross, variant } = props;
+    const { className, setIsModalOpen, withCloseButton, variant } = props;
 
-    if (!withCross) return null;
+    if (!withCloseButton) return null;
 
     return (
         <button
             type="button"
             aria-label="Close modal"
             onClick={() => setIsModalOpen(false)}
-            className={combo(theme[variant].crossButton, className?.crossButton)}
+            className={combo(theme[variant].closeButton, className?.closeButton)}
         >
-            <X className={combo(theme[variant].crossIcon, className?.crossIcon)} />
+            <X className={combo(theme[variant].closeIcon, className?.closeIcon)} />
         </button>
     );
 };

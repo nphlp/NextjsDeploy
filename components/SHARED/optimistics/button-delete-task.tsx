@@ -1,17 +1,20 @@
 "use client";
 
+import { TaskType } from "@app/components/fetch";
 import Button, { ButtonClassName } from "@comps/UI/button/button";
 import Modal from "@comps/UI/modal/modal";
-import { TaskModel } from "@services/types";
+import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
+import { combo } from "@lib/combo";
 import { RefetchType } from "@utils/FetchHook";
-import { X } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Route } from "next";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { startTransition, useRef, useState } from "react";
 import { DeleteTask } from "@/actions/Task";
+import useInstant from "./useInstant";
 
 type SelectUpdateTaskStatusProps = {
-    task: TaskModel;
+    task: TaskType;
     className?: ButtonClassName;
 } & (
     | {
@@ -19,24 +22,43 @@ type SelectUpdateTaskStatusProps = {
           refetch?: undefined;
       }
     | {
-          refetch: RefetchType;
           redirectTo?: undefined;
+          refetch?: RefetchType;
       }
 );
 
 export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
     const { task, className, redirectTo, refetch } = props;
-    const { id } = task;
 
     const router = useRouter();
+    const { setData, setOptimisticData } = useInstant(task);
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const buttonRef = useRef<HTMLButtonElement>(null);
 
-    const handleDelete = async () => {
-        await DeleteTask({ id });
-        if (redirectTo) return router.push(redirectTo);
-        if (refetch) refetch();
+    const handleDelete = () => {
+        startTransition(async () => {
+            // New item
+            const newItem: TaskType = task;
+
+            // Set optimistic state
+            setOptimisticData(newItem);
+
+            // Do mutation
+            const validatedItem = await DeleteTask({ id: newItem.id });
+
+            // If failed, the optimistic state is rolled back at the end of the transition
+            if (!validatedItem) return console.log("❌ Deletion failed");
+
+            // If success, update the real state in a new transition to prevent key conflict
+            startTransition(() => setData(validatedItem));
+
+            // If redirection or refetching, do it after the real state change
+            if (redirectTo) router.push(redirectTo);
+            if (refetch) refetch();
+
+            console.log("✅ Deletion succeeded");
+        });
     };
 
     return (
@@ -47,17 +69,17 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
                 className={className}
                 onClick={() => setIsModalOpen(true)}
             >
-                <X />
+                <Trash2 className="size-6" />
             </Button>
             <Modal
                 className={{
                     cardContainer: "px-5 py-16",
-                    card: "max-w-[400px] min-w-[200px] space-y-5",
+                    card: "max-w-[500px] min-w-[250px] space-y-5",
                 }}
                 setIsModalOpen={setIsModalOpen}
                 isModalOpen={isModalOpen}
                 focusToRef={buttonRef}
-                withCross
+                withCloseButton
             >
                 <h2 className="text-lg font-bold">Confirmer la suppression</h2>
                 <p>Êtes-vous sûr de vouloir supprimer cette tâche ?</p>
@@ -69,3 +91,17 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
         </>
     );
 }
+
+type ButtonDeleteTaskSkeletonProps = {
+    className?: string;
+};
+
+export const ButtonDeleteTaskSkeleton = (props: ButtonDeleteTaskSkeletonProps) => {
+    const { className } = props;
+
+    return (
+        <SkeletonContainer className={combo("w-fit px-2", className)} noShrink>
+            <SkeletonText width="20px" />
+        </SkeletonContainer>
+    );
+};

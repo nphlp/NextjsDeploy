@@ -53,15 +53,20 @@ export default function ComboboxIcon<T extends ComboOptionType | MultiSourceComb
     };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        e.stopPropagation();
-        handleRemoveAll();
+        const key = e.key;
+
+        if (key === "Enter") {
+            e.preventDefault();
+            e.stopPropagation();
+
+            handleRemoveAll();
+        }
     };
 
     if (isLoading) {
         return (
-            <div className={combo("absolute top-1/2 right-2 -translate-y-1/2 rounded p-1")}>
-                <Loader />
+            <div className={combo("absolute top-1/2 right-2 -translate-y-1/2 rounded")}>
+                <Loader className="stroke-gray-high" />
             </div>
         );
     }
@@ -80,8 +85,9 @@ export default function ComboboxIcon<T extends ComboOptionType | MultiSourceComb
                     // Accessibility
                     "cursor-pointer",
                 )}
+                aria-label="Open options list"
             >
-                <ChevronDown className="translate-y-px stroke-gray-600" />
+                <ChevronDown className="stroke-gray-high size-6 translate-y-px" />
             </ComboboxButton>
         );
     }
@@ -102,8 +108,9 @@ export default function ComboboxIcon<T extends ComboOptionType | MultiSourceComb
                 // Accessibility
                 "cursor-pointer",
             )}
+            aria-label="Remove all selected options"
         >
-            <X className="stroke-gray-600" />
+            <X className="stroke-gray-high size-6" />
         </button>
     );
 }

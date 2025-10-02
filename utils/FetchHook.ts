@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import { Body, Fetch, FetchProps, FetchResponse, Method, Params, Route } from "./Fetch";
 
 export type FetchHookProps<
@@ -10,8 +10,9 @@ export type FetchHookProps<
     M extends Method<Input, R>,
     B extends Body<Input, R>,
 > = Omit<FetchProps<Input, R, P, M, B>, "client" | "signal"> & {
+    initialData: FetchResponse<Input, R, P>;
+    debounce?: number;
     fetchOnFirstRender?: boolean;
-    initialData?: FetchResponse<Input, R, P>;
 };
 
 export type RefetchType = (offsetTime?: number) => void;
@@ -19,8 +20,9 @@ export type RefetchType = (offsetTime?: number) => void;
 export type FetchHookResponse<Input, R extends Route<Input>, P extends Params<Input, R>> = {
     data: FetchResponse<Input, R, P> | undefined;
     isLoading: boolean;
-    error: string | undefined;
+    setDataBypass: Dispatch<SetStateAction<FetchResponse<Input, R, P> | undefined>>;
     refetch: RefetchType;
+    error: string | undefined;
 };
 
 export const useFetch = <
@@ -32,13 +34,12 @@ export const useFetch = <
 >(
     props: FetchHookProps<Input, R, P, M, B>,
 ): FetchHookResponse<Input, R, P> => {
-    const { route, params, fetchOnFirstRender = false, initialData } = props;
+    const { route, params, debounce = 0, fetchOnFirstRender = false, initialData } = props;
 
     const stringifiedParams = JSON.stringify(params);
     const memoizedProps = useMemo(
         () => ({
             route,
-
             // FetchV2
             params: JSON.parse(stringifiedParams),
             // FetchV1
@@ -51,8 +52,8 @@ export const useFetch = <
 
     const [data, setData] = useState<FetchResponse<Input, R, P> | undefined>(initialData);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string>();
-    const [renderTime, setRenderTime] = useState(new Date().getTime());
+    const [error, setError] = useState<string | undefined>();
+    const [refetchTrigger, setRefetchTrigger] = useState(0);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -83,19 +84,34 @@ export const useFetch = <
             }
         };
 
-        if (fetchOnFirstRenderRef.current) {
-            fetchData();
-        }
-        fetchOnFirstRenderRef.current = true;
+        const debounceTimeout = setTimeout(() => {
+            if (fetchOnFirstRenderRef.current) {
+                fetchData();
+            }
+            fetchOnFirstRenderRef.current = true;
+        }, debounce);
 
-        return () => controller.abort();
-    }, [memoizedProps, renderTime]);
+        return () => {
+            clearTimeout(debounceTimeout);
+            controller.abort();
+        };
+    }, [memoizedProps, refetchTrigger, debounce]);
 
     const refetch = (offsetTime: number = 100) => {
         setTimeout(() => {
-            setRenderTime(new Date().getTime());
+            setRefetchTrigger((prev) => prev + 1);
         }, offsetTime);
     };
 
-    return { data, isLoading, error, refetch };
+    const setDataBypass: Dispatch<SetStateAction<FetchResponse<Input, R, P> | undefined>> = (value) => {
+        return setData(value);
+    };
+
+    return {
+        data,
+        setDataBypass,
+        isLoading,
+        error,
+        refetch,
+    };
 };

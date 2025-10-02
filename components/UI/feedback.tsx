@@ -59,7 +59,7 @@ export default function Feedback(props: FeedbackProps) {
         },
         none: {
             class: combo("text-gray-500 border-gray-500 bg-gray-100"),
-            icon: <CircleCheck className="size-5"></CircleCheck>,
+            icon: <CircleCheck className="size-5" />,
         },
     };
 

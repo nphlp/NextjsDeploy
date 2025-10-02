@@ -2,13 +2,14 @@
 
 import Loader from "@comps/UI/loader";
 import { combo } from "@lib/combo";
-import { ButtonHTMLAttributes, Ref } from "react";
+import { ButtonHTMLAttributes, KeyboardEvent, MouseEvent, ReactNode, Ref } from "react";
 import { ButtonVariant, theme } from "./theme";
 
 export type ButtonClassName = {
     button?: string;
     isLoading?: string;
     isDisabled?: string;
+    text?: string;
     loader?: string;
 };
 
@@ -25,33 +26,41 @@ export type ButtonProps = {
     noRing?: boolean;
     focusVisible?: boolean;
 
+    // Events
+    onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
+    onKeyDown?: (e: KeyboardEvent<HTMLButtonElement>) => void;
+
     // Optional
+    type?: "button" | "submit" | "reset";
+    children?: ReactNode;
     ref?: Ref<HTMLButtonElement | null>;
-} & Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className">;
+    legacyProps?: ButtonHTMLAttributes<HTMLButtonElement>;
+};
 
 /**
  * Button component
  * @example
  * ```tsx
+ * // Import Route type
+ * import { Route } from "next";
+ *
  * // Define the state
  * const [isLoading, setIsLoading] = useState(false);
  *
  * // Use the component
- * <Button
- *     type="submit"
+ * <Link
  *     label="Send the form"
- *     isLoading={isLoading}
- *     loadingLabel="Sending..."
+ *     href={`/task/${slug}` as Route}
  * >
  *     Send
- * </Button>
+ * </Link>
  * ```
  */
 export default function Button(props: ButtonProps) {
     const {
         type = "button",
         label,
-        loadingLabel = "Loading...",
+        loadingLabel,
         variant = "default",
         noPointer = false,
         noRing = false,
@@ -82,14 +91,8 @@ export default function Button(props: ButtonProps) {
             disabled={isLoading || isDisabled}
             {...others}
         >
-            {isLoading ? (
-                <>
-                    <Loader className={combo(theme[variant].loaderColor, className?.loader)} />
-                    {loadingLabel}
-                </>
-            ) : (
-                (children ?? label)
-            )}
+            {isLoading && <Loader className={combo(theme[variant].loader, className?.loader)} />}
+            <span className={combo(theme[variant].text, className?.text)}>{loadingLabel ?? children ?? label}</span>
         </button>
     );
 }
