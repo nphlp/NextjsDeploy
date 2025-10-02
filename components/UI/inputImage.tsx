@@ -136,7 +136,7 @@ export default function InputImage(props: InputFileProps) {
                         <ImageRatio
                             src={URL.createObjectURL(imagePreview)}
                             alt="Preview"
-                            className="w-full rounded-xl"
+                            className={{ div: "w-full rounded-xl" }}
                             mode="onPageLoad"
                         />
                         <Button

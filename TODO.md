@@ -19,6 +19,7 @@
 
 - [ ] Build Cache
 - [ ] ISR Cache -> Redis
+- [ ] https://github.com/vercel/next.js/issues/82993
 
 ## Baser le Select sur un vrai select !
 

@@ -15,7 +15,7 @@ export default function Page() {
                     src="/fruit/apple.webp"
                     alt="Apple"
                     mode="onPageLoad"
-                    className="rounded-2xl border border-gray-300"
+                    className={{ div: "rounded-2xl border border-gray-300" }}
                 />
             </PerspectiveCard>
         </div>

@@ -2,7 +2,7 @@ import { TaskFindUniqueProps, TaskFindUniqueResponse } from "@services/types";
 
 export const taskIdPageParams = (id: string) =>
     ({
-        select: { id: true, title: true, status: true },
+        select: { id: true, title: true, status: true, updatedAt: true },
         where: { id },
     }) satisfies TaskFindUniqueProps;
 

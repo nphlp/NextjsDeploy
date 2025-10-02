@@ -1,8 +1,10 @@
 "use client";
 
-import ButtonDeleteTask, { ButtonDeleteTaskSkeleton } from "@comps/SHARED/button-delete-task";
-import InputUpdateTaskTitle, { InputUpdateTaskTitleSkeleton } from "@comps/SHARED/input-update-task-title";
-import SelectUpdateTaskStatus, { SelectUpdateTaskStatusSkeleton } from "@comps/SHARED/select-update-task-status";
+import ButtonDeleteTask, { ButtonDeleteTaskSkeleton } from "@comps/SHARED/optimistics/button-delete-task";
+import InputUpdateTaskTitle, { InputUpdateTaskTitleSkeleton } from "@comps/SHARED/optimistics/input-update-task-title";
+import SelectUpdateTaskStatus, {
+    SelectUpdateTaskStatusSkeleton,
+} from "@comps/SHARED/optimistics/select-update-task-status";
 import Link from "@comps/UI/button/link";
 import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
 import { Pencil } from "lucide-react";

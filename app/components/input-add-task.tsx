@@ -6,8 +6,8 @@ import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
 import { ArrowUp } from "lucide-react";
 import { startTransition, useContext, useState } from "react";
 import { AddTask } from "@/actions/Task";
-import { Context } from "../../app/components/context";
-import { TaskType } from "../../app/components/fetch";
+import { Context } from "./context";
+import { TaskType } from "./fetch";
 
 export default function InputAddTask() {
     const { setDataBypass, setOptimisticData, optimisticMutations } = useContext(Context);

@@ -1,6 +1,6 @@
+import InputAddTask, { InputAddTaskSkeleton } from "@app/components/input-add-task";
 import SearchFilter, { SearchFilterSkeleton } from "@comps/SHARED/filters/SearchFilter";
 import UpdatedAtFilter, { UpdatedAtFilterSkeleton } from "@comps/SHARED/filters/UpdatedAtFilter";
-import InputAddTask, { InputAddTaskSkeleton } from "@comps/SHARED/input-add-task";
 import { TaskFindManyServer } from "@services/server";
 import { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
