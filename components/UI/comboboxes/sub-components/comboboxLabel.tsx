@@ -17,8 +17,6 @@ export default function ComboboxLabel<T extends ComboOptionType | MultiSourceCom
 ) {
     const { option, query } = props;
 
-    console.log("Highlighting query:", { name: option.name, query });
-
     const highlightQuery = (optionName: string, query: string) => {
         // Slugify the option name and the query
         const nameSlug = stringToSlug(optionName);

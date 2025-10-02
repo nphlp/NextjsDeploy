@@ -112,8 +112,8 @@ export default function InputImage(props: InputFileProps) {
                 className={combo(!imagePreview && "cursor-pointer", variant && theme[variant].content, classContent)}
                 onDragOver={preventBrowserDropBehavior}
                 onDrop={handleDrop}
-                // Allow to focus the input when pressing Enter or Space
-                role="input"
+                // Allow to focus to enable key down listeners for Enter or Space
+                role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {

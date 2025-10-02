@@ -85,6 +85,7 @@ export default function ComboboxIcon<T extends ComboOptionType | MultiSourceComb
                     // Accessibility
                     "cursor-pointer",
                 )}
+                aria-label="Open options list"
             >
                 <ChevronDown className="stroke-gray-high size-6 translate-y-px" />
             </ComboboxButton>
@@ -107,6 +108,7 @@ export default function ComboboxIcon<T extends ComboOptionType | MultiSourceComb
                 // Accessibility
                 "cursor-pointer",
             )}
+            aria-label="Remove all selected options"
         >
             <X className="stroke-gray-high size-6" />
         </button>
