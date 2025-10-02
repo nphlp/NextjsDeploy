@@ -1,8 +1,13 @@
 "use client";
 
-import ButtonDeleteTask, { ButtonDeleteTaskSkeleton } from "@comps/SHARED/button-delete-task";
-import InputUpdateTaskTitle, { InputUpdateTaskTitleSkeleton } from "@comps/SHARED/input-update-task-title";
-import SelectUpdateTaskStatus, { SelectUpdateTaskStatusSkeleton } from "@comps/SHARED/select-update-task-status";
+import ButtonDeleteTask, { ButtonDeleteTaskSkeleton } from "@comps/SHARED/optimistics/button-delete-task";
+import InputUpdateTaskTitle, { InputUpdateTaskTitleSkeleton } from "@comps/SHARED/optimistics/input-update-task-title";
+import SelectUpdateTaskStatus, {
+    SelectUpdateTaskStatusSkeleton,
+} from "@comps/SHARED/optimistics/select-update-task-status";
+import { SkeletonText } from "@comps/UI/skeleton";
+import dayjs from "dayjs";
+import "dayjs/locale/fr";
 import { TaskType } from "./fetch";
 
 type EditionProps = {
@@ -11,6 +16,8 @@ type EditionProps = {
 
 export default function Edition(props: EditionProps) {
     const { task } = props;
+
+    const formattedDate = dayjs(task.updatedAt).locale("fr").format("D MMM YYYY à HH[h]mm et  ss[s]");
 
     return (
         <div className="space-y-4">
@@ -25,6 +32,10 @@ export default function Edition(props: EditionProps) {
                 <SelectUpdateTaskStatus task={task} className={{ component: "w-full" }} />
                 <ButtonDeleteTask task={task} className={{ button: "px-1.5" }} redirectTo="/" />
             </div>
+            <div className="flex items-end gap-2 text-gray-500">
+                <div className="text-xs font-extrabold uppercase">Mis à jour</div>
+                <div className="text-sm">{formattedDate}</div>
+            </div>
         </div>
     );
 }
@@ -36,6 +47,9 @@ export const EditionSkeleton = () => {
             <div className="flex justify-between gap-2">
                 <SelectUpdateTaskStatusSkeleton />
                 <ButtonDeleteTaskSkeleton />
+            </div>
+            <div>
+                <SkeletonText width="60%" fontSize="sm" />
             </div>
         </div>
     );
