@@ -22,7 +22,7 @@ const structure: StructureType = {
     buttonGroup: combo("relative"),
     button: combo(
         // Text
-        "text-foreground text-left whitespace-nowrap",
+        "text-foreground text-left line-clamp-1 overflow-hidden text-ellipsis",
         // Size and padding
         "w-full",
         // Outline

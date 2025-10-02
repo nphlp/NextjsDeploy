@@ -19,7 +19,7 @@ export default async function Page(props: PageProps) {
     const params = await exampleSrrQueryParamsCached.parse(searchParams);
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 p-7">
             <Suspense>
                 <Data searchParams={params} />
             </Suspense>
@@ -39,7 +39,7 @@ const Data = async (props: DataProps) => {
 
     return (
         <Provider initialData={taskList}>
-            <div className="grid grid-cols-3 items-end gap-4">
+            <div className="grid grid-cols-2 items-end gap-4 md:grid-cols-3">
                 <UpdatedAtFilter />
                 <SearchFilter />
                 <ButtonRefetch />

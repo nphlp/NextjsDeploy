@@ -64,7 +64,7 @@ export default function Page() {
     return (
         <div
             className={combo(
-                "bg-red-100 p-5",
+                "bg-red-100 p-7",
                 // Toggle `flex-1` to see the difference
                 // "flex-1",
                 // Toggle `w-full` to see the difference

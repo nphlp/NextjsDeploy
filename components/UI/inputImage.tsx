@@ -162,8 +162,7 @@ export default function InputImage(props: InputFileProps) {
                     <div className="m-5 flex flex-col items-center gap-2">
                         <ImageTemplate className="text-gray-middle size-10 stroke-[1.5px]" />
                         <div className="text-gray-middle text-center text-sm">
-                            <div>Glissez une image</div>
-                            <div>ou cliquez pour sélectionner</div>
+                            Glissez une image ou cliquez pour sélectionner
                         </div>
                     </div>
                 )}

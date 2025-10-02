@@ -9,7 +9,7 @@ export default async function Page() {
     });
 
     return (
-        <div className="mt-16 flex-1">
+        <div className="flex-1 p-7">
             <Card initialData={taskList} />
         </div>
     );

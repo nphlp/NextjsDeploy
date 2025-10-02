@@ -23,7 +23,7 @@ export default async function Page() {
 
     return (
         <div className="p-7">
-            <Card className="h-fit w-[450px] space-y-4">
+            <Card className="h-fit max-w-[450px] space-y-4">
                 <div className="text-2xl font-bold">Formulaire</div>
                 <div className="text-sm text-gray-500">
                     Ce formulaire est un exemple de formulaire avec des champs de type texte, sélection, checkbox,

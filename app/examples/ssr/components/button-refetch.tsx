@@ -20,9 +20,17 @@ export default function ButtonRefetch() {
     };
 
     return (
-        <div className="grid grid-cols-2 gap-2">
-            <Button label="SetData" onClick={() => newData()} className={{ button: "h-fit w-full" }} />
-            <Button label="Refetch" onClick={() => refetch()} className={{ button: "h-fit w-full" }} />
+        <div className="grid grid-cols-2 gap-4 max-md:col-span-2">
+            <Button
+                label="SetData"
+                onClick={() => newData()}
+                className={{ button: "border-foreground hover:border-gray-high h-fit w-full border" }}
+            />
+            <Button
+                label="Refetch"
+                onClick={() => refetch()}
+                className={{ button: "border-foreground hover:border-gray-high h-fit w-full border" }}
+            />
         </div>
     );
 }
