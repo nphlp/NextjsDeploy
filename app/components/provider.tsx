@@ -19,24 +19,24 @@ export default function Provider(props: ContextProviderProps) {
     const { search } = useSearchQueryParams();
 
     // Reactive fetch
-    // TODO: tester si setDataBypass est provoque qu'un seul render
-    const {
-        data,
-        setDataBypass: setData,
-        isLoading,
-        refetch,
-    } = useFetch({
+    const { data, setDataBypass, isLoading, refetch } = useFetch({
         route: "/internal/task/findMany",
         params: homePageParams({ updatedAt, search }),
         initialData,
     });
 
     // Optimistic management
-    // TODO: tester combien de refetch sont provoqués par [useFetch + useOptimistic]
     const [optimisticData, setOptimisticData] = useOptimistic(data, optimisticMutations);
 
     // Context values
-    const value: ContextType = { optimisticData, isLoading, setData, refetch, setOptimisticData, optimisticMutations };
+    const value: ContextType = {
+        optimisticData,
+        isLoading,
+        setDataBypass,
+        refetch,
+        setOptimisticData,
+        optimisticMutations,
+    };
 
     return <Context.Provider value={value}>{children}</Context.Provider>;
 }

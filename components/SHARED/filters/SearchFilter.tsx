@@ -16,12 +16,6 @@ export default function SearchFilter(props: SearchFilterProps) {
 
     const { search, setSearch } = useSearchQueryParams();
 
-    // const { setPage } = usePageQueryParams();
-
-    // const handleChange = () => {
-    //     setPage(1);
-    // };
-
     return (
         <div className="relative">
             <Input
@@ -29,7 +23,6 @@ export default function SearchFilter(props: SearchFilterProps) {
                 placeholder="Rechercher"
                 className={className}
                 autoComplete="off"
-                // afterChange={handleChange}
                 setValue={setSearch}
                 value={search}
                 noLabel={noLabel}

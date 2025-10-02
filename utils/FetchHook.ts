@@ -11,6 +11,7 @@ export type FetchHookProps<
     B extends Body<Input, R>,
 > = Omit<FetchProps<Input, R, P, M, B>, "client" | "signal"> & {
     initialData: FetchResponse<Input, R, P>;
+    debounce?: number;
     fetchOnFirstRender?: boolean;
 };
 
@@ -33,7 +34,7 @@ export const useFetch = <
 >(
     props: FetchHookProps<Input, R, P, M, B>,
 ): FetchHookResponse<Input, R, P> => {
-    const { route, params, fetchOnFirstRender = false, initialData } = props;
+    const { route, params, debounce = 0, fetchOnFirstRender = false, initialData } = props;
 
     const stringifiedParams = JSON.stringify(params);
     const memoizedProps = useMemo(
@@ -62,8 +63,7 @@ export const useFetch = <
             setIsLoading(true);
 
             if (process.env.NODE_ENV === "development") {
-                // console.log("useFetch: ", memoizedProps);
-                console.log("useFetch: ", JSON.stringify(memoizedProps, null, 2));
+                console.log("useFetch: ", memoizedProps);
             }
 
             try {
@@ -89,13 +89,13 @@ export const useFetch = <
                 fetchData();
             }
             fetchOnFirstRenderRef.current = true;
-        }, 50);
+        }, debounce);
 
         return () => {
             clearTimeout(debounceTimeout);
             controller.abort();
         };
-    }, [memoizedProps, refetchTrigger]);
+    }, [memoizedProps, refetchTrigger, debounce]);
 
     const refetch = (offsetTime: number = 100) => {
         setTimeout(() => {

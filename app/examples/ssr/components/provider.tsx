@@ -22,6 +22,7 @@ export default function Provider(props: ContextProviderProps) {
         route: "/internal/task/findMany",
         params: exampleSrrPageParams({ updatedAt, search }),
         initialData,
+        debounce: 200,
     });
 
     // Context values

@@ -10,7 +10,7 @@ import { Context } from "../../app/components/context";
 import { TaskType } from "../../app/components/fetch";
 
 export default function InputAddTask() {
-    const { setData, setOptimisticData, optimisticMutations } = useContext(Context);
+    const { setDataBypass, setOptimisticData, optimisticMutations } = useContext(Context);
 
     const [title, setTitle] = useState("");
 
@@ -35,7 +35,7 @@ export default function InputAddTask() {
 
             // If success, update the real state in a new transition to prevent key conflict
             startTransition(() =>
-                setData((current) => optimisticMutations(current, { type: "add", newItem: validatedItem })),
+                setDataBypass((current) => optimisticMutations(current, { type: "add", newItem: validatedItem })),
             );
 
             console.log("✅ Creation succeeded");

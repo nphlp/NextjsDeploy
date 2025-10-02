@@ -5,10 +5,14 @@ import { useContext } from "react";
 import { Context } from "./context";
 
 export default function List() {
-    const { data } = useContext(Context);
+    const { data, isLoading } = useContext(Context);
+
+    if (isLoading) {
+        return <Loader />;
+    }
 
     if (!data?.length) {
-        return <Loader />;
+        return <div>No tasks found</div>;
     }
 
     return (
