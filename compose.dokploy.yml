@@ -36,10 +36,6 @@ services:
                 - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
             dockerfile: ./Dockerfile
             target: runner
-        expose:
-            - 3000
-        ports:
-            - "3005:3000"
         restart: unless-stopped
         depends_on:
             postgres:
@@ -50,7 +46,8 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.frontend-app.rule=Host(`app.nansp.dev`)
-            - traefik.http.routers.frontend-app.entrypoints=web
+            - traefik.http.routers.frontend-app.entrypoints=websecure
+            - traefik.http.routers.frontend-app.tls.certResolver=letsencrypt
             - traefik.http.services.frontend-app.loadbalancer.server.port=3000
 
 volumes:
