@@ -1,5 +1,9 @@
 # TODO
 
+## Dokploy
+
+- [ ] Tester de mettre des labels traefik directement dans le `compose.dokploy.yml`
+
 ## Portainer
 
 - [ ] Certificats HTTPS non fonctionnels/intermittents pour `nansp.dev` mais toujours valide pour les sous-domaines

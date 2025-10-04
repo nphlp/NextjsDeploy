@@ -36,6 +36,8 @@ services:
                 - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
             dockerfile: ./Dockerfile
             target: runner
+        expose:
+            - 3000
         ports:
             - "3005:3000"
         restart: unless-stopped
@@ -45,6 +47,11 @@ services:
         networks:
             - app-network
             - dokploy-network
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.frontend-app.rule=Host(`app.nansp.dev`)
+            - traefik.http.routers.frontend-app.entrypoints=web
+            - traefik.http.services.frontend-app.loadbalancer.server.port=3000
 
 volumes:
     postgres-volume:
