@@ -7,7 +7,6 @@ services:
             - POSTGRES_DB=${POSTGRES_DB}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
         volumes:
-            # PostgreSQL data (persistent volume)
             - postgres-volume:/var/lib/postgresql/data
         healthcheck:
             test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
@@ -20,12 +19,10 @@ services:
 
     nextjs:
         container_name: nextjs
-        # Provide ENVs to runtime
         env_file:
             - ./.env
         build:
             context: ./
-            # Provide ARGs to buildtime
             args:
                 - NODE_ENV=${NODE_ENV}
                 - NEXTJS_STANDALONE=${NEXTJS_STANDALONE}
@@ -45,10 +42,10 @@ services:
             - dokploy-network
         labels:
             - traefik.enable=true
-            - traefik.http.routers.frontend-app.rule=Host(`app.nansp.dev`)
-            - traefik.http.routers.frontend-app.entrypoints=websecure
-            - traefik.http.routers.frontend-app.tls.certResolver=letsencrypt
-            - traefik.http.services.frontend-app.loadbalancer.server.port=3000
+            - traefik.http.routers.nextjs-${VPS_SUB_DOMAIN}.rule=Host(`${VPS_SUB_DOMAIN}.${VPS_DOMAIN}`)
+            - traefik.http.routers.nextjs-${VPS_SUB_DOMAIN}.entrypoints=websecure
+            - traefik.http.routers.nextjs-${VPS_SUB_DOMAIN}.tls.certResolver=letsencrypt
+            - traefik.http.services.nextjs-${VPS_SUB_DOMAIN}.loadbalancer.server.port=3000
 
 volumes:
     postgres-volume:
