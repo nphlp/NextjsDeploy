@@ -1,7 +1,7 @@
 services:
     postgres:
         image: postgres:16-alpine
-        container_name: postgres
+        container_name: postgres-${VPS_SUB_DOMAIN}
         restart: unless-stopped
         environment:
             - POSTGRES_DB=${POSTGRES_DB}
@@ -18,7 +18,7 @@ services:
             - app-network
 
     nextjs:
-        container_name: nextjs
+        container_name: nextjs-${VPS_SUB_DOMAIN}
         env_file:
             - ./.env
         build:
@@ -49,12 +49,12 @@ services:
 
 volumes:
     postgres-volume:
-        name: postgres-volume
+        name: postgres-volume-${VPS_SUB_DOMAIN}
         driver: local
 
 networks:
     app-network:
-        name: app-network
+        name: app-network-${VPS_SUB_DOMAIN}
         driver: bridge
     dokploy-network:
         external: true
