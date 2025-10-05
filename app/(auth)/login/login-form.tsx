@@ -16,36 +16,35 @@ export default function LoginForm() {
     const [password, setPassword] = useState("");
 
     const [isLoading, setIsLoading] = useState(false);
-    const [feedback, setFeedback] = useState<FeedbackType>({
-        message: "",
-        mode: "success",
-        isFeedbackOpen: false,
-    });
+
+    const [feedback, setFeedback] = useState<FeedbackType>();
+    const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
     const handleLogin = async () => {
         setIsLoading(true);
+        setIsFeedbackOpen(false);
 
         if (!email || !password) {
             setFeedback({
                 message: "Please fill all fields.",
                 mode: "warning",
-                isFeedbackOpen: true,
             });
+            setIsFeedbackOpen(true);
             setIsLoading(false);
             return;
         }
 
-        const { data } = await signIn.email({
+        const { data, error } = await signIn.email({
             email,
             password,
         });
 
-        if (!data) {
+        if (!data || error) {
             setFeedback({
                 message: "Failed to login, invalid credentials.",
                 mode: "error",
-                isFeedbackOpen: true,
             });
+            setIsFeedbackOpen(true);
             setIsLoading(false);
             return;
         }
@@ -78,7 +77,7 @@ export default function LoginForm() {
                 <Link label="S'inscrire" href="/register" variant="underline" />
             </div>
 
-            <Feedback feedback={feedback} />
+            <Feedback feedback={feedback} isFeedbackOpen={isFeedbackOpen} />
 
             <div className="flex justify-center">
                 <Button type="submit" label="Connexion" isLoading={isLoading} />

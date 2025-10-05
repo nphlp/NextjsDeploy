@@ -29,7 +29,8 @@ export default function Form(props: FormProps) {
     const comboboxMultiStates = useComboboxMultiStates([], accountList);
 
     // Feedback
-    const [feedback, setFeedback] = useState<FeedbackType>({ isFeedbackOpen: false, message: "", mode: "success" });
+    const [feedback, setFeedback] = useState<FeedbackType>();
+    const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
     // Loading
     const [isLoading, setIsLoading] = useState(false);
@@ -51,7 +52,8 @@ export default function Form(props: FormProps) {
         });
 
         // Set feedback
-        setFeedback({ isFeedbackOpen: true, message: "Formulaire envoyé avec succès", mode: "success" });
+        setFeedback({ message: "Formulaire envoyé avec succès", mode: "success" });
+        setIsFeedbackOpen(true);
 
         // Reset loading
         setIsLoading(false);
@@ -60,7 +62,7 @@ export default function Form(props: FormProps) {
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
         // Reset feedback
-        setFeedback({ isFeedbackOpen: false, message: "", mode: "success" });
+        setIsFeedbackOpen(false);
     };
 
     return (
@@ -104,7 +106,7 @@ export default function Form(props: FormProps) {
                 classComponent="w-full"
                 required={false}
             />
-            <Feedback feedback={feedback} />
+            <Feedback feedback={feedback} isFeedbackOpen={isFeedbackOpen} />
             <div className="flex justify-center">
                 <Button type="submit" label="Envoyer" isLoading={isLoading} />
             </div>

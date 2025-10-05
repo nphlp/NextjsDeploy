@@ -5,7 +5,7 @@ import Input from "@comps/UI/input/input";
 import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
 import { ArrowUp } from "lucide-react";
 import { startTransition, useContext, useState } from "react";
-import { AddTask } from "@/actions/Task";
+import { AddTask } from "@/actions/TaskAction";
 import { Context } from "./context";
 import { TaskType } from "./fetch";
 

@@ -6,49 +6,21 @@ import { motion } from "motion/react";
 
 export type FeedbackMode = "success" | "info" | "warning" | "error";
 
-export type FeedbackType = {
-    message: string;
-    mode: FeedbackMode;
-    isFeedbackOpen: boolean;
-};
+export type FeedbackType =
+    | {
+          message: string;
+          mode: FeedbackMode;
+      }
+    | undefined;
 
 type FeedbackProps = {
     feedback: FeedbackType;
+    isFeedbackOpen: boolean;
 };
 
-/**
- * Feedback component
- * @example
- * ```tsx
- * // Define the state
- * const [feedback, setFeedback] = useState<FeedbackType>({
- *     message: "",
- *     mode: "success",
- *     isFeedbackOpen: false,
- * });
- *
- * // Update the state
- * const handleSubmit = (e: FormEvent) => {
- *     e.preventDefault();
- *
- *     setFeedback({
- *         message: "Product created successfully",
- *         mode: "success",
- *         isFeedbackOpen: true,
- *     });
- * }
- *
- * // Use the component
- * return <form onSubmit={handleSubmit}>
- *     <Input label="Product name" name="product-name" />
- *     <Feedback feedback={feedback} />
- *     <Button label="Submit" />
- * </form>
- * ```
- */
 export default function Feedback(props: FeedbackProps) {
-    const { feedback } = props;
-    const { message, mode, isFeedbackOpen } = feedback;
+    const { feedback = { message: "", mode: "success" }, isFeedbackOpen } = props;
+    const { message, mode } = feedback;
 
     const modeStyle = {
         success: {

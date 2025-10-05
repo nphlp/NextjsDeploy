@@ -5,7 +5,7 @@ import Input, { InputClassName } from "@comps/UI/input/input";
 import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
 import { combo } from "@lib/combo";
 import { startTransition, useState } from "react";
-import { UpdateTask } from "@/actions/Task";
+import { UpdateTask } from "@/actions/TaskAction";
 import useInstant from "./useInstant";
 
 type InputUpdateTaskTitleProps = {
