@@ -28,7 +28,7 @@ export default function InputPassword(props: InputPasswordProps) {
     const [toggleVisibility, setToggleVisibility] = useState(false);
 
     return (
-        <div className={combo("flex flex-row items-end gap-1.5", className?.component)}>
+        <div className={combo("relative flex flex-row items-end gap-1.5", className?.component)}>
             <Input
                 label={label}
                 placeholder={placeholder}
@@ -41,8 +41,11 @@ export default function InputPassword(props: InputPasswordProps) {
             <Button
                 type="button"
                 label="toggle-password-visibility"
-                className={merge({ button: "hover:border-gray-low p-2" }, className?.button)}
-                variant="outline"
+                className={merge(
+                    { button: "hover:border-gray-low absolute right-1.5 bottom-1 p-1" },
+                    className?.button,
+                )}
+                variant="ghost"
                 onClick={() => setToggleVisibility(!toggleVisibility)}
             >
                 {toggleVisibility && <Eye className="stroke-gray-high size-5" />}
