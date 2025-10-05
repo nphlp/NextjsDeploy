@@ -21,7 +21,7 @@ export default async function Page(props: PageProps) {
     return (
         <div className="w-full max-w-[900px] space-y-4 px-4 py-4 sm:px-12">
             <h1 className="text-2xl font-bold">Ma liste de tâches 📝 V2</h1>
-            <section className="space-y-4">
+            <section className="space-y-8">
                 <Suspense fallback={<TodoSkeleton />}>
                     <Todo params={params} />
                 </Suspense>
@@ -43,12 +43,10 @@ const Todo = async (props: TodoProps) => {
     return (
         <Provider initialData={taskList}>
             <InputAddTask />
-            <hr className="border-gray-low" />
             <div className="grid grid-cols-2 gap-4">
                 <UpdatedAtFilter />
                 <SearchFilter />
             </div>
-            <hr className="border-gray-low" />
             <List />
         </Provider>
     );
@@ -58,12 +56,10 @@ const TodoSkeleton = () => {
     return (
         <>
             <InputAddTaskSkeleton />
-            <hr className="border-gray-low" />
             <div className="grid grid-cols-2 gap-4">
                 <UpdatedAtFilterSkeleton />
                 <SearchFilterSkeleton />
             </div>
-            <hr className="border-gray-low" />
             <ListSkeleton />
         </>
     );
