@@ -57,9 +57,17 @@ jobs:
         needs: [lint, format, type]
         environment: preview
         steps:
-            # Deploy vers Portainer
-            - name: Trigger Portainer Deploy Preview
-              run: curl -X POST "${{ secrets.PORTAINER_WEBHOOK_PREVIEW }}"
+            - name: Trigger Dokploy Deploy Preview
+              run: |
+                curl -X 'POST' 'https://${{ secrets.DOKPLOY_VPS_URL }}/api/compose.deploy' \
+                    -H 'accept: application/json' \
+                    -H 'Content-Type: application/json' \
+                    -H 'x-api-key: ${{ secrets.DOKPLOY_API_TOKEN }}' \
+                    -d '{
+                        "composeId": "${{ secrets.DOKPLOY_COMPOSE_ID_PREVIEW }}",
+                        "title": "Api Deployment for Preview",
+                        "description": "Deployment pipeline triggered by commit: ${{ github.sha }}"
+                    }'
 
     deploy-production:
         if : github.ref == 'refs/heads/main'
@@ -78,6 +86,14 @@ jobs:
             #   env:
             #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            # Deploy vers Portainer
-            - name: Trigger Portainer Deploy Production
-              run: curl -X POST "${{ secrets.PORTAINER_WEBHOOK_PRODUCTION }}"
+            - name: Trigger Dokploy Deploy Production
+              run: |
+                curl -X 'POST' 'https://${{ secrets.DOKPLOY_VPS_URL }}/api/compose.deploy' \
+                    -H 'accept: application/json' \
+                    -H 'Content-Type: application/json' \
+                    -H 'x-api-key: ${{ secrets.DOKPLOY_API_TOKEN }}' \
+                    -d '{
+                        "composeId": "${{ secrets.DOKPLOY_COMPOSE_ID_PRODUCTION }}",
+                        "title": "Api Deployment for Production",
+                        "description": "Deployment pipeline triggered by commit: ${{ github.sha }}"
+                    }'
