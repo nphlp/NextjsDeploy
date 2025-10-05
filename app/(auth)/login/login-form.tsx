@@ -2,16 +2,59 @@
 
 import Button from "@comps/UI/button/button";
 import Link from "@comps/UI/button/link";
+import Feedback, { FeedbackType } from "@comps/UI/feedback";
 import Input from "@comps/UI/input/input";
 import InputPassword from "@comps/UI/inputPassword";
+import { signIn } from "@lib/authClient";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function LoginForm() {
+    const router = useRouter();
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    const [isLoading, setIsLoading] = useState(false);
+    const [feedback, setFeedback] = useState<FeedbackType>({
+        message: "",
+        mode: "success",
+        isFeedbackOpen: false,
+    });
+
+    const handleLogin = async () => {
+        setIsLoading(true);
+
+        if (!email || !password) {
+            setFeedback({
+                message: "Please fill all fields.",
+                mode: "warning",
+                isFeedbackOpen: true,
+            });
+            setIsLoading(false);
+            return;
+        }
+
+        const { data } = await signIn.email({
+            email,
+            password,
+        });
+
+        if (!data) {
+            setFeedback({
+                message: "Failed to login, invalid credentials.",
+                mode: "error",
+                isFeedbackOpen: true,
+            });
+            setIsLoading(false);
+            return;
+        }
+
+        router.push("/profile");
+    };
+
     return (
-        <form action="" className="space-y-4">
+        <form action={handleLogin} className="space-y-4">
             <Input label="Email" type="email" setValue={setEmail} value={email} autoComplete="email" autoFocus />
 
             <div className="flex flex-col items-end gap-2">
@@ -34,8 +77,11 @@ export default function LoginForm() {
                 <p>Pas encore de compte ?</p>
                 <Link label="S'inscrire" href="/register" variant="underline" />
             </div>
+
+            <Feedback feedback={feedback} />
+
             <div className="flex justify-center">
-                <Button type="submit" label="Connexion" />
+                <Button type="submit" label="Connexion" isLoading={isLoading} />
             </div>
         </form>
     );

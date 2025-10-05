@@ -5,7 +5,7 @@ import { useComboboxMultiStates, useComboboxStates } from "@comps/UI/comboboxes/
 import Combobox from "@comps/UI/comboboxes/combobox";
 import ComboboxMulti from "@comps/UI/comboboxes/comboboxMulti";
 import { ComboOptionType, MultiSourceComboOptionType } from "@comps/UI/comboboxes/utils";
-import Feedback, { FeedbackMode } from "@comps/UI/feedback";
+import Feedback, { FeedbackType } from "@comps/UI/feedback";
 import Input from "@comps/UI/input/input";
 import InputImage from "@comps/UI/inputImage";
 import Select from "@comps/UI/select/select";
@@ -29,9 +29,7 @@ export default function Form(props: FormProps) {
     const comboboxMultiStates = useComboboxMultiStates([], accountList);
 
     // Feedback
-    const [message, setMessage] = useState("");
-    const [mode, setMode] = useState<FeedbackMode>("none");
-    const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+    const [feedback, setFeedback] = useState<FeedbackType>({ isFeedbackOpen: false, message: "", mode: "success" });
 
     // Loading
     const [isLoading, setIsLoading] = useState(false);
@@ -53,9 +51,7 @@ export default function Form(props: FormProps) {
         });
 
         // Set feedback
-        setMessage("Formulaire envoyé avec succès");
-        setMode("success");
-        setIsFeedbackOpen(true);
+        setFeedback({ isFeedbackOpen: true, message: "Formulaire envoyé avec succès", mode: "success" });
 
         // Reset loading
         setIsLoading(false);
@@ -64,7 +60,7 @@ export default function Form(props: FormProps) {
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
         // Reset feedback
-        setIsFeedbackOpen(false);
+        setFeedback({ isFeedbackOpen: false, message: "", mode: "success" });
     };
 
     return (
@@ -108,7 +104,7 @@ export default function Form(props: FormProps) {
                 classComponent="w-full"
                 required={false}
             />
-            <Feedback message={message} mode={mode} isFeedbackOpen={isFeedbackOpen} />
+            <Feedback feedback={feedback} />
             <div className="flex justify-center">
                 <Button type="submit" label="Envoyer" isLoading={isLoading} />
             </div>

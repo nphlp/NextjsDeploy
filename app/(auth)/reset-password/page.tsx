@@ -1,7 +1,13 @@
 import Card from "@comps/UI/card";
+import { getSession } from "@lib/authServer";
+import { redirect } from "next/navigation";
 import ResetForm from "./reset-form";
 
-export default function Page() {
+export default async function Page() {
+    const session = await getSession();
+
+    if (session) redirect("/profile");
+
     return (
         <Card className="max-w-[400px] space-y-4 p-7">
             <div className="flex flex-col items-center gap-2">
