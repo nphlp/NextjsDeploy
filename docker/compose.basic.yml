@@ -20,9 +20,9 @@ services:
     nextjs:
         container_name: nextjs
         env_file:
-            - ./.env.basic
+            - ../.env.basic
         build:
-            context: ./
+            context: ../
             args:
                 - NODE_ENV=${NODE_ENV}
                 - NEXTJS_STANDALONE=${NEXTJS_STANDALONE}
@@ -31,7 +31,7 @@ services:
                 - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
                 - POSTGRES_DB=${POSTGRES_DB}
                 - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
-            dockerfile: ./Dockerfile
+            dockerfile: docker/Dockerfile
             target: runner
         ports:
             - "3000:3000"

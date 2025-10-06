@@ -63,8 +63,8 @@ merge-env-production:
 
 DC = BUILDKIT_PROGRESS=plain COMPOSE_BAKE=true docker compose
 
-POSTGRES = compose.postgres.yml
-BASIC = compose.basic.yml
+POSTGRES = docker/compose.postgres.yml
+BASIC = docker/compose.basic.yml
 
 # Start a Postgres standalone
 # -> Used in the following commands: dev, prod, ngrok
@@ -72,15 +72,15 @@ BASIC = compose.basic.yml
 
 postgres:
 	@make setup-env
-	$(DC) -f $(POSTGRES) up -d --build
+	$(DC) --env-file .env -f $(POSTGRES) up -d --build
 	@echo "🚀 Postgres is running on port 5432 ✅"
 	@echo "📝 Now start Nextjs with 'pnpm auto'"
 
 postgres-stop:
-	$(DC) -f $(POSTGRES) down
+	$(DC) --env-file .env -f $(POSTGRES) down
 
 postgres-clear:
-	$(DC) -f $(POSTGRES) down -v
+	$(DC) --env-file .env -f $(POSTGRES) down -v
 
 # One command to start Dev, Prod or Ngrok
 # -> Nextjs in terminal + Postgres in docker
