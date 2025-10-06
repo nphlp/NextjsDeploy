@@ -9,7 +9,7 @@
         "build:analyze": "ANALYZE=true next build",
         "start": "next start",
         "auto": "pnpm install && pnpm db:reload && pnpm prisma:generate && pnpm prisma:deploy && pnpm fixtures:reload && pnpm dev",
-        "auto:prod": "pnpm install && pnpm db:reload && pnpm prisma:generate && pnpm prisma:deploy && pnpm fixtures:reload && pnpm build && pnpm start",
+        "auto:start": "pnpm install && pnpm db:reload && pnpm prisma:generate && pnpm prisma:deploy && pnpm fixtures:reload && pnpm build && pnpm start",
         "lint": "eslint",
         "lint:fix": "eslint . --fix",
         "format": "prettier . --check",

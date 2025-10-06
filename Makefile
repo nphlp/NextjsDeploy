@@ -85,20 +85,20 @@ postgres-clear:
 # One command to start Dev, Prod or Ngrok
 # -> Nextjs in terminal + Postgres in docker
 # -> CMD/CTRL+C to stop both
-.PHONY: dev prod ngrok
+.PHONY: dev start ngrok
 
-# For local development -> http://localhost:3000
+# For local development server -> http://localhost:3000
 # -> Best performance for hot-reloading
 dev:
 	@make postgres
 	@pnpm auto && make postgres-stop && make postgres-stop
 	@echo "🚀 Access the app at: http://localhost:3000 ✅"
 
-# For local production testing -> http://localhost:3000
+# For local build server for testing -> http://localhost:3000
 # -> Check everything works before deploying to VPS
-prod:
+start:
 	@make postgres
-	@pnpm auto:prod && make postgres-stop && make postgres-stop
+	@pnpm auto:start && make postgres-stop && make postgres-stop
 	@echo "🚀 Access the app at: http://localhost:3000 ✅"
 
 # For tunneling with Ngrok -> https://your-static-url.ngrok-free.app
