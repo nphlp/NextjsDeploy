@@ -20,7 +20,7 @@ services:
     nextjs:
         container_name: nextjs
         env_file:
-            - ./.env.merged
+            - ./.env.basic
         build:
             context: ./
             args:
