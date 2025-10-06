@@ -16,9 +16,6 @@ OVERRIDE_VPS = .env.override.vps
 merge-env-basic:
 	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_BASIC) --output $(OUTPUT)
 
-merge-env-local:
-	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_LOCAL) --output $(OUTPUT)
-
 merge-env-vps:
 	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_VPS) --output .env.vps
 
@@ -110,16 +107,3 @@ basic-clear:
 
 # Build (for portainer local)
 .PHONY: local local-stop local-clear
-
-local:
-	@make merge-env-local
-	$(DC) $(ENV_MERGED) -f $(LOCAL) up -d --build
-	@echo "🚀 Access the app at: https://front.local.dev ✅"
-
-local-stop:
-	@make merge-env-local
-	$(DC) $(ENV_MERGED) -f $(LOCAL) down
-
-local-clear:
-	@make merge-env-local
-	$(DC) $(ENV_MERGED) -f $(LOCAL) down -v
