@@ -24,8 +24,48 @@ export const taskData: Prisma.TaskCreateInput[] = [
         },
     },
     {
+        title: "Installer les panneaux solaires",
+        slug: stringToSlug("Installer les panneaux solaires"),
+        status: "DONE",
+        Author: {
+            connect: {
+                email: "admin@example.com",
+            },
+        },
+    },
+    {
+        title: "Composter les déchets organiques",
+        slug: stringToSlug("Composter les déchets organiques"),
+        status: "DONE",
+        Author: {
+            connect: {
+                email: "user@example.com",
+            },
+        },
+    },
+    {
         title: "Arroser le basilic",
         slug: stringToSlug("Arroser le basilic"),
+        status: "IN_PROGRESS",
+        Author: {
+            connect: {
+                email: "admin@example.com",
+            },
+        },
+    },
+    {
+        title: "Réduire son empreinte carbone",
+        slug: stringToSlug("Réduire son empreinte carbone"),
+        status: "IN_PROGRESS",
+        Author: {
+            connect: {
+                email: "user@example.com",
+            },
+        },
+    },
+    {
+        title: "Apprendre le jardinage biologique",
+        slug: stringToSlug("Apprendre le jardinage biologique"),
         status: "IN_PROGRESS",
         Author: {
             connect: {
@@ -44,9 +84,9 @@ export const taskData: Prisma.TaskCreateInput[] = [
         },
     },
     {
-        title: "Réduire son empreinte carbone",
-        slug: stringToSlug("Réduire son empreinte carbone"),
-        status: "IN_PROGRESS",
+        title: "Aller au marché local",
+        slug: stringToSlug("Aller au marché local"),
+        status: "TODO",
         Author: {
             connect: {
                 email: "user@example.com",
@@ -54,8 +94,8 @@ export const taskData: Prisma.TaskCreateInput[] = [
         },
     },
     {
-        title: "Aller au marché local",
-        slug: stringToSlug("Aller au marché local"),
+        title: "Créer un potager urbain",
+        slug: stringToSlug("Créer un potager urbain"),
         status: "TODO",
         Author: {
             connect: {

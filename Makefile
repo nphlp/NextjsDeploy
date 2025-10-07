@@ -1,66 +1,108 @@
-include .env
+# Import environment variables from .env if it exists
+ifneq (,$(wildcard .env))
+    include .env
+endif
 
 ########################
 #    Merge Env Files   #
 ########################
 
 BASE = .env
-OUTPUT = .env.merged
 
-OVERRIDE_BASIC = .env.override.basic
-OVERRIDE_LOCAL = .env.override.local
-OVERRIDE_VPS = .env.override.vps
+OVERRIDE_BASIC = env/.env.override.basic
+OVERRIDE_PREVIEW = env/.env.override.preview
+OVERRIDE_PRODUCTION = env/.env.override.production
 
-.PHONY: merge-env-basic merge-env-local
+OUTPUT_BASIC = .env.basic
+OUTPUT_PREVIEW = .env.preview
+OUTPUT_PRODUCTION = .env.production
+
+# Setup environment files if they don't exist
+.PHONY: setup-env merge-env-basic merge-env-preview merge-env-production
+
+setup-env:
+	@if [ ! -f .env ]; then \
+		cp env/.env.example .env; \
+		echo "✅ Created .env from env/.env.example"; \
+	else \
+		echo "📝 .env already exists"; \
+	fi
 
 merge-env-basic:
-	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_BASIC) --output $(OUTPUT)
+	@if [ ! -f env/.env.override.basic ]; then \
+		cp env/.env.override.basic.example env/.env.override.basic; \
+		echo "✅ Created env/.env.override.basic from example"; \
+	else \
+		echo "📝 env/.env.override.basic already exists"; \
+	fi
+	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_BASIC) --output $(OUTPUT_BASIC)
 
-merge-env-local:
-	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_LOCAL) --output $(OUTPUT)
+# Used for VPS preview deployments environment
+merge-env-preview:
+	@if [ ! -f env/.env.override.preview ]; then \
+		cp env/.env.override.preview.example env/.env.override.preview; \
+		echo "✅ Created env/.env.override.preview from example"; \
+	else \
+		echo "📝 env/.env.override.preview already exists"; \
+	fi
+	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_PREVIEW) --output $(OUTPUT_PREVIEW)
 
-merge-env-vps:
-	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_VPS) --output .env.vps
+# Used for VPS production deployments environment
+merge-env-production:
+	@if [ ! -f env/.env.override.production ]; then \
+		cp env/.env.override.production.example env/.env.override.production; \
+		echo "✅ Created env/.env.override.production from example"; \
+	else \
+		echo "📝 env/.env.override.production already exists"; \
+	fi
+	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_PRODUCTION) --output $(OUTPUT_PRODUCTION)
 
 #####################
 #   Nextjs server   #
 #####################
 
 DC = BUILDKIT_PROGRESS=plain COMPOSE_BAKE=true docker compose
-ENV_MERGED = --env-file .env.merged
 
-POSTGRES = compose.postgres.yml
-BASIC = compose.basic.yml
-LOCAL = compose.local.yml
-VPS = compose.vps.yml
+POSTGRES = docker/compose.postgres.yml
+BASIC = docker/compose.basic.yml
 
-# Postgres standalone (for dev with nextjs terminal server)
+# Start a Postgres standalone
+# -> Used in the following commands: dev, prod, ngrok
 .PHONY: postgres postgres-stop postgres-clear
 
 postgres:
-	$(DC) -f $(POSTGRES) up -d --build
+	@make setup-env
+	$(DC) --env-file .env -f $(POSTGRES) up -d --build
 	@echo "🚀 Postgres is running on port 5432 ✅"
 	@echo "📝 Now start Nextjs with 'pnpm auto'"
 
 postgres-stop:
-	$(DC) -f $(POSTGRES) down
+	$(DC) --env-file .env -f $(POSTGRES) down
 
 postgres-clear:
-	$(DC) -f $(POSTGRES) down -v
+	$(DC) --env-file .env -f $(POSTGRES) down -v
 
-# Dev and prod shortcut (nextjs in terminal + postgres in docker)
-.PHONY: dev prod ngrok
+# One command to start Dev, Prod or Ngrok
+# -> Nextjs in terminal + Postgres in docker
+# -> CMD/CTRL+C to stop both
+.PHONY: dev start ngrok
 
+# For local development server -> http://localhost:3000
+# -> Best performance for hot-reloading
 dev:
 	@make postgres
 	@pnpm auto && make postgres-stop && make postgres-stop
 	@echo "🚀 Access the app at: http://localhost:3000 ✅"
 
-prod:
+# For local build server for testing -> http://localhost:3000
+# -> Check everything works before deploying to VPS
+start:
 	@make postgres
-	@pnpm auto:prod && make postgres-stop && make postgres-stop
+	@pnpm auto:start && make postgres-stop && make postgres-stop
 	@echo "🚀 Access the app at: http://localhost:3000 ✅"
 
+# For tunneling with Ngrok -> https://your-static-url.ngrok-free.app
+# -> Useful for mobile debugging, functional testing or sharing with others
 ngrok:
 	@if [ -z "$(NGROK_URL)" ]; then \
 		echo; \
@@ -92,34 +134,19 @@ ngrok:
 		fi \
 	fi
 
-# Build (without portainer)
+# Fully containerized Nextjs and Postgres for local testing
 .PHONY: basic basic-stop basic-clear
 
 basic:
+	@make setup-env
 	@make merge-env-basic
-	$(DC) $(ENV_MERGED) -f $(BASIC) up -d --build
+	$(DC) --env-file $(OUTPUT_BASIC) -f $(BASIC) up -d --build
 	@echo "🚀 Access the app at: http://localhost:3000 ✅"
 
 basic-stop:
 	@make merge-env-basic
-	$(DC) $(ENV_MERGED) -f $(BASIC) down
+	$(DC) --env-file $(OUTPUT_BASIC) -f $(BASIC) down
 
 basic-clear:
 	@make merge-env-basic
-	$(DC) $(ENV_MERGED) -f $(BASIC) down -v
-
-# Build (for portainer local)
-.PHONY: local local-stop local-clear
-
-local:
-	@make merge-env-local
-	$(DC) $(ENV_MERGED) -f $(LOCAL) up -d --build
-	@echo "🚀 Access the app at: https://front.local.dev ✅"
-
-local-stop:
-	@make merge-env-local
-	$(DC) $(ENV_MERGED) -f $(LOCAL) down
-
-local-clear:
-	@make merge-env-local
-	$(DC) $(ENV_MERGED) -f $(LOCAL) down -v
+	$(DC) --env-file $(OUTPUT_BASIC) -f $(BASIC) down -v

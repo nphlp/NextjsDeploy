@@ -5,7 +5,7 @@ import { useComboboxMultiStates, useComboboxStates } from "@comps/UI/comboboxes/
 import Combobox from "@comps/UI/comboboxes/combobox";
 import ComboboxMulti from "@comps/UI/comboboxes/comboboxMulti";
 import { ComboOptionType, MultiSourceComboOptionType } from "@comps/UI/comboboxes/utils";
-import Feedback, { FeedbackMode } from "@comps/UI/feedback";
+import Feedback, { FeedbackType } from "@comps/UI/feedback";
 import Input from "@comps/UI/input/input";
 import InputImage from "@comps/UI/inputImage";
 import Select from "@comps/UI/select/select";
@@ -29,8 +29,7 @@ export default function Form(props: FormProps) {
     const comboboxMultiStates = useComboboxMultiStates([], accountList);
 
     // Feedback
-    const [message, setMessage] = useState("");
-    const [mode, setMode] = useState<FeedbackMode>("none");
+    const [feedback, setFeedback] = useState<FeedbackType>();
     const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
     // Loading
@@ -53,8 +52,7 @@ export default function Form(props: FormProps) {
         });
 
         // Set feedback
-        setMessage("Formulaire envoyé avec succès");
-        setMode("success");
+        setFeedback({ message: "Formulaire envoyé avec succès", mode: "success" });
         setIsFeedbackOpen(true);
 
         // Reset loading
@@ -108,7 +106,7 @@ export default function Form(props: FormProps) {
                 classComponent="w-full"
                 required={false}
             />
-            <Feedback message={message} mode={mode} isFeedbackOpen={isFeedbackOpen} />
+            <Feedback feedback={feedback} isFeedbackOpen={isFeedbackOpen} />
             <div className="flex justify-center">
                 <Button type="submit" label="Envoyer" isLoading={isLoading} />
             </div>

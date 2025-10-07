@@ -11,16 +11,13 @@ node_modules/
 
 # env files
 .env
-.env.override.basic
-.env.override.local
-.env.override.vps
-
-# env auto generated
-.env.merged
-
-# saved env for real deploy
-.env.prod
+.env.backup
+.env.basic
 .env.preview
+.env.production
+.env.override.basic
+.env.override.preview
+.env.override.production
 
 # typescript
 *.tsbuildinfo

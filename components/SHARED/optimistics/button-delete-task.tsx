@@ -10,7 +10,7 @@ import { Trash2 } from "lucide-react";
 import { Route } from "next";
 import { useRouter } from "next/navigation";
 import { startTransition, useRef, useState } from "react";
-import { DeleteTask } from "@/actions/Task";
+import { DeleteTask } from "@/actions/TaskAction";
 import useInstant from "./useInstant";
 
 type SelectUpdateTaskStatusProps = {
