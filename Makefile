@@ -91,14 +91,14 @@ postgres-clear:
 # -> Best performance for hot-reloading
 dev:
 	@make postgres
-	@pnpm auto && make postgres-stop && make postgres-stop
+	@pnpm auto && make postgres-stop
 	@echo "🚀 Access the app at: http://localhost:3000 ✅"
 
 # For local build server for testing -> http://localhost:3000
 # -> Check everything works before deploying to VPS
 start:
 	@make postgres
-	@pnpm auto:start && make postgres-stop && make postgres-stop
+	@pnpm auto:start && make postgres-stop
 	@echo "🚀 Access the app at: http://localhost:3000 ✅"
 
 # For tunneling with Ngrok -> https://your-static-url.ngrok-free.app
