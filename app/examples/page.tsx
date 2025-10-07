@@ -11,6 +11,26 @@ type LinkProps = {
 export default function Page() {
     const links: LinkProps[] = [
         {
+            label: "Shadcn Accordion",
+            href: "/examples/accordion",
+            text: "An accordion from origin/shadcn ui",
+        },
+        {
+            label: "Shadcn Chart",
+            href: "/examples/chart",
+            text: "A chart from origin/shadcn ui",
+        },
+        {
+            label: "Shadcn Table",
+            href: "/examples/table",
+            text: "A table from origin/shadcn ui",
+        },
+        {
+            label: "Shadcn Dropdown",
+            href: "/examples/dropdown",
+            text: "A dropdown from origin/shadcn ui",
+        },
+        {
             label: "Auto-Layout",
             href: "/examples/auto-layout",
             text: "How to create a auto-layout",

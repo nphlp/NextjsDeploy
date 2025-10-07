@@ -34,11 +34,14 @@
     "dependencies": {
         "@prisma/client": "6.16.2",
         "@radix-ui/react-slot": "^1.2.3",
+        "@tanstack/react-table": "^8.21.3",
         "class-variance-authority": "^0.7.1",
         "dayjs": "^1.11.18",
         "next": "^15.6.0-canary.16",
+        "radix-ui": "^1.4.3",
         "react": "^19.1.1",
         "react-dom": "^19.1.1",
+        "recharts": "2.15.4",
         "tsx": "^4.20.5"
     },
     "devDependencies": {
