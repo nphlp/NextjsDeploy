@@ -21,6 +21,7 @@ The following software are required to lauch the development environment.
 
 - [Node.js](https://nodejs.org/fr/download)
 - [PNPM](https://pnpm.io/installation)
+- [Postgres](https://www.postgresql.org/download/)
 
 > [!NOTE]
 > Docker works on Windows, MacOS and Linux. \
