@@ -40,7 +40,7 @@ The following software are required to lauch the development environment.
 Run the following command to start the development server environment (nextjs in terminal + postgres in docker):
 
 ```
-make setup
+make dev
 ```
 
 It will:
