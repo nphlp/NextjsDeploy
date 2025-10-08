@@ -2,7 +2,6 @@
 
 import Link from "@comps/UI/button/link";
 import { combo } from "@lib/combo";
-import { UserRound } from "lucide-react";
 import { Route } from "next";
 import { usePathname } from "next/navigation";
 
@@ -43,9 +42,6 @@ export default function Links(props: LinksProps) {
                     className={combo("text-lg", path === href && "font-bold")}
                 />
             ))}
-            <Link label="Connexion" href="/login" variant="ghost" className="p-2" onNavigate={handleNativation}>
-                <UserRound className="size-6" />
-            </Link>
         </div>
     );
 }

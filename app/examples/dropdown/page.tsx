@@ -1,5 +1,5 @@
-import { DropdownMenuDemo } from "./dropdown";
+import ThemeDropdown from "@comps/CORE/theme/theme-dropdown";
 
 export default function Page() {
-    return <DropdownMenuDemo />;
+    return <ThemeDropdown />;
 }

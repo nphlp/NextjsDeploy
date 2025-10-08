@@ -9,7 +9,7 @@ import {
     resolveThemeToApply,
     themeCookieName,
     validateTheme,
-} from "./themeUtils";
+} from "./theme-utils";
 
 /**
  * Get theme from cookie (if exists), otherwise return default theme

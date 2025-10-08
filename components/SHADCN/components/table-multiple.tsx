@@ -244,6 +244,7 @@ export default function TableMultiple() {
         const values = Array.from(statusColumn.getFacetedUniqueValues().keys());
 
         return values.sort();
+        // eslint-disable-next-line
     }, [table.getColumn("status")?.getFacetedUniqueValues()]);
 
     // Get counts for each status
@@ -251,11 +252,13 @@ export default function TableMultiple() {
         const statusColumn = table.getColumn("status");
         if (!statusColumn) return new Map();
         return statusColumn.getFacetedUniqueValues();
+        // eslint-disable-next-line
     }, [table.getColumn("status")?.getFacetedUniqueValues()]);
 
     const selectedStatuses = useMemo(() => {
         const filterValue = table.getColumn("status")?.getFilterValue() as string[];
         return filterValue ?? [];
+        // eslint-disable-next-line
     }, [table.getColumn("status")?.getFilterValue()]);
 
     const handleStatusChange = (checked: boolean, value: string) => {
@@ -626,6 +629,7 @@ export default function TableMultiple() {
     );
 }
 
+// eslint-disable-next-line
 function RowActions({ row }: { row: Row<Item> }) {
     return (
         <DropdownMenu>
