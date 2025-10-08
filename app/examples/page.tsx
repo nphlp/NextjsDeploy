@@ -21,16 +21,20 @@ export default function Page() {
             text: "A chart from origin/shadcn ui",
         },
         {
-            label: "Shadcn Table",
-            href: "/examples/table",
-            text: "A table from origin/shadcn ui",
-        },
-        {
             label: "Shadcn Dropdown",
             href: "/examples/dropdown",
             text: "A dropdown from origin/shadcn ui",
         },
-        { label: "Patate", href: "/examples/patate", text: "A patate" },
+        {
+            label: "Tanstack Table",
+            href: "/examples/tanstack-table",
+            text: "A table from tanstack with shadcn ui",
+        },
+        {
+            label: "Patate",
+            href: "/examples/patate",
+            text: "A patate",
+        },
         {
             label: "Auto-Layout",
             href: "/examples/auto-layout",

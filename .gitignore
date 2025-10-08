@@ -36,3 +36,6 @@ prisma/client/
 
 # husky
 .husky/_/
+
+# PDF files
+PDF/
