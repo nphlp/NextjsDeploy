@@ -30,6 +30,7 @@ export default function Page() {
             href: "/examples/dropdown",
             text: "A dropdown from origin/shadcn ui",
         },
+        { label: "Patate", href: "/examples/patate", text: "A patate" },
         {
             label: "Auto-Layout",
             href: "/examples/auto-layout",
