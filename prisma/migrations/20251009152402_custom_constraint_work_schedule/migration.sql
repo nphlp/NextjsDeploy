@@ -1,0 +1,43 @@
+-- Custom SQL constraint
+-- -> avoid overlapping WorkSchedule periods for the same employee
+--
+-- Examples:
+--
+-- ✅ Allowed: consecutive periods
+--    01/09/2025 → 14/09/2025
+--    15/09/2025 → 31/09/2025
+--
+-- ❌ Blocked: overlapping periods
+--    01/09/2025 → 20/09/2025
+--    15/09/2025 → 31/09/2025  ← PostgreSQL Error
+
+-- Enable btree_gist extension for exclusion constraints
+-- This PostgreSQL extension allows using GIST indexes with btree-compatible types
+
+-- CREATE EXTENSION IF NOT EXISTS btree_gist;
+
+-- Exclusion constraint: prevents overlapping periods for the same employee
+--
+-- EXCLUDE USING gist: Creates a constraint using a GIST index (Generalized Search Tree)
+--   - More powerful than UNIQUE, can enforce complex conditions
+--   - Checks for conflicts based on operators (not just equality)
+--
+-- How it works:
+--   1. "employeeId" WITH =
+--      → Rows must have the same employeeId (equality check)
+--
+--   2. tsrange("startDate", COALESCE("endDate", 'infinity'::timestamp), '[]') WITH &&
+--      → tsrange: Creates a timestamp range (PostgreSQL range type)
+--      → COALESCE("endDate", 'infinity'): If endDate is NULL, treat as infinite
+--      → '[]': Closed interval (includes both start and end boundaries)
+--      → WITH &&: The overlap operator - returns true if ranges overlap
+--
+-- Result: If two rows have the same employeeId AND their periods overlap,
+--         PostgreSQL will reject the insertion/update with a constraint violation error
+
+-- ALTER TABLE "WorkSchedule"
+-- ADD CONSTRAINT no_overlapping_schedules_periods_for_an_employee
+-- EXCLUDE USING gist (
+--     "employeeId" WITH =,
+--     tsrange("startDate", COALESCE("endDate", 'infinity'::timestamp), '[]') WITH &&
+-- );

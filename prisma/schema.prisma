@@ -1,3 +1,8 @@
+// ⚠️ Custom SQL constraints (not visible in this schema)
+// - WorkSchedule: EXCLUDE constraint preventing overlapping periods for the same employee
+//   See migration: 20251009152402_custom_constraint_work_schedule/migration.sql
+//   Constraint name: no_overlapping_schedules_periods_for_an_employee
+
 generator client {
     provider = "prisma-client-js"
     output   = "./client"
@@ -23,16 +28,20 @@ model User {
     Session Session[]
     Account Account[]
 
+    /// Contrats de l'employé
+    Contracts   Contract[]
+    /// Horaires de travail
+    Schedules   WorkSchedule[]
+    /// Congés et absences
+    Leaves      Leave[]
+    /// Pointages
+    TimeEntries TimeEntry[]
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@index([id])
     @@index([email])
-}
-
-enum Role {
-    USER
-    ADMIN
 }
 
 model Session {
@@ -114,8 +123,158 @@ model Task {
     @@index([authorId])
 }
 
+/// Contrats d'un employé
+model Contract {
+    id String @id @default(nanoid())
+
+    employeeId String
+    Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+    /// Type de contrat
+    contractType ContractType
+
+    /// Date de début du contrat
+    startDate DateTime
+
+    /// Date de fin du contrat (null pour CDI ou contrat en cours)
+    endDate DateTime?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([employeeId, startDate])
+    @@index([employeeId, endDate])
+}
+
+/// Semaine de travail d'un employé
+model WorkSchedule {
+    id String @id @default(nanoid())
+
+    employeeId String
+    Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+    /// Période de validité de cet horaire
+    startDate DateTime
+
+    /// Fin de validité de cet horaire
+    endDate DateTime? // NULL == valide indéfiniment jusqu'à nouvel horaire
+
+    /// Liste des jours configurés
+    WorkDays WorkDay[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // ⚠️ Custom SQL constraint (see top of file for details)
+    // @@constraint `no_overlapping_schedules_periods_for_an_employee`
+
+    @@index([employeeId, startDate])
+    @@index([employeeId, endDate])
+}
+
+// Jour de travail d'un employé
+model WorkDay {
+    id String @id @default(nanoid())
+
+    scheduleId String
+    Schedule   WorkSchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+    /// Jour de la semaine concerné
+    dayOfWeek DayOfWeek
+    isWorking Boolean
+
+    morningStart   String? /// "09:00"
+    morningEnd     String? /// "12:00"
+    afternoonStart String? /// "14:00"
+    afternoonEnd   String? /// "18:00"
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([scheduleId, dayOfWeek]) /// IMPORTANT : Évite les doublons
+    @@index([scheduleId])
+}
+
+/// Congés et absences
+model Leave {
+    id String @id @default(nanoid())
+
+    employeeId String
+    Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+    /// Type de congé
+    leaveType LeaveType /// ex: CP, RTT, Maladie, etc.
+
+    /// Statut de la demande
+    status LeaveStatus /// ex: Pending, Approved, Rejected
+
+    /// Période de congé
+    startDate DateTime
+    endDate   DateTime
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([employeeId, status])
+    @@index([employeeId, startDate, endDate])
+}
+
+/// Pointages
+model TimeEntry {
+    id String @id @default(nanoid())
+
+    date DateTime @db.Date
+
+    employeeId String
+    Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+    checkIn  DateTime?
+    checkOut DateTime?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([employeeId, date]) /// Un seul pointage par jour
+    @@index([employeeId, date(sort: Desc)])
+}
+
 enum Status {
     TODO
     IN_PROGRESS
     DONE
+}
+
+enum Role {
+    USER
+    ADMIN
+}
+
+enum ContractType {
+    CDI
+    CDD
+    INTERIM
+    STAGE
+}
+
+enum LeaveType {
+    CP
+    RTT
+    MALADIE
+    SANS_SOLDE
+}
+
+enum LeaveStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+enum DayOfWeek {
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
 }
