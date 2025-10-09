@@ -1,6 +1,6 @@
 "use client";
 
-import { TaskType } from "@app/components/fetch";
+import { TaskType } from "@app/task/components/fetch";
 import Select, { SelectClassName } from "@comps/UI/select/select";
 import { SelectOptionType } from "@comps/UI/select/utils";
 import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";

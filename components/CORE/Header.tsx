@@ -1,15 +1,15 @@
-import Link from "@comps/UI/button/link";
-import { UserRound } from "lucide-react";
+import { getSession } from "@lib/authServer";
 import Links from "./Header/Links";
+import ProfileIcon from "./Header/ProfileIcon";
 import ThemeDropdown from "./theme/theme-dropdown";
 
-export default function Header() {
+export default async function Header() {
+    const session = await getSession();
+
     return (
         <header className="flex w-full items-center justify-end gap-4 px-5 py-3">
             <Links />
-            <Link label="Connexion" href="/login" variant="ghost" className="p-2">
-                <UserRound className="size-6" />
-            </Link>
+            <ProfileIcon serverSession={session} />
             <ThemeDropdown />
         </header>
     );
