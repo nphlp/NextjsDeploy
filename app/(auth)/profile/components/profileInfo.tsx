@@ -23,12 +23,12 @@ export default function ProfileInfo(props: ProfileInfoProps) {
                 classTemplate="stroke-[1.2px]"
             /> */}
             <div>
-                <div className="text-md font-bold text-gray-700">
+                <div className="text-md text-gray-high font-bold">
                     <span>{session.user.name}</span>
                     <span> </span>
                     <span>{session.user.lastname}</span>
                 </div>
-                <div className="line-clamp-1 flex flex-row items-center gap-1 text-sm text-gray-700">
+                <div className="text-gray-middle line-clamp-1 flex flex-row items-center gap-1 text-sm">
                     <div>{session.user.email}</div>
                     <div>
                         {session.user.emailVerified ? (

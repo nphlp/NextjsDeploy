@@ -85,16 +85,16 @@ const DisplaySessionList = () => {
                 </Modal>
             </div>
             {/* Other sessions list */}
-            <div className="space-y-2 rounded-lg border border-gray-300 px-5 py-3">
+            <div className="border-gray-light space-y-2 rounded-lg border px-5 py-3">
                 {data.length ? (
                     data.map((sessionAndLocation, index) => (
                         <Fragment key={index}>
-                            {index > 0 && <hr className="border-gray-300" />}
+                            {index > 0 && <hr className="border-gray-light" />}
                             <SessionItem sessionAndLocation={sessionAndLocation} />
                         </Fragment>
                     ))
                 ) : (
-                    <div className="text-center text-sm text-gray-500">Aucune autre session n&apos;est active.</div>
+                    <div className="text-gray-middle text-center text-sm">Aucune autre session n&apos;est active.</div>
                 )}
             </div>
         </div>
@@ -132,9 +132,9 @@ const SessionItem = (props: SessionItemProps) => {
                 <div className="flex w-full flex-row items-center justify-between gap-3">
                     <div className="text-sm">
                         <div className="font-semibold">{`${getBrowser(userAgent)} • ${getOs(userAgent)}`}</div>
-                        <div className="text-2xs line-clamp-1 w-full text-gray-500">{locationString(location)}</div>
+                        <div className="text-2xs text-gray-middle line-clamp-1 w-full">{locationString(location)}</div>
                     </div>
-                    <div className="text-right text-gray-500">
+                    <div className="text-gray-middle text-right">
                         <div className="text-2xs">Dernière activité le </div>
                         <div className="text-xs text-nowrap">
                             <span className="font-semibold">{formattedDate}</span>
@@ -158,7 +158,7 @@ const SessionItem = (props: SessionItemProps) => {
                 <div className="flex flex-col items-center gap-4">
                     <div className="text-xl font-bold">Déconnexion</div>
                     <div className="flex flex-row justify-center">
-                        <div className="w-fit rounded-lg border border-gray-300 px-7 py-2 text-center">
+                        <div className="border-gray-light w-fit rounded-lg border px-7 py-2 text-center">
                             <div className="text-xs">Dernière activité le</div>
                             <div className="text-sm font-semibold">
                                 {formattedDate} à {formattedTime}
