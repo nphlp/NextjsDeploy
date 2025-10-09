@@ -4,13 +4,15 @@ import Button from "@comps/UI/button/button";
 import { signOut } from "@lib/authClient";
 import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
+import { ButtonVariant } from "./button/theme";
 
 type LogoutProps = {
+    variant?: ButtonVariant;
     children: ReactNode;
 };
 
 export default function Logout(props: LogoutProps) {
-    const { children } = props;
+    const { variant, children } = props;
 
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +34,7 @@ export default function Logout(props: LogoutProps) {
             label="Se déconnecter"
             className={{ text: "flex items-center gap-2" }}
             onClick={handleClick}
+            variant={variant}
             isLoading={isLoading}
         >
             {children}

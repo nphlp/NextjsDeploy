@@ -1,6 +1,6 @@
 "use client";
 
-import { TaskType } from "@app/components/fetch";
+import { TaskType } from "@app/task/components/fetch";
 import Button, { ButtonClassName } from "@comps/UI/button/button";
 import Modal from "@comps/UI/modal/modal";
 import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";

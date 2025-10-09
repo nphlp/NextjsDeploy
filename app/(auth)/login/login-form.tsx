@@ -49,7 +49,7 @@ export default function LoginForm() {
             return;
         }
 
-        router.push("/");
+        router.push("/task");
     };
 
     return (

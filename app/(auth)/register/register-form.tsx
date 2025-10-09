@@ -56,7 +56,7 @@ export default function RegisterForm() {
 
         await UpdateLastnameAction({ lastname });
 
-        router.push("/");
+        router.push("/task");
     };
 
     return (
