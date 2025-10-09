@@ -1,7 +1,7 @@
 import Footer from "@comps/CORE/Footer";
 import Header from "@comps/CORE/Header";
-import ThemeProvider from "@comps/CORE/theme/themeProvider";
-import { getTheme } from "@comps/CORE/theme/themeServer";
+import ThemeProvider from "@comps/CORE/theme/theme-provider";
+import { getTheme } from "@comps/CORE/theme/theme-server";
 import ArrowToTop from "@comps/UI/arrowToTop";
 import Breakpoints from "@comps/UI/breakpoints";
 import type { Metadata } from "next";

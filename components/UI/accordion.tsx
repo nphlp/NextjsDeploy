@@ -161,7 +161,7 @@ const Accordion = (props: AccordionProps) => {
         <AccordionProvider openByDefault={openByDefault} index={indexRef.current}>
             <div
                 className={combo(
-                    "w-full overflow-hidden rounded-2xl border border-gray-300 bg-white shadow-md",
+                    "border-gray-low bg-background w-full overflow-hidden rounded-2xl border shadow-md",
                     className,
                 )}
             >
@@ -188,7 +188,7 @@ const AccordionButton = (props: AccordionButtonProps) => {
             <div
                 className={combo(
                     "w-full items-center justify-between rounded-lg px-3 py-1.5",
-                    "hover:cursor-pointer hover:bg-gray-100",
+                    "hover:bg-gray-light hover:cursor-pointer",
                     "transition-colors duration-200",
                     "flex items-center justify-between",
                 )}
@@ -224,7 +224,7 @@ const AccordionContent = (props: AccordionContentProps) => {
             transition={{ duration: 0.3 }}
             className={combo(className)}
         >
-            <hr className="mx-5 border-gray-200" />
+            <hr className="border-gray-low mx-5" />
             <div className="p-5">{children}</div>
         </motion.div>
     );

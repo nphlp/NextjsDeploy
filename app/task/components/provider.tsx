@@ -1,6 +1,8 @@
 "use client";
 
 import { useSearchQueryParams, useUpdatedAtQueryParams } from "@comps/SHARED/filters/queryParamsClientHooks";
+import { useSession } from "@lib/authClient";
+import { Session } from "@lib/authServer";
 import { useFetch } from "@utils/FetchHook";
 import { ReactNode, useOptimistic } from "react";
 import { Context, ContextType } from "./context";
@@ -9,11 +11,17 @@ import { optimisticMutations } from "./optimistic";
 
 type ContextProviderProps = {
     initialData: TaskType[];
+    sessionServer: NonNullable<Session>;
     children: ReactNode;
 };
 
 export default function Provider(props: ContextProviderProps) {
-    const { initialData, children } = props;
+    const { initialData, sessionServer, children } = props;
+
+    const { data: sessionClient, isPending } = useSession();
+    const session = isPending ? sessionServer : sessionClient;
+
+    if (!session) throw new Error("No session in Provider");
 
     const { updatedAt } = useUpdatedAtQueryParams();
     const { search } = useSearchQueryParams();
@@ -21,7 +29,7 @@ export default function Provider(props: ContextProviderProps) {
     // Reactive fetch
     const { data, setDataBypass, isLoading, refetch } = useFetch({
         route: "/internal/task/findMany",
-        params: homePageParams({ updatedAt, search }),
+        params: homePageParams({ updatedAt, search, authorId: session.user.id }),
         initialData,
     });
 

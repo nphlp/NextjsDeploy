@@ -1,11 +1,16 @@
+import { getSession } from "@lib/authServer";
 import Links from "./Header/Links";
-import ThemeToggle from "./theme/themeToggle";
+import ProfileIcon from "./Header/ProfileIcon";
+import ThemeDropdown from "./theme/theme-dropdown";
 
-export default function Header() {
+export default async function Header() {
+    const session = await getSession();
+
     return (
         <header className="flex w-full items-center justify-end gap-4 px-5 py-3">
             <Links />
-            <ThemeToggle />
+            <ProfileIcon serverSession={session} />
+            <ThemeDropdown />
         </header>
     );
 }

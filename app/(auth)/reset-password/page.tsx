@@ -6,7 +6,7 @@ import ResetForm from "./reset-form";
 export default async function Page() {
     const session = await getSession();
 
-    if (session) redirect("/profile");
+    if (session) redirect("/");
 
     return (
         <Card className="max-w-[400px] space-y-4 p-7">

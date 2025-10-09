@@ -1,9 +1,9 @@
 "use client";
 
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { getSystemTheme, setThemeClass, setThemeCookie } from "./themeClient";
-import { ThemeContext } from "./themeContext";
-import { SystemTheme, Theme, defaultTheme } from "./themeUtils";
+import { getSystemTheme, setThemeClass, setThemeCookie } from "./theme-client";
+import { ThemeContext } from "./theme-context";
+import { SystemTheme, Theme, defaultTheme } from "./theme-utils";
 
 type ContextProviderProps = {
     initialTheme: Theme | undefined;

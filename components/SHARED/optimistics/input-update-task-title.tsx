@@ -1,6 +1,6 @@
 "use client";
 
-import { TaskType } from "@app/components/fetch";
+import { TaskType } from "@app/task/components/fetch";
 import Input, { InputClassName } from "@comps/UI/input/input";
 import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
 import { combo } from "@lib/combo";

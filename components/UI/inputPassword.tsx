@@ -20,10 +20,11 @@ type InputPasswordProps = {
     className?: ButtonClassName;
     setValue: (value: string) => void;
     value: string;
+    noLabel?: boolean;
 };
 
 export default function InputPassword(props: InputPasswordProps) {
-    const { setValue, value, label, placeholder, autoComplete, className } = props;
+    const { setValue, value, label, placeholder, autoComplete, className, noLabel } = props;
 
     const [toggleVisibility, setToggleVisibility] = useState(false);
 
@@ -37,6 +38,7 @@ export default function InputPassword(props: InputPasswordProps) {
                 className={merge({ component: "w-full" }, className?.input)}
                 setValue={setValue}
                 value={value}
+                noLabel={noLabel}
             />
             <Button
                 type="button"

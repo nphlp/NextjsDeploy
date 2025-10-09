@@ -2,11 +2,13 @@
 
 import { TaskCreateAction, TaskDeleteAction, TaskFindUniqueAction, TaskUpdateAction } from "@actions/TaskAction";
 import { taskIdPageParams } from "@app/task/[id]/components/fetch";
+import { getSession } from "@lib/authServer";
 import { $Enums } from "@prisma/client";
 import { TaskModel } from "@services/types";
 import { hashParamsForCacheKey } from "@utils/FetchConfig";
 import { stringToSlug } from "@utils/stringToSlug";
 import { revalidateTag } from "next/cache";
+import { unauthorized } from "next/navigation";
 import z, { ZodType } from "zod";
 
 type AddTaskProps = {
@@ -21,23 +23,33 @@ export const AddTask = async (props: AddTaskProps): Promise<TaskModel | null> =>
     try {
         const { title } = addTaskSchema.parse(props);
 
-        const existingTask = await TaskFindUniqueAction({ where: { title } });
+        // Check session
+        const session = await getSession();
+        if (!session) unauthorized();
+
+        // Check that task does not already exist
+        const existingTask = await TaskFindUniqueAction({
+            where: {
+                title,
+                authorId: session.user.id,
+            },
+        });
         if (existingTask) return null;
 
+        // Generate slug
+        const slug = stringToSlug(title);
+
+        // Proceed to creation
         const createdTask = await TaskCreateAction({
             data: {
                 title,
-                slug: stringToSlug(title),
-                Author: {
-                    connect: {
-                        email: "user@example.com",
-                    },
-                },
+                slug,
+                authorId: session.user.id,
             },
         });
 
         // Reset specific cache tags
-        // revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
+        // TODO: revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
         revalidateTag("task-findMany");
 
         console.log("Creation succeeded", createdTask.title, createdTask.status);
@@ -69,15 +81,28 @@ export const UpdateTask = async (props: UpdateTaskProps): Promise<TaskModel | nu
     try {
         const { id, title, status } = updateTaskSchema.parse(props);
 
-        const existingTask = await TaskFindUniqueAction({ where: { id } });
+        // Check session
+        const session = await getSession();
+        if (!session) unauthorized();
+
+        // Check if task exists
+        const existingTask = await TaskFindUniqueAction({
+            where: {
+                id,
+                authorId: session.user.id,
+            },
+        });
         if (!existingTask) return null;
 
-        console.log("Task found:", existingTask.title, existingTask.status);
-
+        // Generate slug (if title is updated)
         const slug = title ? stringToSlug(title) : undefined;
 
+        // Proceed to update
         const updatedTask = await TaskUpdateAction({
-            where: { id },
+            where: {
+                id,
+                authorId: session.user.id,
+            },
             data: {
                 title,
                 slug,
@@ -86,9 +111,9 @@ export const UpdateTask = async (props: UpdateTaskProps): Promise<TaskModel | nu
         });
 
         // Reset specific cache tags
-        // revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
+        // TODO: revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
         revalidateTag("task-findMany");
-        revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id)));
+        revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id, session)));
 
         console.log("Update succeeded", updatedTask.title, updatedTask.status);
 
@@ -111,17 +136,31 @@ export const DeleteTask = async (props: DeleteTaskProps): Promise<TaskModel | nu
     try {
         const { id } = deleteTaskSchema.parse(props);
 
-        const existingTask = await TaskFindUniqueAction({ where: { id } });
+        // Check session
+        const session = await getSession();
+        if (!session) unauthorized();
+
+        // Check if task exists
+        const existingTask = await TaskFindUniqueAction({
+            where: {
+                id,
+                authorId: session.user.id,
+            },
+        });
         if (!existingTask) return null;
 
+        // Proceed to deletion
         const deletedTask = await TaskDeleteAction({
-            where: { id },
+            where: {
+                id,
+                authorId: session.user.id,
+            },
         });
 
         // Reset specific cache tags
-        // revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
+        // TODO: revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
         revalidateTag("task-findMany");
-        revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id)));
+        revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id, session)));
 
         console.log("Deletion succeeded", deletedTask.title, deletedTask.status);
 

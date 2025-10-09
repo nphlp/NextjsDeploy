@@ -1,34 +1,27 @@
-import Logout from "@comps/UI/logout";
+import { AccordionGroup } from "@comps/UI/accordion";
 import { getSession } from "@lib/authServer";
-import { LogOut } from "lucide-react";
-import { redirect } from "next/navigation";
+import { unauthorized } from "next/navigation";
+import EditionAccordion from "./components/editionAccordion";
+import EmailConfirmModal from "./components/emailConfirmModal";
+import ProfileAccordion from "./components/profileAccordion";
+import SessionAccordion from "./components/sessionAccordion";
 
 export default async function Page() {
     const session = await getSession();
-
-    if (!session) redirect("/login");
-
-    // const userList = await UserFindManyAction({});
+    if (!session) unauthorized();
 
     return (
-        <div className="space-y-4 p-7">
-            <h1 className="text-2xl font-bold">Profil</h1>
-
-            <p>Connecté !</p>
-
-            {/* <div className="space-y-2">
-                <div>Liste des utilisateurs</div>
-                <ul className="flex flex-col gap-1">
-                    {userList.map((u) => (
-                        <li key={u.id} className="list-disc ml-6 pl-2">{u.email}</li>
-                    ))}
-                </ul>
-            </div> */}
-
-            <Logout>
-                <div>Déconnexion</div>
-                <LogOut className="size-4" />
-            </Logout>
+        <div className="w-full space-y-4 p-7">
+            <EmailConfirmModal session={session} />
+            <AccordionGroup openByDefaultIndex={0}>
+                <div className="flex min-h-full flex-col items-center justify-center">
+                    <div className="flex w-full flex-col items-center space-y-5 sm:w-2/3 lg:w-1/2">
+                        <ProfileAccordion session={session} />
+                        <SessionAccordion session={session} />
+                        <EditionAccordion session={session} />
+                    </div>
+                </div>
+            </AccordionGroup>
         </div>
     );
 }

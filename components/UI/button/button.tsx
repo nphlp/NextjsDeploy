@@ -92,7 +92,7 @@ export default function Button(props: ButtonProps) {
             {...others}
         >
             {isLoading && <Loader className={combo(theme[variant].loader, className?.loader)} />}
-            <span className={combo(theme[variant].text, className?.text)}>{loadingLabel ?? children ?? label}</span>
+            <div className={combo(theme[variant].text, className?.text)}>{loadingLabel ?? children ?? label}</div>
         </button>
     );
 }

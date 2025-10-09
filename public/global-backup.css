@@ -1,0 +1,108 @@
+/*
+    Tailwind variables
+    -> https://tailwindcss.com/docs/theme#theme-variable-namespaces
+
+    Tailwind default
+    -> https://tailwindcss.com/docs/theme#default-theme-variable-reference
+*/
+
+@import "tailwindcss";
+
+@source "../components";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Light theme */
+:root {
+    --primary: var(--color-sky-700);
+
+    --background: var(--color-white);
+    --foreground: var(--color-black);
+
+    --gray-light: var(--color-gray-100);
+    --gray-low: var(--color-gray-300);
+    --gray-middle: var(--color-gray-500);
+    --gray-high: var(--color-gray-700);
+
+    --destructive: var(--color-red-600);
+    --destructive-hover: var(--color-red-500);
+    --destructive-disabled: var(--color-red-200);
+}
+
+/* Dark theme */
+.dark {
+    --primary: var(--color-sky-400);
+
+    --background: var(--color-black);
+    --foreground: var(--color-white);
+
+    --gray-light: var(--color-gray-900);
+    --gray-low: var(--color-gray-700);
+    --gray-middle: var(--color-gray-500);
+    --gray-high: var(--color-gray-300);
+
+    --destructive: var(--color-red-500);
+    --destructive-hover: var(--color-red-600);
+    --destructive-disabled: var(--color-red-950);
+}
+
+/* Dark and light theme mapping */
+@theme inline {
+    --color-primary: var(--primary);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-gray-light: var(--gray-light);
+    --color-gray-low: var(--gray-low);
+    --color-gray-middle: var(--gray-middle);
+    --color-gray-high: var(--gray-high);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-hover: var(--destructive-hover);
+    --color-destructive-disabled: var(--destructive-disabled);
+
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+}
+
+:root {
+    /* Base (over 640px) */
+    font-size: 16px;
+
+    /* Breakpoints SM */
+    @media (width <= 640px) {
+        font-size: 15px;
+    }
+
+    /* Breakpoints SM */
+    @media (width <= 416px) {
+        font-size: 14px;
+    }
+}
+
+/* Theme extensions */
+@theme {
+    /* Breakpoints extension for mobile  */
+    --breakpoint-3xs: 320px; /* - 96px */
+    --breakpoint-2xs: 416px; /* - 96px */
+    --breakpoint-xs: 512px; /* - 128px */
+    /* Breakpoints default based on absolute units */
+    --breakpoint-sm: 640px; /* Base */
+    --breakpoint-md: 768px; /* + 128px */
+    --breakpoint-lg: 1024px; /* + 256px */
+    --breakpoint-xl: 1280px; /* + 256px */
+    --breakpoint-2xl: 1536px; /* + 256px */
+    /* Breakpoints extension for larger screens */
+    --breakpoint-3xl: 1920px; /* + 384px */
+
+    --text-3xs: 0.625rem; /* 10px */
+    --text-3xs--line-height: calc(1 / var(--text-3xs));
+    --text-2xs: 0.5rem; /* 8px */
+    --text-2xs--line-height: calc(1 / var(--text-2xs));
+
+    /* Radius Centralisation */
+    --radius-low: var(--radius-xs);
+    --radius-middle: var(--radius-md);
+    --radius-high: var(--radius-lg);
+}
