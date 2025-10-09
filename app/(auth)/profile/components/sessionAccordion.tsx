@@ -23,7 +23,7 @@ export default async function SessionAccordion(props: SessionAccordionProps) {
         <Accordion>
             <AccordionButton>
                 <div className="text-lg font-bold">Sessions</div>
-                <div className="text-xs text-gray-500">Gérer vos sessions actives.</div>
+                <div className="text-gray-middle text-xs">Gérer vos sessions actives.</div>
             </AccordionButton>
             <AccordionContent>
                 <div className="space-y-5">
@@ -48,17 +48,17 @@ const CurrentSession = async (props: CurrentSessionProps) => {
     const location = await Fetch({ route: "/location", params: { ipAddress } });
 
     return (
-        <div className="space-y-2 rounded-lg border border-gray-300 px-5 py-3">
+        <div className="border-gray-light space-y-2 rounded-lg border px-5 py-3">
             <div className="flex flex-row items-center justify-between">
                 <div className="flex flex-row items-center gap-3">
                     <div className="min-h-2 min-w-2 rounded-full bg-green-500" />
                     <div>
                         <div className="line-clamp-1">
                             <span className="text-sm font-bold">Current Session</span>
-                            <span className="text-xs text-gray-500"> • </span>
-                            <span className="text-xs text-gray-500">{`${getBrowser(userAgent)}, ${getOs(userAgent)}`}</span>
+                            <span className="text-gray-middle text-xs"> • </span>
+                            <span className="text-gray-middle text-xs">{`${getBrowser(userAgent)}, ${getOs(userAgent)}`}</span>
                         </div>
-                        <div className="text-2xs line-clamp-1 text-gray-500">{locationString(location)}</div>
+                        <div className="text-2xs text-gray-middle line-clamp-1">{locationString(location)}</div>
                     </div>
                 </div>
             </div>

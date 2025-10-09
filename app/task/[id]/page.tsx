@@ -1,6 +1,7 @@
 import Link from "@comps/UI/button/link";
+import { getSession } from "@lib/authServer";
 import { TaskFindUniqueServer } from "@services/server";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import z, { ZodType } from "zod";
 import Edition, { EditionSkeleton } from "./components/edition";
@@ -37,7 +38,10 @@ type TaskProps = Params;
 const Task = async (props: TaskProps) => {
     const { id } = props;
 
-    const task = await TaskFindUniqueServer(taskIdPageParams(id));
+    const session = await getSession();
+    if (!session) redirect("/login");
+
+    const task = await TaskFindUniqueServer(taskIdPageParams(id, session));
 
     if (!task) notFound();
 

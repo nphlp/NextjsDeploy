@@ -113,7 +113,7 @@ export const UpdateTask = async (props: UpdateTaskProps): Promise<TaskModel | nu
         // Reset specific cache tags
         // TODO: revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
         revalidateTag("task-findMany");
-        revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id)));
+        revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id, session)));
 
         console.log("Update succeeded", updatedTask.title, updatedTask.status);
 
@@ -160,7 +160,7 @@ export const DeleteTask = async (props: DeleteTaskProps): Promise<TaskModel | nu
         // Reset specific cache tags
         // TODO: revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
         revalidateTag("task-findMany");
-        revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id)));
+        revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id, session)));
 
         console.log("Deletion succeeded", deletedTask.title, deletedTask.status);
 

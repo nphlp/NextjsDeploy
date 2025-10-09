@@ -14,27 +14,27 @@ export default function ProfileAccordion(props: ProfileAccordionProps) {
         <Accordion>
             <AccordionButton>
                 <div className="text-lg font-bold">Profil</div>
-                <div className="text-xs text-gray-500">Consulter vos informations personnelles.</div>
+                <div className="text-gray-middle text-xs">Consulter vos informations personnelles.</div>
             </AccordionButton>
             <AccordionContent>
                 <div className="space-y-4">
                     <ProfileInfo session={session} />
                     <div className="flex flex-row items-center justify-between gap-2">
                         <div className="flex flex-1 flex-col gap-2">
-                            <div className="text-xs font-bold text-gray-700">Expédiés</div>
-                            <div className="text-xl text-gray-500">3</div>
+                            <div className="text-gray-high text-xs font-bold">Expédiés</div>
+                            <div className="text-gray-middle text-xl">3</div>
                         </div>
                         <div className="flex flex-1 flex-col gap-2">
-                            <div className="text-xs font-bold text-gray-700">En livraison</div>
-                            <div className="text-xl text-gray-500">2</div>
+                            <div className="text-gray-high text-xs font-bold">En livraison</div>
+                            <div className="text-gray-middle text-xl">2</div>
                         </div>
                         <div className="flex flex-1 flex-col gap-2">
-                            <div className="text-xs font-bold text-gray-700">Livrés</div>
-                            <div className="text-xl text-gray-500">47</div>
+                            <div className="text-gray-high text-xs font-bold">Livrés</div>
+                            <div className="text-gray-middle text-xl">47</div>
                         </div>
                         <div className="flex flex-1 flex-col gap-2">
-                            <div className="text-xs font-bold text-gray-700">Retournés</div>
-                            <div className="text-xl text-gray-500">5</div>
+                            <div className="text-gray-high text-xs font-bold">Retournés</div>
+                            <div className="text-gray-middle text-xl">5</div>
                         </div>
                     </div>
                 </div>

@@ -26,7 +26,7 @@ export default function EditionAccordion(props: EditionAccordionProps) {
         <Accordion>
             <AccordionButton>
                 <div className="text-lg font-bold">Edition</div>
-                <div className="text-xs text-gray-500">Modifier vos données personnelles.</div>
+                <div className="text-gray-middle text-xs">Modifier vos données personnelles.</div>
             </AccordionButton>
             <AccordionContent>
                 <div className="space-y-4">
