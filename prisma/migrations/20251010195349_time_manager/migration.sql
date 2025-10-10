@@ -10,13 +10,16 @@ CREATE TYPE "LeaveStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 -- CreateEnum
 CREATE TYPE "DayOfWeek" AS ENUM ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY');
 
+-- CreateEnum
+CREATE TYPE "CheckType" AS ENUM ('CHECKIN', 'CHECKOUT');
+
 -- CreateTable
 CREATE TABLE "Contract" (
     "id" TEXT NOT NULL,
-    "employeeId" TEXT NOT NULL,
     "contractType" "ContractType" NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3),
+    "employeeId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -26,9 +29,10 @@ CREATE TABLE "Contract" (
 -- CreateTable
 CREATE TABLE "WorkSchedule" (
     "id" TEXT NOT NULL,
-    "employeeId" TEXT NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3),
+    "employeeId" TEXT NOT NULL,
+    "contractId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -38,13 +42,10 @@ CREATE TABLE "WorkSchedule" (
 -- CreateTable
 CREATE TABLE "WorkDay" (
     "id" TEXT NOT NULL,
-    "scheduleId" TEXT NOT NULL,
     "dayOfWeek" "DayOfWeek" NOT NULL,
-    "isWorking" BOOLEAN NOT NULL,
-    "morningStart" TEXT,
-    "morningEnd" TEXT,
-    "afternoonStart" TEXT,
-    "afternoonEnd" TEXT,
+    "arriving" TEXT NOT NULL,
+    "leaving" TEXT NOT NULL,
+    "scheduleId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -54,11 +55,11 @@ CREATE TABLE "WorkDay" (
 -- CreateTable
 CREATE TABLE "Leave" (
     "id" TEXT NOT NULL,
-    "employeeId" TEXT NOT NULL,
     "leaveType" "LeaveType" NOT NULL,
     "status" "LeaveStatus" NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3) NOT NULL,
+    "employeeId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -68,10 +69,9 @@ CREATE TABLE "Leave" (
 -- CreateTable
 CREATE TABLE "TimeEntry" (
     "id" TEXT NOT NULL,
-    "date" DATE NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+    "checkType" "CheckType" NOT NULL,
     "employeeId" TEXT NOT NULL,
-    "checkIn" TIMESTAMP(3),
-    "checkOut" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -113,6 +113,9 @@ ALTER TABLE "Contract" ADD CONSTRAINT "Contract_employeeId_fkey" FOREIGN KEY ("e
 
 -- AddForeignKey
 ALTER TABLE "WorkSchedule" ADD CONSTRAINT "WorkSchedule_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "WorkSchedule" ADD CONSTRAINT "WorkSchedule_contractId_fkey" FOREIGN KEY ("contractId") REFERENCES "Contract"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "WorkDay" ADD CONSTRAINT "WorkDay_scheduleId_fkey" FOREIGN KEY ("scheduleId") REFERENCES "WorkSchedule"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -28,13 +28,9 @@ model User {
     Session Session[]
     Account Account[]
 
-    /// Contrats de l'employé
     Contracts   Contract[]
-    /// Horaires de travail
     Schedules   WorkSchedule[]
-    /// Congés et absences
     Leaves      Leave[]
-    /// Pointages
     TimeEntries TimeEntry[]
 
     createdAt DateTime @default(now())
@@ -127,17 +123,15 @@ model Task {
 model Contract {
     id String @id @default(nanoid())
 
+    contractType ContractType /// Type de contrat (CDI, CDD, etc.)
+
+    startDate DateTime /// Date de début du contrat
+    endDate   DateTime? /// Date de fin du contrat (null pour CDI ou contrat en cours)
+
     employeeId String
     Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 
-    /// Type de contrat
-    contractType ContractType
-
-    /// Date de début du contrat
-    startDate DateTime
-
-    /// Date de fin du contrat (null pour CDI ou contrat en cours)
-    endDate DateTime?
+    Schedules WorkSchedule[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -150,17 +144,16 @@ model Contract {
 model WorkSchedule {
     id String @id @default(nanoid())
 
+    startDate DateTime /// Période de validité de cet horaire
+    endDate   DateTime? /// Fin de validité de cet horaire (NULL == valide indéfiniment jusqu'à nouvel horaire)
+
+    WorkDays WorkDay[] /// Liste des jours configurés
+
     employeeId String
     Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 
-    /// Période de validité de cet horaire
-    startDate DateTime
-
-    /// Fin de validité de cet horaire
-    endDate DateTime? // NULL == valide indéfiniment jusqu'à nouvel horaire
-
-    /// Liste des jours configurés
-    WorkDays WorkDay[]
+    contractId String
+    Contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -176,17 +169,13 @@ model WorkSchedule {
 model WorkDay {
     id String @id @default(nanoid())
 
+    dayOfWeek DayOfWeek /// Jour de la semaine concerné
+
+    arriving String // "09:00"
+    leaving  String // "17:00"
+
     scheduleId String
     Schedule   WorkSchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
-
-    /// Jour de la semaine concerné
-    dayOfWeek DayOfWeek
-    isWorking Boolean
-
-    morningStart   String? /// "09:00"
-    morningEnd     String? /// "12:00"
-    afternoonStart String? /// "14:00"
-    afternoonEnd   String? /// "18:00"
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -199,18 +188,15 @@ model WorkDay {
 model Leave {
     id String @id @default(nanoid())
 
-    employeeId String
-    Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-
-    /// Type de congé
-    leaveType LeaveType /// ex: CP, RTT, Maladie, etc.
-
-    /// Statut de la demande
-    status LeaveStatus /// ex: Pending, Approved, Rejected
+    leaveType LeaveType /// Type de congé (ex: CP, RTT, Maladie, etc.)
+    status    LeaveStatus /// Statut de la demande (ex: Pending, Approved, Rejected)
 
     /// Période de congé
     startDate DateTime
     endDate   DateTime
+
+    employeeId String
+    Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -223,13 +209,11 @@ model Leave {
 model TimeEntry {
     id String @id @default(nanoid())
 
-    date DateTime @db.Date
+    date      DateTime
+    checkType CheckType
 
     employeeId String
     Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-
-    checkIn  DateTime?
-    checkOut DateTime?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -277,4 +261,9 @@ enum DayOfWeek {
     FRIDAY
     SATURDAY
     SUNDAY
+}
+
+enum CheckType {
+    CHECKIN
+    CHECKOUT
 }
