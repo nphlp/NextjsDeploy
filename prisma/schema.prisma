@@ -1,7 +1,14 @@
 // ⚠️ Custom SQL constraints (not visible in this schema)
-// - WorkSchedule: EXCLUDE constraint preventing overlapping periods for the same employee
-//   See migration: 20251009152402_custom_constraint_work_schedule/migration.sql
-//   Constraint name: no_overlapping_schedules_periods_for_an_employee
+//
+// Migration 30000000000001_custom_constraint_work_schedule:
+//   - no_overlapping_schedules_periods_for_an_employee (WorkSchedule)
+//     → EXCLUDE constraint: prevents overlapping periods for same employee
+//
+// Migration 30000000000002_same_employeeid_for_contract_and_workschedule:
+//   - unique_contract_id_employee (Contract)
+//     → UNIQUE on (id, employeeId) - required for composite FK
+//   - same_employeeid_for_contract_and_workschedule (WorkSchedule)
+//     → Composite FK: ensures WorkSchedule.employeeId === Contract.employeeId
 
 generator client {
     provider = "prisma-client-js"
@@ -136,6 +143,9 @@ model Contract {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    // ⚠️ Custom SQL constraints (see top of file)
+    // @@constraint `unique_contract_id_employee`
+
     @@index([employeeId, startDate])
     @@index([employeeId, endDate])
 }
@@ -158,8 +168,9 @@ model WorkSchedule {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    // ⚠️ Custom SQL constraint (see top of file for details)
+    // ⚠️ Custom SQL constraints (see top of file)
     // @@constraint `no_overlapping_schedules_periods_for_an_employee`
+    // @@constraint `same_employeeid_for_contract_and_workschedule`
 
     @@index([employeeId, startDate])
     @@index([employeeId, endDate])
