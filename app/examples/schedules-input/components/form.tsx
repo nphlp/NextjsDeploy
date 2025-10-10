@@ -4,6 +4,7 @@ import DropdownCalendar from "@comps/SHADCN/components/dropdown-calendar";
 import Button from "@comps/UI/button/button";
 import Card from "@comps/UI/card";
 import { Time } from "@internationalized/date";
+import { $Enums } from "@prisma/client";
 import { useContext, useState } from "react";
 import { AddWorkSchedule } from "@/actions/WorkScheduleAction";
 import { Context } from "./context";
@@ -21,23 +22,22 @@ export default function Form() {
     const handleSubmit = async () => {
         if (!dateFrom) return console.log("Please select a start date");
 
-        const formatTimeToString = (time?: Time | null): string | null => {
-            if (!time) return null;
-            return `${time.hour}:${time.minute}`;
-        };
+        const formatTimeToString = (time: Time): string => `${time.hour}:${time.minute}`;
 
-        const selectedDaysString = selectedDays.map((day) => ({
-            dayOfWeek: day.dayOfWeek,
-            isActive: day.isActive,
-            morningStart: formatTimeToString(day.morningStart),
-            morningEnd: formatTimeToString(day.morningEnd),
-            afternoonStart: formatTimeToString(day.afternoonStart),
-            afternoonEnd: formatTimeToString(day.afternoonEnd),
-        }));
+        const selectedDaysString: { dayOfWeek: $Enums.DayOfWeek; arriving: string; leaving: string }[] = selectedDays
+            .map((day) => {
+                if (!day.isActive || !day.arriving || !day.leaving) return null;
+                return {
+                    dayOfWeek: day.dayOfWeek,
+                    arriving: formatTimeToString(day.arriving),
+                    leaving: formatTimeToString(day.leaving),
+                };
+            })
+            .filter((day) => day !== null);
 
-        const reponse = await AddWorkSchedule({ dateFrom, dateTo, selectedDays: selectedDaysString });
+        const response = await AddWorkSchedule({ dateFrom, dateTo, selectedDays: selectedDaysString });
 
-        console.log("reponse", reponse);
+        console.log("response", response);
 
         refetch();
     };
@@ -49,7 +49,7 @@ export default function Form() {
                     <h2 className="text-foreground text-sm font-bold">Période de planification</h2>
                     <div className="flex w-full justify-between gap-4">
                         <DropdownCalendar label="Début" setDate={setDateFrom} date={dateFrom} />
-                        <DropdownCalendar label="Fin (optionnelle)" setDate={setDateTo} date={dateTo} />
+                        <DropdownCalendar label="Fin" setDate={setDateTo} date={dateTo} optional />
                     </div>
                 </div>
                 <hr />

@@ -1,16 +1,20 @@
 "use client";
 
 import { Time } from "@internationalized/date";
-import { DayOfWeek } from "@prisma/client";
+import { $Enums, DayOfWeek } from "@prisma/client";
 import { Dispatch, SetStateAction, useState } from "react";
-import { WorkDayTemplate } from "./input-schedules";
+
+export type WorkDayTemplate = {
+    dayOfWeek: $Enums.DayOfWeek;
+    isActive: boolean;
+    arriving: Time | null;
+    leaving: Time | null;
+};
 
 export default function useSchedule() {
     const defaultTimes = {
-        morningStart: new Time(9, 0),
-        morningEnd: new Time(12, 0),
-        afternoonStart: new Time(13, 0),
-        afternoonEnd: new Time(17, 0),
+        arriving: new Time(9, 0),
+        leaving: new Time(17, 0),
     };
 
     const [mondaySchedule, setMondaySchedule] = useState<WorkDayTemplate>({
@@ -25,17 +29,17 @@ export default function useSchedule() {
     });
     const [wednesdaySchedule, setWednesdaySchedule] = useState<WorkDayTemplate>({
         dayOfWeek: DayOfWeek.WEDNESDAY,
-        isActive: false,
+        isActive: true,
         ...defaultTimes,
     });
     const [thursdaySchedule, setThursdaySchedule] = useState<WorkDayTemplate>({
         dayOfWeek: DayOfWeek.THURSDAY,
-        isActive: false,
+        isActive: true,
         ...defaultTimes,
     });
     const [fridaySchedule, setFridaySchedule] = useState<WorkDayTemplate>({
         dayOfWeek: DayOfWeek.FRIDAY,
-        isActive: false,
+        isActive: true,
         ...defaultTimes,
     });
     const [saturdaySchedule, setSaturdaySchedule] = useState<WorkDayTemplate>({

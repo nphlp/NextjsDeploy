@@ -1,5 +1,6 @@
 "use server";
 
+import { ContractCreateAction, ContractFindFirstAction } from "@actions/ContractAction";
 import { WorkScheduleDeleteAction } from "@actions/WorkScheduleAction";
 import { WorkScheduleCreateAction } from "@actions/WorkScheduleAction";
 import { exampleSchedulesInputPageParams } from "@app/examples/schedules-input/components/fetch";
@@ -16,11 +17,8 @@ type AddWorkScheduleProps = {
     dateTo?: Date;
     selectedDays: {
         dayOfWeek: $Enums.DayOfWeek;
-        isActive: boolean;
-        morningStart: string | null;
-        morningEnd: string | null;
-        afternoonStart: string | null;
-        afternoonEnd: string | null;
+        arriving: string;
+        leaving: string;
     }[];
 };
 
@@ -30,11 +28,8 @@ const addWorkScheduleSchema: ZodType<AddWorkScheduleProps> = z.object({
     selectedDays: z.array(
         z.object({
             dayOfWeek: z.enum($Enums.DayOfWeek),
-            isActive: z.boolean(),
-            morningStart: z.string().nullable(),
-            morningEnd: z.string().nullable(),
-            afternoonStart: z.string().nullable(),
-            afternoonEnd: z.string().nullable(),
+            arriving: z.string(),
+            leaving: z.string(),
         }),
     ),
 });
@@ -47,24 +42,43 @@ export const AddWorkSchedule = async (props: AddWorkScheduleProps): Promise<Work
         const session = await getSession();
         if (!session) unauthorized();
 
+        // Find
+        const foundContract = await ContractFindFirstAction({
+            where: {
+                employeeId: session.user.id,
+                AND: {
+                    startDate: { gte: dateFrom },
+                    endDate: dateTo ? { lte: dateTo } : undefined,
+                },
+            },
+        });
+
+        const contract = foundContract
+            ? foundContract
+            : await ContractCreateAction({
+                  data: {
+                      employeeId: session.user.id,
+                      contractType: "CDI",
+                      startDate: dateFrom,
+                  },
+              });
+
         // Proceed to creation
         const workSchedule = await WorkScheduleCreateAction({
             data: {
                 // For the connected user
                 employeeId: session.user.id,
+                contractId: contract.id,
                 // On the following period
                 startDate: dateFrom,
                 endDate: dateTo,
                 // With the following work days
                 WorkDays: {
                     createMany: {
-                        data: selectedDays.map((day) => ({
-                            isWorking: true, // TODO: remove this ! Useless no ?
-                            dayOfWeek: day.dayOfWeek,
-                            morningStart: day.morningStart,
-                            morningEnd: day.morningEnd,
-                            afternoonStart: day.afternoonStart,
-                            afternoonEnd: day.afternoonEnd,
+                        data: selectedDays.map(({ dayOfWeek, arriving, leaving }) => ({
+                            dayOfWeek,
+                            arriving,
+                            leaving,
                         })),
                     },
                 },

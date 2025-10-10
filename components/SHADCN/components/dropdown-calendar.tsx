@@ -12,18 +12,22 @@ type DropdownCalendarProps = {
     label: string;
     setDate: Dispatch<SetStateAction<Date | undefined>>;
     date: Date | undefined;
+    optional?: boolean;
 };
 
 export default function DropdownCalendar(props: DropdownCalendarProps) {
-    const { label, setDate, date } = props;
+    const { label, setDate, date, optional = false } = props;
 
     const [open, setOpen] = useState(false);
 
     return (
         <div className="flex w-full flex-col gap-3">
-            <Label htmlFor="date" className="px-1">
-                {label}
-            </Label>
+            <div className="flex items-end gap-1">
+                <Label htmlFor="date" className="px-1">
+                    {label}
+                </Label>
+                {!!optional && <div className="text-gray-middle text-2xs font-bold uppercase">Optionnel</div>}
+            </div>
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <Button variant="outline" id="date" className="w-full justify-between font-normal">

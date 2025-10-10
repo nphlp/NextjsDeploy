@@ -1,20 +1,12 @@
 "use client";
 
 import RangeTimeInput from "@comps/SHADCN/components/time-input";
-import { Time } from "@internationalized/date";
 import { $Enums, DayOfWeek } from "@prisma/client";
 import { Label } from "@shadcn/ui/label";
 import { Switch } from "@shadcn/ui/switch";
+import { ArrowRight } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
-
-export type WorkDayTemplate = {
-    dayOfWeek: $Enums.DayOfWeek;
-    isActive: boolean;
-    morningStart: Time | null;
-    morningEnd: Time | null;
-    afternoonStart: Time | null;
-    afternoonEnd: Time | null;
-};
+import { WorkDayTemplate } from "./states";
 
 type InputSchedulesProps = {
     setSelectedDay: Dispatch<SetStateAction<WorkDayTemplate>>;
@@ -62,26 +54,15 @@ export default function InputSchedules(props: InputSchedulesProps) {
             </div>
 
             {selectedDay.isActive && (
-                <div className="grid w-[400px] grid-cols-4 gap-2">
+                <div className="flex items-end justify-between gap-4">
                     <RangeTimeInput
-                        label="Morning"
-                        setTime={(time) => setSelectedDay((prev) => ({ ...prev, morningStart: time }))}
-                        time={selectedDay.morningStart}
+                        setTime={(time) => setSelectedDay((prev) => ({ ...prev, arriving: time }))}
+                        time={selectedDay.arriving}
                     />
+                    <ArrowRight className="mb-2.5 size-4 shrink-0" />
                     <RangeTimeInput
-                        label="to"
-                        setTime={(time) => setSelectedDay((prev) => ({ ...prev, morningEnd: time }))}
-                        time={selectedDay.morningEnd}
-                    />
-                    <RangeTimeInput
-                        label="Afternoon"
-                        setTime={(time) => setSelectedDay((prev) => ({ ...prev, afternoonStart: time }))}
-                        time={selectedDay.afternoonStart}
-                    />
-                    <RangeTimeInput
-                        label="to"
-                        setTime={(time) => setSelectedDay((prev) => ({ ...prev, afternoonEnd: time }))}
-                        time={selectedDay.afternoonEnd}
+                        setTime={(time) => setSelectedDay((prev) => ({ ...prev, leaving: time }))}
+                        time={selectedDay.leaving}
                     />
                 </div>
             )}

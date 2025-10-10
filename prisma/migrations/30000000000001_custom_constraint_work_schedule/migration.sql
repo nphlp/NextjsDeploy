@@ -14,7 +14,7 @@
 -- Enable btree_gist extension for exclusion constraints
 -- This PostgreSQL extension allows using GIST indexes with btree-compatible types
 
--- CREATE EXTENSION IF NOT EXISTS btree_gist;
+CREATE EXTENSION IF NOT EXISTS btree_gist;
 
 -- Exclusion constraint: prevents overlapping periods for the same employee
 --
@@ -35,9 +35,9 @@
 -- Result: If two rows have the same employeeId AND their periods overlap,
 --         PostgreSQL will reject the insertion/update with a constraint violation error
 
--- ALTER TABLE "WorkSchedule"
--- ADD CONSTRAINT no_overlapping_schedules_periods_for_an_employee
--- EXCLUDE USING gist (
---     "employeeId" WITH =,
---     tsrange("startDate", COALESCE("endDate", 'infinity'::timestamp), '[]') WITH &&
--- );
+ALTER TABLE "WorkSchedule"
+ADD CONSTRAINT no_overlapping_schedules_periods_for_an_employee
+EXCLUDE USING gist (
+    "employeeId" WITH =,
+    tsrange("startDate", COALESCE("endDate", 'infinity'::timestamp), '[]') WITH &&
+);

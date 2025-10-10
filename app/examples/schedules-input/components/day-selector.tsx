@@ -1,7 +1,8 @@
 "use client";
 
 import { Dispatch, SetStateAction } from "react";
-import InputSchedules, { WorkDayTemplate } from "./input-schedules";
+import InputSchedules from "./input-schedules";
+import { WorkDayTemplate } from "./states";
 
 type DaySelectorProps = {
     setSelectedDays: Dispatch<SetStateAction<WorkDayTemplate>>[];
