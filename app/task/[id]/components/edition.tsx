@@ -30,7 +30,7 @@ export default function Edition(props: EditionProps) {
             />
             <div className="flex justify-between gap-2">
                 <SelectUpdateTaskStatus task={task} className={{ component: "w-full" }} />
-                <ButtonDeleteTask task={task} className={{ button: "px-1.5" }} redirectTo="/" />
+                <ButtonDeleteTask task={task} className={{ button: "px-1.5" }} redirectTo="/task" />
             </div>
             <div className="flex items-end gap-2 text-gray-500">
                 <div className="text-xs font-extrabold uppercase">Mis à jour</div>

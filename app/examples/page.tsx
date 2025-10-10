@@ -11,6 +11,11 @@ type LinkProps = {
 export default function Page() {
     const links: LinkProps[] = [
         {
+            label: "Work Schedule",
+            href: "/examples/schedules-input",
+            text: "Add a work schedule with work days to a user",
+        },
+        {
             label: "Shadcn Accordion",
             href: "/examples/accordion",
             text: "An accordion from origin/shadcn ui",
