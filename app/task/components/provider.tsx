@@ -6,7 +6,7 @@ import { Session } from "@lib/authServer";
 import { useFetch } from "@utils/FetchHook";
 import { ReactNode, useOptimistic } from "react";
 import { Context, ContextType } from "./context";
-import { TaskType, homePageParams } from "./fetch";
+import { TaskType, taskPageParams } from "./fetch";
 import { optimisticMutations } from "./optimistic";
 
 type ContextProviderProps = {
@@ -29,7 +29,7 @@ export default function Provider(props: ContextProviderProps) {
     // Reactive fetch
     const { data, setDataBypass, isLoading, refetch } = useFetch({
         route: "/internal/task/findMany",
-        params: homePageParams({ updatedAt, search, authorId: session.user.id }),
+        params: taskPageParams({ updatedAt, search, authorId: session.user.id }),
         initialData,
     });
 

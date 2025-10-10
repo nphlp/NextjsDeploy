@@ -26,11 +26,6 @@ export default function Page() {
             text: "A chart from origin/shadcn ui",
         },
         {
-            label: "Shadcn Dropdown",
-            href: "/examples/dropdown",
-            text: "A dropdown from origin/shadcn ui",
-        },
-        {
             label: "Tanstack Table",
             href: "/examples/tanstack-table",
             text: "A table from tanstack with shadcn ui",

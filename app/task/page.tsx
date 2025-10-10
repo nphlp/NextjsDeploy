@@ -6,10 +6,10 @@ import { TaskFindManyServer } from "@services/server";
 import { redirect } from "next/navigation";
 import { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
-import { homePageParams } from "./components/fetch";
+import { taskPageParams } from "./components/fetch";
 import List, { ListSkeleton } from "./components/list";
 import Provider from "./components/provider";
-import { HomeQueryParamsCachedType, homeQueryParamsCached } from "./components/queryParams";
+import { TaskQueryParamsCachedType, taskQueryParamsCached } from "./components/queryParams";
 
 type PageProps = {
     searchParams: Promise<SearchParams>;
@@ -18,7 +18,7 @@ type PageProps = {
 export default async function Page(props: PageProps) {
     const { searchParams } = props;
 
-    const params = await homeQueryParamsCached.parse(searchParams);
+    const params = await taskQueryParamsCached.parse(searchParams);
 
     return (
         <div className="w-full max-w-[900px] space-y-4 px-4 py-4 sm:px-12">
@@ -33,7 +33,7 @@ export default async function Page(props: PageProps) {
 }
 
 type TodoProps = {
-    params: HomeQueryParamsCachedType;
+    params: TaskQueryParamsCachedType;
 };
 
 const Todo = async (props: TodoProps) => {
@@ -43,7 +43,7 @@ const Todo = async (props: TodoProps) => {
     const session = await getSession();
     if (!session) redirect("/login");
 
-    const taskList = await TaskFindManyServer(homePageParams({ updatedAt, search, authorId: session.user.id }));
+    const taskList = await TaskFindManyServer(taskPageParams({ updatedAt, search, authorId: session.user.id }));
 
     return (
         <Provider initialData={taskList} sessionServer={session}>
