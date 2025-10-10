@@ -5,6 +5,7 @@ import Button from "@comps/UI/button/button";
 import Card from "@comps/UI/card";
 import { Time } from "@internationalized/date";
 import { $Enums } from "@prisma/client";
+import dayjs from "dayjs";
 import { useContext, useState } from "react";
 import { AddWorkSchedule } from "@/actions/WorkScheduleAction";
 import { Context } from "./context";
@@ -12,10 +13,10 @@ import DaySelector from "./day-selector";
 import useSchedule from "./states";
 
 export default function Form() {
-    const { refetch } = useContext(Context);
+    const { data, refetch } = useContext(Context);
 
-    const [dateFrom, setDateFrom] = useState<Date | undefined>(new Date());
-    const [dateTo, setDateTo] = useState<Date | undefined>(undefined);
+    const [dateFrom, setDateFrom] = useState<Date | undefined>();
+    const [dateTo, setDateTo] = useState<Date | undefined>();
 
     const { selectedDays, setSelectedDays } = useSchedule();
 
@@ -42,14 +43,47 @@ export default function Form() {
         refetch();
     };
 
+    const today = dayjs().startOf("day").toDate();
+
     return (
         <Card>
             <form className="space-y-4" action={handleSubmit}>
                 <div className="space-y-6">
                     <h2 className="text-foreground text-sm font-bold">Période de planification</h2>
                     <div className="flex w-full justify-between gap-4">
-                        <DropdownCalendar label="Début" setDate={setDateFrom} date={dateFrom} />
-                        <DropdownCalendar label="Fin" setDate={setDateTo} date={dateTo} optional />
+                        <DropdownCalendar
+                            label="Début"
+                            setDate={setDateFrom}
+                            date={dateFrom}
+                            disabled={[
+                                // Disable before today
+                                (date) => date < today,
+                                // Disable before dateTo
+                                (date) => (dateTo ? date > dateTo : false),
+                                // Disable all periods already defined
+                                ...(data?.Schedules.map(({ startDate, endDate }) => ({
+                                    from: startDate!,
+                                    to: endDate!,
+                                })) ?? []),
+                            ]}
+                        />
+                        <DropdownCalendar
+                            label="Fin"
+                            setDate={setDateTo}
+                            date={dateTo}
+                            optional
+                            disabled={[
+                                // // Disable before today
+                                (date) => date < today,
+                                // // Disable before dateFrom
+                                (date) => (dateFrom ? date < dateFrom : false),
+                                // Disable all periods already defined
+                                ...(data?.Schedules.map(({ startDate, endDate }) => ({
+                                    from: startDate!,
+                                    to: endDate!,
+                                })) ?? []),
+                            ]}
+                        />
                     </div>
                 </div>
                 <hr />

@@ -7,16 +7,18 @@ import { Popover, PopoverContent, PopoverTrigger } from "@shadcn/ui/popover";
 import dayjs from "dayjs";
 import { ChevronDownIcon } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
+import { Matcher } from "react-day-picker";
 
 type DropdownCalendarProps = {
     label: string;
     setDate: Dispatch<SetStateAction<Date | undefined>>;
     date: Date | undefined;
     optional?: boolean;
+    disabled?: Matcher | Matcher[] | undefined;
 };
 
 export default function DropdownCalendar(props: DropdownCalendarProps) {
-    const { label, setDate, date, optional = false } = props;
+    const { label, setDate, date, optional = false, disabled } = props;
 
     const [open, setOpen] = useState(false);
 
@@ -44,6 +46,7 @@ export default function DropdownCalendar(props: DropdownCalendarProps) {
                             setDate(date);
                             setOpen(false);
                         }}
+                        disabled={disabled}
                     />
                 </PopoverContent>
             </Popover>
