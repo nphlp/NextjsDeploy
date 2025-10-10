@@ -6,6 +6,8 @@ import { exampleSchedulesInputPageParams } from "./components/fetch";
 import Form from "./components/form";
 import Provider from "./components/provider";
 
+export const dynamic = "force-dynamic";
+
 export default async function Page() {
     const session = await getSession();
     if (!session) redirect("/login");

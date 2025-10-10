@@ -1,4 +1,4 @@
-import { ChartAreaStacked } from "@comps/SHADCN/components/chart-area-stacked";
+import { ChartAreaStacked } from "@app/examples/chart/chart-area-stacked";
 
 export default function Page() {
     return <ChartAreaStacked />;
