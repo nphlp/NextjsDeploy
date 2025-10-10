@@ -1,11 +1,11 @@
 "use client";
 
-import { WorkScheduleDeleteAction } from "@actions/WorkScheduleAction";
 import Button from "@comps/UI/button/button";
 import { WorkScheduleModel } from "@services/types";
 import dayjs from "dayjs";
 import { Trash2 } from "lucide-react";
 import { useContext } from "react";
+import { DeleteWorkSchedule } from "@/actions/WorkScheduleAction";
 import { Context } from "./context";
 
 type ScheduleProps = {
@@ -22,8 +22,10 @@ export default function Schedule(props: ScheduleProps) {
     const to = schedule.endDate ? dayjs(schedule.endDate).format("D MMM YYYY") : "Infinie";
 
     const handleDelete = async () => {
-        const deleted = await WorkScheduleDeleteAction({ where: { id: schedule.id } });
+        const deleted = await DeleteWorkSchedule({ id: schedule.id });
+
         console.log("Schedule deleted successfully", deleted);
+
         refetch();
     };
 

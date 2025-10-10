@@ -17,11 +17,11 @@ export default async function Page() {
     if (!user) throw new Error("User not found");
 
     return (
-        <div className="space-y-4 p-7">
-            <Provider initialData={user} sessionServer={session}>
+        <Provider initialData={user} sessionServer={session}>
+            <div className="grid grid-cols-1 gap-4 p-7 lg:grid-cols-2">
                 <DisplayPeriods />
-                <Form sessionServer={session} />
-            </Provider>
-        </div>
+                <Form />
+            </div>
+        </Provider>
     );
 }
