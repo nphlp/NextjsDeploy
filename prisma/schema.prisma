@@ -1,14 +1,8 @@
 // ⚠️ Custom SQL constraints (not visible in this schema)
 //
 // Migration 30000000000001_custom_constraint_work_schedule:
-//   - no_overlapping_schedules_periods_for_an_employee (WorkSchedule)
+//   - no_overlapping_schedules_periods_for_an_employee (Schedule)
 //     → EXCLUDE constraint: prevents overlapping periods for same employee
-//
-// Migration 30000000000002_same_employeeid_for_contract_and_workschedule:
-//   - unique_contract_id_employee (Contract)
-//     → UNIQUE on (id, employeeId) - required for composite FK
-//   - same_employeeid_for_contract_and_workschedule (WorkSchedule)
-//     → Composite FK: ensures WorkSchedule.employeeId === Contract.employeeId
 
 generator client {
     provider = "prisma-client-js"
@@ -36,9 +30,9 @@ model User {
     Account Account[]
 
     Contracts   Contract[]
-    Schedules   WorkSchedule[]
+    Schedules   Schedule[]
     Leaves      Leave[]
-    TimeEntries TimeEntry[]
+    TimeEntries Clock[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -138,26 +132,23 @@ model Contract {
     employeeId String
     Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 
-    Schedules WorkSchedule[]
+    Schedules Schedule[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-
-    // ⚠️ Custom SQL constraints (see top of file)
-    // @@constraint `unique_contract_id_employee`
 
     @@index([employeeId, startDate])
     @@index([employeeId, endDate])
 }
 
 /// Semaine de travail d'un employé
-model WorkSchedule {
+model Schedule {
     id String @id @default(nanoid())
 
     startDate DateTime /// Période de validité de cet horaire
     endDate   DateTime? /// Fin de validité de cet horaire (NULL == valide indéfiniment jusqu'à nouvel horaire)
 
-    WorkDays WorkDay[] /// Liste des jours configurés
+    Days Day[] /// Liste des jours configurés
 
     employeeId String
     Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
@@ -170,14 +161,13 @@ model WorkSchedule {
 
     // ⚠️ Custom SQL constraints (see top of file)
     // @@constraint `no_overlapping_schedules_periods_for_an_employee`
-    // @@constraint `same_employeeid_for_contract_and_workschedule`
 
     @@index([employeeId, startDate])
     @@index([employeeId, endDate])
 }
 
 // Jour de travail d'un employé
-model WorkDay {
+model Day {
     id String @id @default(nanoid())
 
     dayOfWeek DayOfWeek /// Jour de la semaine concerné
@@ -186,7 +176,7 @@ model WorkDay {
     leaving  String // "17:00"
 
     scheduleId String
-    Schedule   WorkSchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+    Schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -217,7 +207,7 @@ model Leave {
 }
 
 /// Pointages
-model TimeEntry {
+model Clock {
     id String @id @default(nanoid())
 
     date      DateTime

@@ -27,7 +27,7 @@ CREATE TABLE "Contract" (
 );
 
 -- CreateTable
-CREATE TABLE "WorkSchedule" (
+CREATE TABLE "Schedule" (
     "id" TEXT NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3),
@@ -36,11 +36,11 @@ CREATE TABLE "WorkSchedule" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "WorkSchedule_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Schedule_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "WorkDay" (
+CREATE TABLE "Day" (
     "id" TEXT NOT NULL,
     "dayOfWeek" "DayOfWeek" NOT NULL,
     "arriving" TEXT NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE "WorkDay" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "WorkDay_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Day_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -67,7 +67,7 @@ CREATE TABLE "Leave" (
 );
 
 -- CreateTable
-CREATE TABLE "TimeEntry" (
+CREATE TABLE "Clock" (
     "id" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
     "checkType" "CheckType" NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE "TimeEntry" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "TimeEntry_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Clock_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -85,16 +85,16 @@ CREATE INDEX "Contract_employeeId_startDate_idx" ON "Contract"("employeeId", "st
 CREATE INDEX "Contract_employeeId_endDate_idx" ON "Contract"("employeeId", "endDate");
 
 -- CreateIndex
-CREATE INDEX "WorkSchedule_employeeId_startDate_idx" ON "WorkSchedule"("employeeId", "startDate");
+CREATE INDEX "Schedule_employeeId_startDate_idx" ON "Schedule"("employeeId", "startDate");
 
 -- CreateIndex
-CREATE INDEX "WorkSchedule_employeeId_endDate_idx" ON "WorkSchedule"("employeeId", "endDate");
+CREATE INDEX "Schedule_employeeId_endDate_idx" ON "Schedule"("employeeId", "endDate");
 
 -- CreateIndex
-CREATE INDEX "WorkDay_scheduleId_idx" ON "WorkDay"("scheduleId");
+CREATE INDEX "Day_scheduleId_idx" ON "Day"("scheduleId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "WorkDay_scheduleId_dayOfWeek_key" ON "WorkDay"("scheduleId", "dayOfWeek");
+CREATE UNIQUE INDEX "Day_scheduleId_dayOfWeek_key" ON "Day"("scheduleId", "dayOfWeek");
 
 -- CreateIndex
 CREATE INDEX "Leave_employeeId_status_idx" ON "Leave"("employeeId", "status");
@@ -103,25 +103,25 @@ CREATE INDEX "Leave_employeeId_status_idx" ON "Leave"("employeeId", "status");
 CREATE INDEX "Leave_employeeId_startDate_endDate_idx" ON "Leave"("employeeId", "startDate", "endDate");
 
 -- CreateIndex
-CREATE INDEX "TimeEntry_employeeId_date_idx" ON "TimeEntry"("employeeId", "date" DESC);
+CREATE INDEX "Clock_employeeId_date_idx" ON "Clock"("employeeId", "date" DESC);
 
 -- CreateIndex
-CREATE UNIQUE INDEX "TimeEntry_employeeId_date_key" ON "TimeEntry"("employeeId", "date");
+CREATE UNIQUE INDEX "Clock_employeeId_date_key" ON "Clock"("employeeId", "date");
 
 -- AddForeignKey
 ALTER TABLE "Contract" ADD CONSTRAINT "Contract_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "WorkSchedule" ADD CONSTRAINT "WorkSchedule_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Schedule" ADD CONSTRAINT "Schedule_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "WorkSchedule" ADD CONSTRAINT "WorkSchedule_contractId_fkey" FOREIGN KEY ("contractId") REFERENCES "Contract"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Schedule" ADD CONSTRAINT "Schedule_contractId_fkey" FOREIGN KEY ("contractId") REFERENCES "Contract"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "WorkDay" ADD CONSTRAINT "WorkDay_scheduleId_fkey" FOREIGN KEY ("scheduleId") REFERENCES "WorkSchedule"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Day" ADD CONSTRAINT "Day_scheduleId_fkey" FOREIGN KEY ("scheduleId") REFERENCES "Schedule"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Leave" ADD CONSTRAINT "Leave_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "TimeEntry" ADD CONSTRAINT "TimeEntry_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Clock" ADD CONSTRAINT "Clock_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
