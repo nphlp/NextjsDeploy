@@ -68,7 +68,7 @@ export default function Form() {
                                 // Disable before dateTo
                                 (date) => (dateTo ? date > dateTo : false),
                                 // Disable all periods already defined
-                                ...(data?.Schedules.map(({ startDate, endDate }) => ({
+                                ...(data?.Contracts[0]?.Schedules.map(({ startDate, endDate }) => ({
                                     from: startDate!,
                                     to: endDate!,
                                 })) ?? []),
@@ -85,7 +85,7 @@ export default function Form() {
                                 // // Disable before dateFrom
                                 (date) => (dateFrom ? date < dateFrom : false),
                                 // Disable all periods already defined
-                                ...(data?.Schedules.map(({ startDate, endDate }) => ({
+                                ...(data?.Contracts[0]?.Schedules.map(({ startDate, endDate }) => ({
                                     from: startDate!,
                                     to: endDate!,
                                 })) ?? []),

@@ -10,7 +10,7 @@ import { UserType } from "./fetch";
 
 type ScheduleProps = {
     index: number;
-    schedule: UserType["Schedules"][number];
+    schedule: UserType["Contracts"][number]["Schedules"][number];
 };
 
 export default function Schedule(props: ScheduleProps) {

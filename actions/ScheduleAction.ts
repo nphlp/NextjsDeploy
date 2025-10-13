@@ -67,8 +67,12 @@ export const AddSchedule = async (props: AddScheduleProps): Promise<ScheduleMode
         const workSchedule = await ScheduleCreateAction({
             data: {
                 // For the connected user
-                employeeId: session.user.id,
-                contractId: contract.id,
+                Contract: {
+                    connect: {
+                        id: contract.id,
+                        employeeId: session.user.id,
+                    },
+                },
                 // On the following period
                 startDate: dateFrom,
                 endDate: dateTo,
