@@ -1,5 +1,5 @@
 -- Custom SQL constraint
--- -> avoid overlapping Schedule periods for the same employee
+-- -> avoid overlapping Schedule periods for the same contract
 --
 -- Examples:
 --
@@ -16,15 +16,15 @@
 
 CREATE EXTENSION IF NOT EXISTS btree_gist;
 
--- Exclusion constraint: prevents overlapping periods for the same employee
+-- Exclusion constraint: prevents overlapping periods for the same contract
 --
 -- EXCLUDE USING gist: Creates a constraint using a GIST index (Generalized Search Tree)
 --   - More powerful than UNIQUE, can enforce complex conditions
 --   - Checks for conflicts based on operators (not just equality)
 --
 -- How it works:
---   1. "employeeId" WITH =
---      → Rows must have the same employeeId (equality check)
+--   1. "contractId" WITH =
+--      → Rows must have the same contractId (equality check)
 --
 --   2. tsrange("startDate", COALESCE("endDate", 'infinity'::timestamp), '[]') WITH &&
 --      → tsrange: Creates a timestamp range (PostgreSQL range type)
@@ -32,12 +32,12 @@ CREATE EXTENSION IF NOT EXISTS btree_gist;
 --      → '[]': Closed interval (includes both start and end boundaries)
 --      → WITH &&: The overlap operator - returns true if ranges overlap
 --
--- Result: If two rows have the same employeeId AND their periods overlap,
+-- Result: If two rows have the same contractId AND their periods overlap,
 --         PostgreSQL will reject the insertion/update with a constraint violation error
 
 ALTER TABLE "Schedule"
-ADD CONSTRAINT no_overlapping_schedules_periods_for_an_employee
+ADD CONSTRAINT no_overlapping_schedules_periods_for_a_contract
 EXCLUDE USING gist (
-    "employeeId" WITH =,
+    "contractId" WITH =,
     tsrange("startDate", COALESCE("endDate", 'infinity'::timestamp), '[]') WITH &&
 );

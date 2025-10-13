@@ -1,8 +1,8 @@
 // ⚠️ Custom SQL constraints (not visible in this schema)
 //
 // Migration 30000000000001_custom_constraint_work_schedule:
-//   - no_overlapping_schedules_periods_for_an_employee (Schedule)
-//     → EXCLUDE constraint: prevents overlapping periods for same employee
+//   - no_overlapping_schedules_periods_for_a_contract (Schedule)
+//     → EXCLUDE constraint: prevents overlapping periods for same contract
 
 generator client {
     provider = "prisma-client-js"
@@ -30,7 +30,6 @@ model User {
     Account Account[]
 
     Contracts   Contract[]
-    Schedules   Schedule[]
     Leaves      Leave[]
     TimeEntries Clock[]
 
@@ -150,9 +149,6 @@ model Schedule {
 
     Days Day[] /// Liste des jours configurés
 
-    employeeId String
-    Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-
     contractId String
     Contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
 
@@ -160,10 +156,10 @@ model Schedule {
     updatedAt DateTime @updatedAt
 
     // ⚠️ Custom SQL constraints (see top of file)
-    // @@constraint `no_overlapping_schedules_periods_for_an_employee`
+    // @@constraint `no_overlapping_schedules_periods_for_a_contract`
 
-    @@index([employeeId, startDate])
-    @@index([employeeId, endDate])
+    @@index([contractId, startDate])
+    @@index([contractId, endDate])
 }
 
 // Jour de travail d'un employé
