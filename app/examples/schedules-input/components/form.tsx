@@ -3,6 +3,7 @@
 import DropdownCalendar from "@comps/SHADCN/components/dropdown-calendar";
 import Button from "@comps/UI/button/button";
 import Card from "@comps/UI/card";
+import Feedback, { FeedbackType } from "@comps/UI/feedback";
 import { Time } from "@internationalized/date";
 import { $Enums } from "@prisma/client";
 import dayjs from "dayjs";
@@ -20,8 +21,22 @@ export default function Form() {
 
     const { selectedDays, setSelectedDays } = useSchedule();
 
+    const [feedback, setFeedback] = useState<FeedbackType>();
+    const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+
+    const [isLoading, setIsLoading] = useState(false);
+
     const handleSubmit = async () => {
-        if (!dateFrom) return console.log("Please select a start date");
+        setIsFeedbackOpen(false);
+
+        if (!dateFrom) {
+            setFeedback({ message: "Veuillez sélectionner une date de début", mode: "error" });
+            setIsFeedbackOpen(true);
+            return;
+        }
+
+        // Start loading
+        setIsLoading(true);
 
         const formatTimeToString = (time: Time): string => `${time.hour}:${time.minute}`;
 
@@ -43,11 +58,20 @@ export default function Form() {
 
             setDateFrom(undefined);
             setDateTo(undefined);
-        } catch (error) {
-            console.log(error);
-        }
 
-        refetch();
+            setFeedback({ message: "Période ajoutée avec succès", mode: "success" });
+            setIsFeedbackOpen(true);
+            setIsLoading(false);
+
+            refetch();
+        } catch (error) {
+            setFeedback({ message: "Une erreur est survenue", mode: "error" });
+            setIsFeedbackOpen(true);
+            setIsLoading(false);
+
+            console.log(error);
+            return;
+        }
     };
 
     const today = dayjs().startOf("day").toDate();
@@ -96,8 +120,9 @@ export default function Form() {
                 <hr />
                 <DaySelector setSelectedDays={setSelectedDays} selectedDays={selectedDays} />
                 <hr />
+                <Feedback isFeedbackOpen={isFeedbackOpen} feedback={feedback} />
                 <div className="flex justify-center">
-                    <Button type="submit" label="Enregistrer" />
+                    <Button type="submit" label="Enregistrer" isLoading={isLoading} />
                 </div>
             </form>
         </Card>

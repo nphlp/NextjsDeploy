@@ -24,22 +24,22 @@ export default function useSchedule() {
     });
     const [tuesdaySchedule, setTuesdaySchedule] = useState<WorkDayTemplate>({
         dayOfWeek: DayOfWeek.TUESDAY,
-        isActive: true,
+        isActive: false,
         ...defaultTimes,
     });
     const [wednesdaySchedule, setWednesdaySchedule] = useState<WorkDayTemplate>({
         dayOfWeek: DayOfWeek.WEDNESDAY,
-        isActive: true,
+        isActive: false,
         ...defaultTimes,
     });
     const [thursdaySchedule, setThursdaySchedule] = useState<WorkDayTemplate>({
         dayOfWeek: DayOfWeek.THURSDAY,
-        isActive: true,
+        isActive: false,
         ...defaultTimes,
     });
     const [fridaySchedule, setFridaySchedule] = useState<WorkDayTemplate>({
         dayOfWeek: DayOfWeek.FRIDAY,
-        isActive: true,
+        isActive: false,
         ...defaultTimes,
     });
     const [saturdaySchedule, setSaturdaySchedule] = useState<WorkDayTemplate>({
