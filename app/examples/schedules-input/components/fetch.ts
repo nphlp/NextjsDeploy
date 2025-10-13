@@ -2,7 +2,13 @@ import { UserFindManyProps, UserFindManyResponse } from "@services/types";
 
 export const exampleSchedulesInputPageParams = ({ userId }: { userId: string }) =>
     ({
-        include: { Schedules: true },
+        include: {
+            Schedules: {
+                include: {
+                    Days: true,
+                },
+            },
+        },
         where: { id: userId },
     }) satisfies UserFindManyProps;
 

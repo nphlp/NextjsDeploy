@@ -1,18 +1,18 @@
 "use server";
 
 import { ContractCreateAction, ContractFindFirstAction } from "@actions/ContractAction";
-import { WorkScheduleDeleteAction } from "@actions/WorkScheduleAction";
-import { WorkScheduleCreateAction } from "@actions/WorkScheduleAction";
+import { ScheduleDeleteAction } from "@actions/ScheduleAction";
+import { ScheduleCreateAction } from "@actions/ScheduleAction";
 import { exampleSchedulesInputPageParams } from "@app/examples/schedules-input/components/fetch";
 import { getSession } from "@lib/authServer";
 import { $Enums } from "@prisma/client";
-import { WorkScheduleModel } from "@services/types";
-import { hashParamsForCacheKey } from "@utils/FetchConfig";
+import { ScheduleModel } from "@services/types";
+import { cacheLifeApi, hashParamsForCacheKey } from "@utils/FetchConfig";
 import { revalidateTag } from "next/cache";
 import { unauthorized } from "next/navigation";
 import z, { ZodType } from "zod";
 
-type AddWorkScheduleProps = {
+type AddScheduleProps = {
     dateFrom: Date;
     dateTo?: Date;
     selectedDays: {
@@ -22,7 +22,7 @@ type AddWorkScheduleProps = {
     }[];
 };
 
-const addWorkScheduleSchema: ZodType<AddWorkScheduleProps> = z.object({
+const addScheduleSchema: ZodType<AddScheduleProps> = z.object({
     dateFrom: z.date(),
     dateTo: z.date().optional(),
     selectedDays: z.array(
@@ -34,9 +34,9 @@ const addWorkScheduleSchema: ZodType<AddWorkScheduleProps> = z.object({
     ),
 });
 
-export const AddWorkSchedule = async (props: AddWorkScheduleProps): Promise<WorkScheduleModel | null> => {
+export const AddSchedule = async (props: AddScheduleProps): Promise<ScheduleModel | null> => {
     try {
-        const { dateFrom, dateTo, selectedDays } = addWorkScheduleSchema.parse(props);
+        const { dateFrom, dateTo, selectedDays } = addScheduleSchema.parse(props);
 
         // Check session
         const session = await getSession();
@@ -64,7 +64,7 @@ export const AddWorkSchedule = async (props: AddWorkScheduleProps): Promise<Work
               });
 
         // Proceed to creation
-        const workSchedule = await WorkScheduleCreateAction({
+        const workSchedule = await ScheduleCreateAction({
             data: {
                 // For the connected user
                 employeeId: session.user.id,
@@ -73,7 +73,7 @@ export const AddWorkSchedule = async (props: AddWorkScheduleProps): Promise<Work
                 startDate: dateFrom,
                 endDate: dateTo,
                 // With the following work days
-                WorkDays: {
+                Days: {
                     createMany: {
                         data: selectedDays.map(({ dayOfWeek, arriving, leaving }) => ({
                             dayOfWeek,
@@ -84,13 +84,14 @@ export const AddWorkSchedule = async (props: AddWorkScheduleProps): Promise<Work
                 },
             },
             include: {
-                WorkDays: true,
+                Days: true,
             },
         });
 
         // Reset specific cache tags
         revalidateTag(
             hashParamsForCacheKey("user-findUnique", exampleSchedulesInputPageParams({ userId: session.user.id })),
+            cacheLifeApi,
         );
 
         console.log("Creation succeeded", workSchedule.startDate, workSchedule.endDate);
@@ -102,33 +103,34 @@ export const AddWorkSchedule = async (props: AddWorkScheduleProps): Promise<Work
     }
 };
 
-type DeleteWorkScheduleProps = {
+type DeleteScheduleProps = {
     id: string;
 };
 
-const deleteWorkScheduleSchema: ZodType<DeleteWorkScheduleProps> = z.object({
+const deleteScheduleSchema: ZodType<DeleteScheduleProps> = z.object({
     id: z.nanoid(),
 });
 
-export const DeleteWorkSchedule = async (props: DeleteWorkScheduleProps): Promise<WorkScheduleModel | null> => {
+export const DeleteSchedule = async (props: DeleteScheduleProps): Promise<ScheduleModel | null> => {
     try {
-        const { id } = deleteWorkScheduleSchema.parse(props);
+        const { id } = deleteScheduleSchema.parse(props);
 
         // Check session
         const session = await getSession();
         if (!session) unauthorized();
 
         // Proceed to deletion
-        const deletedWorkSchedule = await WorkScheduleDeleteAction({ where: { id } });
+        const deletedSchedule = await ScheduleDeleteAction({ where: { id } });
 
         // Reset specific cache tags
         revalidateTag(
             hashParamsForCacheKey("user-findUnique", exampleSchedulesInputPageParams({ userId: session.user.id })),
+            cacheLifeApi,
         );
 
-        console.log("Deletion succeeded", deletedWorkSchedule.startDate, deletedWorkSchedule.endDate);
+        console.log("Deletion succeeded", deletedSchedule.startDate, deletedSchedule.endDate);
 
-        return deletedWorkSchedule;
+        return deletedSchedule;
     } catch (error) {
         console.error("Failed to delete task:", error);
         return null;

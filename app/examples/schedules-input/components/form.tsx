@@ -7,7 +7,7 @@ import { Time } from "@internationalized/date";
 import { $Enums } from "@prisma/client";
 import dayjs from "dayjs";
 import { useContext, useState } from "react";
-import { AddWorkSchedule } from "@/actions/WorkScheduleAction";
+import { AddSchedule } from "@/actions/ScheduleAction";
 import { Context } from "./context";
 import DaySelector from "./day-selector";
 import useSchedule from "./states";
@@ -36,9 +36,16 @@ export default function Form() {
             })
             .filter((day) => day !== null);
 
-        const response = await AddWorkSchedule({ dateFrom, dateTo, selectedDays: selectedDaysString });
+        try {
+            const response = await AddSchedule({ dateFrom, dateTo, selectedDays: selectedDaysString });
 
-        console.log("response", response);
+            console.log("Schedule added:", response);
+
+            setDateFrom(undefined);
+            setDateTo(undefined);
+        } catch (error) {
+            console.log(error);
+        }
 
         refetch();
     };

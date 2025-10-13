@@ -1,5 +1,5 @@
 -- Custom SQL constraint
--- -> avoid overlapping WorkSchedule periods for the same employee
+-- -> avoid overlapping Schedule periods for the same employee
 --
 -- Examples:
 --
@@ -35,7 +35,7 @@ CREATE EXTENSION IF NOT EXISTS btree_gist;
 -- Result: If two rows have the same employeeId AND their periods overlap,
 --         PostgreSQL will reject the insertion/update with a constraint violation error
 
-ALTER TABLE "WorkSchedule"
+ALTER TABLE "Schedule"
 ADD CONSTRAINT no_overlapping_schedules_periods_for_an_employee
 EXCLUDE USING gist (
     "employeeId" WITH =,
