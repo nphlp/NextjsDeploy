@@ -7,7 +7,7 @@ import Input from "@comps/UI/input/input";
 import InputPassword from "@comps/UI/inputPassword";
 import { signIn } from "@lib/authClient";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 
 export default function LoginForm() {
     const router = useRouter();
@@ -20,7 +20,9 @@ export default function LoginForm() {
     const [feedback, setFeedback] = useState<FeedbackType>();
     const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
-    const handleLogin = async () => {
+    const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
         setIsLoading(true);
         setIsFeedbackOpen(false);
 
@@ -53,7 +55,7 @@ export default function LoginForm() {
     };
 
     return (
-        <form action={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4">
             <Input label="Email" type="email" setValue={setEmail} value={email} autoComplete="email" autoFocus />
 
             <div className="flex flex-col items-end gap-2">

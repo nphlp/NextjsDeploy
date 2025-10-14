@@ -1,4 +1,5 @@
 import { UserFindUniqueAction } from "@actions/UserAction";
+import EmailTemplate from "@comps/UI/email";
 import PrismaInstance from "@lib/prisma";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
@@ -27,7 +28,7 @@ export const auth = betterAuth({
             await SendEmailAction({
                 subject: `Welcome ${user.name}! Let's verify your email.`,
                 email: user.email,
-                buttonUrl: url,
+                body: EmailTemplate({ buttonUrl: url, changingEmail: false }),
             });
         },
     },
@@ -38,7 +39,7 @@ export const auth = betterAuth({
                 await SendEmailAction({
                     subject: `Hey ${user.name}! Let's verify your new email.`,
                     email: newEmail,
-                    buttonUrl: url,
+                    body: EmailTemplate({ buttonUrl: url, changingEmail: true }),
                 });
             },
         },

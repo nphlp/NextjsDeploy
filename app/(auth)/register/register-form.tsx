@@ -7,7 +7,7 @@ import Input from "@comps/UI/input/input";
 import InputPassword from "@comps/UI/inputPassword";
 import { signUp } from "@lib/authClient";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { UpdateLastnameAction } from "@/actions/UpdateLastnameAction";
 
 export default function RegisterForm() {
@@ -24,7 +24,9 @@ export default function RegisterForm() {
     const [feedback, setFeedback] = useState<FeedbackType>();
     const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
-    const handleRegister = async () => {
+    const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
         setIsLoading(true);
         setIsFeedbackOpen(false);
 
@@ -60,7 +62,7 @@ export default function RegisterForm() {
     };
 
     return (
-        <form action={handleRegister} className="space-y-4">
+        <form onSubmit={handleRegister} className="space-y-4">
             <Input
                 label="Prénom"
                 type="text"

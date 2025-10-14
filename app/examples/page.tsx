@@ -31,6 +31,11 @@ export default function Page() {
             text: "A table from tanstack with shadcn ui",
         },
         {
+            label: "Send Email",
+            href: "/examples/email",
+            text: "How to send an email with nodemailer",
+        },
+        {
             label: "Patate",
             href: "/examples/patate",
             text: "A patate",
