@@ -21,6 +21,7 @@ const eslintConfig = [
             ".github/**",
             "prettier.config.mjs",
             "postcss.config.mjs",
+            "vitest.config.mjs",
             "prisma/client/**",
             "next-env.d.ts",
         ],
