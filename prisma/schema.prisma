@@ -171,6 +171,8 @@ model Day {
     arriving String // "09:00"
     leaving  String // "17:00"
 
+    breack Int? @default(0) /// Pause en minutes (ex: 60 pour 1h de pause)
+
     scheduleId String
     Schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
 

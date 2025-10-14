@@ -14,7 +14,7 @@
 -- Enable btree_gist extension for exclusion constraints
 -- This PostgreSQL extension allows using GIST indexes with btree-compatible types
 
-CREATE EXTENSION IF NOT EXISTS btree_gist;
+-- CREATE EXTENSION IF NOT EXISTS btree_gist;
 
 -- Exclusion constraint: prevents overlapping periods for the same contract
 --
@@ -35,9 +35,9 @@ CREATE EXTENSION IF NOT EXISTS btree_gist;
 -- Result: If two rows have the same contractId AND their periods overlap,
 --         PostgreSQL will reject the insertion/update with a constraint violation error
 
-ALTER TABLE "Schedule"
-ADD CONSTRAINT no_overlapping_schedules_periods_for_a_contract
-EXCLUDE USING gist (
-    "contractId" WITH =,
-    tsrange("startDate", COALESCE("endDate", 'infinity'::timestamp), '[]') WITH &&
-);
+-- ALTER TABLE "Schedule"
+-- ADD CONSTRAINT no_overlapping_schedules_periods_for_a_contract
+-- EXCLUDE USING gist (
+--     "contractId" WITH =,
+--     tsrange("startDate", COALESCE("endDate", 'infinity'::timestamp), '[]') WITH &&
+-- );

@@ -31,7 +31,6 @@ CREATE TABLE "Schedule" (
     "id" TEXT NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3),
-    "employeeId" TEXT NOT NULL,
     "contractId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -45,6 +44,7 @@ CREATE TABLE "Day" (
     "dayOfWeek" "DayOfWeek" NOT NULL,
     "arriving" TEXT NOT NULL,
     "leaving" TEXT NOT NULL,
+    "breack" INTEGER DEFAULT 0,
     "scheduleId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -85,10 +85,10 @@ CREATE INDEX "Contract_employeeId_startDate_idx" ON "Contract"("employeeId", "st
 CREATE INDEX "Contract_employeeId_endDate_idx" ON "Contract"("employeeId", "endDate");
 
 -- CreateIndex
-CREATE INDEX "Schedule_employeeId_startDate_idx" ON "Schedule"("employeeId", "startDate");
+CREATE INDEX "Schedule_contractId_startDate_idx" ON "Schedule"("contractId", "startDate");
 
 -- CreateIndex
-CREATE INDEX "Schedule_employeeId_endDate_idx" ON "Schedule"("employeeId", "endDate");
+CREATE INDEX "Schedule_contractId_endDate_idx" ON "Schedule"("contractId", "endDate");
 
 -- CreateIndex
 CREATE INDEX "Day_scheduleId_idx" ON "Day"("scheduleId");
@@ -110,9 +110,6 @@ CREATE UNIQUE INDEX "Clock_employeeId_date_key" ON "Clock"("employeeId", "date")
 
 -- AddForeignKey
 ALTER TABLE "Contract" ADD CONSTRAINT "Contract_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Schedule" ADD CONSTRAINT "Schedule_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Schedule" ADD CONSTRAINT "Schedule_contractId_fkey" FOREIGN KEY ("contractId") REFERENCES "Contract"("id") ON DELETE CASCADE ON UPDATE CASCADE;
