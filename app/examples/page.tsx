@@ -11,6 +11,11 @@ type LinkProps = {
 export default function Page() {
     const links: LinkProps[] = [
         {
+            label: "Work Schedule",
+            href: "/examples/schedules-input",
+            text: "Add a work schedule with work days to a user",
+        },
+        {
             label: "Shadcn Accordion",
             href: "/examples/accordion",
             text: "An accordion from origin/shadcn ui",
@@ -21,14 +26,14 @@ export default function Page() {
             text: "A chart from origin/shadcn ui",
         },
         {
-            label: "Shadcn Dropdown",
-            href: "/examples/dropdown",
-            text: "A dropdown from origin/shadcn ui",
-        },
-        {
             label: "Tanstack Table",
             href: "/examples/tanstack-table",
             text: "A table from tanstack with shadcn ui",
+        },
+        {
+            label: "Send Email",
+            href: "/examples/email",
+            text: "How to send an email with nodemailer",
         },
         {
             label: "Patate",

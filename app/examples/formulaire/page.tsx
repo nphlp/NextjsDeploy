@@ -4,6 +4,8 @@ import { createSelectOptions } from "@comps/UI/select/utils";
 import { AccountFindManyServer, TaskFindManyServer, UserFindManyServer } from "@services/server";
 import Form from "./form";
 
+export const dynamic = "force-dynamic";
+
 export default async function Page() {
     // Fetch the data
     const userListRaw = await UserFindManyServer({

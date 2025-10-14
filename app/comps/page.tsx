@@ -5,6 +5,8 @@ import ButtonSection from "./components/button";
 import InputSection from "./components/input";
 import PopupSection from "./components/popup";
 
+export const dynamic = "force-dynamic";
+
 export default async function Page() {
     // Fetch the data
     const taskList = await TaskFindManyServer({
