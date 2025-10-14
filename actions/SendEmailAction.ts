@@ -25,12 +25,20 @@ export default async function SendEmailAction(props: SendEmailActionProps) {
             pretty: true,
         });
 
+        if (process.env.NODE_ENV === "development") {
+            console.log("📨 Sending email...");
+        }
+
         const success = await NodemailerInstance.sendMail({
             from: `"${SMTP_FROM_NAME}" <${SMTP_FROM}>`,
             to: email,
             subject: subject,
             html,
         });
+
+        if (process.env.NODE_ENV === "development") {
+            console.log(`✅ Email sent successfully to ${email}`);
+        }
 
         return success;
     } catch (error) {

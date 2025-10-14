@@ -20,6 +20,13 @@ export const auth = betterAuth({
     trustedOrigins: [NEXT_PUBLIC_BASE_URL],
     emailAndPassword: {
         enabled: true,
+        sendResetPassword: async ({ user, url }: { user: { email: string; name: string }; url: string }) => {
+            await SendEmailAction({
+                subject: `Reset your password`,
+                email: user.email,
+                body: EmailTemplate({ buttonUrl: url, emailType: "reset" }),
+            });
+        },
     },
     emailVerification: {
         sendOnSignUp: true,
@@ -28,22 +35,22 @@ export const auth = betterAuth({
             await SendEmailAction({
                 subject: `Welcome ${user.name}! Let's verify your email.`,
                 email: user.email,
-                body: EmailTemplate({ buttonUrl: url, changingEmail: false }),
+                body: EmailTemplate({ buttonUrl: url, emailType: "verification" }),
             });
         },
     },
-    user: {
-        changeEmail: {
-            enabled: true,
-            sendChangeEmailVerification: async ({ newEmail, url, user }) => {
-                await SendEmailAction({
-                    subject: `Hey ${user.name}! Let's verify your new email.`,
-                    email: newEmail,
-                    body: EmailTemplate({ buttonUrl: url, changingEmail: true }),
-                });
-            },
-        },
-    },
+    // user: {
+    //     changeEmail: {
+    //         enabled: true,
+    //         sendChangeEmailVerification: async ({ newEmail, url, user }) => {
+    //             await SendEmailAction({
+    //                 subject: `Hey ${user.name}! Let's verify your new email.`,
+    //                 email: newEmail,
+    //                 body: EmailTemplate({ buttonUrl: url, emailType: "change" }),
+    //             });
+    //         },
+    //     },
+    // },
     session: {
         expiresIn: 60 * 60 * 24, // 24 hours
         updateAge: 60 * 20, // 20 minutes

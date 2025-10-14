@@ -3,36 +3,34 @@
 import Button from "@comps/UI/button/button";
 import Link from "@comps/UI/button/link";
 import Feedback, { FeedbackType } from "@comps/UI/feedback";
-import Input from "@comps/UI/input/input";
 import InputPassword from "@comps/UI/inputPassword";
-import { signUp } from "@lib/authClient";
+import { resetPassword } from "@lib/authClient";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { UpdateLastnameAction } from "@/actions/UpdateLastnameAction";
 
-export default function RegisterForm() {
+type ResetPasswordFormProps = {
+    token: string;
+};
+
+export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const router = useRouter();
 
-    const [firstname, setFirstname] = useState("");
-    const [lastname, setLastname] = useState("");
-    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-
     const [isLoading, setIsLoading] = useState(false);
 
     const [feedback, setFeedback] = useState<FeedbackType>();
     const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
-    const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
+    const handleResetPassword = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setIsLoading(true);
         setIsFeedbackOpen(false);
 
-        if (!firstname || !lastname || !email || !password || !confirmPassword) {
+        if (!password || !confirmPassword) {
             setFeedback({
-                message: "Please fill all fields.",
+                message: "Veuillez remplir tous les champs.",
                 mode: "warning",
             });
             setIsFeedbackOpen(true);
@@ -50,15 +48,14 @@ export default function RegisterForm() {
             return;
         }
 
-        const { data } = await signUp.email({
-            name: firstname,
-            email,
-            password,
+        const { data } = await resetPassword({
+            newPassword: password,
+            token,
         });
 
         if (!data) {
             setFeedback({
-                message: "Failed to login, invalid credentials.",
+                message: "Erreur lors de la réinitialisation...",
                 mode: "error",
             });
             setIsFeedbackOpen(true);
@@ -66,44 +63,42 @@ export default function RegisterForm() {
             return;
         }
 
-        await UpdateLastnameAction({ lastname });
+        setFeedback({
+            message: "Mot de passe réinitialisé avec succès !",
+            mode: "success",
+        });
+        setIsFeedbackOpen(true);
 
-        router.push("/task");
+        setTimeout(() => {
+            router.push("/login");
+        }, 1000);
     };
 
     return (
-        <form onSubmit={handleRegister} className="space-y-4">
-            <Input
-                label="Prénom"
-                type="text"
-                setValue={setFirstname}
-                value={firstname}
-                autoComplete="given-name"
-                autoFocus
+        <form onSubmit={handleResetPassword} className="space-y-4">
+            <InputPassword
+                label="Nouveau mot de passe"
+                setValue={setPassword}
+                value={password}
+                autoComplete="new-password"
             />
 
-            <Input label="Nom" type="text" setValue={setLastname} value={lastname} autoComplete="family-name" />
-
-            <Input label="Email" type="email" setValue={setEmail} value={email} autoComplete="email" />
-
-            <InputPassword label="Mot de passe" setValue={setPassword} value={password} autoComplete="new-password" />
-
             <InputPassword
-                label="Confirmation mot de passe"
+                label="Confirmer le mot de passe"
                 setValue={setConfirmPassword}
                 value={confirmPassword}
                 autoComplete="new-password"
             />
 
             <div className="text-gray-middle flex justify-center gap-2 text-sm">
-                <p>Déjà un compte ?</p>
+                <p>Mot de passe retrouvé ?</p>
                 <Link label="Se connecter" href="/login" variant="underline" />
             </div>
 
             <Feedback feedback={feedback} isFeedbackOpen={isFeedbackOpen} />
 
             <div className="flex justify-center">
-                <Button type="submit" label="S'inscrire" isLoading={isLoading} />
+                <Button type="submit" label="Réinitialiser" isLoading={isLoading} />
             </div>
         </form>
     );
