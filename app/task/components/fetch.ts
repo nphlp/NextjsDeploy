@@ -1,7 +1,7 @@
 import { TaskFindManyProps, TaskFindManyResponse } from "@services/types";
-import { HomeQueryParamsCachedType } from "./queryParams";
+import { TaskQueryParamsCachedType } from "./queryParams";
 
-export const homePageParams = ({ updatedAt, search, authorId }: HomeQueryParamsCachedType & { authorId: string }) =>
+export const taskPageParams = ({ updatedAt, search, authorId }: TaskQueryParamsCachedType & { authorId: string }) =>
     ({
         select: { id: true, title: true, status: true },
         orderBy: { updatedAt },
@@ -13,4 +13,4 @@ export const homePageParams = ({ updatedAt, search, authorId }: HomeQueryParamsC
         },
     }) satisfies TaskFindManyProps;
 
-export type TaskType = TaskFindManyResponse<ReturnType<typeof homePageParams>>[number];
+export type TaskType = TaskFindManyResponse<ReturnType<typeof taskPageParams>>[number];

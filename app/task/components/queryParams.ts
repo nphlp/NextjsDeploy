@@ -2,9 +2,9 @@ import { searchQueryParser, updatedAtQueryParser } from "@comps/SHARED/filters/q
 import { createSearchParamsCache, createSerializer } from "nuqs/server";
 
 /**
- * Server parsers structure for query parameters for the home
+ * Server parsers structure for query parameters for the task
  */
-export const homeQueryParams = {
+export const taskQueryParams = {
     /** Updated at order (default value: `"desc"`) */
     updatedAt: updatedAtQueryParser,
     /** Search (default value: `""`) */
@@ -12,13 +12,13 @@ export const homeQueryParams = {
 };
 
 /**
- * Utility function to parse and cache home query parameters server side
+ * Utility function to parse and cache task query parameters server side
  */
-export const homeQueryParamsCached = createSearchParamsCache(homeQueryParams);
+export const taskQueryParamsCached = createSearchParamsCache(taskQueryParams);
 
-export type HomeQueryParamsCachedType = Awaited<ReturnType<typeof homeQueryParamsCached.parse>>;
+export type TaskQueryParamsCachedType = Awaited<ReturnType<typeof taskQueryParamsCached.parse>>;
 
 /**
  * Serializer to construct an URL with query params
  */
-export const homeUrlSerializer = createSerializer(homeQueryParams);
+export const taskUrlSerializer = createSerializer(taskQueryParams);

@@ -1,3 +1,9 @@
+// ⚠️ Custom SQL constraints (not visible in this schema)
+//
+// Migration 30000000000001_custom_constraint_work_schedule:
+//   - no_overlapping_schedules_periods_for_a_contract (Schedule)
+//     → EXCLUDE constraint: prevents overlapping periods for same contract
+
 generator client {
     provider = "prisma-client-js"
     output   = "./client"
@@ -23,16 +29,15 @@ model User {
     Session Session[]
     Account Account[]
 
+    Contracts   Contract[]
+    Leaves      Leave[]
+    TimeEntries Clock[]
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@index([id])
     @@index([email])
-}
-
-enum Role {
-    USER
-    ADMIN
 }
 
 model Session {
@@ -114,8 +119,150 @@ model Task {
     @@index([authorId])
 }
 
+/// Contrats d'un employé
+model Contract {
+    id String @id @default(nanoid())
+
+    contractType ContractType /// Type de contrat (CDI, CDD, etc.)
+
+    startDate DateTime /// Date de début du contrat
+    endDate   DateTime? /// Date de fin du contrat (null pour CDI ou contrat en cours)
+
+    employeeId String
+    Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+    Schedules Schedule[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([employeeId, startDate])
+    @@index([employeeId, endDate])
+}
+
+/// Semaine de travail d'un employé
+model Schedule {
+    id String @id @default(nanoid())
+
+    startDate DateTime /// Période de validité de cet horaire
+    endDate   DateTime? /// Fin de validité de cet horaire (NULL == valide indéfiniment jusqu'à nouvel horaire)
+
+    Days Day[] /// Liste des jours configurés
+
+    contractId String
+    Contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // ⚠️ Custom SQL constraints (see top of file)
+    // @@constraint `no_overlapping_schedules_periods_for_a_contract`
+
+    @@index([contractId, startDate])
+    @@index([contractId, endDate])
+}
+
+// Jour de travail d'un employé
+model Day {
+    id String @id @default(nanoid())
+
+    dayOfWeek DayOfWeek /// Jour de la semaine concerné
+
+    arriving String // "09:00"
+    leaving  String // "17:00"
+
+    breack Int? @default(0) /// Pause en minutes (ex: 60 pour 1h de pause)
+
+    scheduleId String
+    Schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([scheduleId, dayOfWeek]) /// IMPORTANT : Évite les doublons
+    @@index([scheduleId])
+}
+
+/// Congés et absences
+model Leave {
+    id String @id @default(nanoid())
+
+    leaveType LeaveType /// Type de congé (ex: CP, RTT, Maladie, etc.)
+    status    LeaveStatus /// Statut de la demande (ex: Pending, Approved, Rejected)
+
+    /// Période de congé
+    startDate DateTime
+    endDate   DateTime
+
+    employeeId String
+    Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([employeeId, status])
+    @@index([employeeId, startDate, endDate])
+}
+
+/// Pointages
+model Clock {
+    id String @id @default(nanoid())
+
+    date      DateTime
+    checkType CheckType
+
+    employeeId String
+    Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([employeeId, date]) /// Un seul pointage par jour
+    @@index([employeeId, date(sort: Desc)])
+}
+
 enum Status {
     TODO
     IN_PROGRESS
     DONE
+}
+
+enum Role {
+    USER
+    ADMIN
+}
+
+enum ContractType {
+    CDI
+    CDD
+    INTERIM
+    STAGE
+}
+
+enum LeaveType {
+    CP
+    RTT
+    MALADIE
+    SANS_SOLDE
+}
+
+enum LeaveStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+enum DayOfWeek {
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
+}
+
+enum CheckType {
+    CHECKIN
+    CHECKOUT
 }

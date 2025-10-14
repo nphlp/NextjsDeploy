@@ -5,7 +5,7 @@ import { taskIdPageParams } from "@app/task/[id]/components/fetch";
 import { getSession } from "@lib/authServer";
 import { $Enums } from "@prisma/client";
 import { TaskModel } from "@services/types";
-import { hashParamsForCacheKey } from "@utils/FetchConfig";
+import { cacheLifeApi, hashParamsForCacheKey } from "@utils/FetchConfig";
 import { stringToSlug } from "@utils/stringToSlug";
 import { revalidateTag } from "next/cache";
 import { unauthorized } from "next/navigation";
@@ -49,8 +49,7 @@ export const AddTask = async (props: AddTaskProps): Promise<TaskModel | null> =>
         });
 
         // Reset specific cache tags
-        // TODO: revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
-        revalidateTag("task-findMany");
+        revalidateTag("task-findMany", cacheLifeApi);
 
         console.log("Creation succeeded", createdTask.title, createdTask.status);
 
@@ -111,9 +110,8 @@ export const UpdateTask = async (props: UpdateTaskProps): Promise<TaskModel | nu
         });
 
         // Reset specific cache tags
-        // TODO: revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
-        revalidateTag("task-findMany");
-        revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id, session)));
+        revalidateTag("task-findMany", cacheLifeApi);
+        revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id, session)), cacheLifeApi);
 
         console.log("Update succeeded", updatedTask.title, updatedTask.status);
 
@@ -158,9 +156,8 @@ export const DeleteTask = async (props: DeleteTaskProps): Promise<TaskModel | nu
         });
 
         // Reset specific cache tags
-        // TODO: revalidateTag(hashParamsForCacheKey("task-findMany", homePageParams()));
-        revalidateTag("task-findMany");
-        revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id, session)));
+        revalidateTag("task-findMany", cacheLifeApi);
+        revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id, session)), cacheLifeApi);
 
         console.log("Deletion succeeded", deletedTask.title, deletedTask.status);
 

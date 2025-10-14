@@ -17,6 +17,9 @@ const nextConfig: NextConfig = {
     // Typed routes for links
     typedRoutes: true,
 
+    // Enable React memoryzing compiler
+    // reactCompiler: true,
+
     experimental: {
         // View transition API
         viewTransition: true,
@@ -28,7 +31,7 @@ const nextConfig: NextConfig = {
         useCache: true,
 
         // Turbopack persistent caching
-        turbopackPersistentCaching: true,
+        turbopackFileSystemCacheForDev: true,
     },
 };
 

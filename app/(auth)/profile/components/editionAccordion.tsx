@@ -5,7 +5,7 @@ import Button from "@comps/UI/button/button";
 import Feedback, { FeedbackType } from "@comps/UI/feedback";
 import Input from "@comps/UI/input/input";
 import InputPassword from "@comps/UI/inputPassword";
-import { changeEmail, changePassword, updateUser, useSession } from "@lib/authClient";
+import { changePassword, updateUser, useSession } from "@lib/authClient";
 import { Session } from "@lib/authServer";
 import { useState } from "react";
 import { UpdateLastnameAction } from "@/actions/UpdateLastnameAction";
@@ -32,7 +32,7 @@ export default function EditionAccordion(props: EditionAccordionProps) {
                 <div className="space-y-4">
                     <UpdateLastnameForm session={session} />
                     <UpdateFirstnameForm session={session} />
-                    <UpdateEmailForm session={session} />
+                    {/* <UpdateEmailForm session={session} /> */}
                     <UpdatePasswordForm />
                 </div>
             </AccordionContent>
@@ -147,57 +147,57 @@ const UpdateFirstnameForm = (props: UpdateFormProps) => {
     );
 };
 
-const UpdateEmailForm = (props: UpdateFormProps) => {
-    const { session } = props;
+// const UpdateEmailForm = (props: UpdateFormProps) => {
+//     const { session } = props;
 
-    const [email, setEmail] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+//     const [email, setEmail] = useState("");
+//     const [isLoading, setIsLoading] = useState(false);
 
-    const handleEmailUpdate = async (e: React.FormEvent) => {
-        // Prevent refresh and check if data exists
-        e.preventDefault();
-        if (!email) return;
+//     const handleEmailUpdate = async (e: React.FormEvent) => {
+//         // Prevent refresh and check if data exists
+//         e.preventDefault();
+//         if (!email) return;
 
-        // Set loading state
-        setIsLoading(true);
+//         // Set loading state
+//         setIsLoading(true);
 
-        // Update database through Better Auth API
-        try {
-            await changeEmail({ newEmail: email, callbackURL: "/profile" });
-        } catch {
-            console.error("Erreur lors de la modification de l'email");
-        }
+//         // Update database through Better Auth API
+//         try {
+//             await changeEmail({ newEmail: email, callbackURL: "/profile" });
+//         } catch {
+//             console.error("Erreur lors de la modification de l'email");
+//         }
 
-        // Reset form and stop loading
-        setEmail("");
-        setIsLoading(false);
-    };
+//         // Reset form and stop loading
+//         setEmail("");
+//         setIsLoading(false);
+//     };
 
-    return (
-        <div>
-            <h2 className="text-gray-middle text-sm font-bold">Modifier mon email</h2>
-            <hr className="mt-1 mb-3" />
-            <form onSubmit={handleEmailUpdate} className="flex flex-col items-center gap-2">
-                <Input
-                    label="Email"
-                    placeholder={session.user.email}
-                    setValue={setEmail}
-                    value={email}
-                    required={false}
-                    autoComplete="email"
-                    className={{ component: "w-full" }}
-                    noLabel
-                />
-                <Button
-                    label="Valider"
-                    isLoading={isLoading}
-                    type="submit"
-                    className={{ button: "px-3 py-1", text: "text-sm" }}
-                />
-            </form>
-        </div>
-    );
-};
+//     return (
+//         <div>
+//             <h2 className="text-gray-middle text-sm font-bold">Modifier mon email</h2>
+//             <hr className="mt-1 mb-3" />
+//             <form onSubmit={handleEmailUpdate} className="flex flex-col items-center gap-2">
+//                 <Input
+//                     label="Email"
+//                     placeholder={session.user.email}
+//                     setValue={setEmail}
+//                     value={email}
+//                     required={false}
+//                     autoComplete="email"
+//                     className={{ component: "w-full" }}
+//                     noLabel
+//                 />
+//                 <Button
+//                     label="Valider"
+//                     isLoading={isLoading}
+//                     type="submit"
+//                     className={{ button: "px-3 py-1", text: "text-sm" }}
+//                 />
+//             </form>
+//         </div>
+//     );
+// };
 
 const UpdatePasswordForm = () => {
     const [currentPassword, setCurrentPassword] = useState("");
@@ -217,7 +217,7 @@ const UpdatePasswordForm = () => {
         setIsFeedbackOpen(false);
 
         // Update database through Better Auth API
-        const { data } = await changePassword({ currentPassword, newPassword });
+        const { data } = await changePassword({ currentPassword, newPassword, revokeOtherSessions: true });
 
         if (!data) {
             setFeedback({ message: "Failed to change password, current password could be incorrect.", mode: "error" });
