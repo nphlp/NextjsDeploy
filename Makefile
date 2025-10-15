@@ -3,6 +3,13 @@ ifneq (,$(wildcard .env))
     include .env
 endif
 
+####################################
+#    Clean none versionned files   #
+####################################
+
+clean:
+	rm -rf .husky/_ .next node_modules prisma/client next-env.d.ts tsconfig.tsbuildinfo
+
 ########################
 #    Merge Env Files   #
 ########################
