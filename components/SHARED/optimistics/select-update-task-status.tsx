@@ -7,7 +7,7 @@ import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
 import { combo } from "@lib/combo";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
 import { startTransition, useState } from "react";
-import { UpdateTask } from "@/actions/TaskAction";
+import { UpdateTask } from "@/actions/TaskUpdateAction";
 import useInstant from "./useInstant";
 
 const options: SelectOptionType[] = [

@@ -6,7 +6,7 @@ import {
     UserFindManyAction,
     UserFindUniqueAction,
     UserUpdateAction,
-} from "@actions/UserAction";
+} from "@services/actions/UserAction";
 import { describe, expect, it } from "vitest";
 
 describe("Actions mutations tests", () => {
@@ -17,15 +17,16 @@ describe("Actions mutations tests", () => {
                 email: "test@example.com",
                 name: "test-name",
                 lastname: "test-lastname",
+                role: "USER",
                 emailVerified: true,
-                Account: {
+                Accounts: {
                     create: {
                         id: "test-account-id",
                         accountId: "test-account-accountId",
                         providerId: "test-account-providerId",
                     },
                 },
-                Session: {
+                Sessions: {
                     create: {
                         id: "test-session-id",
                         token: "test-token",
@@ -38,8 +39,8 @@ describe("Actions mutations tests", () => {
                 email: true,
                 name: true,
                 lastname: true,
-                Account: { select: { id: true } },
-                Session: { select: { id: true } },
+                Accounts: { select: { id: true } },
+                Sessions: { select: { id: true } },
             },
         });
 
@@ -53,18 +54,18 @@ describe("Actions mutations tests", () => {
         expect(user.lastname).toBe("test-lastname");
 
         // Check relations
-        expect(user).toHaveProperty("Account");
-        expect(user).toHaveProperty("Session");
+        expect(user).toHaveProperty("Accounts");
+        expect(user).toHaveProperty("Sessions");
 
-        expect(Array.isArray(user.Account)).toBe(true);
-        expect(Array.isArray(user.Session)).toBe(true);
+        expect(Array.isArray(user.Accounts)).toBe(true);
+        expect(Array.isArray(user.Sessions)).toBe(true);
 
-        expect(user.Account.length).toBe(1);
-        expect(user.Session.length).toBe(1);
+        expect(user.Accounts.length).toBe(1);
+        expect(user.Sessions.length).toBe(1);
 
         // If there are related accounts or sessions, check their properties
-        if (user.Account.length > 0) expect(user.Account[0].id).toBe("test-account-id");
-        if (user.Session.length > 0) expect(user.Session[0].id).toBe("test-session-id");
+        if (user.Accounts.length > 0) expect(user.Accounts[0].id).toBe("test-account-id");
+        if (user.Sessions.length > 0) expect(user.Sessions[0].id).toBe("test-session-id");
     });
 
     it("User Update Action", async () => {
@@ -75,14 +76,14 @@ describe("Actions mutations tests", () => {
                 name: "test-name-2",
                 lastname: "test-lastname-2",
                 emailVerified: true,
-                Account: {
+                Accounts: {
                     create: {
                         id: "test-account-id-2",
                         accountId: "test-account-accountId-2",
                         providerId: "test-account-providerId-2",
                     },
                 },
-                Session: {
+                Sessions: {
                     create: {
                         id: "test-session-id-2",
                         token: "test-token-2",
@@ -95,8 +96,8 @@ describe("Actions mutations tests", () => {
                 email: true,
                 name: true,
                 lastname: true,
-                Account: { select: { id: true } },
-                Session: { select: { id: true } },
+                Accounts: { select: { id: true } },
+                Sessions: { select: { id: true } },
             },
         });
 
@@ -110,21 +111,21 @@ describe("Actions mutations tests", () => {
         expect(user.lastname).toBe("test-lastname-2");
 
         // Check relations
-        expect(user).toHaveProperty("Account");
-        expect(user).toHaveProperty("Session");
+        expect(user).toHaveProperty("Accounts");
+        expect(user).toHaveProperty("Sessions");
 
-        expect(Array.isArray(user.Account)).toBe(true);
-        expect(Array.isArray(user.Session)).toBe(true);
+        expect(Array.isArray(user.Accounts)).toBe(true);
+        expect(Array.isArray(user.Sessions)).toBe(true);
 
-        expect(user.Account.length).toBe(2);
-        expect(user.Session.length).toBe(2);
+        expect(user.Accounts.length).toBe(2);
+        expect(user.Sessions.length).toBe(2);
 
         // If there are related accounts or sessions, check their properties
-        if (user.Account.length > 0) expect(user.Account[0].id).toBe("test-account-id");
-        if (user.Account.length > 0) expect(user.Account[1].id).toBe("test-account-id-2");
+        if (user.Accounts.length > 0) expect(user.Accounts[0].id).toBe("test-account-id");
+        if (user.Accounts.length > 0) expect(user.Accounts[1].id).toBe("test-account-id-2");
 
-        if (user.Session.length > 0) expect(user.Session[0].id).toBe("test-session-id");
-        if (user.Session.length > 0) expect(user.Session[1].id).toBe("test-session-id-2");
+        if (user.Sessions.length > 0) expect(user.Sessions[0].id).toBe("test-session-id");
+        if (user.Sessions.length > 0) expect(user.Sessions[1].id).toBe("test-session-id-2");
     });
 
     it("User Delete Action", async () => {
@@ -152,8 +153,8 @@ describe("Actions fetch tests", () => {
                 email: true,
                 name: true,
                 lastname: true,
-                Account: { select: { id: true } },
-                Session: { select: { id: true } },
+                Accounts: { select: { id: true } },
+                Sessions: { select: { id: true } },
             },
         });
 
@@ -169,14 +170,14 @@ describe("Actions fetch tests", () => {
         expect(user).toHaveProperty("lastname");
 
         // Check relations
-        expect(user).toHaveProperty("Account");
-        expect(user).toHaveProperty("Session");
-        expect(Array.isArray(user.Account)).toBe(true);
-        expect(Array.isArray(user.Session)).toBe(true);
+        expect(user).toHaveProperty("Accounts");
+        expect(user).toHaveProperty("Sessions");
+        expect(Array.isArray(user.Accounts)).toBe(true);
+        expect(Array.isArray(user.Sessions)).toBe(true);
 
         // If there are related accounts or sessions, check their properties
-        if (user.Account.length > 0) expect(user.Account[0]).toHaveProperty("id");
-        if (user.Session.length > 0) expect(user.Session[0]).toHaveProperty("id");
+        if (user.Accounts.length > 0) expect(user.Accounts[0]).toHaveProperty("id");
+        if (user.Sessions.length > 0) expect(user.Sessions[0]).toHaveProperty("id");
     });
 
     it("User FindUnique Action", async () => {
@@ -193,8 +194,8 @@ describe("Actions fetch tests", () => {
                 email: true,
                 name: true,
                 lastname: true,
-                Account: { select: { id: true } },
-                Session: { select: { id: true } },
+                Accounts: { select: { id: true } },
+                Sessions: { select: { id: true } },
             },
             where: { id: firstUser.id },
         });
@@ -211,14 +212,14 @@ describe("Actions fetch tests", () => {
         expect(user).toHaveProperty("lastname");
 
         // Check relations
-        expect(user).toHaveProperty("Account");
-        expect(user).toHaveProperty("Session");
-        expect(Array.isArray(user.Account)).toBe(true);
-        expect(Array.isArray(user.Session)).toBe(true);
+        expect(user).toHaveProperty("Accounts");
+        expect(user).toHaveProperty("Sessions");
+        expect(Array.isArray(user.Accounts)).toBe(true);
+        expect(Array.isArray(user.Sessions)).toBe(true);
 
         // If there are related accounts or sessions, check their properties
-        if (user.Account.length > 0) expect(user.Account[0]).toHaveProperty("id");
-        if (user.Session.length > 0) expect(user.Session[0]).toHaveProperty("id");
+        if (user.Accounts.length > 0) expect(user.Accounts[0]).toHaveProperty("id");
+        if (user.Sessions.length > 0) expect(user.Sessions[0]).toHaveProperty("id");
     });
 
     it("User FindMany Action", async () => {
@@ -229,8 +230,8 @@ describe("Actions fetch tests", () => {
                 email: true,
                 name: true,
                 lastname: true,
-                Account: { select: { id: true } },
-                Session: { select: { id: true } },
+                Accounts: { select: { id: true } },
+                Sessions: { select: { id: true } },
             },
             take: 10,
         });
@@ -248,14 +249,14 @@ describe("Actions fetch tests", () => {
         expect(users[0]).toHaveProperty("lastname");
 
         // Check relations
-        expect(users[0]).toHaveProperty("Account");
-        expect(users[0]).toHaveProperty("Session");
-        expect(Array.isArray(users[0].Account)).toBe(true);
-        expect(Array.isArray(users[0].Session)).toBe(true);
+        expect(users[0]).toHaveProperty("Accounts");
+        expect(users[0]).toHaveProperty("Sessions");
+        expect(Array.isArray(users[0].Accounts)).toBe(true);
+        expect(Array.isArray(users[0].Sessions)).toBe(true);
 
         // If there are related accounts or sessions, check their properties
-        if (users[0].Account.length > 0) expect(users[0].Account[0]).toHaveProperty("id");
-        if (users[0].Session.length > 0) expect(users[0].Session[0]).toHaveProperty("id");
+        if (users[0].Accounts.length > 0) expect(users[0].Accounts[0]).toHaveProperty("id");
+        if (users[0].Sessions.length > 0) expect(users[0].Sessions[0]).toHaveProperty("id");
     });
 
     it("User Count Action", async () => {

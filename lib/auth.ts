@@ -1,6 +1,6 @@
-import { UserFindUniqueAction } from "@actions/UserAction";
 import EmailTemplate from "@comps/UI/email";
 import PrismaInstance from "@lib/prisma";
+import { UserFindUniqueAction } from "@services/actions/UserAction";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";

@@ -1,18 +1,10 @@
 # TODO
 
-## Dokploy
+## Refactor
 
-- [ ] Tester de mettre des labels traefik directement dans le `compose.dokploy.yml`
-
-## Portainer
-
-- [ ] Certificats HTTPS non fonctionnels/intermittents pour `nansp.dev` mais toujours valide pour les sous-domaines
-
-- [ ] Documenter le setup
-
-- [ ] Nextjs Build Cache
-    - Redis enfin fonctionnel avec useCache ?
-    - Un service build (runtime) et un service production (runtime) ?
+- [ ] Faire un `new ActionError()` qui gère les messages d'erreurs
+- [ ] API Routes -> tRPC ou oRPC
+- [ ] Ajouter des tests pour les erreurs
 
 ## Testing
 

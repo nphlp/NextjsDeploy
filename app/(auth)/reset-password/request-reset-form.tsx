@@ -1,35 +1,31 @@
 "use client";
 
-import Button from "@comps/UI/button/button";
-import Link from "@comps/UI/button/link";
-import Feedback, { FeedbackType } from "@comps/UI/feedback";
-import Input from "@comps/UI/input/input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { forgetPassword } from "@lib/authClient";
-import { FormEvent, useState } from "react";
+import { Button } from "@shadcn/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shadcn/ui/form";
+import { Input } from "@shadcn/ui/input";
+import Link from "next/link";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { RequestResetFormValues, requestResetSchema } from "./request-reset-schema";
 
 export default function RequestResetForm() {
-    const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
 
-    const [feedback, setFeedback] = useState<FeedbackType>();
-    const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+    const form = useForm<RequestResetFormValues>({
+        resolver: zodResolver(requestResetSchema),
+        defaultValues: {
+            email: "",
+        },
+    });
 
-    const handleRequestReset = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
+    const handleRequestReset = async (values: RequestResetFormValues) => {
         setIsLoading(true);
-        setIsFeedbackOpen(false);
 
-        if (!email) {
-            setFeedback({
-                message: "Veuillez saisir votre adresse email.",
-                mode: "warning",
-            });
-            setIsFeedbackOpen(true);
-            setIsLoading(false);
-            return;
-        }
+        const { email } = values;
 
         const { data } = await forgetPassword({
             email,
@@ -37,38 +33,56 @@ export default function RequestResetForm() {
         });
 
         if (!data) {
-            setFeedback({
-                message: "Erreur lors de l'envoi de l'email...",
-                mode: "error",
-            });
-            setIsFeedbackOpen(true);
+            toast.error("Erreur lors de l'envoi de l'email...");
             setIsLoading(false);
             return;
         }
 
         setEmailSent(true);
-        setFeedback({
-            message: "Email de réinitialisation envoyé !",
-            mode: "success",
-        });
-        setIsFeedbackOpen(true);
+        toast.success("Email de réinitialisation envoyé ! Vérifiez votre boîte de réception.");
         setIsLoading(false);
     };
 
     return (
-        <form onSubmit={handleRequestReset} className="space-y-4">
-            <Input label="Email" type="email" setValue={setEmail} value={email} autoComplete="email" autoFocus />
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleRequestReset)} className="space-y-4">
+                {/* Email */}
+                <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="email"
+                                    placeholder="exemple@email.com"
+                                    autoComplete="email"
+                                    autoFocus
+                                    disabled={isLoading || emailSent}
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
-            <div className="text-gray-middle flex justify-center gap-2 text-sm">
-                <p>Mot de passe retrouvé ?</p>
-                <Link label="Se connecter" href="/login" variant="underline" />
-            </div>
+                {/* Login link */}
+                <div className="text-muted-foreground flex justify-center gap-2 text-sm">
+                    <p>Mot de passe retrouvé ?</p>
+                    <Link href="/login" className="hover:text-foreground underline underline-offset-4">
+                        Se connecter
+                    </Link>
+                </div>
 
-            <Feedback feedback={feedback} isFeedbackOpen={isFeedbackOpen} />
-
-            <div className="flex justify-center">
-                <Button type="submit" label="Envoyer l'email" isLoading={isLoading} isDisabled={emailSent} />
-            </div>
-        </form>
+                {/* Submit button */}
+                <div className="flex justify-center">
+                    <Button type="submit" disabled={isLoading || emailSent} className="w-full sm:w-auto">
+                        {isLoading ? "Envoi en cours..." : emailSent ? "Email envoyé !" : "Envoyer l'email"}
+                    </Button>
+                </div>
+            </form>
+        </Form>
     );
 }

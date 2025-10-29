@@ -1,5 +1,5 @@
-import { combo } from "@lib/combo";
 import { Body, Button, Container, Html, Section, Tailwind } from "@react-email/components";
+import { cn } from "@shadcn/lib/utils";
 
 type EmailTemplateProps = {
     buttonUrl: string;
@@ -45,7 +45,7 @@ export default function EmailTemplate(props: EmailTemplateProps) {
                         </Section>
                         <Section className="mb-4">
                             <Button
-                                className={combo(
+                                className={cn(
                                     "mx-auto flex w-fit rounded-md px-4 py-2 text-center text-gray-100",
                                     currentContent.buttonColor,
                                 )}

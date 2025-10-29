@@ -1,6 +1,6 @@
 "use client";
 
-import { combo } from "@lib/combo";
+import { cn } from "@shadcn/lib/utils";
 import { useEffect, useRef, useState } from "react";
 
 const env = process.env.NODE_ENV;
@@ -85,27 +85,27 @@ export default function Breakpoints(props: BreakpointsProps) {
 
     return (
         <div
-            className={combo(
+            className={cn(
                 "fixed right-2 bottom-2",
                 isVisible ? "opacity-100" : "opacity-0",
                 "transition-opacity duration-500",
             )}
         >
             <div className="flex justify-end gap-2 text-sm">
-                <div className="text-gray-middle">{`${currentOffset} < `}</div>
+                <div className="text-muted-foreground">{`${currentOffset} < `}</div>
                 <div className="font-bold">
                     <span>{width}</span>
                     <span>px</span>
                 </div>
-                <div className="text-gray-middle">{` < ${nextOffset}`}</div>
+                <div className="text-muted-foreground">{` < ${nextOffset}`}</div>
             </div>
 
             <div className="flex justify-end gap-2 uppercase">
-                {index !== 0 && <div className="text-gray-middle">{`${current.value} < `}</div>}
+                {index !== 0 && <div className="text-muted-foreground">{`${current.value} < `}</div>}
 
                 <div className="font-bold">{current.name}</div>
 
-                <div className="text-gray-middle">
+                <div className="text-muted-foreground">
                     {index !== breakpoints.length - 2 ? ` < ${next.value}` : ` < ${last.name}`}
                 </div>
             </div>

@@ -1,89 +1,128 @@
 "use client";
 
-import Button from "@comps/UI/button/button";
-import Link from "@comps/UI/button/link";
-import Feedback, { FeedbackType } from "@comps/UI/feedback";
-import Input from "@comps/UI/input/input";
-import InputPassword from "@comps/UI/inputPassword";
+import PasswordInput from "@comps/SHADCN/components/password-input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "@lib/authClient";
+import { UserFindUniqueAction } from "@services/actions/UserAction";
+import { Button } from "@shadcn/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shadcn/ui/form";
+import { Input } from "@shadcn/ui/input";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { LoginFormValues, loginSchema } from "./login-schema";
 
 export default function LoginForm() {
     const router = useRouter();
-
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
     const [isLoading, setIsLoading] = useState(false);
 
-    const [feedback, setFeedback] = useState<FeedbackType>();
-    const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+    const form = useForm<LoginFormValues>({
+        resolver: zodResolver(loginSchema),
+        defaultValues: {
+            email: "",
+            password: "",
+        },
+    });
 
-    const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
+    const handleLogin = async (values: LoginFormValues) => {
         setIsLoading(true);
-        setIsFeedbackOpen(false);
 
-        if (!email || !password) {
-            setFeedback({
-                message: "Please fill all fields.",
-                mode: "warning",
-            });
-            setIsFeedbackOpen(true);
-            setIsLoading(false);
-            return;
-        }
+        const { email, password } = values;
 
-        const { data, error } = await signIn.email({
+        const { data } = await signIn.email({
             email,
             password,
         });
 
-        if (!data || error) {
-            setFeedback({
-                message: "Failed to login, invalid credentials.",
-                mode: "error",
-            });
-            setIsFeedbackOpen(true);
+        if (!data) {
+            toast.error("Échec de la connexion, identifiants invalides.");
             setIsLoading(false);
             return;
         }
 
-        router.push("/task");
+        const userRole = await UserFindUniqueAction({ select: { role: true }, where: { id: data.user.id } });
+
+        toast.success("Connexion réussie !");
+
+        if (userRole?.role === "ADMIN" || userRole?.role === "MANAGER") {
+            return router.push("/dashboard");
+        }
+
+        router.push("/clock");
     };
 
     return (
-        <form onSubmit={handleLogin} className="space-y-4">
-            <Input label="Email" type="email" setValue={setEmail} value={email} autoComplete="email" autoFocus />
-
-            <div className="flex flex-col items-end gap-2">
-                <InputPassword
-                    label="Mot de passe"
-                    setValue={setPassword}
-                    value={password}
-                    autoComplete="current-password"
-                    className={{ component: "w-full" }}
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-4">
+                {/* Email */}
+                <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="email"
+                                    placeholder="exemple@email.com"
+                                    autoComplete="email"
+                                    autoFocus
+                                    disabled={isLoading}
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
                 />
-                <Link
-                    label="Mot de passe oublié ?"
-                    href="/reset-password"
-                    variant="underline"
-                    className="text-gray-middle text-xs"
+
+                {/* Password */}
+                <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Mot de passe</FormLabel>
+                            <FormControl>
+                                <PasswordInput
+                                    placeholder="Votre mot de passe"
+                                    autoComplete="current-password"
+                                    disabled={isLoading}
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
                 />
-            </div>
 
-            <div className="text-gray-middle flex justify-center gap-2 text-sm">
-                <p>Pas encore de compte ?</p>
-                <Link label="S'inscrire" href="/register" variant="underline" />
-            </div>
+                {/* Forgot password link */}
+                <div className="flex justify-end">
+                    <Link
+                        href="/reset-password"
+                        className="text-muted-foreground hover:text-foreground text-xs underline underline-offset-4"
+                    >
+                        Mot de passe oublié ?
+                    </Link>
+                </div>
 
-            <Feedback feedback={feedback} isFeedbackOpen={isFeedbackOpen} />
+                {/* Register link */}
+                <div className="text-muted-foreground flex justify-center gap-2 text-sm">
+                    <p>Pas encore de compte ?</p>
+                    <Link href="/register" className="hover:text-foreground underline underline-offset-4">
+                        S&apos;inscrire
+                    </Link>
+                </div>
 
-            <div className="flex justify-center">
-                <Button type="submit" label="Connexion" isLoading={isLoading} />
-            </div>
-        </form>
+                {/* Submit button */}
+                <div className="flex justify-center">
+                    <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
+                        {isLoading ? "Connexion en cours..." : "Connexion"}
+                    </Button>
+                </div>
+            </form>
+        </Form>
     );
 }

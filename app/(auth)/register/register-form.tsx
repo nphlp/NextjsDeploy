@@ -1,54 +1,38 @@
 "use client";
 
-import Button from "@comps/UI/button/button";
-import Link from "@comps/UI/button/link";
-import Feedback, { FeedbackType } from "@comps/UI/feedback";
-import Input from "@comps/UI/input/input";
-import InputPassword from "@comps/UI/inputPassword";
+import { UpdateUserAction } from "@actions/UpdateUserAction";
+import PasswordInput from "@comps/SHADCN/components/password-input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@lib/authClient";
+import { Button } from "@shadcn/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shadcn/ui/form";
+import { Input } from "@shadcn/ui/input";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
-import { UpdateLastnameAction } from "@/actions/UpdateLastnameAction";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { RegisterFormValues, registerSchema } from "./register-schema";
 
 export default function RegisterForm() {
     const router = useRouter();
-
-    const [firstname, setFirstname] = useState("");
-    const [lastname, setLastname] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-
     const [isLoading, setIsLoading] = useState(false);
 
-    const [feedback, setFeedback] = useState<FeedbackType>();
-    const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+    const form = useForm<RegisterFormValues>({
+        resolver: zodResolver(registerSchema),
+        defaultValues: {
+            firstname: "",
+            lastname: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+        },
+    });
 
-    const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
+    const handleRegister = async (values: RegisterFormValues) => {
         setIsLoading(true);
-        setIsFeedbackOpen(false);
 
-        if (!firstname || !lastname || !email || !password || !confirmPassword) {
-            setFeedback({
-                message: "Please fill all fields.",
-                mode: "warning",
-            });
-            setIsFeedbackOpen(true);
-            setIsLoading(false);
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            setFeedback({
-                message: "Les mots de passe ne correspondent pas.",
-                mode: "warning",
-            });
-            setIsFeedbackOpen(true);
-            setIsLoading(false);
-            return;
-        }
+        const { firstname, lastname, email, password } = values;
 
         const { data } = await signUp.email({
             name: firstname,
@@ -57,54 +41,139 @@ export default function RegisterForm() {
         });
 
         if (!data) {
-            setFeedback({
-                message: "Failed to login, invalid credentials.",
-                mode: "error",
-            });
-            setIsFeedbackOpen(true);
+            toast.error("Échec de l'inscription, veuillez réessayer.");
             setIsLoading(false);
             return;
         }
 
-        await UpdateLastnameAction({ lastname });
+        await UpdateUserAction({ lastname });
 
-        router.push("/task");
+        toast.success("Inscription réussie ! Bienvenue !");
+        router.push("/");
     };
 
     return (
-        <form onSubmit={handleRegister} className="space-y-4">
-            <Input
-                label="Prénom"
-                type="text"
-                setValue={setFirstname}
-                value={firstname}
-                autoComplete="given-name"
-                autoFocus
-            />
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleRegister)} className="space-y-4">
+                {/* Firstname */}
+                <FormField
+                    control={form.control}
+                    name="firstname"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Prénom</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="text"
+                                    placeholder="Jean"
+                                    autoComplete="given-name"
+                                    autoFocus
+                                    disabled={isLoading}
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
-            <Input label="Nom" type="text" setValue={setLastname} value={lastname} autoComplete="family-name" />
+                {/* Lastname */}
+                <FormField
+                    control={form.control}
+                    name="lastname"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Nom</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="text"
+                                    placeholder="Dupont"
+                                    autoComplete="family-name"
+                                    disabled={isLoading}
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
-            <Input label="Email" type="email" setValue={setEmail} value={email} autoComplete="email" />
+                {/* Email */}
+                <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="email"
+                                    placeholder="exemple@email.com"
+                                    autoComplete="email"
+                                    disabled={isLoading}
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
-            <InputPassword label="Mot de passe" setValue={setPassword} value={password} autoComplete="new-password" />
+                {/* Password */}
+                <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Mot de passe</FormLabel>
+                            <FormControl>
+                                <PasswordInput
+                                    placeholder="Minimum 8 caractères"
+                                    autoComplete="new-password"
+                                    disabled={isLoading}
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
-            <InputPassword
-                label="Confirmation mot de passe"
-                setValue={setConfirmPassword}
-                value={confirmPassword}
-                autoComplete="new-password"
-            />
+                {/* Confirm Password */}
+                <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Confirmation mot de passe</FormLabel>
+                            <FormControl>
+                                <PasswordInput
+                                    placeholder="Confirmez votre mot de passe"
+                                    autoComplete="new-password"
+                                    disabled={isLoading}
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
-            <div className="text-gray-middle flex justify-center gap-2 text-sm">
-                <p>Déjà un compte ?</p>
-                <Link label="Se connecter" href="/login" variant="underline" />
-            </div>
+                {/* Login link */}
+                <div className="text-muted-foreground flex justify-center gap-2 text-sm">
+                    <p>Déjà un compte ?</p>
+                    <Link href="/login" className="hover:text-foreground underline underline-offset-4">
+                        Se connecter
+                    </Link>
+                </div>
 
-            <Feedback feedback={feedback} isFeedbackOpen={isFeedbackOpen} />
-
-            <div className="flex justify-center">
-                <Button type="submit" label="S'inscrire" isLoading={isLoading} />
-            </div>
-        </form>
+                {/* Submit button */}
+                <div className="flex justify-center">
+                    <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
+                        {isLoading ? "Inscription en cours..." : "S'inscrire"}
+                    </Button>
+                </div>
+            </form>
+        </Form>
     );
 }
