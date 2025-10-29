@@ -12,19 +12,8 @@ type LinkType = {
 
 const links: LinkType[] = [{ label: "Tasks", href: "/tasks" }];
 
-type NavigationProps = {
-    scrollToTop?: boolean;
-};
-
-export default function Navigation(props: NavigationProps) {
-    const { scrollToTop = false } = props;
-
+export default function Navigation() {
     const path = usePathname();
-
-    const handleNativation = () => {
-        const mainEl = document.querySelector("main");
-        if (scrollToTop && mainEl) mainEl.scrollTo({ top: 0, behavior: "smooth" });
-    };
 
     return (
         <div className="flex gap-2 px-4">
@@ -33,7 +22,6 @@ export default function Navigation(props: NavigationProps) {
                     key={label}
                     aria-label={label}
                     href={href}
-                    onNavigate={handleNativation}
                     className={cn("text-lg", path === href && "font-bold")}
                 >
                     {label}

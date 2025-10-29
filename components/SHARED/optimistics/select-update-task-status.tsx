@@ -1,14 +1,18 @@
 "use client";
 
-import { TaskType } from "@app/task/components/fetch";
-import Select, { SelectClassName } from "@comps/UI/select/select";
-import { SelectOptionType } from "@comps/UI/select/utils";
-import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
-import { combo } from "@lib/combo";
+import { TaskUpdateAction } from "@actions/TaskUpdateAction";
+import { TaskType } from "@app/tasks/components/fetch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@comps/SHADCN/ui/select";
+import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import { cn } from "@shadcn/lib/utils";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
-import { startTransition, useState } from "react";
-import { UpdateTask } from "@/actions/TaskUpdateAction";
+import { ReactNode, startTransition } from "react";
 import useInstant from "./useInstant";
+
+type SelectOptionType = {
+    slug: string;
+    label: ReactNode;
+};
 
 const options: SelectOptionType[] = [
     {
@@ -42,16 +46,14 @@ const options: SelectOptionType[] = [
 
 type SelectUpdateTaskStatusProps = {
     task: TaskType;
-    className?: SelectClassName;
+    className?: string;
 };
 
 export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProps) {
     const { task, className } = props;
     const { id, title } = task;
 
-    const { setData, setOptimisticData } = useInstant(task);
-
-    const [status, setStatus] = useState<string>(task.status);
+    const { optimisticData, setData, setOptimisticData } = useInstant(task);
 
     const handleStatusUpdate = (newStatus: string) => {
         const newStatusConst = newStatus as TaskType["status"];
@@ -63,29 +65,31 @@ export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProp
             setOptimisticData(newItem);
 
             // Do mutation
-            const validatedItem = await UpdateTask({ id, status: newStatusConst });
+            const { data, error } = await TaskUpdateAction({ id, status: newStatusConst });
 
             // If failed, the optimistic state is rolled back at the end of the transition
-            if (!validatedItem) return console.log("❌ Update failed");
+            if (!data || error) return console.log("❌ Update failed");
 
             // If success, update the real state in a new transition to prevent key conflict
-            startTransition(() => setData(validatedItem));
+            startTransition(() => setData(data));
 
             console.log("✅ Update succeeded");
         });
     };
 
     return (
-        <Select
-            label="Update status"
-            className={className}
-            onSelectChange={handleStatusUpdate}
-            setSelected={setStatus}
-            selected={status}
-            options={options}
-            canNotBeEmpty
-            noLabel
-        />
+        <Select value={optimisticData.status} onValueChange={handleStatusUpdate}>
+            <SelectTrigger className={className} aria-label="Update status">
+                <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+                {options.map((option) => (
+                    <SelectItem key={option.slug} value={option.slug}>
+                        {option.label}
+                    </SelectItem>
+                ))}
+            </SelectContent>
+        </Select>
     );
 }
 
@@ -96,12 +100,7 @@ type SelectUpdateTaskStatusSkeletonProps = {
 };
 
 export const SelectUpdateTaskStatusSkeleton = (props: SelectUpdateTaskStatusSkeletonProps) => {
-    const { index = 0, className, noShrink = false } = props;
+    const { className } = props;
 
-    return (
-        <SkeletonContainer className={combo("flex gap-3 pr-2 pl-3", className)} noShrink={noShrink}>
-            <SkeletonText index={index} />
-            <SkeletonText width="20px" noShrink />
-        </SkeletonContainer>
-    );
+    return <Skeleton className={cn("h-9 w-[150px]", className)} />;
 };

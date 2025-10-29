@@ -1,4 +1,4 @@
-import { SkeletonText } from "@comps/UI/skeleton";
+import { Skeleton } from "@comps/SHADCN/ui/skeleton";
 import { TaskType } from "./fetch";
 import Item, { ItemSkeleton } from "./item";
 
@@ -25,7 +25,7 @@ export default function SectionStatus(props: SectionStatusProps) {
 export const SectionStatusSkeleton = () => {
     return (
         <div className="space-y-2">
-            <SkeletonText width="120px" fontSize="lg" />
+            <Skeleton className="h-7 w-[120px]" />
             {Array.from({ length: 3 }).map((_, index) => (
                 <ItemSkeleton key={index} index={index} />
             ))}

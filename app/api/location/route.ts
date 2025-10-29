@@ -1,5 +1,5 @@
 import { ResponseFormat, cacheLifeApi, parseAndDecodeParams } from "@utils/FetchConfig";
-import { unstable_cacheLife as cacheLife, unstable_cacheTag as cacheTag } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError, ZodType, strictObject, z } from "zod";
 

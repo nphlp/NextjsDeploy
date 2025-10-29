@@ -4,7 +4,7 @@ import { Session, getSession } from "@lib/authServer";
 import PrismaInstance from "@lib/prisma";
 import { unauthorized } from "next/navigation";
 import { ZodType, z } from "zod";
-import { ActionResponse } from "./types";
+import { ActionResponse } from "./ActionError";
 
 type UserUpdateActionProps = {
     lastname: string;

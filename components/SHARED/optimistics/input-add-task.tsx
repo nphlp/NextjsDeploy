@@ -1,13 +1,13 @@
 "use client";
 
-import Button from "@comps/UI/button/button";
-import Input from "@comps/UI/input/input";
-import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
+import { TaskCreateAction } from "@actions/TaskCreateAction";
+import { Context } from "@app/tasks/components/context";
+import { TaskType } from "@app/tasks/components/fetch";
+import { Button } from "@comps/SHADCN/ui/button";
+import { Input } from "@comps/SHADCN/ui/input";
+import { Skeleton } from "@comps/SHADCN/ui/skeleton";
 import { ArrowUp } from "lucide-react";
 import { startTransition, useContext, useState } from "react";
-import { AddTask } from "@/actions/TaskUpdateAction";
-import { Context } from "./context";
-import { TaskType } from "./fetch";
 
 export default function InputAddTask() {
     const { setDataBypass, setOptimisticData, optimisticMutations } = useContext(Context);
@@ -28,14 +28,14 @@ export default function InputAddTask() {
             setOptimisticData({ type: "add", newItem });
 
             // Do mutation
-            const validatedItem = await AddTask({ title: newItem.title });
+            const { data, error } = await TaskCreateAction({ title: newItem.title });
 
             // If failed, the optimistic state is rolled back at the end of the transition
-            if (!validatedItem) return console.log("❌ Creation failed");
+            if (!data || error) return console.log("❌ Creation failed");
 
             // If success, update the real state in a new transition to prevent key conflict
             startTransition(() =>
-                setDataBypass((current) => optimisticMutations(current, { type: "add", newItem: validatedItem })),
+                setDataBypass((current) => optimisticMutations(current, { type: "add", newItem: data })),
             );
 
             console.log("✅ Creation succeeded");
@@ -45,17 +45,13 @@ export default function InputAddTask() {
     return (
         <form action={handleSubmit} className="flex w-full items-center gap-2">
             <Input
-                label="Ajouter une tâche"
+                aria-label="Ajouter une tâche"
                 placeholder="Ajouter une tâche"
                 autoComplete="off"
-                setValue={setTitle}
+                onChange={(e) => setTitle(e.target.value)}
                 value={title}
-                className={{
-                    component: "w-full",
-                }}
-                noLabel
             />
-            <Button type="submit" label="Ajouter" variant="outline" className={{ button: "p-1.5" }}>
+            <Button type="submit" aria-label="Ajouter" variant="outline" className="p-1.5">
                 <ArrowUp className="size-6" />
             </Button>
         </form>
@@ -65,12 +61,8 @@ export default function InputAddTask() {
 export function InputAddTaskSkeleton() {
     return (
         <div className="flex w-full items-center gap-2">
-            <SkeletonContainer>
-                <SkeletonText width="170px" />
-            </SkeletonContainer>
-            <SkeletonContainer className="w-fit px-2" noShrink>
-                <SkeletonText width="20px" noShrink />
-            </SkeletonContainer>
+            <Skeleton className="h-9 w-full" />
+            <Skeleton className="h-9 w-9 shrink-0" />
         </div>
     );
 }

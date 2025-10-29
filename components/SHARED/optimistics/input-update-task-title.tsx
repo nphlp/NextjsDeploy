@@ -1,16 +1,16 @@
 "use client";
 
-import { TaskType } from "@app/task/components/fetch";
-import Input, { InputClassName } from "@comps/UI/input/input";
-import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
-import { combo } from "@lib/combo";
+import { TaskUpdateAction } from "@actions/TaskUpdateAction";
+import { TaskType } from "@app/tasks/components/fetch";
+import { Input } from "@comps/SHADCN/ui/input";
+import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import { cn } from "@shadcn/lib/utils";
 import { startTransition, useState } from "react";
-import { UpdateTask } from "@/actions/TaskUpdateAction";
 import useInstant from "./useInstant";
 
 type InputUpdateTaskTitleProps = {
     task: TaskType;
-    className?: InputClassName;
+    className?: string;
 };
 
 export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
@@ -32,13 +32,13 @@ export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
             setOptimisticData(newItem);
 
             // Do mutation
-            const validatedItem = await UpdateTask({ id, title });
+            const { data, error } = await TaskUpdateAction({ id, title });
 
             // If failed, the optimistic state is rolled back at the end of the transition
-            if (!validatedItem) return console.log("❌ Update failed");
+            if (!data || error) return console.log("❌ Update failed");
 
             // If success, update the real state in a new transition to prevent key conflict
-            startTransition(() => setData(validatedItem));
+            startTransition(() => setData(data));
 
             console.log("✅ Update succeeded");
         });
@@ -47,12 +47,11 @@ export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
     return (
         <form action={handleTitleUpdate} className="w-full">
             <Input
-                label="Tâche"
+                aria-label="Tâche"
                 onBlur={handleTitleUpdate}
-                setValue={setTitle}
+                onChange={(e) => setTitle(e.target.value)}
                 value={title}
                 className={className}
-                noLabel
                 autoComplete="off"
             />
         </form>
@@ -65,11 +64,7 @@ type InputUpdateTaskTitleSkeletonProps = {
 };
 
 export const InputUpdateTaskTitleSkeleton = (props: InputUpdateTaskTitleSkeletonProps) => {
-    const { index = 0, className } = props;
+    const { className } = props;
 
-    return (
-        <SkeletonContainer className={combo("rounded-none border-x-0 border-t-transparent px-0", className)}>
-            <SkeletonText minWidth={30} maxWidth={60} index={index} />
-        </SkeletonContainer>
-    );
+    return <Skeleton className={cn("h-9 w-full rounded-none border-x-0 border-t-transparent", className)} />;
 };

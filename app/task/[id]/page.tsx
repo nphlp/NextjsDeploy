@@ -1,6 +1,6 @@
+import Link from "@comps/SHADCN/components/link";
 import { getSession } from "@lib/authServer";
 import { TaskFindUniqueServer } from "@services/server";
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import z, { ZodType } from "zod";

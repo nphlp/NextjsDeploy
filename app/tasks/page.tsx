@@ -1,6 +1,6 @@
-import InputAddTask, { InputAddTaskSkeleton } from "@app/tasks/components/input-add-task";
-import SearchFilter, { SearchFilterSkeleton } from "@comps/SHARED/filters/SearchFilter";
-import UpdatedAtFilter, { UpdatedAtFilterSkeleton } from "@comps/SHARED/filters/UpdatedAtFilter";
+import SearchFilter, { SearchFilterSkeleton } from "@comps/SHARED/filters/search-filter";
+import UpdatedAtFilter, { UpdatedAtFilterSkeleton } from "@comps/SHARED/filters/updated-at-filter";
+import InputAddTask, { InputAddTaskSkeleton } from "@comps/SHARED/optimistics/input-add-task";
 import { getSession } from "@lib/authServer";
 import { TaskFindManyServer } from "@services/server";
 import { redirect } from "next/navigation";

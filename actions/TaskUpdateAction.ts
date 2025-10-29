@@ -9,7 +9,7 @@ import { cacheLifeApi, hashParamsForCacheKey } from "@utils/FetchConfig";
 import { revalidateTag } from "next/cache";
 import { unauthorized } from "next/navigation";
 import z, { ZodType } from "zod";
-import { ActionResponse } from "./types";
+import { ActionResponse } from "./ActionError";
 
 type TaskUpdateActionProps = {
     id: string;

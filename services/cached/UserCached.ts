@@ -11,7 +11,7 @@ import {
     UserFindUniqueResponse,
 } from "@services/types";
 import { cacheLifeApi, hashParamsForCacheKey } from "@utils/FetchConfig";
-import { unstable_cacheLife as cacheLife, unstable_cacheTag as cacheTag } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 
 /**
  * # User Cached Services
