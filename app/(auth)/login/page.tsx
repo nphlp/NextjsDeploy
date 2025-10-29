@@ -5,7 +5,7 @@ import LoginForm from "./login-form";
 
 export default async function Page() {
     const session = await getSession();
-    if (session) redirect("/task");
+    if (session) redirect("/tasks");
 
     return (
         <Card className="w-[400px]">

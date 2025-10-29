@@ -43,7 +43,7 @@ export default function LoginForm() {
 
         toast.success("Connexion réussie !");
 
-        router.push("/task");
+        router.push("/tasks");
     };
 
     return (

@@ -14,7 +14,7 @@ export default async function Page(props: PageProps) {
     const token = params.token;
 
     const session = await getSession();
-    if (session) redirect("/task");
+    if (session) redirect("/tasks");
 
     return (
         <Card className="w-[400px]">

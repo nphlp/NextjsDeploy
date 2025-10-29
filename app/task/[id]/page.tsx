@@ -1,6 +1,6 @@
-import Link from "@comps/UI/button/link";
 import { getSession } from "@lib/authServer";
 import { TaskFindUniqueServer } from "@services/server";
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import z, { ZodType } from "zod";
@@ -28,7 +28,9 @@ export default async function Page(props: PageProps) {
             <Suspense fallback={<TaskSkeleton />}>
                 <Task id={id} />
             </Suspense>
-            <Link label="Retour" href="/" />
+            <Link aria-label="Retour" href="/">
+                Retour
+            </Link>
         </div>
     );
 }

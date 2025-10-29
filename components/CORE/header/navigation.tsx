@@ -10,10 +10,7 @@ type LinkType = {
     href: Route;
 };
 
-const links: LinkType[] = [
-    { label: "Home", href: "/" },
-    { label: "Tasks", href: "/task" },
-];
+const links: LinkType[] = [{ label: "Tasks", href: "/tasks" }];
 
 type NavigationProps = {
     scrollToTop?: boolean;
@@ -30,7 +27,7 @@ export default function Navigation(props: NavigationProps) {
     };
 
     return (
-        <div className="flex gap-2">
+        <div className="flex gap-2 px-4">
             {links.map(({ href, label }) => (
                 <Link
                     key={label}

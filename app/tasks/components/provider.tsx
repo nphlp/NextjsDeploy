@@ -29,7 +29,7 @@ export default function Provider(props: ContextProviderProps) {
     // Reactive fetch
     const { data, setDataBypass, isLoading, refetch } = useFetch({
         route: "/internal/task/findMany",
-        params: taskPageParams({ updatedAt, search, authorId: session.user.id }),
+        params: taskPageParams({ updatedAt, search, userId: session.user.id }),
         initialData,
     });
 

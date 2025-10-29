@@ -6,7 +6,7 @@ export const taskIdPageParams = (id: string, session: NonNullable<Session>) =>
         select: { id: true, title: true, status: true, updatedAt: true },
         where: {
             id,
-            authorId: session.user.id,
+            userId: session.user.id,
         },
     }) satisfies TaskFindUniqueProps;
 

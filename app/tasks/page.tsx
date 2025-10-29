@@ -1,4 +1,4 @@
-import InputAddTask, { InputAddTaskSkeleton } from "@app/task/components/input-add-task";
+import InputAddTask, { InputAddTaskSkeleton } from "@app/tasks/components/input-add-task";
 import SearchFilter, { SearchFilterSkeleton } from "@comps/SHARED/filters/SearchFilter";
 import UpdatedAtFilter, { UpdatedAtFilterSkeleton } from "@comps/SHARED/filters/UpdatedAtFilter";
 import { getSession } from "@lib/authServer";
@@ -43,7 +43,7 @@ const Todo = async (props: TodoProps) => {
     const session = await getSession();
     if (!session) redirect("/login");
 
-    const taskList = await TaskFindManyServer(taskPageParams({ updatedAt, search, authorId: session.user.id }));
+    const taskList = await TaskFindManyServer(taskPageParams({ updatedAt, search, userId: session.user.id }));
 
     return (
         <Provider initialData={taskList} sessionServer={session}>

@@ -1,15 +1,15 @@
 import { TaskFindManyProps, TaskFindManyResponse } from "@services/types";
 import { TaskQueryParamsCachedType } from "./queryParams";
 
-export const taskPageParams = ({ updatedAt, search, authorId }: TaskQueryParamsCachedType & { authorId: string }) =>
+export const taskPageParams = ({ updatedAt, search, userId }: TaskQueryParamsCachedType & { userId: string }) =>
     ({
         select: { id: true, title: true, status: true },
         orderBy: { updatedAt },
         where: {
             ...(search && {
-                OR: [{ title: { contains: search } }, { slug: { contains: search } }],
+                title: { contains: search },
             }),
-            authorId,
+            userId,
         },
     }) satisfies TaskFindManyProps;
 

@@ -12,7 +12,7 @@ export default function List() {
         return (
             <div className="flex items-center justify-center gap-4 py-8 text-lg">
                 <span>Aucune tâche...</span>
-                <NotebookPen className="size-5 -translate-y-[2px]" />
+                <NotebookPen className="size-5 -translate-y-0.5" />
             </div>
         );
     }
