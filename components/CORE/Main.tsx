@@ -1,8 +1,6 @@
 "use client";
 
 import { cn } from "@shadcn/lib/utils";
-import { startsWith } from "lodash";
-import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 
 type MainProps = {
@@ -14,9 +12,9 @@ type MainProps = {
 export default function Main(props: MainProps) {
     const { offsetHeader, className, children } = props;
 
-    const path = usePathname();
+    // const path = usePathname();
 
-    if (startsWith(path, "/dashboard")) return children;
+    // if (startsWith(path, "/dashboard")) return children;
 
     return (
         <main

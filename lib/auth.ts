@@ -1,3 +1,4 @@
+import SendEmailAction from "@actions/SendEmailAction";
 import EmailTemplate from "@comps/UI/email";
 import PrismaInstance from "@lib/prisma";
 import { UserFindUniqueAction } from "@services/actions/UserAction";
@@ -5,7 +6,6 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { customSession } from "better-auth/plugins";
-import SendEmailAction from "@/actions/SendEmailAction";
 
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 

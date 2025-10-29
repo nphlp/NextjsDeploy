@@ -1,6 +1,6 @@
 "use client";
 
-import { UpdateUserAction } from "@actions/UpdateUserAction";
+import { UserUpdateAction } from "@actions/UserUpdateAction";
 import PasswordInput from "@comps/SHADCN/components/password-input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@lib/authClient";
@@ -46,7 +46,7 @@ export default function RegisterForm() {
             return;
         }
 
-        await UpdateUserAction({ lastname });
+        await UserUpdateAction({ lastname });
 
         toast.success("Inscription réussie ! Bienvenue !");
         router.push("/");

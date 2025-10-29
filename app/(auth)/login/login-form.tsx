@@ -3,7 +3,6 @@
 import PasswordInput from "@comps/SHADCN/components/password-input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "@lib/authClient";
-import { UserFindUniqueAction } from "@services/actions/UserAction";
 import { Button } from "@shadcn/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shadcn/ui/form";
 import { Input } from "@shadcn/ui/input";
@@ -42,15 +41,9 @@ export default function LoginForm() {
             return;
         }
 
-        const userRole = await UserFindUniqueAction({ select: { role: true }, where: { id: data.user.id } });
-
         toast.success("Connexion réussie !");
 
-        if (userRole?.role === "ADMIN" || userRole?.role === "MANAGER") {
-            return router.push("/dashboard");
-        }
-
-        router.push("/clock");
+        router.push("/task");
     };
 
     return (

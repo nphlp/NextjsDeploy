@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "@comps/UI/button/link";
-import { combo } from "@lib/combo";
+import { cn } from "@comps/SHADCN/lib/utils";
 import { Route } from "next";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 type LinkType = {
@@ -12,22 +12,21 @@ type LinkType = {
 
 const links: LinkType[] = [
     { label: "Home", href: "/" },
-    { label: "Comps", href: "/comps" },
-    { label: "Examples", href: "/examples" },
+    { label: "Tasks", href: "/task" },
 ];
 
-type LinksProps = {
+type NavigationProps = {
     scrollToTop?: boolean;
 };
 
-export default function Links(props: LinksProps) {
+export default function Navigation(props: NavigationProps) {
     const { scrollToTop = false } = props;
 
     const path = usePathname();
 
     const handleNativation = () => {
-        const mainId = document.getElementById("main");
-        if (scrollToTop && mainId) mainId.scrollTo({ top: 0, behavior: "smooth" });
+        const mainEl = document.querySelector("main");
+        if (scrollToTop && mainEl) mainEl.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     return (
@@ -35,12 +34,13 @@ export default function Links(props: LinksProps) {
             {links.map(({ href, label }) => (
                 <Link
                     key={label}
-                    label={label}
+                    aria-label={label}
                     href={href}
-                    variant="ghost"
                     onNavigate={handleNativation}
-                    className={combo("text-lg", path === href && "font-bold")}
-                />
+                    className={cn("text-lg", path === href && "font-bold")}
+                >
+                    {label}
+                </Link>
             ))}
         </div>
     );

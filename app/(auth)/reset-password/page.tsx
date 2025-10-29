@@ -1,5 +1,6 @@
-import { autoRedirectIfLoggedIn } from "@lib/permissions";
+import { getSession } from "@lib/authServer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shadcn/ui/card";
+import { redirect } from "next/navigation";
 import RequestResetForm from "./request-reset-form";
 import ResetPasswordForm from "./reset-password-form";
 
@@ -10,10 +11,10 @@ type PageProps = {
 export default async function Page(props: PageProps) {
     const { searchParams } = props;
     const params = await searchParams;
-
     const token = params.token;
 
-    await autoRedirectIfLoggedIn();
+    const session = await getSession();
+    if (session) redirect("/task");
 
     return (
         <Card className="w-[400px]">

@@ -1,14 +1,16 @@
 import Footer from "@comps/CORE/Footer";
 import Header from "@comps/CORE/Header";
+import Main from "@comps/CORE/Main";
 import ThemeProvider from "@comps/CORE/theme/theme-provider";
 import { getTheme } from "@comps/CORE/theme/theme-server";
-import ArrowToTop from "@comps/UI/arrowToTop";
+import { cn } from "@comps/SHADCN/lib/utils";
 import Breakpoints from "@comps/UI/breakpoints";
+import { getSession } from "@lib/authServer";
+import { Toaster } from "@shadcn/ui/sonner";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ReactNode } from "react";
-import { combo } from "@/lib/combo";
 import "@/public/globals.css";
 
 const geistSans = Geist({
@@ -22,8 +24,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "Next.js Deploy",
-    description: "A Next.js project ready to be deployed 📝",
+    title: "Pulse Work",
+    description: "Time attendance and team management software 📝",
 };
 
 type LayoutProps = Readonly<{
@@ -34,37 +36,21 @@ export default async function Layout(props: LayoutProps) {
     const { children } = props;
 
     const themeCookie = await getTheme();
+    const session = await getSession();
+
+    // Height relative to font-size 16px
+    const headerHeight = 4; // 64px = 4rem
 
     return (
-        <html
-            lang="fr"
-            className={combo(
-                // Layout
-                "h-full antialiased",
-                // Apply theme from server
-                themeCookie?.themeClass,
-            )}
-        >
-            <body
-                className={combo(
-                    // Font imports
-                    geistSans.variable,
-                    geistMono.variable,
-                    // Theme and base styles
-                    "bg-background text-foreground! font-mono",
-                    // Layout
-                    "flex h-full flex-col",
-                )}
-            >
+        <html lang="fr" className={cn("h-full antialiased", themeCookie?.themeClass)}>
+            <body className={cn(geistSans.variable, geistMono.variable, "h-full font-mono")}>
                 <NuqsAdapter>
                     <ThemeProvider initialTheme={themeCookie?.theme}>
-                        <Header />
-                        <div id="main" className="flex-1 overflow-y-auto">
-                            <main className="flex min-h-full flex-col items-center justify-center">{children}</main>
-                            <Footer />
-                        </div>
+                        <Header headerHeight={headerHeight} serverSession={session} />
+                        <Main offsetHeader={headerHeight}>{children}</Main>
+                        <Footer />
                         <Breakpoints mode="onResize" />
-                        <ArrowToTop />
+                        <Toaster />
                     </ThemeProvider>
                 </NuqsAdapter>
             </body>

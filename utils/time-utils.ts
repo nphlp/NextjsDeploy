@@ -1,11 +1,4 @@
-import { DayOfWeek } from "@prisma/client";
 import { Hour, Minute, Time, TimeString } from "./time-types";
-
-export const getDayOfWeekFromDate = (clockDate: Date): DayOfWeek => {
-    const dayNames: DayOfWeek[] = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
-    const dayOfWeek = dayNames[clockDate.getDay()];
-    return dayOfWeek;
-};
 
 export const getTimeFromDate = (date: Date): Time => {
     const hours = date.getHours() as Hour;

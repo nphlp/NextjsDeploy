@@ -2,8 +2,7 @@
 
 import { Session } from "@lib/authServer";
 import { cn } from "@shadcn/lib/utils";
-import { startsWith } from "lodash";
-import { usePathname } from "next/navigation";
+import Navigation from "./header/navigation";
 import ProfileIcon from "./header/profile";
 import ThemeDropdown from "./header/theme";
 
@@ -16,9 +15,9 @@ type HeaderProps = {
 export default function Header(props: HeaderProps) {
     const { headerHeight, className, serverSession } = props;
 
-    const path = usePathname();
+    // const path = usePathname();
 
-    if (startsWith(path, "/dashboard")) return null;
+    // if (startsWith(path, "/dashboard")) return null;
 
     return (
         <header
@@ -31,6 +30,7 @@ export default function Header(props: HeaderProps) {
                 className,
             )}
         >
+            <Navigation />
             <ProfileIcon serverSession={serverSession} />
             <ThemeDropdown />
         </header>

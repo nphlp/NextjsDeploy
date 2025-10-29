@@ -1,6 +1,6 @@
 "use client";
 
-import { UpdateUserAction } from "@actions/UpdateUserAction";
+import { UserUpdateAction } from "@actions/UserUpdateAction";
 import PasswordInput from "@comps/SHADCN/components/password-input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { changePassword, updateUser, useSession } from "@lib/authClient";
@@ -64,7 +64,7 @@ const UpdateLastnameForm = (props: UpdateFormProps) => {
 
         const { lastname } = values;
 
-        const updateResponse = await UpdateUserAction({ lastname });
+        const updateResponse = await UserUpdateAction({ lastname });
 
         if (!updateResponse) {
             toast.error("Erreur lors de la modification du nom");

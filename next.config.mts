@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
     typedRoutes: true,
 
     // Enable React memoryzing compiler
-    // reactCompiler: true,
+    reactCompiler: true,
 
     experimental: {
         // View transition API
