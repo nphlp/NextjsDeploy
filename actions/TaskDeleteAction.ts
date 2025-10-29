@@ -8,7 +8,7 @@ import { cacheLifeApi, hashParamsForCacheKey } from "@utils/FetchConfig";
 import { revalidateTag } from "next/cache";
 import { unauthorized } from "next/navigation";
 import z, { ZodType } from "zod";
-import { ActionResponse } from "./ActionError";
+import { ActionError, ActionResponse, ClientError } from "./ActionError";
 
 type TaskDeleteActionProps = {
     id: string;
@@ -36,7 +36,7 @@ export const TaskDeleteAction = async (props: TaskDeleteActionProps): Promise<Ta
         const taskExists = await PrismaInstance.task.findFirst({
             where: { id, userId },
         });
-        if (!taskExists) throw new Error("Task not found");
+        if (!taskExists) throw new ClientError("Task not found");
 
         // Some other logic here
 
@@ -53,13 +53,6 @@ export const TaskDeleteAction = async (props: TaskDeleteActionProps): Promise<Ta
 
         return { data: deletedTask };
     } catch (error) {
-        const expliciteErrorMessage = (error as Error).message;
-
-        // Server logging
-        console.error("TaskDeleteAction -> ", expliciteErrorMessage, "\n\nRaw error:\n\n", error);
-
-        // Client logging
-        const isDev = process.env.NODE_ENV === "development";
-        return { error: isDev ? expliciteErrorMessage : "Something went wrong" };
+        return ActionError(error);
     }
 };

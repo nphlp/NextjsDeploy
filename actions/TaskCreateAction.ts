@@ -7,7 +7,7 @@ import { cacheLifeApi } from "@utils/FetchConfig";
 import { revalidateTag } from "next/cache";
 import { unauthorized } from "next/navigation";
 import z, { ZodType } from "zod";
-import { ActionResponse } from "./ActionError";
+import { ActionError, ActionResponse } from "./ActionError";
 
 type TaskCreateActionProps = {
     title: string;
@@ -47,13 +47,6 @@ export const TaskCreateAction = async (props: TaskCreateActionProps): Promise<Ta
 
         return { data: createdTask };
     } catch (error) {
-        const expliciteErrorMessage = (error as Error).message;
-
-        // Server logging
-        console.error("TaskCreateAction -> ", expliciteErrorMessage, "\n\nRaw error:\n\n", error);
-
-        // Client logging
-        const isDev = process.env.NODE_ENV === "development";
-        return { error: isDev ? expliciteErrorMessage : "Something went wrong" };
+        return ActionError(error);
     }
 };

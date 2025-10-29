@@ -11,6 +11,7 @@ import { Trash2 } from "lucide-react";
 import { Route } from "next";
 import { useRouter } from "next/navigation";
 import { startTransition, useRef, useState } from "react";
+import { toast } from "sonner";
 import useInstant from "./useInstant";
 
 type SelectUpdateTaskStatusProps = {
@@ -48,7 +49,10 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
             const { data, error } = await TaskDeleteAction({ id: newItem.id });
 
             // If failed, the optimistic state is rolled back at the end of the transition
-            if (!data || error) return console.log("❌ Deletion failed");
+            if (!data || error) {
+                toast.error(error);
+                return;
+            }
 
             // If success, update the real state in a new transition to prevent key conflict
             startTransition(() => setData(data));
@@ -57,7 +61,7 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
             if (redirectTo) router.push(redirectTo);
             if (refetch) refetch();
 
-            console.log("✅ Deletion succeeded");
+            toast.success("Tâche supprimée avec succès");
         });
     };
 

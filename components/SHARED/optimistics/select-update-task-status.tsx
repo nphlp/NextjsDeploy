@@ -7,6 +7,7 @@ import { Skeleton } from "@comps/SHADCN/ui/skeleton";
 import { cn } from "@shadcn/lib/utils";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
 import { ReactNode, startTransition } from "react";
+import { toast } from "sonner";
 import useInstant from "./useInstant";
 
 type SelectOptionType = {
@@ -68,12 +69,15 @@ export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProp
             const { data, error } = await TaskUpdateAction({ id, status: newStatusConst });
 
             // If failed, the optimistic state is rolled back at the end of the transition
-            if (!data || error) return console.log("❌ Update failed");
+            if (!data || error) {
+                toast.error(error);
+                return;
+            }
 
             // If success, update the real state in a new transition to prevent key conflict
             startTransition(() => setData(data));
 
-            console.log("✅ Update succeeded");
+            toast.success("Statut mis à jour avec succès");
         });
     };
 

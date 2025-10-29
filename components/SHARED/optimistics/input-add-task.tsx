@@ -8,6 +8,7 @@ import { Input } from "@comps/SHADCN/ui/input";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
 import { ArrowUp } from "lucide-react";
 import { startTransition, useContext, useState } from "react";
+import { toast } from "sonner";
 
 export default function InputAddTask() {
     const { setDataBypass, setOptimisticData, optimisticMutations } = useContext(Context);
@@ -31,14 +32,17 @@ export default function InputAddTask() {
             const { data, error } = await TaskCreateAction({ title: newItem.title });
 
             // If failed, the optimistic state is rolled back at the end of the transition
-            if (!data || error) return console.log("❌ Creation failed");
+            if (!data || error) {
+                toast.error(error);
+                return;
+            }
 
             // If success, update the real state in a new transition to prevent key conflict
             startTransition(() =>
                 setDataBypass((current) => optimisticMutations(current, { type: "add", newItem: data })),
             );
 
-            console.log("✅ Creation succeeded");
+            toast.success("Création de la tâche réussie");
         });
     };
 

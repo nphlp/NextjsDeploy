@@ -6,6 +6,7 @@ import { Input } from "@comps/SHADCN/ui/input";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
 import { cn } from "@shadcn/lib/utils";
 import { startTransition, useState } from "react";
+import { toast } from "sonner";
 import useInstant from "./useInstant";
 
 type InputUpdateTaskTitleProps = {
@@ -35,12 +36,15 @@ export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
             const { data, error } = await TaskUpdateAction({ id, title });
 
             // If failed, the optimistic state is rolled back at the end of the transition
-            if (!data || error) return console.log("❌ Update failed");
+            if (!data || error) {
+                toast.error(error);
+                return;
+            }
 
             // If success, update the real state in a new transition to prevent key conflict
             startTransition(() => setData(data));
 
-            console.log("✅ Update succeeded");
+            toast.success("Titre mis à jour avec succès");
         });
     };
 
