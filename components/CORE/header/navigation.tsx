@@ -1,6 +1,8 @@
 "use client";
 
 import { cn } from "@comps/SHADCN/lib/utils";
+import { useSession } from "@lib/authClient";
+import { Session } from "@lib/authServer";
 import { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,16 +10,44 @@ import { usePathname } from "next/navigation";
 type LinkType = {
     label: string;
     href: Route;
+    sessionRequired?: boolean;
+    devOnly?: boolean;
+    adminOnly?: boolean;
 };
 
-const links: LinkType[] = [{ label: "Tasks", href: "/tasks" }];
+const links: LinkType[] = [
+    { label: "Tasks", href: "/tasks" },
+    { label: "API Docs", href: "/scalar", devOnly: true },
+    { label: "Examples", href: "/examples", sessionRequired: true, adminOnly: true },
+];
 
-export default function Navigation() {
+type NavigationProps = {
+    serverSession: Session | null;
+};
+
+export default function Navigation(props: NavigationProps) {
+    const { serverSession } = props;
+    const { data: clientSession, isPending } = useSession();
+    const session = isPending ? serverSession : clientSession;
+
     const path = usePathname();
 
+    const linksToRender = links.filter(({ sessionRequired, devOnly, adminOnly }) => {
+        // If no session is required, but session does not exist, skip
+        if (sessionRequired && !session) return false;
+
+        // If dev only, and not in dev env, skip
+        if (devOnly && process.env.NODE_ENV !== "development") return false;
+
+        // If admin only, and session user is not admin, skip
+        if (adminOnly && session?.user.role !== "ADMIN") return false;
+
+        return true;
+    });
+
     return (
-        <div className="flex gap-2 px-4">
-            {links.map(({ href, label }) => (
+        <div className="flex gap-8 px-4">
+            {linksToRender.map(({ href, label }) => (
                 <Link
                     key={label}
                     aria-label={label}

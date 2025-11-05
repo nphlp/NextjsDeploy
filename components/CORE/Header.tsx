@@ -1,7 +1,6 @@
-"use client";
-
-import { Session } from "@lib/authServer";
+import { getSession } from "@lib/authServer";
 import { cn } from "@shadcn/lib/utils";
+import { Suspense } from "react";
 import Navigation from "./header/navigation";
 import ProfileIcon from "./header/profile";
 import ThemeDropdown from "./header/theme";
@@ -9,15 +8,23 @@ import ThemeDropdown from "./header/theme";
 type HeaderProps = {
     headerHeight: number;
     className?: string;
-    serverSession: Session | null;
 };
 
-export default function Header(props: HeaderProps) {
-    const { headerHeight, className, serverSession } = props;
+export default async function Header(props: HeaderProps) {
+    const { headerHeight } = props;
+    return (
+        <Suspense fallback={<header style={{ height: `${headerHeight}rem` }} className="w-full" />}>
+            <SuspendedHeader {...props} />
+        </Suspense>
+    );
+}
 
-    // const path = usePathname();
+const SuspendedHeader = async (props: HeaderProps) => {
+    "use cache: private";
 
-    // if (startsWith(path, "/dashboard")) return null;
+    const { headerHeight, className } = props;
+
+    const session = await getSession();
 
     return (
         <header
@@ -30,9 +37,9 @@ export default function Header(props: HeaderProps) {
                 className,
             )}
         >
-            <Navigation />
-            <ProfileIcon serverSession={serverSession} />
+            <Navigation serverSession={session} />
+            <ProfileIcon serverSession={session} />
             <ThemeDropdown />
         </header>
     );
-}
+};

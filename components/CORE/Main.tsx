@@ -1,5 +1,3 @@
-"use client";
-
 import { cn } from "@shadcn/lib/utils";
 import { ReactNode } from "react";
 
@@ -9,12 +7,8 @@ type MainProps = {
     children: ReactNode;
 };
 
-export default function Main(props: MainProps) {
+export default async function Main(props: MainProps) {
     const { offsetHeader, className, children } = props;
-
-    // const path = usePathname();
-
-    // if (startsWith(path, "/dashboard")) return children;
 
     return (
         <main

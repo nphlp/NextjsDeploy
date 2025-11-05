@@ -2,12 +2,23 @@ import { getSession } from "@lib/authServer";
 import { Card, CardContent } from "@shadcn/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@shadcn/ui/tabs";
 import { unauthorized } from "next/navigation";
+import { Suspense } from "react";
 import EditionTab from "./components/edition-tab";
 import EmailConfirmModal from "./components/email-confirm-modal";
 import ProfileTab from "./components/profile-tab";
 import SessionTab from "./components/session-tab";
 
 export default async function Page() {
+    return (
+        <Suspense>
+            <SuspendedPage />
+        </Suspense>
+    );
+}
+
+const SuspendedPage = async () => {
+    "use cache: private";
+
     const session = await getSession();
     if (!session) unauthorized();
 
@@ -36,4 +47,4 @@ export default async function Page() {
             <EmailConfirmModal session={session} />
         </div>
     );
-}
+};

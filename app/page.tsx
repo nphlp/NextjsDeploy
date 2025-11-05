@@ -1,10 +1,10 @@
-import { getSession } from "@lib/authServer";
-import { redirect } from "next/navigation";
+"use cache";
 
 export default async function Page() {
-    const session = await getSession();
-
-    if (!session) redirect("/login");
-
-    redirect("/tasks");
+    return (
+        <div className="space-y-4">
+            <h1 className="text-8xl font-semibold">Nextjs Deploy</h1>
+            <h2 className="text-2xl">A ready to deploy application template</h2>
+        </div>
+    );
 }

@@ -1,20 +1,38 @@
 import { getSession } from "@lib/authServer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shadcn/ui/card";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import z, { ZodType } from "zod";
 import RequestResetForm from "./request-reset-form";
 import ResetPasswordForm from "./reset-password-form";
 
+type Token = {
+    token?: string;
+};
+
+const paramsSchema: ZodType<Token> = z.object({
+    token: z.string().optional(),
+});
+
 type PageProps = {
-    searchParams: Promise<{ token?: string }>;
+    searchParams: Promise<Token>;
 };
 
 export default async function Page(props: PageProps) {
-    const { searchParams } = props;
-    const params = await searchParams;
-    const token = params.token;
+    return (
+        <Suspense>
+            <SuspendedPage {...props} />
+        </Suspense>
+    );
+}
+
+const SuspendedPage = async (props: PageProps) => {
+    "use cache: private";
+
+    const { token } = paramsSchema.parse(await props.searchParams);
 
     const session = await getSession();
-    if (session) redirect("/tasks");
+    if (session) redirect("/");
 
     return (
         <Card className="w-[400px]">
@@ -31,4 +49,4 @@ export default async function Page(props: PageProps) {
             <CardContent>{token ? <ResetPasswordForm token={token} /> : <RequestResetForm />}</CardContent>
         </Card>
     );
-}
+};

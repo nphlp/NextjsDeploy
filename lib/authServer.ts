@@ -1,6 +1,5 @@
-"use server";
-
 import { headers } from "next/headers";
+import "server-only";
 import { auth } from "./auth";
 
 export const getSession = async () => {

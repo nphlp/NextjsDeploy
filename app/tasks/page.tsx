@@ -9,35 +9,30 @@ import { Suspense } from "react";
 import { taskPageParams } from "./components/fetch";
 import List, { ListSkeleton } from "./components/list";
 import Provider from "./components/provider";
-import { TaskQueryParamsCachedType, taskQueryParamsCached } from "./components/queryParams";
+import { taskQueryParamsCached } from "./components/queryParams";
 
 type PageProps = {
     searchParams: Promise<SearchParams>;
 };
 
 export default async function Page(props: PageProps) {
-    const { searchParams } = props;
-
-    const params = await taskQueryParamsCached.parse(searchParams);
-
     return (
         <div className="w-full max-w-[900px] space-y-4 px-4 py-4 sm:px-12">
             <h1 className="text-2xl font-bold">Ma liste de tâches 📝</h1>
             <section className="space-y-8">
                 <Suspense fallback={<TodoSkeleton />}>
-                    <Todo params={params} />
+                    <Todo {...props} />
                 </Suspense>
             </section>
         </div>
     );
 }
 
-type TodoProps = {
-    params: TaskQueryParamsCachedType;
-};
+const Todo = async (props: PageProps) => {
+    "use cache: private";
 
-const Todo = async (props: TodoProps) => {
-    const { params } = props;
+    const params = taskQueryParamsCached.parse(await props.searchParams);
+
     const { updatedAt, search } = params;
 
     const session = await getSession();
