@@ -28,6 +28,7 @@ const getUserListFindMany = async (props: Prisma.UserFindManyArgs, key: string[]
 
 const getUserList = SolidApi({
     method: "GET",
+    path: "/users",
 })
     .input(
         z
@@ -67,6 +68,7 @@ const getUserFindUnique = async (props: Prisma.UserFindUniqueArgs, key: string[]
 
 const getUser = SolidApi({
     method: "GET",
+    path: "/users/{id}",
 })
     .input(
         z.object({
@@ -93,6 +95,7 @@ const getUser = SolidApi({
 
 const createUser = SolidApi({
     method: "POST",
+    path: "/users",
 })
     .input(
         z.object({
@@ -136,7 +139,8 @@ const createUser = SolidApi({
     });
 
 const updateUser = SolidApi({
-    method: "POST",
+    method: "PUT",
+    path: "/users/{id}",
 })
     .input(
         z.object({
@@ -185,7 +189,8 @@ const updateUser = SolidApi({
     });
 
 const deleteUser = SolidApi({
-    method: "POST",
+    method: "DELETE",
+    path: "/users/{id}",
 })
     .input(
         z.object({
@@ -219,7 +224,7 @@ const deleteUser = SolidApi({
         return user;
     });
 
-const user = {
+export const user = {
     list: getUserList,
     get: getUser,
     create: createUser,

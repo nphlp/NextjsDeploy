@@ -1,17 +1,17 @@
 import { NextRequest } from "next/server";
 
 export const createApiURL = ({
-    baseURL,
+    baseUrl,
     prefix,
     route,
     searchParams,
 }: {
-    baseURL: string | undefined;
+    baseUrl: string | undefined;
     prefix: string[];
     route: string;
     searchParams?: URLSearchParams;
 }): URL => {
-    const routeUrl = new URL(prefix.join("/") + route, baseURL);
+    const routeUrl = new URL(prefix.join("/") + route, baseUrl);
     if (searchParams) routeUrl.search = searchParams.toString();
     return routeUrl;
 };
@@ -35,6 +35,6 @@ export const decodeParams = (params: URLSearchParams) => {
 
 export const extractParamsOrBody = async <T>(request: NextRequest): Promise<T> => {
     if (request.method === "GET") return decodeParams(request.nextUrl.searchParams);
-    if (request.method === "POST") return await request.json();
-    throw new Error("Unsupported request method");
+    // If POST, PUT, PATCH, DELETE
+    return await request.json();
 };

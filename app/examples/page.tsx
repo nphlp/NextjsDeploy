@@ -21,6 +21,19 @@ const orpcSsrExamples: ExampleLink[] = [
     },
 ];
 
+const solidSsrExamples: ExampleLink[] = [
+    // {
+    //     url: "/examples/solid/ssr-1",
+    //     title: "SSR with client-side filtering",
+    //     description: "Fetch initial data server-side and re-fetch client-side when user selection changes.",
+    // },
+    {
+        url: "/examples/solid/ssr-2",
+        title: "SearchParams filtering",
+        description: "Fetch initial data server-side and re-fetch client-side when user filter table values.",
+    },
+];
+
 // const layoutExamples: ExampleLink[] = [
 //     {
 //         url: "/examples/layout-1",
@@ -51,6 +64,11 @@ export default function Page() {
                         title="oRPC SSR"
                         description="Fetching initial data server-side and hydrating useState(s) on the client-side."
                         links={orpcSsrExamples}
+                    />
+                    <LinkSection
+                        title="Solid SSR"
+                        description="Fetching initial data server-side and hydrating useState(s) on the client-side."
+                        links={solidSsrExamples}
                     />
                     {/* <LinkSection
                         title="Layout Configurations"

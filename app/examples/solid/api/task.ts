@@ -25,6 +25,7 @@ const getTaskListFindMany = async (props: Prisma.TaskFindManyArgs, key: string[]
 
 const getTaskList = SolidApi({
     method: "GET",
+    path: "/tasks",
 })
     .input(
         z
@@ -37,7 +38,6 @@ const getTaskList = SolidApi({
     )
     .output(z.array(taskOutputSchema))
     .handler(async (input) => {
-        console.log("====>> getTaskList input:", input);
         const session = await getSession();
         if (!session) unauthorized();
 
@@ -68,6 +68,7 @@ const getTaskFindUnique = async (props: Prisma.TaskFindUniqueArgs, key: string[]
 
 const getTask = SolidApi({
     method: "GET",
+    path: "/tasks/{id}",
 })
     .input(
         z.object({
@@ -94,6 +95,7 @@ const getTask = SolidApi({
 
 const createTask = SolidApi({
     method: "POST",
+    path: "/tasks",
 })
     .input(
         z.object({
@@ -133,7 +135,8 @@ const createTask = SolidApi({
     });
 
 const updateTask = SolidApi({
-    method: "POST",
+    method: "PUT",
+    path: "/tasks/{id}",
 })
     .input(
         z.object({
@@ -175,7 +178,8 @@ const updateTask = SolidApi({
     });
 
 const deleteTask = SolidApi({
-    method: "POST",
+    method: "DELETE",
+    path: "/tasks/{id}",
 })
     .input(
         z.object({
