@@ -1,22 +1,20 @@
-import Solid from "./solid";
-import { solidClientReMapper } from "./solid-remappers";
+import { createSolidClient } from "./solid-proxy";
+import type { SolidClientType } from "./solid-types";
 
-const SolidClient = await solidClientReMapper(Solid);
+// Declare global type for TypeScript
+declare global {
+    var $solidClient: SolidClientType | undefined;
+}
 
 /**
- * Client side
- * Generate fetcher functions for each route
- * Fetch API endpoints, through SolidHandler
+ * Solid Client
  *
- * SolidServer = {
- *     user: {
- *         list: fetcher(input: Input) => Promise<Output>,
- *         get: fetcher(input: Input) => Promise<Output>,
- *     },
- *     task: {
- *         list: fetcher(input: Input) => Promise<Output>,
- *         get: fetcher(input: Input) => Promise<Output>,
- *     },
- * }
+ * On server (SSR): Uses globalThis.$solidClient (direct service calls)
+ * On browser: Creates a Proxy-based client (fetch requests)
+ *
+ * The type is inferred from SolidRouterType via "import type"
+ * No runtime import of server-only code!
  */
+export const SolidClient: SolidClientType = globalThis.$solidClient ?? createSolidClient();
+
 export default SolidClient;

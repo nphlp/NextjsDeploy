@@ -1,6 +1,6 @@
-import { SolidClientType, SolidServerType, SolidType } from "./solid";
+import { SolidRouterType, SolidServerType } from "./solid-types";
 
-const solidServerReMapper = (solidBuilder: SolidType): SolidServerType => {
+export const solidServerReMapper = (solidBuilder: SolidRouterType): SolidServerType => {
     const groupKeyValueArray = Object.entries(solidBuilder);
 
     const groupKeyValueArrayUpdated = groupKeyValueArray.map((groupKeyValue) => {
@@ -11,7 +11,8 @@ const solidServerReMapper = (solidBuilder: SolidType): SolidServerType => {
         const methodKeyValueArrayUpdated = methodKeyValueArray.map((methodKeyValue) => {
             const [methodKey, solidBuilderInstance] = methodKeyValue;
 
-            const executeService = solidBuilderInstance.executeService;
+            // Bind executeService to preserve 'this' context
+            const executeService = solidBuilderInstance.executeService.bind(solidBuilderInstance);
 
             return [methodKey, executeService];
         });
@@ -26,34 +27,35 @@ const solidServerReMapper = (solidBuilder: SolidType): SolidServerType => {
     return groupObjectUpdated;
 };
 
-const solidClientReMapper = async (solidBuilder: SolidType): Promise<SolidClientType> => {
-    const groupKeyValueArray = Object.entries(solidBuilder);
+// const solidClientReMapper = async (solidBuilder: SolidRouterType): Promise<SolidClientType> => {
+//     const groupKeyValueArray = Object.entries(solidBuilder);
 
-    const groupKeyValueArrayUpdatedPromises = groupKeyValueArray.map(async (groupKeyValue) => {
-        const [groupKey, groupValue] = groupKeyValue;
+//     const groupKeyValueArrayUpdatedPromises = groupKeyValueArray.map(async (groupKeyValue) => {
+//         const [groupKey, groupValue] = groupKeyValue;
 
-        const methodKeyValueArray = Object.entries(groupValue);
+//         const methodKeyValueArray = Object.entries(groupValue);
 
-        const methodKeyValueArrayUpdatedPromises = methodKeyValueArray.map(async (methodKeyValue) => {
-            const [methodKey, solidBuilderInstance] = methodKeyValue;
+//         const methodKeyValueArrayUpdatedPromises = methodKeyValueArray.map(async (methodKeyValue) => {
+//             const [methodKey, solidBuilderInstance] = methodKeyValue;
 
-            const fetcher = await solidBuilderInstance.generateFetcher();
+//             // Generate fetcher with proper binding
+//             const fetcher = await solidBuilderInstance.generateFetcher();
 
-            return [methodKey, fetcher];
-        });
+//             return [methodKey, fetcher];
+//         });
 
-        const methodKeyValueArrayUpdated = await Promise.all(methodKeyValueArrayUpdatedPromises);
+//         const methodKeyValueArrayUpdated = await Promise.all(methodKeyValueArrayUpdatedPromises);
 
-        const methodObjectUpdated = Object.fromEntries(methodKeyValueArrayUpdated);
+//         const methodObjectUpdated = Object.fromEntries(methodKeyValueArrayUpdated);
 
-        return [groupKey, methodObjectUpdated];
-    });
+//         return [groupKey, methodObjectUpdated];
+//     });
 
-    const groupKeyValueArrayUpdated = await Promise.all(groupKeyValueArrayUpdatedPromises);
+//     const groupKeyValueArrayUpdated = await Promise.all(groupKeyValueArrayUpdatedPromises);
 
-    const groupObjectUpdated = Object.fromEntries(groupKeyValueArrayUpdated);
+//     const groupObjectUpdated = Object.fromEntries(groupKeyValueArrayUpdated);
 
-    return groupObjectUpdated;
-};
+//     return groupObjectUpdated;
+// };
 
-export { solidServerReMapper, solidClientReMapper };
+// export { solidServerReMapper, solidClientReMapper };

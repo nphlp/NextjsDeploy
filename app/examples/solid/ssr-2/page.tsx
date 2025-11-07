@@ -1,6 +1,7 @@
 import { getSession } from "@lib/authServer";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
+// import SolidClient from "../lib/solid-client";
 import SolidServer from "../lib/solid-server";
 import Tasks from "./tasks";
 

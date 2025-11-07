@@ -1,11 +1,11 @@
 "use client";
 
-import { client } from "@app/examples/orpc/lib/orpc-client";
 import { Card, CardContent, CardHeader } from "@comps/SHADCN/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@comps/SHADCN/ui/select";
 import { Task, User } from "@prisma/client";
 import { useState } from "react";
-import { useFetch } from "../use-fetch";
+import { client } from "../lib/orpc-client";
+import { useFetch } from "./use-fetch";
 
 type TasksProps = {
     tasks: Task[];

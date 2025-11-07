@@ -1,10 +1,11 @@
 import { NextRequest } from "next/server";
-import Solid, { SolidGroup, SolidType } from "./solid";
+import SolidRouter from "./solid";
+import { SolidGroup, SolidRouterType } from "./solid-types";
 
-const findFunctionInRouter = (router: SolidType, segments: string[]) => {
+const findFunctionInRouter = (router: SolidRouterType, segments: string[]) => {
     try {
         const group = segments[0] as SolidGroup;
-        const method = segments[1] as keyof SolidType[SolidGroup];
+        const method = segments[1] as keyof SolidRouterType[SolidGroup];
         return router[group][method];
     } catch {
         return undefined;
@@ -19,7 +20,7 @@ const findCorrespondingRoute = async (request: NextRequest, props: ParamsProps) 
     const { segments } = await props.params;
 
     // Find the function in the router based on segments
-    const routeFunction = findFunctionInRouter(Solid, segments);
+    const routeFunction = findFunctionInRouter(SolidRouter, segments);
 
     // Not found
     if (!routeFunction) return Response.json({ error: "Route not found" }, { status: 404 });

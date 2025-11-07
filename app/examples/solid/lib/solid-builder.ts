@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import "server-only";
 import { ZodType } from "zod";
-import { createApiURL, encodeParams, extractParamsOrBody } from "./utils";
+import { extractParamsOrBody } from "./utils";
 
 export type ApiResponse<Data> =
     | {
@@ -68,57 +68,57 @@ class SolidBuilder<Input, Output> {
         return new SolidBuilder({ ...this.props, handlerFn });
     }
 
-    async generateFetcher(): Promise<(props: Input, signal?: AbortSignal) => Promise<Output>> {
-        const { apiPrefix: prefix } = await import("./solid");
+    // async generateFetcher(): Promise<(props: Input, signal?: AbortSignal) => Promise<Output>> {
+    //     const { apiPrefix: prefix } = await import("./solid");
 
-        const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-        if (!NEXT_PUBLIC_BASE_URL) throw new Error("NEXT_PUBLIC_BASE_URL environment variable is not defined");
+    //     const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+    //     if (!NEXT_PUBLIC_BASE_URL) throw new Error("NEXT_PUBLIC_BASE_URL environment variable is not defined");
 
-        const isClient = typeof window !== "undefined";
+    //     const isClient = typeof window !== "undefined";
 
-        const fetcher = async (props?: Input, signal?: AbortSignal): Promise<Output> => {
-            try {
-                if (!this.props?.path) throw new Error("Missing `path()`");
-                if (!this.props?.method) throw new Error("Missing `method()`");
+    //     const fetcher = async (props?: Input, signal?: AbortSignal): Promise<Output> => {
+    //         try {
+    //             if (!this.props?.path) throw new Error("Missing `path()`");
+    //             if (!this.props?.method) throw new Error("Missing `method()`");
 
-                // Route params
-                const baseUrl = isClient ? "" : NEXT_PUBLIC_BASE_URL;
-                const route = this.props.path;
-                const method = this.props.method;
-                const searchParams =
-                    props !== undefined && method === "GET"
-                        ? encodeParams(props as Record<string, unknown>)
-                        : undefined;
+    //             // Route params
+    //             const baseUrl = isClient ? "" : NEXT_PUBLIC_BASE_URL;
+    //             const route = this.props.path;
+    //             const method = this.props.method;
+    //             const searchParams =
+    //                 props !== undefined && method === "GET"
+    //                     ? encodeParams(props as Record<string, unknown>)
+    //                     : undefined;
 
-                // Fetch params
-                const url = createApiURL({ baseUrl, prefix, route, searchParams });
-                const headers = {
-                    "Content-Type": "application/json",
-                };
-                const body = props !== undefined && method === "POST" ? JSON.stringify(props) : undefined;
+    //             // Fetch params
+    //             const url = createApiURL({ baseUrl, prefix, route, searchParams });
+    //             const headers = {
+    //                 "Content-Type": "application/json",
+    //             };
+    //             const body = props !== undefined && method === "POST" ? JSON.stringify(props) : undefined;
 
-                // Execute fetch
-                const response = await fetch(url, {
-                    method,
-                    headers,
-                    body,
-                    signal,
-                });
+    //             // Execute fetch
+    //             const response = await fetch(url, {
+    //                 method,
+    //                 headers,
+    //                 body,
+    //                 signal,
+    //             });
 
-                const { data, error }: ApiResponse<Output> = await response.json();
+    //             const { data, error }: ApiResponse<Output> = await response.json();
 
-                if (error || data === undefined) {
-                    throw new Error(error ?? "Something went wrong...");
-                }
+    //             if (error || data === undefined) {
+    //                 throw new Error(error ?? "Something went wrong...");
+    //             }
 
-                return data;
-            } catch (error) {
-                throw error;
-            }
-        };
+    //             return data;
+    //         } catch (error) {
+    //             throw error;
+    //         }
+    //     };
 
-        return fetcher;
-    }
+    //     return fetcher;
+    // }
 
     async executeService(props?: Input): Promise<Output> {
         try {
@@ -130,7 +130,7 @@ class SolidBuilder<Input, Output> {
             const input = this.props.inputSchema.parse(props);
 
             // Execute permissions if defined
-            const hasPermission = await this.props?.permissionsFn?.(input);
+            const hasPermission = (await this.props?.permissionsFn?.(input)) ?? true;
             if (!hasPermission) throw new Error("Unauthorized");
 
             // Execute handler

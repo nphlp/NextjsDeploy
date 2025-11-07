@@ -1,22 +1,19 @@
-import Solid from "./solid";
+import "server-only";
+import SolidRouter from "./solid";
 import { solidServerReMapper } from "./solid-remappers";
-
-const SolidServer = solidServerReMapper(Solid);
+import { SolidClientType, SolidServerType } from "./solid-types";
 
 /**
- * Server side
- * Execute service functions directly
- * Bypassing fetch requests
+ * Server-side client
+ * Executes services directly without HTTP requests
  *
- * SolidServer = {
- *     user: {
- *         list: executeService(input: Input) => Promise<Output>,
- *         get: executeService(input: Input) => Promise<Output>,
- *     },
- *     task: {
- *         list: executeService(input: Input) => Promise<Output>,
- *         get: executeService(input: Input) => Promise<Output>,
- *     },
- * }
+ * Loaded via instrumentation.ts at startup
+ * Populates globalThis.$solidClient for SSR usage
  */
+const SolidServer: SolidServerType = solidServerReMapper(SolidRouter);
+
+// Populate global for SSR
+// This allows solid-client.ts to use the direct service calls during SSR
+globalThis.$solidClient = SolidServer as unknown as SolidClientType;
+
 export default SolidServer;

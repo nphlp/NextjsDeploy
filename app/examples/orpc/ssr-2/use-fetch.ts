@@ -12,7 +12,7 @@ type UseFetchProps<T> = {
     fetchOnFirstRender?: boolean;
 };
 
-type useFetchResponse<T> = {
+type UseFetchResponse<T> = {
     data: T;
     isLoading: boolean;
     error: string | undefined;
@@ -20,7 +20,7 @@ type useFetchResponse<T> = {
     setDataBypass: (value: T) => void;
 };
 
-export const useFetch = <T>(props: UseFetchProps<T>): useFetchResponse<T> => {
+export const useFetch = <T>(props: UseFetchProps<T>): UseFetchResponse<T> => {
     const { fetcher, keys, initialData, debounce = 0, fetchOnFirstRender = false } = props;
 
     // Prevent fetch on first render

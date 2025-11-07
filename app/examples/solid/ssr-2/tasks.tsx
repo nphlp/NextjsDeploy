@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader } from "@comps/SHADCN/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@comps/SHADCN/ui/select";
 import { Task, User } from "@prisma/client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SolidClient from "../lib/solid-client";
 
 type TasksProps = {
@@ -15,6 +15,8 @@ export default function Tasks(props: TasksProps) {
     const { tasks, users } = props;
 
     const [selectedUser, setSelectedUser] = useState(users[0]?.id);
+
+    const firstRender = useRef(true);
 
     const [data, setData] = useState<Task[]>(tasks);
     const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +30,13 @@ export default function Tasks(props: TasksProps) {
             setData(newTasks);
             setIsLoading(false);
         };
-        if (false) fetchTasks();
+
+        if (firstRender.current) {
+            firstRender.current = false;
+            return;
+        }
+
+        fetchTasks();
     }, [selectedUser]);
 
     const userName = users.find((u) => u.id === selectedUser)?.name;
