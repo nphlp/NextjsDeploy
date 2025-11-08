@@ -2,10 +2,10 @@
 
 import { Card, CardContent, CardHeader } from "@comps/SHADCN/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@comps/SHADCN/ui/select";
+import oRPC from "@lib/orpc";
+import { useFetch } from "@lib/orpc-hook";
 import { Task, User } from "@prisma/client";
 import { useState } from "react";
-import { client } from "../lib/orpc-client";
-import { useFetch } from "./use-fetch";
 
 type TasksProps = {
     tasks: Task[];
@@ -17,14 +17,12 @@ export default function Tasks(props: TasksProps) {
 
     const [selectedUser, setSelectedUser] = useState(users[0]?.id);
 
-    const { data, isLoading } = useFetch({
-        fetcher: ({ signal }) =>
-            client.task.list(
-                {
-                    userId: selectedUser,
-                },
-                { signal },
-            ),
+    const { data } = useFetch({
+        client: oRPC.task.list,
+        args: {
+            userId: selectedUser,
+            take: 3,
+        },
         keys: [selectedUser],
         initialData: tasks,
     });
@@ -33,32 +31,26 @@ export default function Tasks(props: TasksProps) {
 
     return (
         <div className="w-[500px] space-y-4">
-            <Select onValueChange={setSelectedUser} value={selectedUser}>
-                <SelectTrigger>{userName ?? "Select User"}</SelectTrigger>
-                <SelectContent>
-                    {users.map((user) => (
-                        <SelectItem key={user.id} value={user.id}>
-                            {user.name}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
             <Card>
-                <CardHeader>
-                    <h2 className="text-lg font-medium">Tasks</h2>
+                <CardHeader className="flex items-end justify-between">
+                    <h2 className="text-xl font-medium">Tasks</h2>
+                    <Select onValueChange={setSelectedUser} value={selectedUser}>
+                        <SelectTrigger>{userName ?? "Select User"}</SelectTrigger>
+                        <SelectContent>
+                            {users.map((user) => (
+                                <SelectItem key={user.id} value={user.id}>
+                                    {user.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                 </CardHeader>
                 <CardContent>
-                    {isLoading ? (
-                        <ul>
-                            <li className="h-[200px]">Loading...</li>
-                        </ul>
-                    ) : (
-                        <ul>
-                            {data.map((task) => (
-                                <li key={task.id}>{task.title}</li>
-                            ))}
-                        </ul>
-                    )}
+                    <ul>
+                        {data.map((task) => (
+                            <li key={task.id}>{task.title}</li>
+                        ))}
+                    </ul>
                 </CardContent>
             </Card>
         </div>

@@ -1,4 +1,3 @@
-import "@app/examples/orpc/lib/orpc-server";
 import Footer from "@comps/CORE/Footer";
 import Header from "@comps/CORE/Header";
 import Html from "@comps/CORE/Html";
@@ -6,6 +5,7 @@ import Main from "@comps/CORE/Main";
 import Theme from "@comps/CORE/Theme";
 import { cn } from "@comps/SHADCN/lib/utils";
 import Breakpoints from "@comps/UI/breakpoints";
+import "@lib/orpc-server";
 import { Toaster } from "@shadcn/ui/sonner";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";

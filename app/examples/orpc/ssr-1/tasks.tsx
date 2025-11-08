@@ -1,8 +1,8 @@
 "use client";
 
-import { client } from "@app/examples/orpc/lib/orpc-client";
 import { Card, CardContent, CardHeader } from "@comps/SHADCN/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@comps/SHADCN/ui/select";
+import oRPC from "@lib/orpc";
 import { Task, User } from "@prisma/client";
 import { useState } from "react";
 
@@ -20,8 +20,9 @@ export default function Tasks(props: TasksProps) {
     const handleUserChange = async (userId: string) => {
         setSelectedUser(userId);
 
-        const newTasks = await client.task.list({
+        const newTasks = await oRPC.task.list({
             userId: userId,
+            take: 3,
         });
 
         setDisplayedTasks(newTasks);

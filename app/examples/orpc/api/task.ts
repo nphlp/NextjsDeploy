@@ -6,7 +6,7 @@ import { cacheLife, cacheTag, revalidateTag } from "next/cache";
 import { notFound, unauthorized } from "next/navigation";
 import "server-only";
 import { ZodType, z } from "zod";
-import { formatStringArrayLineByLine } from "../lib/orpc-utils";
+import { formatStringArrayLineByLine } from "./utils";
 
 const taskOutputSchema: ZodType<Task> = z.object({
     id: z.string().describe("Unique ID of the task (nanoid)"),

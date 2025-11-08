@@ -1,6 +1,6 @@
 import "server-only";
-import { taskRoutes } from "../api/task";
-import { userRoutes } from "../api/user";
+import { taskRoutes } from "./task";
+import { userRoutes } from "./user";
 
 export const appRouter = {
     task: taskRoutes,

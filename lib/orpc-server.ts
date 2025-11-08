@@ -1,7 +1,7 @@
 import { createRouterClient } from "@orpc/server";
 import { headers } from "next/headers";
 import "server-only";
-import { appRouter } from "./orpc-router";
+import { appRouter } from "../app/examples/orpc/api/router";
 
 globalThis.$client = createRouterClient(appRouter, {
     context: async () => ({

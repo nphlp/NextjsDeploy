@@ -1,5 +1,5 @@
-import { client } from "@app/examples/orpc/lib/orpc-client";
 import { getSession } from "@lib/authServer";
+import oRPC from "@lib/orpc";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import Tasks from "./tasks";
@@ -19,11 +19,12 @@ const SuspendedPage = async () => {
     const isAdmin = session.user.role === "ADMIN";
     if (!isAdmin) throw new Error("Loggin as admin to access this page.");
 
-    const tasks = await client.task.list({
+    const tasks = await oRPC.task.list({
         userId: session.user.id,
+        take: 3,
     });
 
-    const users = await client.user.list();
+    const users = await oRPC.user.list();
 
     return (
         <div>
