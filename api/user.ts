@@ -1,4 +1,4 @@
-import { getSession } from "@lib/authServer";
+import { getSession } from "@lib/auth-server";
 import PrismaInstance from "@lib/prisma";
 import { os } from "@orpc/server";
 import { $Enums, Prisma, User } from "@prisma/client";

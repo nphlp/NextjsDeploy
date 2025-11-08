@@ -1,6 +1,6 @@
 "use client";
 
-import { Session } from "@lib/authServer";
+import { Session } from "@lib/auth-server";
 import {
     AlertDialog,
     AlertDialogAction,

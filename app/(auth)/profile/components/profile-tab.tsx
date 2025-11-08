@@ -1,6 +1,6 @@
 "use client";
 
-import { SessionClient, sendVerificationEmail, useSession } from "@lib/authClient";
+import { SessionClient, sendVerificationEmail, useSession } from "@lib/auth-client";
 import { Button } from "@shadcn/ui/button";
 import { CircleCheck, CircleX, Mail } from "lucide-react";
 import { useState } from "react";

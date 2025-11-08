@@ -1,8 +1,8 @@
 "use client";
 
 import { useSearchQueryParams, useUpdatedAtQueryParams } from "@comps/SHARED/filters/queryParamsClientHooks";
-import { useSession } from "@lib/authClient";
-import { Session } from "@lib/authServer";
+import { useSession } from "@lib/auth-client";
+import { Session } from "@lib/auth-server";
 import { ReactNode, useOptimistic } from "react";
 import useSolid from "@/solid/solid-hook";
 import { Context, ContextType } from "./context";

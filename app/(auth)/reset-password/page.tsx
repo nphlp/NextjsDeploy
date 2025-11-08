@@ -1,4 +1,4 @@
-import { getSession } from "@lib/authServer";
+import { getSession } from "@lib/auth-server";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shadcn/ui/card";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";

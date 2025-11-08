@@ -1,8 +1,8 @@
 "use client";
 
 import { LocationResponse } from "@app/api/location/route";
-import { revokeOtherSessions, revokeSession } from "@lib/authClient";
-import { SessionList } from "@lib/authServer";
+import { revokeOtherSessions, revokeSession } from "@lib/auth-client";
+import { SessionList } from "@lib/auth-server";
 import {
     AlertDialog,
     AlertDialogAction,

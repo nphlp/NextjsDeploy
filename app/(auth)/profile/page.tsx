@@ -1,4 +1,4 @@
-import { getSession } from "@lib/authServer";
+import { getSession } from "@lib/auth-server";
 import { Card, CardContent } from "@shadcn/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@shadcn/ui/tabs";
 import { unauthorized } from "next/navigation";

@@ -1,4 +1,4 @@
-import { Session, SessionList, getSessionList } from "@lib/authServer";
+import { Session, SessionList, getSessionList } from "@lib/auth-server";
 import Solid from "@/solid/solid-fetch";
 import LocationMap from "./locationMap";
 import SessionManager, { SessionAndLocation } from "./sessionManager";

@@ -1,6 +1,6 @@
 "use server";
 
-import { Session, getSession } from "@lib/authServer";
+import { Session, getSession } from "@lib/auth-server";
 import PrismaInstance from "@lib/prisma";
 import { unauthorized } from "next/navigation";
 import { ZodType, z } from "zod";

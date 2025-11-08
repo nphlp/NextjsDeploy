@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { forgetPassword } from "@lib/authClient";
+import { forgetPassword } from "@lib/auth-client";
 import { Button } from "@shadcn/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shadcn/ui/form";
 import { Input } from "@shadcn/ui/input";

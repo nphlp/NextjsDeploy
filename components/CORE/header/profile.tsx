@@ -6,8 +6,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@comps/SHADCN/ui/dropdown-menu";
-import { signOut, useSession } from "@lib/authClient";
-import { Session } from "@lib/authServer";
+import { signOut, useSession } from "@lib/auth-client";
+import { Session } from "@lib/auth-server";
 import { Loader, LogOut, UserPlus, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

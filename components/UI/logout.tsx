@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@comps/SHADCN/ui/button";
-import { signOut } from "@lib/authClient";
+import { signOut } from "@lib/auth-client";
 import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
 

@@ -1,4 +1,4 @@
-import { getSession } from "@lib/authServer";
+import { getSession } from "@lib/auth-server";
 import oRPC from "@lib/orpc";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";

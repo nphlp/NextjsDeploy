@@ -1,7 +1,7 @@
 "use server";
 
 import { taskIdPageParams } from "@app/task/[id]/components/fetch";
-import { getSession } from "@lib/authServer";
+import { getSession } from "@lib/auth-server";
 import PrismaInstance from "@lib/prisma";
 import { $Enums } from "@prisma/client";
 import { TaskModel } from "@services/types";

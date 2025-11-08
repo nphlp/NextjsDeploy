@@ -2,7 +2,7 @@
 
 import PasswordInput from "@comps/SHADCN/components/password-input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "@lib/authClient";
+import { signIn } from "@lib/auth-client";
 import { Button } from "@shadcn/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shadcn/ui/form";
 import { Input } from "@shadcn/ui/input";

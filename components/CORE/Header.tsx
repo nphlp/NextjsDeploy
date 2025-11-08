@@ -1,4 +1,4 @@
-import { getSession } from "@lib/authServer";
+import { getSession } from "@lib/auth-server";
 import { cn } from "@shadcn/lib/utils";
 import { Suspense } from "react";
 import Navigation from "./header/navigation";

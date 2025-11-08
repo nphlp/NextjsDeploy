@@ -1,7 +1,7 @@
 import SearchFilter, { SearchFilterSkeleton } from "@comps/SHARED/filters/search-filter";
 import UpdatedAtFilter, { UpdatedAtFilterSkeleton } from "@comps/SHARED/filters/updated-at-filter";
 import InputAddTask, { InputAddTaskSkeleton } from "@comps/SHARED/optimistics/input-add-task";
-import { getSession } from "@lib/authServer";
+import { getSession } from "@lib/auth-server";
 import { TaskFindManyServer } from "@services/server";
 import { redirect } from "next/navigation";
 import { SearchParams } from "nuqs/server";

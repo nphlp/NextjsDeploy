@@ -1,4 +1,4 @@
-import { Session } from "@lib/authServer";
+import { Session } from "@lib/auth-server";
 import { TaskFindUniqueProps, TaskFindUniqueResponse } from "@services/types";
 
 export const taskIdPageParams = (id: string, session: NonNullable<Session>) =>

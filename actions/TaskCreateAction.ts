@@ -1,6 +1,6 @@
 "use server";
 
-import { getSession } from "@lib/authServer";
+import { getSession } from "@lib/auth-server";
 import PrismaInstance from "@lib/prisma";
 import { TaskModel } from "@services/types";
 import { revalidateTag } from "next/cache";

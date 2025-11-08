@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@comps/SHADCN/lib/utils";
-import { useSession } from "@lib/authClient";
-import { Session } from "@lib/authServer";
+import { useSession } from "@lib/auth-client";
+import { Session } from "@lib/auth-server";
 import { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

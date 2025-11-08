@@ -3,8 +3,8 @@
 import { UserUpdateAction } from "@actions/UserUpdateAction";
 import PasswordInput from "@comps/SHADCN/components/password-input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { changePassword, updateUser, useSession } from "@lib/authClient";
-import { Session } from "@lib/authServer";
+import { changePassword, updateUser, useSession } from "@lib/auth-client";
+import { Session } from "@lib/auth-server";
 import { Button } from "@shadcn/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@shadcn/ui/form";
 import { Input } from "@shadcn/ui/input";

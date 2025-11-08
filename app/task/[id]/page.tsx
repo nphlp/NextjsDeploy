@@ -1,5 +1,5 @@
 import Link from "@comps/SHADCN/components/link";
-import { getSession } from "@lib/authServer";
+import { getSession } from "@lib/auth-server";
 import { TaskFindUniqueServer } from "@services/server";
 import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
