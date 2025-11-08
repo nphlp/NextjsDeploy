@@ -1,17 +1,9 @@
-import {
-    UserCountAction,
-    UserCreateAction,
-    UserDeleteAction,
-    UserFindFirstAction,
-    UserFindManyAction,
-    UserFindUniqueAction,
-    UserUpdateAction,
-} from "@services/actions/UserAction";
+import PrismaInstance from "@lib/prisma";
 import { describe, expect, it } from "vitest";
 
 describe("Actions mutations tests", () => {
     it("User Create Action", async () => {
-        const user = await UserCreateAction({
+        const user = await PrismaInstance.user.create({
             data: {
                 id: "test-id",
                 email: "test@example.com",
@@ -69,7 +61,7 @@ describe("Actions mutations tests", () => {
     });
 
     it("User Update Action", async () => {
-        const user = await UserUpdateAction({
+        const user = await PrismaInstance.user.update({
             where: { id: "test-id" },
             data: {
                 email: "test@example.com-2",
@@ -129,11 +121,11 @@ describe("Actions mutations tests", () => {
     });
 
     it("User Delete Action", async () => {
-        const deletedUser = await UserDeleteAction({
+        const deletedUser = await PrismaInstance.user.delete({
             where: { id: "test-id" },
         });
 
-        const existingUser = await UserFindUniqueAction({
+        const existingUser = await PrismaInstance.user.findUnique({
             where: { id: "test-id" },
         });
 
@@ -147,7 +139,7 @@ describe("Actions mutations tests", () => {
 
 describe("Actions fetch tests", () => {
     it("User FindFirst Action", async () => {
-        const user = await UserFindFirstAction({
+        const user = await PrismaInstance.user.findFirst({
             select: {
                 id: true,
                 email: true,
@@ -181,14 +173,14 @@ describe("Actions fetch tests", () => {
     });
 
     it("User FindUnique Action", async () => {
-        const firstUser = await UserFindFirstAction({
+        const firstUser = await PrismaInstance.user.findFirst({
             select: { id: true },
         });
 
         if (!firstUser?.id) throw new Error("First user not found");
 
         // Tested function
-        const user = await UserFindUniqueAction({
+        const user = await PrismaInstance.user.findUnique({
             select: {
                 id: true,
                 email: true,
@@ -224,7 +216,7 @@ describe("Actions fetch tests", () => {
 
     it("User FindMany Action", async () => {
         // Tested function
-        const users = await UserFindManyAction({
+        const users = await PrismaInstance.user.findMany({
             select: {
                 id: true,
                 email: true,
@@ -261,7 +253,7 @@ describe("Actions fetch tests", () => {
 
     it("User Count Action", async () => {
         // Tested function
-        const userCount = await UserCountAction({});
+        const userCount = await PrismaInstance.user.count();
 
         // Check userCount
         expect(userCount).toBeDefined();

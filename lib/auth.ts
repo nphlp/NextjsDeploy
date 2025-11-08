@@ -1,7 +1,6 @@
 import SendEmailAction from "@actions/SendEmailAction";
 import EmailTemplate from "@comps/UI/email";
 import PrismaInstance from "@lib/prisma";
-import { UserFindUniqueAction } from "@services/actions/UserAction";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
@@ -58,7 +57,7 @@ export const auth = betterAuth({
     plugins: [
         // Extends session with role and lastname
         customSession(async ({ session, user }) => {
-            const userData = await UserFindUniqueAction({ where: { id: user.id } });
+            const userData = await PrismaInstance.user.findUnique({ where: { id: user.id } });
 
             if (!userData) {
                 throw new Error("User not found");

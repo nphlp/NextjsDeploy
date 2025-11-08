@@ -42,32 +42,32 @@ export const pathsToRemove: string[] = [
 export const templates: FileTemplate[] = [
     // Actions
     {
-        input: `templates/services/actions/{{model}}Action.hbs`,
+        input: `solid/templates/services/actions/{{model}}Action.hbs`,
         output: `services/actions/{{modelName}}Action.ts`,
     },
     // API
     {
-        input: `templates/services/api/{{model}}Api.hbs`,
+        input: `solid/templates/services/api/{{model}}Api.hbs`,
         output: `services/api/{{modelName}}Api.ts`,
     },
     // Cached
     {
-        input: `templates/services/cached/{{model}}Cached.hbs`,
+        input: `solid/templates/services/cached/{{model}}Cached.hbs`,
         output: `services/cached/{{modelName}}Cached.ts`,
     },
     // Classes
     {
-        input: `templates/services/class/{{model}}Class.hbs`,
+        input: `solid/templates/services/class/{{model}}Class.hbs`,
         output: `services/class/{{modelName}}Class.ts`,
     },
     // Server
     {
-        input: `templates/services/server/{{model}}Server.hbs`,
+        input: `solid/templates/services/server/{{model}}Server.hbs`,
         output: `services/server/{{modelName}}Server.ts`,
     },
     // Types
     {
-        input: `templates/services/types/{{model}}Type.hbs`,
+        input: `solid/templates/services/types/{{model}}Type.hbs`,
         output: `services/types/{{modelName}}Type.ts`,
     },
 ];
@@ -83,37 +83,37 @@ export const templates: FileTemplate[] = [
 export const indexTemplates: FileTemplate[] = [
     // Fichiers index pour les services
     {
-        input: "templates/services/actions/index.hbs",
+        input: "solid/templates/services/actions/index.hbs",
         output: "services/actions/index.ts",
     },
     {
-        input: "templates/services/api/index.hbs",
+        input: "solid/templates/services/api/index.hbs",
         output: "services/api/index.ts",
     },
     {
-        input: "templates/services/cached/index.hbs",
+        input: "solid/templates/services/cached/index.hbs",
         output: "services/cached/index.ts",
     },
     {
-        input: "templates/services/class/index.hbs",
+        input: "solid/templates/services/class/index.hbs",
         output: "services/class/index.ts",
     },
     {
-        input: "templates/services/server/index.hbs",
+        input: "solid/templates/services/server/index.hbs",
         output: "services/server/index.ts",
     },
     {
-        input: "templates/services/types/index.hbs",
+        input: "solid/templates/services/types/index.hbs",
         output: "services/types/index.ts",
     },
     // Routes
     {
-        input: "templates/app/api/solid/Routes.hbs",
+        input: "solid/templates/app/api/solid/Routes.hbs",
         output: "app/api/solid/Routes.ts",
     },
     // Handler Next.js pour les routes API
     {
-        input: "templates/app/api/solid/[...segments]/route.hbs",
+        input: "solid/templates/app/api/solid/[...segments]/route.hbs",
         output: "app/api/solid/[...segments]/route.ts",
     },
 ];

@@ -30,9 +30,9 @@
         "fixtures:setup": "tsx scripts/fixtures.ts setup",
         "fixtures:reset": "tsx scripts/fixtures.ts reset",
         "fixtures:reload": "tsx scripts/fixtures.ts reload",
-        "generate:list": "tsx scripts/generator.ts list",
-        "generate:clear": "tsx scripts/generator.ts clear",
-        "generate:all": "tsx scripts/generator.ts all"
+        "generate:list": "tsx solid/solid-generator.ts list",
+        "generate:clear": "tsx solid/solid-generator.ts clear",
+        "generate:all": "tsx solid/solid-generator.ts all"
     },
     "dependencies": {
         "@prisma/client": "6.16.2",

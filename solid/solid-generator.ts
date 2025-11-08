@@ -15,7 +15,7 @@
  * - fileGenerator.ts: traite les templates et génère le contenu
  * - commands.ts: implémente les commandes CLI disponibles
  */
-import { clearModels, generateModels, listModels } from "./generator/commands";
+import { clearModels, generateModels, listModels } from "./scripts/commands";
 
 /**
  * Point d'entrée principal du générateur
