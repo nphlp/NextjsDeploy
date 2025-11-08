@@ -2,11 +2,10 @@ import SearchFilter, { SearchFilterSkeleton } from "@comps/SHARED/filters/search
 import UpdatedAtFilter, { UpdatedAtFilterSkeleton } from "@comps/SHARED/filters/updated-at-filter";
 import InputAddTask, { InputAddTaskSkeleton } from "@comps/SHARED/optimistics/input-add-task";
 import { getSession } from "@lib/auth-server";
-import { TaskFindManyServer } from "@services/server";
+import oRPC from "@lib/orpc";
 import { redirect } from "next/navigation";
 import { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
-import { taskPageParams } from "./components/fetch";
 import List, { ListSkeleton } from "./components/list";
 import Provider from "./components/provider";
 import { taskQueryParamsCached } from "./components/queryParams";
@@ -17,7 +16,7 @@ type PageProps = {
 
 export default async function Page(props: PageProps) {
     return (
-        <div className="w-full max-w-[900px] space-y-4 px-4 py-4 sm:px-12">
+        <div className="w-full max-w-[900px] flex-1 space-y-4 px-4 py-4 sm:px-12">
             <h1 className="text-2xl font-bold">Ma liste de tâches 📝</h1>
             <section className="space-y-8">
                 <Suspense fallback={<TodoSkeleton />}>
@@ -38,7 +37,9 @@ const Todo = async (props: PageProps) => {
     const session = await getSession();
     if (!session) redirect("/login");
 
-    const taskList = await TaskFindManyServer(taskPageParams({ updatedAt, search, userId: session.user.id }));
+    // const taskList = await TaskFindManyServer(taskPageParams({ updatedAt, search, userId: session.user.id }));
+
+    const taskList = await oRPC.page.tasksPage({ updatedAt, search, userId: session.user.id });
 
     return (
         <Provider initialData={taskList} sessionServer={session}>

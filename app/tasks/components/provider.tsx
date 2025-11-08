@@ -3,10 +3,11 @@
 import { useSearchQueryParams, useUpdatedAtQueryParams } from "@comps/SHARED/filters/queryParamsClientHooks";
 import { useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
+import oRPC from "@lib/orpc";
+import { useFetch } from "@lib/orpc-hook";
 import { ReactNode, useOptimistic } from "react";
-import useSolid from "@/solid/solid-hook";
 import { Context, ContextType } from "./context";
-import { TaskType, taskPageParams } from "./fetch";
+import { TaskType } from "./fetch";
 import { optimisticMutations } from "./optimistic";
 
 type ContextProviderProps = {
@@ -27,9 +28,21 @@ export default function Provider(props: ContextProviderProps) {
     const { search } = useSearchQueryParams();
 
     // Reactive fetch
-    const { data, setDataBypass, isLoading, refetch } = useSolid({
-        route: "/solid/task/findMany",
-        params: taskPageParams({ updatedAt, search, userId: session.user.id }),
+    // const { data, setDataBypass, isLoading, refetch } = useSolid({
+    //     route: "/solid/task/findMany",
+    //     params: taskPageParams({ updatedAt, search, userId: session.user.id }),
+    //     initialData,
+    // });
+
+    const {
+        data,
+        setDataBypass,
+        isFetching: isLoading,
+        refetch,
+    } = useFetch({
+        client: oRPC.page.tasksPage,
+        args: { updatedAt, search, userId: session.user.id },
+        keys: [updatedAt, search, session.user.id],
         initialData,
     });
 

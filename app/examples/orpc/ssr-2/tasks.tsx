@@ -47,7 +47,7 @@ export default function Tasks(props: TasksProps) {
                 </CardHeader>
                 <CardContent>
                     <ul>
-                        {data.map((task) => (
+                        {data?.map((task) => (
                             <li key={task.id}>{task.title}</li>
                         ))}
                     </ul>

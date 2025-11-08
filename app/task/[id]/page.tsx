@@ -1,11 +1,10 @@
 import Link from "@comps/SHADCN/components/link";
 import { getSession } from "@lib/auth-server";
-import { TaskFindUniqueServer } from "@services/server";
+import oRPC from "@lib/orpc";
 import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import z, { ZodType } from "zod";
 import Edition, { EditionSkeleton } from "./components/edition";
-import { taskIdPageParams } from "./components/fetch";
 
 type Params = {
     id: string;
@@ -39,7 +38,9 @@ const Task = async (props: PageProps) => {
     const session = await getSession();
     if (!session) redirect("/login");
 
-    const task = await TaskFindUniqueServer(taskIdPageParams(id, session));
+    // const task = await TaskFindUniqueServer(taskIdPageParams(id, session));
+
+    const task = await oRPC.task.get({ id });
 
     if (!task) notFound();
 

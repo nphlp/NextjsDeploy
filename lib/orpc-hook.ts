@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 
 export type RefetchType = (offsetTime?: number) => void;
 
@@ -26,7 +26,7 @@ type UseFetchProps<T, TArgs = unknown> = {
      *
      * Data to use for server-side rendering
      */
-    initialData: T;
+    initialData?: T;
     /**
      * **Debounce time**
      *
@@ -47,7 +47,7 @@ type UseFetchResponse<T> = {
     /**
      * **Fetched data**
      */
-    data: T;
+    data: T | undefined;
     /**
      * **Loading state**
      */
@@ -67,7 +67,7 @@ type UseFetchResponse<T> = {
      *
      * Manually set the data without triggering a fetch
      */
-    setDataBypass: (value: T) => void;
+    setDataBypass: Dispatch<SetStateAction<T | undefined>>;
 };
 
 /**
@@ -109,7 +109,7 @@ export const useFetch = <T, TArgs = unknown>(props: UseFetchProps<T, TArgs>): Us
     const argsRef = useRef(args);
 
     // States
-    const [data, setData] = useState(initialData);
+    const [data, setData] = useState<T | undefined>(initialData);
     const [isFetching, setIsLoading] = useState(false);
     const [error, setError] = useState<string | undefined>();
 
@@ -172,7 +172,7 @@ export const useFetch = <T, TArgs = unknown>(props: UseFetchProps<T, TArgs>): Us
     };
 
     // Manual set data (bypass fetch)
-    const setDataBypass = (value: T) => {
+    const setDataBypass: Dispatch<SetStateAction<T | undefined>> = (value) => {
         return setData(value);
     };
 

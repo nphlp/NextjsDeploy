@@ -47,9 +47,13 @@ export const TaskDeleteAction = async (props: TaskDeleteActionProps): Promise<Ta
             where: { id, userId },
         });
 
-        // Reset specific cache tags
+        // Revalidate related cache tags
+        // -> `/tasks` page
         revalidateTag("task-findMany", cacheLifeApi);
+        revalidateTag(`getTasksPage-${userId}`, "hours");
+        // -> `/task/{id}` page
         revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id, session)), cacheLifeApi);
+        revalidateTag(`getTask-${deletedTask.id}`, "hours");
 
         return { data: deletedTask };
     } catch (error) {

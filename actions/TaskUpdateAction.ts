@@ -58,8 +58,12 @@ export const TaskUpdateAction = async (props: TaskUpdateActionProps): Promise<Ta
         });
 
         // Revalidate related cache tags
+        // -> `/tasks` page
         revalidateTag("task-findMany", cacheLifeApi);
+        revalidateTag(`getTasksPage-${userId}`, "hours");
+        // -> `/task/{id}` page
         revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id, session)), cacheLifeApi);
+        revalidateTag(`getTask-${updatedTask.id}`, "hours");
 
         return { data: updatedTask };
     } catch (error) {

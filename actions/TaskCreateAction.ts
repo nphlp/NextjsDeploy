@@ -43,7 +43,9 @@ export const TaskCreateAction = async (props: TaskCreateActionProps): Promise<Ta
         });
 
         // Revalidate related cache tags
+        // -> `/tasks` page
         revalidateTag("task-findMany", cacheLifeApi);
+        revalidateTag(`getTasksPage-${userId}`, "hours");
 
         return { data: createdTask };
     } catch (error) {
