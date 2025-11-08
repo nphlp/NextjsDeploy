@@ -1,11 +1,12 @@
 import { getSession } from "@lib/authServer";
 import PrismaInstance from "@lib/prisma";
+import { os } from "@orpc/server";
 import { $Enums, Prisma, Task } from "@prisma/client";
+import { formatStringArrayLineByLine } from "@utils/string-format";
 import { cacheLife, cacheTag, revalidateTag } from "next/cache";
 import { notFound, unauthorized } from "next/navigation";
 import "server-only";
 import { ZodType, z } from "zod";
-import { SolidApi } from "../lib/solid-builder";
 
 const taskOutputSchema: ZodType<Task> = z.object({
     id: z.string().describe("Unique ID of the task (nanoid)"),
@@ -23,10 +24,24 @@ const getTaskListFindMany = async (props: Prisma.TaskFindManyArgs, key: string[]
     return await PrismaInstance.task.findMany(props);
 };
 
-const getTaskList = SolidApi({
-    method: "GET",
-    path: "/tasks",
-})
+const getTaskList = os
+    .route({
+        method: "GET",
+        path: "/tasks",
+        summary: "Get tasks",
+        description: formatStringArrayLineByLine([
+            "**Pagination**",
+            "  - [ ] Take: Number of tasks to take (min: 1, max: 1000)",
+            "  - [ ] Skip: Number of tasks to skip (min: 0)",
+            "\n",
+            "**Permissions**",
+            "- **Admin**",
+            "  - [ ] Get every tasks",
+            "  - [ ] Get tasks of any user by filtering with user ID",
+            "- **User**",
+            "  - [ ] Get its own tasks only",
+        ]),
+    })
     .input(
         z
             .object({
@@ -37,7 +52,7 @@ const getTaskList = SolidApi({
             .optional(),
     )
     .output(z.array(taskOutputSchema))
-    .handler(async (input) => {
+    .handler(async ({ input }) => {
         const session = await getSession();
         if (!session) unauthorized();
 
@@ -66,17 +81,26 @@ const getTaskFindUnique = async (props: Prisma.TaskFindUniqueArgs, key: string[]
     return await PrismaInstance.task.findUnique(props);
 };
 
-const getTask = SolidApi({
-    method: "GET",
-    path: "/tasks/{id}",
-})
+const getTask = os
+    .route({
+        method: "GET",
+        path: "/tasks/{id}",
+        summary: "Get a task by ID",
+        description: formatStringArrayLineByLine([
+            "**Permissions**",
+            "- **Admin**",
+            "  - [ ] Get task of any user",
+            "- **User**",
+            "  - [ ] Get its own task only",
+        ]),
+    })
     .input(
         z.object({
             id: z.string().describe("Task ID"),
         }),
     )
     .output(taskOutputSchema.nullable())
-    .handler(async (input) => {
+    .handler(async ({ input }) => {
         const session = await getSession();
         if (!session) unauthorized();
 
@@ -93,10 +117,19 @@ const getTask = SolidApi({
         return task;
     });
 
-const createTask = SolidApi({
-    method: "POST",
-    path: "/tasks",
-})
+const createTask = os
+    .route({
+        method: "POST",
+        path: "/tasks",
+        summary: "Create a new task",
+        description: formatStringArrayLineByLine([
+            "**Permissions**",
+            "- **Admin**",
+            "  - [ ] Create task for any user",
+            "- **User**",
+            "  - [ ] Create task for himself only",
+        ]),
+    })
     .input(
         z.object({
             title: z.string().min(1, "Title is required").describe("Task title"),
@@ -109,7 +142,7 @@ const createTask = SolidApi({
         }),
     )
     .output(taskOutputSchema)
-    .handler(async (input) => {
+    .handler(async ({ input }) => {
         const session = await getSession();
         if (!session) unauthorized();
 
@@ -134,10 +167,19 @@ const createTask = SolidApi({
         return task;
     });
 
-const updateTask = SolidApi({
-    method: "PUT",
-    path: "/tasks/{id}",
-})
+const updateTask = os
+    .route({
+        method: "PUT",
+        path: "/tasks/{id}",
+        summary: "Update a task",
+        description: formatStringArrayLineByLine([
+            "**Permissions**",
+            "- **Admin**",
+            "  - [ ] Update task of any user",
+            "- **User**",
+            "  - [ ] Update task of himself only",
+        ]),
+    })
     .input(
         z.object({
             id: z.string().describe("Task ID"),
@@ -146,7 +188,7 @@ const updateTask = SolidApi({
         }),
     )
     .output(taskOutputSchema)
-    .handler(async (input) => {
+    .handler(async ({ input }) => {
         const session = await getSession();
         if (!session) unauthorized();
 
@@ -177,17 +219,26 @@ const updateTask = SolidApi({
         return task;
     });
 
-const deleteTask = SolidApi({
-    method: "DELETE",
-    path: "/tasks/{id}",
-})
+const deleteTask = os
+    .route({
+        method: "DELETE",
+        path: "/tasks/{id}",
+        summary: "Delete a task",
+        description: formatStringArrayLineByLine([
+            "**Permissions**",
+            "- **Admin**",
+            "  - [ ] Delete task of any user",
+            "- **User**",
+            "  - [ ] Delete task of himself only",
+        ]),
+    })
     .input(
         z.object({
             id: z.string().describe("Task ID"),
         }),
     )
     .output(taskOutputSchema)
-    .handler(async (input) => {
+    .handler(async ({ input }) => {
         const session = await getSession();
         if (!session) unauthorized();
 
@@ -212,12 +263,10 @@ const deleteTask = SolidApi({
         return task;
     });
 
-const task = {
+export const taskRoutes = {
     list: getTaskList,
     get: getTask,
     create: createTask,
     update: updateTask,
     delete: deleteTask,
 };
-
-export default task;

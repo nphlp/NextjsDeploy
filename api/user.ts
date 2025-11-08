@@ -1,11 +1,12 @@
 import { getSession } from "@lib/authServer";
 import PrismaInstance from "@lib/prisma";
+import { os } from "@orpc/server";
 import { $Enums, Prisma, User } from "@prisma/client";
+import { formatStringArrayLineByLine } from "@utils/string-format";
 import { cacheLife, cacheTag, revalidateTag } from "next/cache";
 import { notFound, unauthorized } from "next/navigation";
 import "server-only";
 import { ZodType, z } from "zod";
-import { SolidApi } from "../lib/solid-builder";
 
 const userOutputSchema: ZodType<User> = z.object({
     id: z.string().describe("Unique ID of the user (nanoid)"),
@@ -26,10 +27,23 @@ const getUserListFindMany = async (props: Prisma.UserFindManyArgs, key: string[]
     return await PrismaInstance.user.findMany(props);
 };
 
-const getUserList = SolidApi({
-    method: "GET",
-    path: "/users",
-})
+const getUserList = os
+    .route({
+        method: "GET",
+        path: "/users",
+        summary: "Get users",
+        description: formatStringArrayLineByLine([
+            "**Pagination**",
+            "  - [ ] Take: Number of tasks to take (min: 1, max: 1000)",
+            "  - [ ] Skip: Number of tasks to skip (min: 0)",
+            "\n",
+            "**Permissions**",
+            "- **Admin**",
+            "  - [ ] Get every users",
+            "- **User**",
+            "  - [ ] Cannot access this endpoint",
+        ]),
+    })
     .input(
         z
             .object({
@@ -39,7 +53,7 @@ const getUserList = SolidApi({
             .optional(),
     )
     .output(z.array(userOutputSchema))
-    .handler(async (input) => {
+    .handler(async ({ input }) => {
         const session = await getSession();
         if (!session) unauthorized();
 
@@ -66,17 +80,26 @@ const getUserFindUnique = async (props: Prisma.UserFindUniqueArgs, key: string[]
     return await PrismaInstance.user.findUnique(props);
 };
 
-const getUser = SolidApi({
-    method: "GET",
-    path: "/users/{id}",
-})
+const getUser = os
+    .route({
+        method: "GET",
+        path: "/users/{id}",
+        summary: "Get a user by ID",
+        description: formatStringArrayLineByLine([
+            "**Permissions**",
+            "- **Admin**",
+            "  - [ ] Get user of any user",
+            "- **User**",
+            "  - [ ] Get its own user only",
+        ]),
+    })
     .input(
         z.object({
             id: z.string().describe("User ID"),
         }),
     )
     .output(userOutputSchema.nullable())
-    .handler(async (input) => {
+    .handler(async ({ input }) => {
         const session = await getSession();
         if (!session) unauthorized();
 
@@ -93,10 +116,19 @@ const getUser = SolidApi({
         return user;
     });
 
-const createUser = SolidApi({
-    method: "POST",
-    path: "/users",
-})
+const createUser = os
+    .route({
+        method: "POST",
+        path: "/users",
+        summary: "Create a new user",
+        description: formatStringArrayLineByLine([
+            "**Permissions**",
+            "- **Admin**",
+            "  - [ ] Create user with any role",
+            "- **User**",
+            "  - [ ] Cannot access this endpoint",
+        ]),
+    })
     .input(
         z.object({
             name: z.string().min(1, "Name is required").describe("Firstname"),
@@ -107,7 +139,7 @@ const createUser = SolidApi({
         }),
     )
     .output(userOutputSchema)
-    .handler(async (input) => {
+    .handler(async ({ input }) => {
         const session = await getSession();
         if (!session) unauthorized();
 
@@ -138,10 +170,21 @@ const createUser = SolidApi({
         return user;
     });
 
-const updateUser = SolidApi({
-    method: "PUT",
-    path: "/users/{id}",
-})
+const updateUser = os
+    .route({
+        method: "PUT",
+        path: "/users/{id}",
+        summary: "Update a user",
+        description: formatStringArrayLineByLine([
+            "**Permissions**",
+            "- **Admin**",
+            "  - [ ] Update user of any user",
+            "  - [ ] Can change role",
+            "- **User**",
+            "  - [ ] Update its own user only",
+            "  - [ ] Cannot change role",
+        ]),
+    })
     .input(
         z.object({
             id: z.string().describe("User ID"),
@@ -152,7 +195,7 @@ const updateUser = SolidApi({
         }),
     )
     .output(userOutputSchema)
-    .handler(async (input) => {
+    .handler(async ({ input }) => {
         const session = await getSession();
         if (!session) unauthorized();
 
@@ -188,17 +231,27 @@ const updateUser = SolidApi({
         return user;
     });
 
-const deleteUser = SolidApi({
-    method: "DELETE",
-    path: "/users/{id}",
-})
+const deleteUser = os
+    .route({
+        method: "DELETE",
+        path: "/users/{id}",
+        summary: "Delete a user",
+        description: formatStringArrayLineByLine([
+            "**Permissions**",
+            "- **Admin**",
+            "  - [ ] Delete user of any user",
+            "  - [ ] Cannot delete himself",
+            "- **User**",
+            "  - [ ] Cannot access this endpoint",
+        ]),
+    })
     .input(
         z.object({
             id: z.string().describe("User ID"),
         }),
     )
     .output(userOutputSchema)
-    .handler(async (input) => {
+    .handler(async ({ input }) => {
         const session = await getSession();
         if (!session) unauthorized();
 
@@ -224,12 +277,10 @@ const deleteUser = SolidApi({
         return user;
     });
 
-export const user = {
+export const userRoutes = {
     list: getUserList,
     get: getUser,
     create: createUser,
     update: updateUser,
     delete: deleteUser,
 };
-
-export default user;
