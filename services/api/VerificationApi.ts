@@ -6,8 +6,9 @@ import {
     VerificationFindManyCached,
     VerificationFindUniqueCached,
 } from "@services/cached";
-import { ResponseFormat, parseAndDecodeParams } from "@utils/FetchConfig";
+import { decodeParams } from "@utils/url-parsers";
 import { NextRequest, NextResponse } from "next/server";
+import { ResponseFormat } from "@/solid/solid-config";
 
 /**
  * # Verification Api Services
@@ -77,19 +78,19 @@ type VerificationCountResponse<T extends Prisma.VerificationCountArgs> =
 type RouteResponse<T> = Promise<NextResponse<ResponseFormat<T>>>;
 
 export type VerificationRoutes<Input> = {
-    "/internal/verification/findFirst": <T extends Prisma.VerificationFindFirstArgs>() => {
+    "/solid/verification/findFirst": <T extends Prisma.VerificationFindFirstArgs>() => {
         params: VerificationFindFirstProps<T>;
         response: VerificationFindFirstResponse<Input extends VerificationFindFirstProps<T> ? Input : never>;
     };
-    "/internal/verification/findUnique": <T extends Prisma.VerificationFindUniqueArgs>() => {
+    "/solid/verification/findUnique": <T extends Prisma.VerificationFindUniqueArgs>() => {
         params: VerificationFindUniqueProps<T>;
         response: VerificationFindUniqueResponse<Input extends VerificationFindUniqueProps<T> ? Input : never>;
     };
-    "/internal/verification/findMany": <T extends Prisma.VerificationFindManyArgs>() => {
+    "/solid/verification/findMany": <T extends Prisma.VerificationFindManyArgs>() => {
         params: VerificationFindManyProps<T>;
         response: VerificationFindManyResponse<Input extends VerificationFindManyProps<T> ? Input : never>;
     };
-    "/internal/verification/count": <T extends Prisma.VerificationCountArgs>() => {
+    "/solid/verification/count": <T extends Prisma.VerificationCountArgs>() => {
         params: VerificationCountProps<T>;
         response: VerificationCountResponse<Input extends VerificationCountProps<T> ? Input : never>;
     };
@@ -101,7 +102,7 @@ export const VerificationFindFirstApi = async <T extends Prisma.VerificationFind
     request: NextRequest,
 ): RouteResponse<VerificationFindFirstResponse<T>> => {
     try {
-        const params: VerificationFindFirstProps<T> = parseAndDecodeParams(request);
+        const params: VerificationFindFirstProps<T> = decodeParams(request.nextUrl.searchParams);
         const response: VerificationFindFirstResponse<T> = await VerificationFindFirstCached(params);
         return NextResponse.json({ data: response }, { status: 200 });
     } catch (error) {
@@ -113,7 +114,7 @@ export const VerificationFindUniqueApi = async <T extends Prisma.VerificationFin
     request: NextRequest,
 ): RouteResponse<VerificationFindUniqueResponse<T>> => {
     try {
-        const params: VerificationFindUniqueProps<T> = parseAndDecodeParams(request);
+        const params: VerificationFindUniqueProps<T> = decodeParams(request.nextUrl.searchParams);
         const response: VerificationFindUniqueResponse<T> = await VerificationFindUniqueCached(params);
         return NextResponse.json({ data: response }, { status: 200 });
     } catch (error) {
@@ -125,7 +126,7 @@ export const VerificationFindManyApi = async <T extends Prisma.VerificationFindM
     request: NextRequest,
 ): RouteResponse<VerificationFindManyResponse<T>> => {
     try {
-        const params: VerificationFindManyProps<T> = parseAndDecodeParams(request);
+        const params: VerificationFindManyProps<T> = decodeParams(request.nextUrl.searchParams);
         const response: VerificationFindManyResponse<T> = await VerificationFindManyCached(params);
         return NextResponse.json({ data: response }, { status: 200 });
     } catch (error) {
@@ -137,7 +138,7 @@ export const VerificationCountApi = async <T extends Prisma.VerificationCountArg
     request: NextRequest,
 ): RouteResponse<VerificationCountResponse<T>> => {
     try {
-        const params: VerificationCountProps<T> = parseAndDecodeParams(request);
+        const params: VerificationCountProps<T> = decodeParams(request.nextUrl.searchParams);
         const response: VerificationCountResponse<T> = await VerificationCountCached(params);
         return NextResponse.json({ data: response }, { status: 200 });
     } catch (error) {

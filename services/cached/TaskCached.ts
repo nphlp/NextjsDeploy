@@ -10,8 +10,8 @@ import {
     TaskFindUniqueProps,
     TaskFindUniqueResponse,
 } from "@services/types";
-import { cacheLifeApi, hashParamsForCacheKey } from "@utils/FetchConfig";
 import { cacheLife, cacheTag } from "next/cache";
+import { cacheLifeApi, hashParamsForCacheKey } from "@/solid/solid-config";
 
 /**
  * # Task Cached Services

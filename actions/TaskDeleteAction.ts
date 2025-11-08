@@ -4,10 +4,10 @@ import { taskIdPageParams } from "@app/task/[id]/components/fetch";
 import { getSession } from "@lib/authServer";
 import PrismaInstance from "@lib/prisma";
 import { TaskModel } from "@services/types";
-import { cacheLifeApi, hashParamsForCacheKey } from "@utils/FetchConfig";
 import { revalidateTag } from "next/cache";
 import { unauthorized } from "next/navigation";
 import z, { ZodType } from "zod";
+import { cacheLifeApi, hashParamsForCacheKey } from "@/solid/solid-config";
 import { ActionError, ActionResponse, ClientError } from "./ActionError";
 
 type TaskDeleteActionProps = {

@@ -10,8 +10,8 @@ import {
     UserFindUniqueProps,
     UserFindUniqueResponse,
 } from "@services/types";
-import { cacheLifeApi, hashParamsForCacheKey } from "@utils/FetchConfig";
 import { cacheLife, cacheTag } from "next/cache";
+import { cacheLifeApi, hashParamsForCacheKey } from "@/solid/solid-config";
 
 /**
  * # User Cached Services

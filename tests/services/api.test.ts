@@ -1,10 +1,10 @@
-import { Fetch } from "@utils/Fetch";
 import { describe, expect, it } from "vitest";
+import Solid from "@/solid/solid-fetch";
 
 describe("API fetch tests", () => {
     it("User FindFirst API", async () => {
-        const user = await Fetch({
-            route: "/internal/user/findFirst",
+        const user = await Solid({
+            route: "/solid/user/findFirst",
             params: {
                 select: {
                     id: true,
@@ -40,8 +40,8 @@ describe("API fetch tests", () => {
     });
 
     it("User FindUnique API", async () => {
-        const firstUser = await Fetch({
-            route: "/internal/user/findFirst",
+        const firstUser = await Solid({
+            route: "/solid/user/findFirst",
             params: {
                 select: { id: true },
             },
@@ -50,8 +50,8 @@ describe("API fetch tests", () => {
         if (!firstUser?.id) throw new Error("First user not found");
 
         // Tested function
-        const user = await Fetch({
-            route: "/internal/user/findUnique",
+        const user = await Solid({
+            route: "/solid/user/findUnique",
             params: {
                 select: {
                     id: true,
@@ -89,8 +89,8 @@ describe("API fetch tests", () => {
 
     it("User FindMany API", async () => {
         // Tested function
-        const users = await Fetch({
-            route: "/internal/user/findMany",
+        const users = await Solid({
+            route: "/solid/user/findMany",
             params: {
                 select: {
                     id: true,
@@ -129,8 +129,8 @@ describe("API fetch tests", () => {
 
     it("User Count API", async () => {
         // Tested function
-        const userCount = await Fetch({
-            route: "/internal/user/count",
+        const userCount = await Solid({
+            route: "/solid/user/count",
         });
 
         // Check userCount

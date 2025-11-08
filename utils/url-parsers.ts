@@ -18,12 +18,13 @@ export const createApiURL = ({
     route,
     searchParams,
 }: {
-    baseUrl: string | undefined;
+    baseUrl: string;
     prefix: string[];
     route: string;
     searchParams?: URLSearchParams;
 }): URL => {
-    const routeUrl = new URL(prefix.join("/") + route, baseUrl);
+    const prefixJoined = prefix.join("/");
+    const routeUrl = new URL(prefixJoined + route, baseUrl);
     if (searchParams) routeUrl.search = searchParams.toString();
     return routeUrl;
 };
@@ -48,7 +49,7 @@ export const createApiURL = ({
  * URLSearchParams.get("tags") => "%5B%22tag1%22%2C%22tag2%22%5D"
  * ```
  */
-export const encodeParams = (params: Record<string, unknown>): URLSearchParams => {
+export const encodeParams = (params: object): URLSearchParams => {
     const searchParams = new URLSearchParams();
     for (const [key, value] of Object.entries(params)) {
         searchParams.append(encodeURIComponent(key), encodeURIComponent(JSON.stringify(value)));

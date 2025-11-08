@@ -3,8 +3,8 @@
 import { useSearchQueryParams, useUpdatedAtQueryParams } from "@comps/SHARED/filters/queryParamsClientHooks";
 import { useSession } from "@lib/authClient";
 import { Session } from "@lib/authServer";
-import { useFetch } from "@utils/FetchHook";
 import { ReactNode, useOptimistic } from "react";
+import useSolid from "@/solid/solid-hook";
 import { Context, ContextType } from "./context";
 import { TaskType, taskPageParams } from "./fetch";
 import { optimisticMutations } from "./optimistic";
@@ -27,8 +27,8 @@ export default function Provider(props: ContextProviderProps) {
     const { search } = useSearchQueryParams();
 
     // Reactive fetch
-    const { data, setDataBypass, isLoading, refetch } = useFetch({
-        route: "/internal/task/findMany",
+    const { data, setDataBypass, isLoading, refetch } = useSolid({
+        route: "/solid/task/findMany",
         params: taskPageParams({ updatedAt, search, userId: session.user.id }),
         initialData,
     });

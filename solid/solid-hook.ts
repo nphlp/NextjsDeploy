@@ -1,48 +1,46 @@
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
-import { Body, Fetch, FetchProps, FetchResponse, Method, Params, Route } from "./Fetch";
+import Solid, { Body, Method, Params, Route, SolidProps, SolidResponse } from "./solid-fetch";
 
-export type FetchHookProps<
+export type SolidHookProps<
     Input,
     R extends Route<Input>,
     P extends Params<Input, R>,
     M extends Method<Input, R>,
     B extends Body<Input, R>,
-> = Omit<FetchProps<Input, R, P, M, B>, "client" | "signal"> & {
-    initialData: FetchResponse<Input, R, P>;
+> = Omit<SolidProps<Input, R, P, M, B>, "client" | "signal"> & {
+    initialData: SolidResponse<Input, R, P>;
     debounce?: number;
     fetchOnFirstRender?: boolean;
 };
 
 export type RefetchType = (offsetTime?: number) => void;
 
-export type FetchHookResponse<Input, R extends Route<Input>, P extends Params<Input, R>> = {
-    data: FetchResponse<Input, R, P> | undefined;
+export type SolidHookResponse<Input, R extends Route<Input>, P extends Params<Input, R>> = {
+    data: SolidResponse<Input, R, P> | undefined;
     isLoading: boolean;
-    setDataBypass: Dispatch<SetStateAction<FetchResponse<Input, R, P> | undefined>>;
+    setDataBypass: Dispatch<SetStateAction<SolidResponse<Input, R, P> | undefined>>;
     refetch: RefetchType;
     error: string | undefined;
 };
 
-export const useFetch = <
+const useSolid = <
     Input,
     R extends Route<Input>,
     P extends Params<Input, R>,
     M extends Method<Input, R>,
     B extends Body<Input, R>,
 >(
-    props: FetchHookProps<Input, R, P, M, B>,
-): FetchHookResponse<Input, R, P> => {
+    props: SolidHookProps<Input, R, P, M, B>,
+): SolidHookResponse<Input, R, P> => {
     const { route, params, debounce = 0, fetchOnFirstRender = false, initialData } = props;
 
     const stringifiedParams = JSON.stringify(params);
     const memoizedProps = useMemo(
         () => ({
             route,
-            // FetchV2
             params: JSON.parse(stringifiedParams),
-            // FetchV1
             // params: stringifiedParams ? JSON.parse(stringifiedParams) : undefined,
         }),
         [route, stringifiedParams],
@@ -50,7 +48,7 @@ export const useFetch = <
 
     const fetchOnFirstRenderRef = useRef(fetchOnFirstRender);
 
-    const [data, setData] = useState<FetchResponse<Input, R, P> | undefined>(initialData);
+    const [data, setData] = useState<SolidResponse<Input, R, P> | undefined>(initialData);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | undefined>();
     const [refetchTrigger, setRefetchTrigger] = useState(0);
@@ -63,13 +61,13 @@ export const useFetch = <
             setIsLoading(true);
 
             if (process.env.NODE_ENV === "development") {
-                console.log("useFetch: ", memoizedProps);
+                // console.log("useSolid: ", memoizedProps);
             }
 
             try {
                 const { route, params } = memoizedProps;
 
-                const response = await Fetch<Input, R, P, M, B>({
+                const response = await Solid<Input, R, P, M, B>({
                     route,
                     params,
                     client: true,
@@ -78,6 +76,9 @@ export const useFetch = <
 
                 if (!signal.aborted) setData(response);
             } catch (error) {
+                if (process.env.NODE_ENV === "development") {
+                    console.error("useSolid error:", error);
+                }
                 if (!signal.aborted) setError((error as Error).message);
             } finally {
                 if (!signal.aborted) setIsLoading(false);
@@ -103,7 +104,7 @@ export const useFetch = <
         }, offsetTime);
     };
 
-    const setDataBypass: Dispatch<SetStateAction<FetchResponse<Input, R, P> | undefined>> = (value) => {
+    const setDataBypass: Dispatch<SetStateAction<SolidResponse<Input, R, P> | undefined>> = (value) => {
         return setData(value);
     };
 
@@ -115,3 +116,5 @@ export const useFetch = <
         refetch,
     };
 };
+
+export default useSolid;

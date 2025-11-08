@@ -6,12 +6,12 @@ import { Button } from "@comps/SHADCN/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@comps/SHADCN/ui/dialog";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
 import { cn } from "@shadcn/lib/utils";
-import { RefetchType } from "@utils/FetchHook";
 import { Trash2 } from "lucide-react";
 import { Route } from "next";
 import { useRouter } from "next/navigation";
 import { startTransition, useRef, useState } from "react";
 import { toast } from "sonner";
+import { RefetchType } from "@/solid/solid-hook";
 import useInstant from "./useInstant";
 
 type SelectUpdateTaskStatusProps = {

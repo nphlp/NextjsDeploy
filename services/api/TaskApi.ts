@@ -1,8 +1,9 @@
 import { Prisma } from "@prisma/client";
 import { GetResult, InternalArgs, PrismaClientOptions } from "@prisma/client/runtime/library";
 import { TaskCountCached, TaskFindFirstCached, TaskFindManyCached, TaskFindUniqueCached } from "@services/cached";
-import { ResponseFormat, parseAndDecodeParams } from "@utils/FetchConfig";
+import { decodeParams } from "@utils/url-parsers";
 import { NextRequest, NextResponse } from "next/server";
+import { ResponseFormat } from "@/solid/solid-config";
 
 /**
  * # Task Api Services
@@ -60,19 +61,19 @@ type TaskCountResponse<T extends Prisma.TaskCountArgs> =
 type RouteResponse<T> = Promise<NextResponse<ResponseFormat<T>>>;
 
 export type TaskRoutes<Input> = {
-    "/internal/task/findFirst": <T extends Prisma.TaskFindFirstArgs>() => {
+    "/solid/task/findFirst": <T extends Prisma.TaskFindFirstArgs>() => {
         params: TaskFindFirstProps<T>;
         response: TaskFindFirstResponse<Input extends TaskFindFirstProps<T> ? Input : never>;
     };
-    "/internal/task/findUnique": <T extends Prisma.TaskFindUniqueArgs>() => {
+    "/solid/task/findUnique": <T extends Prisma.TaskFindUniqueArgs>() => {
         params: TaskFindUniqueProps<T>;
         response: TaskFindUniqueResponse<Input extends TaskFindUniqueProps<T> ? Input : never>;
     };
-    "/internal/task/findMany": <T extends Prisma.TaskFindManyArgs>() => {
+    "/solid/task/findMany": <T extends Prisma.TaskFindManyArgs>() => {
         params: TaskFindManyProps<T>;
         response: TaskFindManyResponse<Input extends TaskFindManyProps<T> ? Input : never>;
     };
-    "/internal/task/count": <T extends Prisma.TaskCountArgs>() => {
+    "/solid/task/count": <T extends Prisma.TaskCountArgs>() => {
         params: TaskCountProps<T>;
         response: TaskCountResponse<Input extends TaskCountProps<T> ? Input : never>;
     };
@@ -84,7 +85,7 @@ export const TaskFindFirstApi = async <T extends Prisma.TaskFindFirstArgs>(
     request: NextRequest,
 ): RouteResponse<TaskFindFirstResponse<T>> => {
     try {
-        const params: TaskFindFirstProps<T> = parseAndDecodeParams(request);
+        const params: TaskFindFirstProps<T> = decodeParams(request.nextUrl.searchParams);
         const response: TaskFindFirstResponse<T> = await TaskFindFirstCached(params);
         return NextResponse.json({ data: response }, { status: 200 });
     } catch (error) {
@@ -96,7 +97,7 @@ export const TaskFindUniqueApi = async <T extends Prisma.TaskFindUniqueArgs>(
     request: NextRequest,
 ): RouteResponse<TaskFindUniqueResponse<T>> => {
     try {
-        const params: TaskFindUniqueProps<T> = parseAndDecodeParams(request);
+        const params: TaskFindUniqueProps<T> = decodeParams(request.nextUrl.searchParams);
         const response: TaskFindUniqueResponse<T> = await TaskFindUniqueCached(params);
         return NextResponse.json({ data: response }, { status: 200 });
     } catch (error) {
@@ -108,7 +109,7 @@ export const TaskFindManyApi = async <T extends Prisma.TaskFindManyArgs>(
     request: NextRequest,
 ): RouteResponse<TaskFindManyResponse<T>> => {
     try {
-        const params: TaskFindManyProps<T> = parseAndDecodeParams(request);
+        const params: TaskFindManyProps<T> = decodeParams(request.nextUrl.searchParams);
         const response: TaskFindManyResponse<T> = await TaskFindManyCached(params);
         return NextResponse.json({ data: response }, { status: 200 });
     } catch (error) {
@@ -120,7 +121,7 @@ export const TaskCountApi = async <T extends Prisma.TaskCountArgs>(
     request: NextRequest,
 ): RouteResponse<TaskCountResponse<T>> => {
     try {
-        const params: TaskCountProps<T> = parseAndDecodeParams(request);
+        const params: TaskCountProps<T> = decodeParams(request.nextUrl.searchParams);
         const response: TaskCountResponse<T> = await TaskCountCached(params);
         return NextResponse.json({ data: response }, { status: 200 });
     } catch (error) {

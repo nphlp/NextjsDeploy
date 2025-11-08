@@ -6,8 +6,9 @@ import {
     SessionFindManyCached,
     SessionFindUniqueCached,
 } from "@services/cached";
-import { ResponseFormat, parseAndDecodeParams } from "@utils/FetchConfig";
+import { decodeParams } from "@utils/url-parsers";
 import { NextRequest, NextResponse } from "next/server";
+import { ResponseFormat } from "@/solid/solid-config";
 
 /**
  * # Session Api Services
@@ -68,19 +69,19 @@ type SessionCountResponse<T extends Prisma.SessionCountArgs> =
 type RouteResponse<T> = Promise<NextResponse<ResponseFormat<T>>>;
 
 export type SessionRoutes<Input> = {
-    "/internal/session/findFirst": <T extends Prisma.SessionFindFirstArgs>() => {
+    "/solid/session/findFirst": <T extends Prisma.SessionFindFirstArgs>() => {
         params: SessionFindFirstProps<T>;
         response: SessionFindFirstResponse<Input extends SessionFindFirstProps<T> ? Input : never>;
     };
-    "/internal/session/findUnique": <T extends Prisma.SessionFindUniqueArgs>() => {
+    "/solid/session/findUnique": <T extends Prisma.SessionFindUniqueArgs>() => {
         params: SessionFindUniqueProps<T>;
         response: SessionFindUniqueResponse<Input extends SessionFindUniqueProps<T> ? Input : never>;
     };
-    "/internal/session/findMany": <T extends Prisma.SessionFindManyArgs>() => {
+    "/solid/session/findMany": <T extends Prisma.SessionFindManyArgs>() => {
         params: SessionFindManyProps<T>;
         response: SessionFindManyResponse<Input extends SessionFindManyProps<T> ? Input : never>;
     };
-    "/internal/session/count": <T extends Prisma.SessionCountArgs>() => {
+    "/solid/session/count": <T extends Prisma.SessionCountArgs>() => {
         params: SessionCountProps<T>;
         response: SessionCountResponse<Input extends SessionCountProps<T> ? Input : never>;
     };
@@ -92,7 +93,7 @@ export const SessionFindFirstApi = async <T extends Prisma.SessionFindFirstArgs>
     request: NextRequest,
 ): RouteResponse<SessionFindFirstResponse<T>> => {
     try {
-        const params: SessionFindFirstProps<T> = parseAndDecodeParams(request);
+        const params: SessionFindFirstProps<T> = decodeParams(request.nextUrl.searchParams);
         const response: SessionFindFirstResponse<T> = await SessionFindFirstCached(params);
         return NextResponse.json({ data: response }, { status: 200 });
     } catch (error) {
@@ -104,7 +105,7 @@ export const SessionFindUniqueApi = async <T extends Prisma.SessionFindUniqueArg
     request: NextRequest,
 ): RouteResponse<SessionFindUniqueResponse<T>> => {
     try {
-        const params: SessionFindUniqueProps<T> = parseAndDecodeParams(request);
+        const params: SessionFindUniqueProps<T> = decodeParams(request.nextUrl.searchParams);
         const response: SessionFindUniqueResponse<T> = await SessionFindUniqueCached(params);
         return NextResponse.json({ data: response }, { status: 200 });
     } catch (error) {
@@ -116,7 +117,7 @@ export const SessionFindManyApi = async <T extends Prisma.SessionFindManyArgs>(
     request: NextRequest,
 ): RouteResponse<SessionFindManyResponse<T>> => {
     try {
-        const params: SessionFindManyProps<T> = parseAndDecodeParams(request);
+        const params: SessionFindManyProps<T> = decodeParams(request.nextUrl.searchParams);
         const response: SessionFindManyResponse<T> = await SessionFindManyCached(params);
         return NextResponse.json({ data: response }, { status: 200 });
     } catch (error) {
@@ -128,7 +129,7 @@ export const SessionCountApi = async <T extends Prisma.SessionCountArgs>(
     request: NextRequest,
 ): RouteResponse<SessionCountResponse<T>> => {
     try {
-        const params: SessionCountProps<T> = parseAndDecodeParams(request);
+        const params: SessionCountProps<T> = decodeParams(request.nextUrl.searchParams);
         const response: SessionCountResponse<T> = await SessionCountCached(params);
         return NextResponse.json({ data: response }, { status: 200 });
     } catch (error) {

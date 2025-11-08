@@ -1,7 +1,7 @@
 "use client";
 
-import { RefetchType } from "@utils/FetchHook";
 import { Dispatch, SetStateAction, createContext } from "react";
+import { RefetchType } from "@/solid/solid-hook";
 import { TaskType } from "./fetch";
 import { OptimisticAction } from "./optimistic";
 

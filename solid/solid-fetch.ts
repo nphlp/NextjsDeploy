@@ -1,5 +1,6 @@
 import { Routes } from "@app/api/Routes";
-import { ResponseFormat } from "@utils/FetchConfig";
+import { createApiURL, encodeParams } from "@utils/url-parsers";
+import { ResponseFormat } from "@/solid/solid-config";
 
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -27,7 +28,7 @@ export type Method<Input, R extends Route<Input>> =
 export type Body<Input, R extends Route<Input>> =
     ReturnType<Routes<Input>[R]> extends { body: object } ? ReturnType<Routes<Input>[R]>["body"] : undefined;
 
-export type FetchProps<
+export type SolidProps<
     Input,
     R extends Route<Input>,
     P extends Params<Input, R>,
@@ -42,34 +43,29 @@ export type FetchProps<
     client?: boolean;
 };
 
-export type FetchResponse<Input, R extends Route<Input>, P extends Params<Input, R>> = ReturnType<
+export type SolidResponse<Input, R extends Route<Input>, P extends Params<Input, R>> = ReturnType<
     Routes<P>[R]
 >["response"];
 
-export const Fetch = async <
+const Solid = async <
     Input,
     R extends Route<Input>,
     P extends Params<Input, R>,
     M extends Method<Input, R>,
     B extends Body<Input, R>,
 >(
-    props: FetchProps<Input, R, P, M, B>,
-): Promise<FetchResponse<Input, R, P>> => {
-    const { route, params, method = "GET", body: bodyObject, signal: overrideSignal, client = false } = props;
+    props: SolidProps<Input, R, P, M, B>,
+): Promise<SolidResponse<Input, R, P>> => {
+    const { route, params, method = "GET", body: bodyObject, signal: overrideSignal } = props;
 
     // Construct URL
-    const baseUrl = client ? "" : NEXT_PUBLIC_BASE_URL;
-    const encodedParams = params ? encodeURIComponent(JSON.stringify(params)) : "";
-    const urlParams = params ? "?params=" + encodedParams : "";
-    const url = baseUrl + "/api" + route + urlParams;
+    const baseUrl = NEXT_PUBLIC_BASE_URL;
+    const prefix = ["api"];
+    const searchParams = params ? encodeParams(params) : undefined;
+    const url = createApiURL({ baseUrl, prefix, route, searchParams });
 
     // Construct body
-    const body = bodyObject ? new FormData() : undefined;
-    if (body && bodyObject) {
-        Object.entries(bodyObject).forEach(([key, value]) => {
-            body.append(key, value);
-        });
-    }
+    const body = bodyObject ? JSON.stringify(bodyObject) : undefined;
 
     // Manage abort controller signal
     const defaultOrOverrideSignal = overrideSignal ?? AbortSignal.timeout(10000);
@@ -79,12 +75,11 @@ export const Fetch = async <
         method,
         body,
         signal,
-
         // headers: await headers(),
         // credentials: "include",
     });
 
-    const { data, error }: ResponseFormat<FetchResponse<Input, R, P>> = await response.json();
+    const { data, error }: ResponseFormat<SolidResponse<Input, R, P>> = await response.json();
 
     if (error || data === undefined) {
         throw new Error(error ?? "Something went wrong...");
@@ -92,3 +87,5 @@ export const Fetch = async <
 
     return data;
 };
+
+export default Solid;

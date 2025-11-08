@@ -1,5 +1,5 @@
 import { Session, SessionList, getSessionList } from "@lib/authServer";
-import { Fetch } from "@utils/Fetch";
+import Solid from "@/solid/solid-fetch";
 import LocationMap from "./locationMap";
 import SessionManager, { SessionAndLocation } from "./sessionManager";
 import { getBrowser, getOs, locationString } from "./utils";
@@ -41,7 +41,7 @@ const CurrentSession = async (props: CurrentSessionProps) => {
     const userAgent = session.session.userAgent ?? "";
     const ipAddress = session.session.ipAddress ?? "";
 
-    const location = await Fetch({ route: "/location", params: { ipAddress } });
+    const location = await Solid({ route: "/location", params: { ipAddress } });
 
     return (
         <div className="border-border bg-card space-y-2 rounded-lg border px-5 py-3">
@@ -76,7 +76,7 @@ const OtherSessions = async (props: OtherSessionsProps) => {
 
     const location = await Promise.all(
         orderedSessionList.map(({ ipAddress }) =>
-            Fetch({
+            Solid({
                 route: "/location",
                 params: { ipAddress: ipAddress ?? "" },
             }),

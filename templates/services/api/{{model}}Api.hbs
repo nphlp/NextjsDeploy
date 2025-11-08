@@ -6,8 +6,9 @@ import {
     {{modelName}}FindManyCached,
     {{modelName}}FindUniqueCached,
 } from "@services/cached";
-import { ResponseFormat, parseAndDecodeParams } from "@utils/FetchConfig";
+import { decodeParams } from "@utils/url-parsers";
 import { NextRequest, NextResponse } from "next/server";
+import { ResponseFormat } from "@/solid/solid-config";
 
 /**
  * # {{modelName}} Api Services
@@ -68,19 +69,19 @@ type {{modelName}}CountResponse<T extends Prisma.{{modelName}}CountArgs> =
 type RouteResponse<T> = Promise<NextResponse<ResponseFormat<T>>>;
 
 export type {{modelName}}Routes<Input> = {
-    "/internal/{{modelNameLower}}/findFirst": <T extends Prisma.{{modelName}}FindFirstArgs>() => {
+    "/solid/{{modelNameLower}}/findFirst": <T extends Prisma.{{modelName}}FindFirstArgs>() => {
         params: {{modelName}}FindFirstProps<T>;
         response: {{modelName}}FindFirstResponse<Input extends {{modelName}}FindFirstProps<T> ? Input : never>;
     };
-    "/internal/{{modelNameLower}}/findUnique": <T extends Prisma.{{modelName}}FindUniqueArgs>() => {
+    "/solid/{{modelNameLower}}/findUnique": <T extends Prisma.{{modelName}}FindUniqueArgs>() => {
         params: {{modelName}}FindUniqueProps<T>;
         response: {{modelName}}FindUniqueResponse<Input extends {{modelName}}FindUniqueProps<T> ? Input : never>;
     };
-    "/internal/{{modelNameLower}}/findMany": <T extends Prisma.{{modelName}}FindManyArgs>() => {
+    "/solid/{{modelNameLower}}/findMany": <T extends Prisma.{{modelName}}FindManyArgs>() => {
         params: {{modelName}}FindManyProps<T>;
         response: {{modelName}}FindManyResponse<Input extends {{modelName}}FindManyProps<T> ? Input : never>;
     };
-    "/internal/{{modelNameLower}}/count": <T extends Prisma.{{modelName}}CountArgs>() => {
+    "/solid/{{modelNameLower}}/count": <T extends Prisma.{{modelName}}CountArgs>() => {
         params: {{modelName}}CountProps<T>;
         response: {{modelName}}CountResponse<Input extends {{modelName}}CountProps<T> ? Input : never>;
     };
@@ -92,7 +93,7 @@ export const {{modelName}}FindFirstApi = async <T extends Prisma.{{modelName}}Fi
     request: NextRequest,
 ): RouteResponse<{{modelName}}FindFirstResponse<T>> => {
     try {
-        const params: {{modelName}}FindFirstProps<T> = parseAndDecodeParams(request);
+        const params: {{modelName}}FindFirstProps<T> = decodeParams(request.nextUrl.searchParams);
         const response: {{modelName}}FindFirstResponse<T> = await {{modelName}}FindFirstCached(params);
         return NextResponse.json({ data: response }, { status: 200 });
     } catch (error) {
@@ -104,7 +105,7 @@ export const {{modelName}}FindUniqueApi = async <T extends Prisma.{{modelName}}F
     request: NextRequest,
 ): RouteResponse<{{modelName}}FindUniqueResponse<T>> => {
     try {
-        const params: {{modelName}}FindUniqueProps<T> = parseAndDecodeParams(request);
+        const params: {{modelName}}FindUniqueProps<T> = decodeParams(request.nextUrl.searchParams);
         const response: {{modelName}}FindUniqueResponse<T> = await {{modelName}}FindUniqueCached(params);
         return NextResponse.json({ data: response }, { status: 200 });
     } catch (error) {
@@ -116,7 +117,7 @@ export const {{modelName}}FindManyApi = async <T extends Prisma.{{modelName}}Fin
     request: NextRequest,
 ): RouteResponse<{{modelName}}FindManyResponse<T>> => {
     try {
-        const params: {{modelName}}FindManyProps<T> = parseAndDecodeParams(request);
+        const params: {{modelName}}FindManyProps<T> = decodeParams(request.nextUrl.searchParams);
         const response: {{modelName}}FindManyResponse<T> = await {{modelName}}FindManyCached(params);
         return NextResponse.json({ data: response }, { status: 200 });
     } catch (error) {
@@ -128,7 +129,7 @@ export const {{modelName}}CountApi = async <T extends Prisma.{{modelName}}CountA
     request: NextRequest,
 ): RouteResponse<{{modelName}}CountResponse<T>> => {
     try {
-        const params: {{modelName}}CountProps<T> = parseAndDecodeParams(request);
+        const params: {{modelName}}CountProps<T> = decodeParams(request.nextUrl.searchParams);
         const response: {{modelName}}CountResponse<T> = await {{modelName}}CountCached(params);
         return NextResponse.json({ data: response }, { status: 200 });
     } catch (error) {

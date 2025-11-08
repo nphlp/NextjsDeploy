@@ -3,10 +3,10 @@
 import { getSession } from "@lib/authServer";
 import PrismaInstance from "@lib/prisma";
 import { TaskModel } from "@services/types";
-import { cacheLifeApi } from "@utils/FetchConfig";
 import { revalidateTag } from "next/cache";
 import { unauthorized } from "next/navigation";
 import z, { ZodType } from "zod";
+import { cacheLifeApi } from "@/solid/solid-config";
 import { ActionError, ActionResponse } from "./ActionError";
 
 type TaskCreateActionProps = {

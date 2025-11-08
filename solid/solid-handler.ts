@@ -58,25 +58,29 @@ const findRoute = (path: string[]): Route | null => {
 };
 
 // Type for request parameters
-type ParamsProps = { params: Promise<{ routes: string[] }> };
+type ParamsProps = {
+    params: Promise<{ segments: string[] }>;
+};
 
 /**
  * GET handler for all routes
  */
-export async function GET(request: NextRequest, props: ParamsProps): Promise<NextResponse> {
+async function GET(request: NextRequest, props: ParamsProps): Promise<NextResponse> {
     const { params } = props;
-    const { routes } = await params;
+    const { segments } = await params;
 
-    const route = findRoute(routes);
+    const route = findRoute(segments);
 
     if (route) {
         try {
             return route(request);
         } catch (error) {
-            console.error(`Error in route ${routes.join("/")}: ${(error as Error).message}`);
+            console.error(`Error in route ${segments.join("/")}: ${(error as Error).message}`);
             return NextResponse.json({ error: "Internal server error" }, { status: 500 });
         }
     }
 
     return NextResponse.json({ error: "Route not found" }, { status: 404 });
 }
+
+export default GET;
