@@ -1,11 +1,11 @@
 "use client";
 
-import { TaskCreateAction } from "@actions/TaskCreateAction";
 import { Context } from "@app/tasks/components/context";
 import { TaskType } from "@app/tasks/components/fetch";
 import { Button } from "@comps/SHADCN/ui/button";
 import { Input } from "@comps/SHADCN/ui/input";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import oRPC from "@lib/orpc";
 import { ArrowUp } from "lucide-react";
 import { startTransition, useContext, useState } from "react";
 import { toast } from "sonner";
@@ -28,21 +28,20 @@ export default function InputAddTask() {
             // Set optimistic state
             setOptimisticData({ type: "add", newItem });
 
-            // Do mutation
-            const { data, error } = await TaskCreateAction({ title: newItem.title });
+            try {
+                // Do mutation
+                const data = await oRPC.task.create({ title: newItem.title });
 
-            // If failed, the optimistic state is rolled back at the end of the transition
-            if (!data || error) {
-                toast.error(error);
-                return;
+                // If success, update the real state in a new transition to prevent key conflict
+                startTransition(() =>
+                    setDataBypass((current) => optimisticMutations(current, { type: "add", newItem: data })),
+                );
+
+                toast.success("Création de la tâche réussie");
+            } catch (error) {
+                // If failed, the optimistic state is rolled back at the end of the transition
+                toast.error((error as Error).message ?? "Impossible de créer de la tâche");
             }
-
-            // If success, update the real state in a new transition to prevent key conflict
-            startTransition(() =>
-                setDataBypass((current) => optimisticMutations(current, { type: "add", newItem: data })),
-            );
-
-            toast.success("Création de la tâche réussie");
         });
     };
 

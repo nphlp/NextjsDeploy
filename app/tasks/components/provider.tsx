@@ -40,7 +40,7 @@ export default function Provider(props: ContextProviderProps) {
         isFetching: isLoading,
         refetch,
     } = useFetch({
-        client: oRPC.page.tasksPage,
+        client: oRPC.task.findMany,
         args: { updatedAt, search, userId: session.user.id },
         keys: [updatedAt, search, session.user.id],
         initialData,

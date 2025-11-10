@@ -1,10 +1,10 @@
 "use client";
 
-import { TaskDeleteAction } from "@actions/TaskDeleteAction";
 import { TaskType } from "@app/tasks/components/fetch";
 import { Button } from "@comps/SHADCN/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@comps/SHADCN/ui/dialog";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import oRPC from "@lib/orpc";
 import { cn } from "@shadcn/lib/utils";
 import { Trash2 } from "lucide-react";
 import { Route } from "next";
@@ -45,23 +45,22 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
             // Set optimistic state
             setOptimisticData(newItem);
 
-            // Do mutation
-            const { data, error } = await TaskDeleteAction({ id: newItem.id });
+            try {
+                // Do mutation
+                const data = await oRPC.task.delete({ id: newItem.id });
 
-            // If failed, the optimistic state is rolled back at the end of the transition
-            if (!data || error) {
-                toast.error(error);
-                return;
+                // If success, update the real state in a new transition to prevent key conflict
+                startTransition(() => setData(data));
+
+                // If redirection or refetching, do it after the real state change
+                if (redirectTo) router.push(redirectTo);
+                if (refetch) refetch();
+
+                toast.success("Tâche supprimée avec succès");
+            } catch (error) {
+                // If failed, the optimistic state is rolled back at the end of the transition
+                toast.error((error as Error).message ?? "Impossible de supprimer la tâche");
             }
-
-            // If success, update the real state in a new transition to prevent key conflict
-            startTransition(() => setData(data));
-
-            // If redirection or refetching, do it after the real state change
-            if (redirectTo) router.push(redirectTo);
-            if (refetch) refetch();
-
-            toast.success("Tâche supprimée avec succès");
         });
     };
 

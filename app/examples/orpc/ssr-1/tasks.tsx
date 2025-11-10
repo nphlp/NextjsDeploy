@@ -20,7 +20,7 @@ export default function Tasks(props: TasksProps) {
     const handleUserChange = async (userId: string) => {
         setSelectedUser(userId);
 
-        const newTasks = await oRPC.task.list({
+        const newTasks = await oRPC.task.findMany({
             userId: userId,
             take: 3,
         });

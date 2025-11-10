@@ -1,6 +1,6 @@
 "use server";
 
-import { taskIdPageParams } from "@app/task/[id]/components/fetch";
+// import { taskIdPageParams } from "@app/task/[id]/components/fetch";
 import { getSession } from "@lib/auth-server";
 import PrismaInstance from "@lib/prisma";
 import { $Enums } from "@prisma/client";
@@ -8,7 +8,7 @@ import { TaskModel } from "@services/types";
 import { revalidateTag } from "next/cache";
 import { unauthorized } from "next/navigation";
 import z, { ZodType } from "zod";
-import { cacheLifeApi, hashParamsForCacheKey } from "@/solid/solid-config";
+import { cacheLifeApi } from "@/solid/solid-config";
 import { ActionError, ActionResponse, ClientError } from "./ActionError";
 
 type TaskUpdateActionProps = {
@@ -62,7 +62,7 @@ export const TaskUpdateAction = async (props: TaskUpdateActionProps): Promise<Ta
         revalidateTag("task-findMany", cacheLifeApi);
         revalidateTag(`getTasksPage-${userId}`, "hours");
         // -> `/task/{id}` page
-        revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id, session)), cacheLifeApi);
+        // revalidateTag(hashParamsForCacheKey("task-findUnique", taskIdPageParams(id, session)), cacheLifeApi);
         revalidateTag(`getTask-${updatedTask.id}`, "hours");
 
         return { data: updatedTask };

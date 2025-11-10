@@ -1,9 +1,9 @@
 "use client";
 
-import { TaskUpdateAction } from "@actions/TaskUpdateAction";
 import { TaskType } from "@app/tasks/components/fetch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@comps/SHADCN/ui/select";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import oRPC from "@lib/orpc";
 import { cn } from "@shadcn/lib/utils";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
 import { ReactNode, startTransition } from "react";
@@ -65,19 +65,18 @@ export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProp
             // Set optimistic state
             setOptimisticData(newItem);
 
-            // Do mutation
-            const { data, error } = await TaskUpdateAction({ id, status: newStatusConst });
+            try {
+                // Do mutation
+                const data = await oRPC.task.update({ id, status: newStatusConst });
 
-            // If failed, the optimistic state is rolled back at the end of the transition
-            if (!data || error) {
-                toast.error(error);
-                return;
+                // If success, update the real state in a new transition to prevent key conflict
+                startTransition(() => setData(data));
+
+                toast.success("Statut mis à jour avec succès");
+            } catch (error) {
+                // If failed, the optimistic state is rolled back at the end of the transition
+                toast.error((error as Error).message ?? "Impossible de mettre à jour le statut");
             }
-
-            // If success, update the real state in a new transition to prevent key conflict
-            startTransition(() => setData(data));
-
-            toast.success("Statut mis à jour avec succès");
         });
     };
 

@@ -18,7 +18,7 @@ export default function Tasks(props: TasksProps) {
     const [selectedUser, setSelectedUser] = useState(users[0]?.id);
 
     const { data } = useFetch({
-        client: oRPC.task.list,
+        client: oRPC.task.findMany,
         args: {
             userId: selectedUser,
             take: 3,

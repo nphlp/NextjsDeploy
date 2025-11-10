@@ -6,12 +6,12 @@ import InputUpdateTaskTitle, { InputUpdateTaskTitleSkeleton } from "@comps/SHARE
 import SelectUpdateTaskStatus, {
     SelectUpdateTaskStatusSkeleton,
 } from "@comps/SHARED/optimistics/select-update-task-status";
+import { Task } from "@prisma/client";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
-import { TaskType } from "./fetch";
 
 type EditionProps = {
-    task: TaskType;
+    task: Task;
 };
 
 export default function Edition(props: EditionProps) {

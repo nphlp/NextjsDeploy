@@ -19,12 +19,12 @@ const SuspendedPage = async () => {
     const isAdmin = session.user.role === "ADMIN";
     if (!isAdmin) throw new Error("Loggin as admin to access this page.");
 
-    const tasks = await oRPC.task.list({
+    const tasks = await oRPC.task.findMany({
         userId: session.user.id,
         take: 3,
     });
 
-    const users = await oRPC.user.list();
+    const users = await oRPC.user.findMany();
 
     return (
         <div>

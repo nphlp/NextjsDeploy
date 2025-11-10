@@ -1,126 +1,21 @@
+"use server";
+
 import { getSession } from "@lib/auth-server";
 import PrismaInstance from "@lib/prisma";
 import { os } from "@orpc/server";
-import { $Enums, Prisma, User } from "@prisma/client";
+import { $Enums } from "@prisma/client";
 import { formatStringArrayLineByLine } from "@utils/string-format";
-import { cacheLife, cacheTag, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { notFound, unauthorized } from "next/navigation";
 import "server-only";
-import { ZodType, z } from "zod";
+import { z } from "zod";
+import { userOutputSchema } from "./user-schema";
 
-const userOutputSchema: ZodType<User> = z.object({
-    id: z.string().describe("Unique ID of the user (nanoid)"),
-    name: z.string().describe("Firstname of the user"),
-    lastname: z.string().nullable().describe("Lastname of the user"),
-    email: z.string().describe("Email address"),
-    emailVerified: z.boolean().describe("Email verification status (boolean)"),
-    image: z.string().nullable().describe("Profile image URL"),
-    role: z.enum($Enums.Role).describe("User role: ADMIN, USER (default)"),
-    createdAt: z.date().describe("Creation date"),
-    updatedAt: z.date().describe("Last update date"),
-});
-
-const getUserListFindMany = async (props: Prisma.UserFindManyArgs, key: string[]) => {
-    "use cache";
-    cacheTag(...key);
-    cacheLife("hours");
-    return await PrismaInstance.user.findMany(props);
-};
-
-const getUserList = os
-    .route({
-        method: "GET",
-        path: "/users",
-        summary: "Get users",
-        description: formatStringArrayLineByLine([
-            "**Pagination**",
-            "  - [ ] Take: Number of tasks to take (min: 1, max: 1000)",
-            "  - [ ] Skip: Number of tasks to skip (min: 0)",
-            "\n",
-            "**Permissions**",
-            "- **Admin**",
-            "  - [ ] Get every users",
-            "- **User**",
-            "  - [ ] Cannot access this endpoint",
-        ]),
-    })
-    .input(
-        z
-            .object({
-                take: z.number().min(1).max(1000).optional().describe("Number of tasks to take"),
-                skip: z.number().min(0).optional().describe("Number of tasks to skip"),
-            })
-            .optional(),
-    )
-    .output(z.array(userOutputSchema))
-    .handler(async ({ input }) => {
-        const session = await getSession();
-        if (!session) unauthorized();
-
-        // Only admin can get user list
-        const isAdmin = session.user.role === "ADMIN";
-        if (!isAdmin) unauthorized();
-
-        // Get user list
-        const users = await getUserListFindMany(
-            {
-                take: input?.take,
-                skip: input?.skip,
-            },
-            [`getUserList`],
-        );
-
-        return users;
-    });
-
-const getUserFindUnique = async (props: Prisma.UserFindUniqueArgs, key: string[]) => {
-    "use cache";
-    cacheTag(...key);
-    cacheLife("hours");
-    return await PrismaInstance.user.findUnique(props);
-};
-
-const getUser = os
-    .route({
-        method: "GET",
-        path: "/users/{id}",
-        summary: "Get a user by ID",
-        description: formatStringArrayLineByLine([
-            "**Permissions**",
-            "- **Admin**",
-            "  - [ ] Get user of any user",
-            "- **User**",
-            "  - [ ] Get its own user only",
-        ]),
-    })
-    .input(
-        z.object({
-            id: z.string().describe("User ID"),
-        }),
-    )
-    .output(userOutputSchema.nullable())
-    .handler(async ({ input }) => {
-        const session = await getSession();
-        if (!session) unauthorized();
-
-        const isAdmin = session.user.role === "ADMIN";
-
-        // Check if user exists (cached)
-        const user = await getUserFindUnique({ where: { id: input.id } }, [`getUser-${input.id}`]);
-        if (!user) notFound();
-
-        // Check if user session is authorized to access this user
-        const isAuthorized = isAdmin || user.id === session.user.id;
-        if (!isAuthorized) unauthorized();
-
-        return user;
-    });
-
-const createUser = os
+const create = os
     .route({
         method: "POST",
         path: "/users",
-        summary: "Create a new user",
+        summary: "USER Create",
         description: formatStringArrayLineByLine([
             "**Permissions**",
             "- **Admin**",
@@ -165,16 +60,18 @@ const createUser = os
         });
 
         // Revalidate cache
-        revalidateTag(`getUserList`, "hours");
+        revalidateTag(`userFindManyCached`, "hours");
+        // revalidateTag(`userFindFirstCached`, "hours");
 
         return user;
-    });
+    })
+    .actionable();
 
-const updateUser = os
+const update = os
     .route({
         method: "PUT",
         path: "/users/{id}",
-        summary: "Update a user",
+        summary: "USER Update",
         description: formatStringArrayLineByLine([
             "**Permissions**",
             "- **Admin**",
@@ -224,18 +121,20 @@ const updateUser = os
         });
 
         // Revalidate cache
-        revalidateTag(`getUserList`, "hours");
-        revalidateTag(`getUserList-${userExists.id}`, "hours");
-        revalidateTag(`getUser-${input.id}`, "hours");
+        revalidateTag(`userFindManyCached`, "hours");
+        revalidateTag(`userFindManyCached-${userExists.id}`, "hours");
+        revalidateTag(`userFindUniqueCached-${input.id}`, "hours");
+        // revalidateTag(`userFindFirstCached`, "hours");
 
         return user;
-    });
+    })
+    .actionable();
 
-const deleteUser = os
+const deleting = os
     .route({
         method: "DELETE",
         path: "/users/{id}",
-        summary: "Delete a user",
+        summary: "USER Delete",
         description: formatStringArrayLineByLine([
             "**Permissions**",
             "- **Admin**",
@@ -270,17 +169,19 @@ const deleteUser = os
         const user = await PrismaInstance.user.delete({ where: { id: input.id } });
 
         // Revalidate cache
-        revalidateTag(`getUserList`, "hours");
-        revalidateTag(`getUserList-${userExists.id}`, "hours");
-        revalidateTag(`getUser-${input.id}`, "hours");
+        revalidateTag(`userFindManyCached`, "hours");
+        revalidateTag(`userFindManyCached-${userExists.id}`, "hours");
+        revalidateTag(`userFindUniqueCached-${input.id}`, "hours");
+        // revalidateTag(`userFindFirstCached`, "hours");
 
         return user;
-    });
+    })
+    .actionable();
 
-export const userRoutes = {
-    list: getUserList,
-    get: getUser,
-    create: createUser,
-    update: updateUser,
-    delete: deleteUser,
-};
+const userMutations = () => ({
+    create,
+    update,
+    delete: deleting,
+});
+
+export default userMutations;

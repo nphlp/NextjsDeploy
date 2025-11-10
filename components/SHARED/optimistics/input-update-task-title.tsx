@@ -1,9 +1,9 @@
 "use client";
 
-import { TaskUpdateAction } from "@actions/TaskUpdateAction";
 import { TaskType } from "@app/tasks/components/fetch";
 import { Input } from "@comps/SHADCN/ui/input";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import oRPC from "@lib/orpc";
 import { cn } from "@shadcn/lib/utils";
 import { startTransition, useState } from "react";
 import { toast } from "sonner";
@@ -32,19 +32,18 @@ export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
             // Set optimistic state
             setOptimisticData(newItem);
 
-            // Do mutation
-            const { data, error } = await TaskUpdateAction({ id, title });
+            try {
+                // Do mutation
+                const data = await oRPC.task.update({ id, title });
 
-            // If failed, the optimistic state is rolled back at the end of the transition
-            if (!data || error) {
-                toast.error(error);
-                return;
+                // If success, update the real state in a new transition to prevent key conflict
+                startTransition(() => setData(data));
+
+                toast.success("Titre mis à jour avec succès");
+            } catch (error) {
+                // If failed, the optimistic state is rolled back at the end of the transition
+                toast.error((error as Error).message ?? "Impossible de mettre à jour le titre");
             }
-
-            // If success, update the real state in a new transition to prevent key conflict
-            startTransition(() => setData(data));
-
-            toast.success("Titre mis à jour avec succès");
         });
     };
 

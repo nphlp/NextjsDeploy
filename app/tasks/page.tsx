@@ -37,9 +37,7 @@ const Todo = async (props: PageProps) => {
     const session = await getSession();
     if (!session) redirect("/login");
 
-    // const taskList = await TaskFindManyServer(taskPageParams({ updatedAt, search, userId: session.user.id }));
-
-    const taskList = await oRPC.page.tasksPage({ updatedAt, search, userId: session.user.id });
+    const taskList = await oRPC.task.findMany({ updatedAt, search, userId: session.user.id });
 
     return (
         <Provider initialData={taskList} sessionServer={session}>

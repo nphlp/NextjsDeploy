@@ -1,12 +1,18 @@
 import "server-only";
-import { pageRoutes } from "./page";
-import { taskRoutes } from "./task";
-import { userRoutes } from "./user";
+import taskMutations from "./task/task-mutation";
+import taskQueries from "./task/task-query";
+import userMutations from "./user/user-mutation";
+import userQueries from "./user/user-query";
 
 export const appRouter = {
-    task: taskRoutes,
-    user: userRoutes,
-    page: pageRoutes,
+    task: {
+        ...taskQueries(),
+        ...taskMutations(),
+    },
+    user: {
+        ...userQueries(),
+        ...userMutations(),
+    },
 };
 
 export type AppRouter = typeof appRouter;

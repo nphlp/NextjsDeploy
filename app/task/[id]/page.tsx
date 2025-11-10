@@ -38,9 +38,7 @@ const Task = async (props: PageProps) => {
     const session = await getSession();
     if (!session) redirect("/login");
 
-    // const task = await TaskFindUniqueServer(taskIdPageParams(id, session));
-
-    const task = await oRPC.task.get({ id });
+    const task = await oRPC.task.findUnique({ id });
 
     if (!task) notFound();
 
