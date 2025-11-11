@@ -1,8 +1,8 @@
 "use client";
 
+import { TaskType } from "@comps/SHARED/optimistics/types";
 import { Dispatch, SetStateAction, createContext } from "react";
 import { RefetchType } from "@/solid/solid-hook";
-import { TaskType } from "./fetch";
 import { OptimisticAction } from "./optimistic";
 
 export type ContextType = {

@@ -1,4 +1,4 @@
-import { TaskType } from "./fetch";
+import { TaskType } from "@comps/SHARED/optimistics/types";
 
 export type OptimisticAction<T> = {
     type: "add" | "update" | "delete";

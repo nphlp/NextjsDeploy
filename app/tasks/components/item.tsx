@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "@comps/SHADCN/components/link";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
 import ButtonDeleteTask, { ButtonDeleteTaskSkeleton } from "@comps/SHARED/optimistics/button-delete-task";
@@ -7,11 +5,9 @@ import InputUpdateTaskTitle, { InputUpdateTaskTitleSkeleton } from "@comps/SHARE
 import SelectUpdateTaskStatus, {
     SelectUpdateTaskStatusSkeleton,
 } from "@comps/SHARED/optimistics/select-update-task-status";
+import { TaskType } from "@comps/SHARED/optimistics/types";
 import { Pencil } from "lucide-react";
 import { Route } from "next";
-import { useContext } from "react";
-import { Context } from "./context";
-import { TaskType } from "./fetch";
 
 type TodoItemProps = {
     task: TaskType;
@@ -19,8 +15,6 @@ type TodoItemProps = {
 
 export default function Item(props: TodoItemProps) {
     const { task } = props;
-
-    const { refetch } = useContext(Context);
 
     return (
         <div className="flex flex-row gap-2">
@@ -37,7 +31,7 @@ export default function Item(props: TodoItemProps) {
             >
                 <Pencil className="size-6" />
             </Link>
-            <ButtonDeleteTask task={task} refetch={refetch} className="max-xs:hidden px-1.5" />
+            <ButtonDeleteTask task={task} className="max-xs:hidden px-1.5" />
         </div>
     );
 }

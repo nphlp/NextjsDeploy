@@ -1,5 +1,5 @@
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
-import { TaskType } from "./fetch";
+import { TaskType } from "@comps/SHARED/optimistics/types";
 import Item, { ItemSkeleton } from "./item";
 
 type SectionStatusProps = {

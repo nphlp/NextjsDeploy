@@ -74,10 +74,6 @@ export type LocationResponse = {
 } | null;
 
 export async function GET(request: NextRequest): Promise<NextResponse<ResponseFormat<LocationResponse>>> {
-    "use cache: private";
-
-    cacheLife("hours");
-
     try {
         const params: LocationProps = decodeParams(request.nextUrl.searchParams);
 
@@ -96,8 +92,11 @@ export async function GET(request: NextRequest): Promise<NextResponse<ResponseFo
         console.error("Location -> " + (error as Error).message);
         if (process.env.NODE_ENV === "development") {
             if (error instanceof ZodError)
-                return NextResponse.json({ error: "Location -> Invalid Zod params -> " + error.message });
-            return NextResponse.json({ error: "Location -> " + (error as Error).message });
+                return NextResponse.json(
+                    { error: "Location -> Invalid Zod params -> " + error.message },
+                    { status: 400 },
+                );
+            return NextResponse.json({ error: "Location -> " + (error as Error).message }, { status: 500 });
         }
         // TODO: add logging
         return NextResponse.json({ error: "Something went wrong..." }, { status: 500 });
