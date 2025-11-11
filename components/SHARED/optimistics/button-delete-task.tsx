@@ -1,6 +1,6 @@
 "use client";
 
-import { TaskType } from "@app/tasks/components/fetch";
+import { Context } from "@app/tasks/components/context";
 import { Button } from "@comps/SHADCN/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@comps/SHADCN/ui/dialog";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
@@ -9,52 +9,54 @@ import { cn } from "@shadcn/lib/utils";
 import { Trash2 } from "lucide-react";
 import { Route } from "next";
 import { useRouter } from "next/navigation";
-import { startTransition, useRef, useState } from "react";
+import { startTransition, useContext, useRef, useState } from "react";
 import { toast } from "sonner";
-import { RefetchType } from "@/solid/solid-hook";
-import useInstant from "./useInstant";
+import { TaskType } from "./types";
 
 type SelectUpdateTaskStatusProps = {
     task: TaskType;
     className?: string;
-} & (
-    | {
-          redirectTo: Route;
-          refetch?: undefined;
-      }
-    | {
-          redirectTo?: undefined;
-          refetch?: RefetchType;
-      }
-);
+    redirectTo?: Route;
+};
 
 export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
-    const { task, className, redirectTo, refetch } = props;
+    const { task, className, redirectTo } = props;
+
+    // This context may be undefined if used outside of a provider
+    const setDataBypass = useContext(Context)?.setDataBypass;
+    const setOptimisticData = useContext(Context)?.setOptimisticData;
+    const optimisticMutations = useContext(Context)?.optimisticMutations;
 
     const router = useRouter();
-    const { setData, setOptimisticData } = useInstant(task);
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const buttonRef = useRef<HTMLButtonElement>(null);
 
     const handleDelete = () => {
         startTransition(async () => {
-            // New item
-            const newItem: TaskType = task;
-
             // Set optimistic state
-            setOptimisticData(newItem);
+            if (setOptimisticData) setOptimisticData({ type: "delete", newItem: task });
 
             try {
                 // Do mutation
-                const data = await oRPC.task.delete({ id: newItem.id });
+                const data = await oRPC.task.delete({ id: task.id, revalidatePaths: ["/tasks", `/task/${task.id}`] });
+
+                // Close modal
+                setIsModalOpen(false);
+
+                // If redirection is defined, do not need updating state
+                if (redirectTo) {
+                    setTimeout(() => {
+                        router.push(redirectTo);
+                    }, 200);
+                }
 
                 // If success, update the real state in a new transition to prevent key conflict
-                startTransition(() => setData(data));
-
-                // If redirection or refetching, do it after the real state change
-                if (redirectTo) router.push(redirectTo);
-                if (refetch) refetch();
+                if (!redirectTo) {
+                    startTransition(async () =>
+                        setDataBypass((current) => optimisticMutations(current, { type: "delete", newItem: data })),
+                    );
+                }
 
                 toast.success("Tâche supprimée avec succès");
             } catch (error) {

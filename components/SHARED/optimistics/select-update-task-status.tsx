@@ -1,6 +1,5 @@
 "use client";
 
-import { TaskType } from "@app/tasks/components/fetch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@comps/SHADCN/ui/select";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
 import oRPC from "@lib/orpc";
@@ -8,6 +7,7 @@ import { cn } from "@shadcn/lib/utils";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
 import { ReactNode, startTransition } from "react";
 import { toast } from "sonner";
+import { TaskType } from "./types";
 import useInstant from "./useInstant";
 
 type SelectOptionType = {
@@ -60,14 +60,18 @@ export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProp
         const newStatusConst = newStatus as TaskType["status"];
         startTransition(async () => {
             // New item
-            const newItem: TaskType = { id, title, status: newStatusConst };
+            const updatedItem: TaskType = { id, title, status: newStatusConst };
 
             // Set optimistic state
-            setOptimisticData(newItem);
+            setOptimisticData(updatedItem);
 
             try {
                 // Do mutation
-                const data = await oRPC.task.update({ id, status: newStatusConst });
+                const data = await oRPC.task.update({
+                    id,
+                    status: newStatusConst,
+                    revalidatePaths: ["/tasks", `/task/${id}`],
+                });
 
                 // If success, update the real state in a new transition to prevent key conflict
                 startTransition(() => setData(data));

@@ -7,7 +7,10 @@ export const insertTasks = async () => {
 
         userList.map(async (user, index) => {
             const taskList = (index + 1) % 2 === 0 ? taskData : taskData2;
-            await PrismaInstance.task.createMany({ data: taskList.map((task) => ({ ...task, userId: user.id })) });
+
+            for (const task of taskList) {
+                await PrismaInstance.task.create({ data: { ...task, userId: user.id } });
+            }
         });
     } catch (error) {
         throw new Error("❌ Erreur lors de la création des tasks -> " + (error as Error).message);

@@ -1,7 +1,7 @@
 import { getSession } from "@lib/auth-server";
 import { os } from "@orpc/server";
 import { Prisma } from "@prisma/client";
-import { formatStringArrayLineByLine } from "@utils/string-format";
+import { deepPropsSort, formatStringArrayLineByLine } from "@utils/string-format";
 import { notFound, unauthorized } from "next/navigation";
 import "server-only";
 import { z } from "zod";
@@ -33,6 +33,8 @@ const findMany = os
             "  - [ ] Get tasks of any user by filtering with user ID",
             "- **User**",
             "  - [ ] Get its own tasks only",
+            "**Cache tags**",
+            "  - [ ] Precise custom cache tags for revalidation",
         ]),
     })
     .input(
@@ -47,6 +49,8 @@ const findMany = os
                 // Pagination
                 take: z.number().min(1).max(1000).optional().describe("Number of tasks to take"),
                 skip: z.number().min(0).optional().describe("Number of tasks to skip"),
+                // Cache tags
+                cacheTags: z.array(z.string()).optional().describe("Array of cache tags"),
             })
             .optional(),
     )
@@ -73,7 +77,13 @@ const findMany = os
                     userId: userIdFilter,
                 },
             },
-            [`taskFindManyCached`, `taskFindManyCached-${userIdFilter}`],
+            [
+                `taskFindManyCached`,
+                `taskFindManyCached-${userIdFilter}`,
+                `taskFindManyCached-${deepPropsSort(input)}`,
+                // Provided cache tags
+                ...(input?.cacheTags ?? []),
+            ],
         );
 
         return tasks;
@@ -90,11 +100,15 @@ const findUnique = os
             "  - [ ] Get task of any user",
             "- **User**",
             "  - [ ] Get its own task only",
+            "**Cache tags**",
+            "  - [ ] Precise custom cache tags for revalidation",
         ]),
     })
     .input(
         z.object({
             id: z.string().describe("Task ID"),
+            // Cache tags
+            cacheTags: z.array(z.string()).optional().describe("Array of cache tags"),
         }),
     )
     .output(taskOutputSchema.nullable())
@@ -108,6 +122,8 @@ const findUnique = os
         const task = await taskFindUniqueCached({ where: { id: input.id } }, [
             `taskFindUniqueCached`,
             `taskFindUniqueCached-${input.id}`,
+            // Provided cache tags
+            ...(input?.cacheTags ?? []),
         ]);
         if (!task) notFound();
 
@@ -129,11 +145,15 @@ const findFirst = os
             "  - [ ] Get task of any user",
             "- **User**",
             "  - [ ] Get its own task only",
+            "**Cache tags**",
+            "  - [ ] Precise custom cache tags for revalidation",
         ]),
     })
     .input(
         z.object({
             title: z.string().describe("Task title"),
+            // Cache tags
+            cacheTags: z.array(z.string()).optional().describe("Array of cache tags"),
         }),
     )
     .output(taskOutputSchema.nullable())
@@ -146,7 +166,9 @@ const findFirst = os
         // Check if task exists
         const task = await taskFindFirstCached({ where: { title: input.title } }, [
             `taskFindFirstCached`,
-            `taskFindFirstCached-${JSON.stringify(input)}`,
+            `taskFindFirstCached-${deepPropsSort(input)}`,
+            // Provided cache tags
+            ...(input?.cacheTags ?? []),
         ]);
         if (!task) notFound();
 

@@ -1,12 +1,12 @@
 "use client";
 
-import { TaskType } from "@app/tasks/components/fetch";
 import { Input } from "@comps/SHADCN/ui/input";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
 import oRPC from "@lib/orpc";
 import { cn } from "@shadcn/lib/utils";
-import { startTransition, useState } from "react";
+import { startTransition, useRef, useState } from "react";
 import { toast } from "sonner";
+import { TaskType } from "./types";
 import useInstant from "./useInstant";
 
 type InputUpdateTaskTitleProps = {
@@ -20,24 +20,29 @@ export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
 
     const { setData, setOptimisticData } = useInstant(task);
 
+    const previousTitle = useRef<string>(task.title);
     const [title, setTitle] = useState<string>(task.title);
 
     const handleTitleUpdate = async () => {
-        if (title.length === 0) return setTitle(task.title);
+        if (title.length === 0) return setTitle(previousTitle.current);
+        if (title === previousTitle.current) return;
 
         startTransition(async () => {
             // New item
-            const newItem: TaskType = { id, title, status };
+            const updatedItem: TaskType = { id, title, status };
 
             // Set optimistic state
-            setOptimisticData(newItem);
+            setOptimisticData(updatedItem);
 
             try {
                 // Do mutation
-                const data = await oRPC.task.update({ id, title });
+                const data = await oRPC.task.update({ id, title, revalidatePaths: ["/tasks", `/task/${id}`] });
 
                 // If success, update the real state in a new transition to prevent key conflict
                 startTransition(() => setData(data));
+
+                // Update previous title
+                previousTitle.current = title;
 
                 toast.success("Titre mis à jour avec succès");
             } catch (error) {

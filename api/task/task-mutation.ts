@@ -5,7 +5,7 @@ import PrismaInstance from "@lib/prisma";
 import { os } from "@orpc/server";
 import { $Enums } from "@prisma/client";
 import { formatStringArrayLineByLine } from "@utils/string-format";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { notFound, unauthorized } from "next/navigation";
 import "server-only";
 import { z } from "zod";
@@ -22,6 +22,9 @@ export const create = os
             "  - [ ] Create task for any user",
             "- **User**",
             "  - [ ] Create task for himself only",
+            "**Cache revalidation**",
+            "  - [ ] Revalidate specific tags after mutation",
+            "  - [ ] Revalidate specific paths after mutation",
         ]),
     })
     .input(
@@ -33,6 +36,8 @@ export const create = os
                 .default("TODO")
                 .describe("Task status : TODO (default), IN_PROGRESS, DONE"),
             userId: z.string().optional().describe("User ID owner of the task (admin right)"),
+            revalidateTags: z.array(z.string()).optional().describe("Array of revalidation tags"),
+            revalidatePaths: z.array(z.string()).optional().describe("Array of revalidation paths"),
         }),
     )
     .output(taskOutputSchema)
@@ -57,7 +62,10 @@ export const create = os
         // Revalidate cache
         revalidateTag(`taskFindManyCached`, "hours");
         revalidateTag(`taskFindManyCached-${userIdOwner}`, "hours");
-        // revalidateTag(`taskFindFirstCached`, "hours");
+
+        // Provided revalidation tags and paths
+        input.revalidateTags?.map((tag) => revalidateTag(tag, "hours"));
+        input.revalidatePaths?.map((path) => revalidatePath(path));
 
         return task;
     })
@@ -74,6 +82,9 @@ export const update = os
             "  - [ ] Update task of any user",
             "- **User**",
             "  - [ ] Update task of himself only",
+            "**Cache revalidation**",
+            "  - [ ] Revalidate specific tags after mutation",
+            "  - [ ] Revalidate specific paths after mutation",
         ]),
     })
     .input(
@@ -81,6 +92,8 @@ export const update = os
             id: z.string().describe("Task ID"),
             title: z.string().min(1, "Title cannot be empty").optional().describe("Task title"),
             status: z.enum($Enums.Status).optional().describe("Task status"),
+            revalidateTags: z.array(z.string()).optional().describe("Array of revalidation tags"),
+            revalidatePaths: z.array(z.string()).optional().describe("Array of revalidation paths"),
         }),
     )
     .output(taskOutputSchema)
@@ -111,7 +124,10 @@ export const update = os
         revalidateTag(`taskFindManyCached`, "hours");
         revalidateTag(`taskFindManyCached-${taskExists.userId}`, "hours");
         revalidateTag(`taskFindUniqueCached-${input.id}`, "hours");
-        // revalidateTag(`taskFindFirstCached`, "hours");
+
+        // Provided revalidation tags and paths
+        input.revalidateTags?.map((tag) => revalidateTag(tag, "hours"));
+        input.revalidatePaths?.map((path) => revalidatePath(path));
 
         return task;
     })
@@ -128,11 +144,16 @@ export const deleting = os
             "  - [ ] Delete task of any user",
             "- **User**",
             "  - [ ] Delete task of himself only",
+            "**Cache revalidation**",
+            "  - [ ] Revalidate specific tags after mutation",
+            "  - [ ] Revalidate specific paths after mutation",
         ]),
     })
     .input(
         z.object({
             id: z.string().describe("Task ID"),
+            revalidateTags: z.array(z.string()).optional().describe("Array of revalidation tags"),
+            revalidatePaths: z.array(z.string()).optional().describe("Array of revalidation paths"),
         }),
     )
     .output(taskOutputSchema)
@@ -157,7 +178,10 @@ export const deleting = os
         revalidateTag(`taskFindManyCached`, "hours");
         revalidateTag(`taskFindManyCached-${taskExists.userId}`, "hours");
         revalidateTag(`taskFindUniqueCached-${input.id}`, "hours");
-        // revalidateTag(`taskFindFirstCached`, "hours");
+
+        // Provided revalidation tags and paths
+        input.revalidateTags?.map((tag) => revalidateTag(tag, "hours"));
+        input.revalidatePaths?.map((path) => revalidatePath(path));
 
         return task;
     })

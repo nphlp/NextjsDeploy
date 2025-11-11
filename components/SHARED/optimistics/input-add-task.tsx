@@ -1,7 +1,6 @@
 "use client";
 
 import { Context } from "@app/tasks/components/context";
-import { TaskType } from "@app/tasks/components/fetch";
 import { Button } from "@comps/SHADCN/ui/button";
 import { Input } from "@comps/SHADCN/ui/input";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
@@ -9,6 +8,7 @@ import oRPC from "@lib/orpc";
 import { ArrowUp } from "lucide-react";
 import { startTransition, useContext, useState } from "react";
 import { toast } from "sonner";
+import { TaskType } from "./types";
 
 export default function InputAddTask() {
     const { setDataBypass, setOptimisticData, optimisticMutations } = useContext(Context);
@@ -16,13 +16,15 @@ export default function InputAddTask() {
     const [title, setTitle] = useState("");
 
     const handleSubmit = async () => {
-        if (!title) return console.log("✏️ Input is empty");
+        if (!title) {
+            toast.error("Le titre ne peut pas être vide");
+            return;
+        }
 
         // Clear input
         setTitle("");
 
         startTransition(async () => {
-            // New item (only title is important, id and status will be set by the server)
             const newItem: TaskType = { id: "", title, status: "TODO" };
 
             // Set optimistic state
@@ -30,7 +32,7 @@ export default function InputAddTask() {
 
             try {
                 // Do mutation
-                const data = await oRPC.task.create({ title: newItem.title });
+                const data = await oRPC.task.create({ title: newItem.title, revalidatePaths: ["/tasks"] });
 
                 // If success, update the real state in a new transition to prevent key conflict
                 startTransition(() =>
