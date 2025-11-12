@@ -7,3 +7,4 @@
 
 export { insertUsers } from "@fixtures/userData";
 export { insertTasks } from "@fixtures/taskData";
+export { insertFruits } from "@fixtures/fruitData";
