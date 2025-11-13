@@ -18,23 +18,12 @@ Créer des exemples avec du sens.
 - "use cache: remote"
 - "use cache: private
 
-### SSR Example
+### Zustand
 
-- SSR (take 10) + useState + Toggle (show 3 or 10 items)
-  -> Fecth 10 server
-  -> Hydrate useState
-  -> ⨯ Perd le state au refresh
-
-- SSR (take 3) + useFetch + Toggle (take 3 or 10 items)
-  -> Fetch 3 server, puis foetch 10 client
-  -> Hydrate useFetch initialData
-  -> ⨯ Perd le state au refresh
-
-- SearchParams SSR + useFetch + useQuery (take 3 or 10 items)
-  -> Parse SearchParams côté server
-  -> Fetch 3 ou 10 server, puis fetch 3 ou 10 client
-  -> Hydrate useFetch initialData
-  -> ✔︎ Garde le state au refresh
+- Basic store (client side only)
+- Store with SSR initial state
+- Store with persistence (localStorage)
+- Store with SSR and cookie persistence
 
 ### UseQuery Examples
 
