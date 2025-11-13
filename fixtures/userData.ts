@@ -30,6 +30,20 @@ export const userData: Prisma.UserCreateInput[] = [
         },
     },
     {
+        name: "Vendor",
+        lastname: "Debug",
+        email: "vendor@example.com",
+        emailVerified: true,
+        role: "VENDOR",
+        Accounts: {
+            create: {
+                providerId: "credential",
+                accountId: "",
+                password: defaultPassword,
+            },
+        },
+    },
+    {
         name: "User",
         lastname: "Debug",
         email: "user@example.com",

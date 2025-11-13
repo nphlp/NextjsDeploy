@@ -17,7 +17,9 @@ model User {
     image         String? @db.Text
     role          Role    @default(USER)
 
-    Tasks Task[]
+    Tasks   Task[]
+    Fruits  Fruit[]
+    Baskets Basket[]
 
     Sessions Session[]
     Accounts Account[]
@@ -83,6 +85,12 @@ model Verification {
     @@index([identifier])
 }
 
+enum Role {
+    USER
+    VENDOR
+    ADMIN
+}
+
 model Task {
     id    String @id @default(nanoid())
     title String
@@ -106,17 +114,56 @@ enum Status {
 }
 
 model Fruit {
-    id          String  @id @default(nanoid())
-    name        String
-    description String?
+    id          String @id @default(nanoid())
+    name        String @unique
+    description String @db.Text
+
+    Quantities Quantity[]
+
+    /// Author
+    userId String
+    User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@index([name])
+    @@index([userId])
 }
 
-enum Role {
-    USER
-    ADMIN
+model Basket {
+    id String @id @default(nanoid())
+
+    userId String
+    User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    /// Fruit quantities in the basket
+    Quantity Quantity[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([userId])
+}
+
+/// Fruit quantity in a basket
+model Quantity {
+    id       String @id @default(nanoid())
+    quantity Int
+
+    basketId String
+    Basket   Basket @relation(fields: [basketId], references: [id], onDelete: Cascade)
+
+    fruitId String
+    Fruit   Fruit  @relation(fields: [fruitId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Constraints
+    @@unique([basketId, fruitId])
+    // Indexes
+    @@index([basketId])
+    @@index([fruitId])
+    @@index([fruitId, basketId])
 }
