@@ -8,53 +8,65 @@ import { Route } from "next";
 import { usePathname } from "next/navigation";
 import exampleLinks from "./link";
 
-export default function Navigation() {
+type NavigationProps = {
+    sideBarWidth: number;
+};
+
+export default function Navigation(props: NavigationProps) {
+    const { sideBarWidth } = props;
+
     const pathname = usePathname() as Route;
 
     if (pathname === "/examples") return null;
 
-    const examplesPaths = exampleLinks.flatMap((group) => group.links.map((link) => link.url));
+    const examplesPaths = exampleLinks.flatMap((group) => group.links);
 
-    const pathIndex = examplesPaths.indexOf(pathname);
+    const pathIndex = examplesPaths.map((link) => link.url).indexOf(pathname);
 
     const previousPath = pathIndex > 0 ? examplesPaths[pathIndex - 1] : null;
     const nextPath = pathIndex < examplesPaths.length - 1 ? examplesPaths[pathIndex + 1] : null;
 
     return (
-        <div className="fixed inset-x-0 bottom-4 flex justify-center">
+        <div style={{ left: sideBarWidth }} className="fixed right-0 bottom-4 flex justify-center">
             <div className="grid grid-cols-2 gap-4">
                 <div className="group relative">
-                    <Badge
-                        variant="outline"
-                        className={cn(
-                            "absolute top-1/2 -translate-y-1/2",
-                            "right-full translate-x-3 pr-4",
-                            "pointer-events-none opacity-0 transition-all duration-150",
-                            "group-hover:pr-5 group-hover:opacity-100",
-                        )}
-                    >
-                        Previous
-                    </Badge>
+                    {!!previousPath && (
+                        <Badge
+                            variant="outline"
+                            className={cn(
+                                "absolute top-1/2 -translate-y-1/2",
+                                "right-full translate-x-3 pr-4",
+                                "pointer-events-none opacity-0 transition-all duration-150",
+                                "group-hover:pr-5 group-hover:opacity-100",
+                                "bg-background",
+                            )}
+                        >
+                            {previousPath.shortTitle}
+                        </Badge>
+                    )}
                     <div className="bg-background relative z-10 rounded-md">
-                        <Link href={previousPath ?? "#"} variant="outline" disabled={!previousPath}>
+                        <Link href={previousPath?.url ?? "#"} variant="outline" disabled={!previousPath}>
                             <ChevronLeft />
                         </Link>
                     </div>
                 </div>
                 <div className="group relative">
-                    <Badge
-                        variant="outline"
-                        className={cn(
-                            "absolute top-1/2 -translate-y-1/2",
-                            "left-full -translate-x-3 pl-4",
-                            "pointer-events-none opacity-0 transition-all duration-150",
-                            "group-hover:pl-5 group-hover:opacity-100",
-                        )}
-                    >
-                        Next
-                    </Badge>
+                    {!!nextPath && (
+                        <Badge
+                            variant="outline"
+                            className={cn(
+                                "absolute top-1/2 -translate-y-1/2",
+                                "left-full -translate-x-3 pl-4",
+                                "pointer-events-none opacity-0 transition-all duration-150",
+                                "group-hover:pl-5 group-hover:opacity-100",
+                                "bg-background",
+                            )}
+                        >
+                            {nextPath.shortTitle}
+                        </Badge>
+                    )}
                     <div className="bg-background relative z-10 rounded-md">
-                        <Link href={nextPath ?? "#"} variant="outline" disabled={!nextPath}>
+                        <Link href={nextPath?.url ?? "#"} variant="outline" disabled={!nextPath}>
                             <ChevronRight />
                         </Link>
                     </div>

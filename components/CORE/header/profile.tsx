@@ -67,13 +67,13 @@ export default function ProfileIcon(props: ProfileIconProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent side="bottom" align="end" className="min-w-[140px]">
                 <DropdownMenuItem className="flex gap-4" asChild>
-                    <Link aria-label="Connexion" href="/login" className="flex w-full justify-start gap-4">
+                    <Link aria-label="Connexion" href="/login" className="flex w-full justify-start gap-4" noStyle>
                         <UserRound className="size-5" />
                         <span>Connexion</span>
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="flex gap-4" asChild>
-                    <Link aria-label="Inscription" href="/register" className="flex w-full justify-start gap-4">
+                    <Link aria-label="Inscription" href="/register" className="flex w-full justify-start gap-4" noStyle>
                         <UserPlus className="size-5" />
                         <span>Inscription</span>
                     </Link>

@@ -1,49 +1,54 @@
-import Link from "@comps/SHADCN/components/link";
-import AnchorButton from "./_components/archor-button";
+import { Button } from "@comps/SHADCN/ui/button";
+import { Card } from "@comps/SHADCN/ui/card";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import exampleLinks, { LinkGroupType } from "./_components/link";
 
 export default function Page() {
     return (
-        <div className="max-w-[600px] space-y-8 p-7">
-            <div>
-                <h2 className="text-2xl font-bold">Examples</h2>
-                <p>A collection of examples demonstrating various features for this Next.js template.</p>
+        <div className="max-w-[1000px] space-y-8 p-7">
+            <div className="space-y-2">
+                <h1 className="text-4xl font-bold">Examples</h1>
+                <p className="text-muted-foreground text-lg">
+                    A collection of practical examples demonstrating various features and patterns for this Next.js
+                    template.
+                </p>
             </div>
-            {exampleLinks.map((group, index) => (
-                <LinkGroup key={index} group={group} />
-            ))}
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {exampleLinks.map((group, index) => (
+                    <GroupCard key={index} group={group} />
+                ))}
+            </div>
         </div>
     );
 }
 
-type LinkGroupProps = {
+type GroupCardProps = {
     group: LinkGroupType;
 };
 
-const LinkGroup = (props: LinkGroupProps) => {
-    const { name, description, links } = props.group;
+const GroupCard = (props: GroupCardProps) => {
+    const { name, longDescription, links } = props.group;
+    const firstLink = links[0];
 
     return (
-        <div className="space-y-3">
-            <div>
-                <AnchorButton name={name} />
-                <p className="text-muted-foreground text-xs">{description}</p>
+        <Card className="gap-4 p-6">
+            <div className="space-y-2">
+                <h3 className="text-xl font-semibold">{name}</h3>
+                <p className="text-muted-foreground text-sm">{longDescription}</p>
             </div>
-            <hr />
-            <ul className="space-y-2">
-                {links.map((example, index) => (
-                    <li key={index} className="ml-5 list-disc space-y-1 pl-1">
-                        <Link
-                            href={example.url}
-                            className="text-md h-fit p-0 font-semibold whitespace-normal hover:underline"
-                            noStyle
-                        >
-                            {example.title}
-                        </Link>
-                        <p className="text-muted-foreground text-xs">{example.description}</p>
-                    </li>
-                ))}
-            </ul>
-        </div>
+            <div className="flex flex-1 flex-col justify-end gap-4">
+                <p className="text-muted-foreground text-sm">
+                    {links.length} {links.length === 1 ? "guide" : "guides"} available
+                </p>
+                <Link href={firstLink.url} className="w-full">
+                    <Button variant="outline" className="w-full">
+                        Start with {firstLink.shortTitle}
+                        <ArrowRight className="ml-2 size-4" />
+                    </Button>
+                </Link>
+            </div>
+        </Card>
     );
 };

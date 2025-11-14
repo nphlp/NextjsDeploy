@@ -1,4 +1,14 @@
-export default async function Footer() {
+"use client";
+
+import { usePathname } from "next/navigation";
+
+export default function Footer() {
+    const pathname = usePathname();
+
+    if (pathname.startsWith("/examples")) {
+        return null;
+    }
+
     return (
         <footer className="flex flex-col items-center justify-center gap-2 p-6">
             <h2 className="text-2xl font-bold">Nextjs Deploy</h2>
