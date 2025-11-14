@@ -1,5 +1,7 @@
+import Link from "@comps/SHADCN/components/link";
 import oRPC from "@lib/orpc";
 import { Fruit } from "@prisma/client";
+import { Route } from "next";
 import { Suspense } from "react";
 
 type GetFruitsCachedProps = {
@@ -33,8 +35,6 @@ type FruitsGridProps = {
 };
 
 const FruitsGrid = async (props: FruitsGridProps) => {
-    "use cache";
-
     const { searchParams } = props;
 
     const { take } = await searchParams;
@@ -60,12 +60,16 @@ const FruitCard = async (props: FruitCardProps) => {
     const { fruit } = props;
 
     return (
-        <div className="rounded-lg border p-5 shadow">
+        <Link
+            href={`/fruit/${fruit.id}` as Route}
+            className="block rounded-lg border p-5 shadow transition-all hover:scale-101 hover:shadow-lg"
+            noStyle
+        >
             <h2 className="text-lg font-semibold">{fruit.name}</h2>
             {fruit.description && <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{fruit.description}</p>}
             <div className="mt-4 text-xs text-gray-500">
                 Ajouté le {new Date(fruit.createdAt).toLocaleDateString("fr-FR")}
             </div>
-        </div>
+        </Link>
     );
 };

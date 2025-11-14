@@ -3,8 +3,8 @@ import { Prisma } from "@prisma/client";
 import { deepPropsSort, formatStringArrayLineByLine } from "@utils/string-format";
 import "server-only";
 import { z } from "zod";
-import { fruitFindManyCached } from "./fruit-cached";
-import { fruitOutputSchema } from "./fruit-schema";
+import { fruitFindManyCached, fruitFindUniqueCached } from "./fruit-cached";
+import { fruitOutputSchema, fruitWithUserOutputSchema } from "./fruit-schema";
 
 const findMany = os
     .route({
@@ -77,8 +77,60 @@ const findMany = os
         return fruits;
     });
 
+const findUnique = os
+    .route({
+        method: "GET",
+        path: "/fruit/{id}",
+        summary: "FRUIT Find Unique",
+        description: formatStringArrayLineByLine([
+            "**Find unique fruit by ID**",
+            "  - [ ] Returns a single fruit by its unique identifier",
+            "\n",
+            "**Permissions**",
+            "  - [ ] Public access - no authentication required",
+            "**Cache tags**",
+            "  - [ ] Precise custom cache tags for revalidation",
+        ]),
+    })
+    .input(
+        z.object({
+            id: z.string().describe("Unique ID of the fruit"),
+            cacheTags: z.array(z.string()).optional().describe("Array of cache tags"),
+        }),
+    )
+    .output(fruitWithUserOutputSchema.nullable())
+    .handler(async ({ input }) => {
+        // No authentication required - public access
+
+        // Get fruit by ID with user information
+        const fruit = await fruitFindUniqueCached(
+            {
+                where: { id: input.id },
+                include: {
+                    User: {
+                        select: {
+                            id: true,
+                            name: true,
+                            lastname: true,
+                            email: true,
+                        },
+                    },
+                },
+            },
+            [
+                `fruitFindUniqueCached`,
+                `fruitFindUniqueCached-${input.id}`,
+                // Provided cache tags
+                ...(input.cacheTags ?? []),
+            ],
+        );
+
+        return fruit;
+    });
+
 export const fruitQueries = () => ({
     findMany,
+    findUnique,
 });
 
 export default fruitQueries;

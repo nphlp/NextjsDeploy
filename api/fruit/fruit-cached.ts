@@ -10,4 +10,14 @@ const fruitFindManyCached = async (props: Prisma.FruitFindManyArgs, tags: string
     return await PrismaInstance.fruit.findMany(props);
 };
 
-export { fruitFindManyCached };
+const fruitFindUniqueCached = async <T extends Prisma.FruitFindUniqueArgs>(
+    props: Prisma.SelectSubset<T, Prisma.FruitFindUniqueArgs>,
+    tags: string[],
+) => {
+    "use cache";
+    cacheTag(...tags);
+    cacheLife("hours");
+    return await PrismaInstance.fruit.findUnique(props);
+};
+
+export { fruitFindManyCached, fruitFindUniqueCached };
