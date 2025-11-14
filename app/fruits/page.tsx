@@ -1,15 +1,15 @@
 import oRPC from "@lib/orpc";
 import { Fruit } from "@prisma/client";
-import { unstable_cache } from "next/cache";
 import { Suspense } from "react";
 
-const fruitsCached = unstable_cache(
-    async ({ take }: { take?: number }) => {
-        return oRPC.fruit.findMany({ take });
-    },
-    [],
-    { revalidate: 300, tags: ["fruits"] },
-);
+type GetFruitsCachedProps = {
+    take?: number;
+};
+
+const getFruitsCached = async (props: GetFruitsCachedProps) => {
+    "use cache";
+    return await oRPC.fruit.findMany(props);
+};
 
 type PageProps = {
     searchParams: Promise<{ take?: string }>;
@@ -39,7 +39,7 @@ const FruitsGrid = async (props: FruitsGridProps) => {
 
     const { take } = await searchParams;
 
-    const fruits = await fruitsCached({ take: take ? Number(take) : undefined });
+    const fruits = await getFruitsCached({ take: take ? Number(take) : undefined });
 
     return (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
