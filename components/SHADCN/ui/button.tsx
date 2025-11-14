@@ -34,6 +34,7 @@ const buttonVariants = cva(
 );
 
 function Button({
+    noStyle = false,
     className,
     variant,
     size,
@@ -41,11 +42,18 @@ function Button({
     ...props
 }: React.ComponentProps<"button"> &
     VariantProps<typeof buttonVariants> & {
+        noStyle?: boolean;
         asChild?: boolean;
     }) {
     const Comp = asChild ? Slot : "button";
 
-    return <Comp data-slot="button" className={cn(buttonVariants({ variant, size, className }))} {...props} />;
+    return (
+        <Comp
+            data-slot="button"
+            className={cn(noStyle ? className : buttonVariants({ variant, size, className }))}
+            {...props}
+        />
+    );
 }
 
 // eslint-disable-next-line

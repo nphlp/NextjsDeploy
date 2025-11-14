@@ -1,11 +1,11 @@
 "use client";
 
+import Link from "@comps/SHADCN/components/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { forgetPassword } from "@lib/auth-client";
 import { Button } from "@shadcn/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shadcn/ui/form";
 import { Input } from "@shadcn/ui/input";
-import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -71,7 +71,7 @@ export default function RequestResetForm() {
                 {/* Login link */}
                 <div className="text-muted-foreground flex justify-center gap-2 text-sm">
                     <p>Mot de passe retrouvé ?</p>
-                    <Link href="/login" className="hover:text-foreground underline underline-offset-4">
+                    <Link href="/login" className="hover:text-foreground underline underline-offset-4" noStyle>
                         Se connecter
                     </Link>
                 </div>

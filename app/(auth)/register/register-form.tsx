@@ -1,13 +1,13 @@
 "use client";
 
 import { UserUpdateAction } from "@actions/UserUpdateAction";
+import Link from "@comps/SHADCN/components/link";
 import PasswordInput from "@comps/SHADCN/components/password-input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@lib/auth-client";
 import { Button } from "@shadcn/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shadcn/ui/form";
 import { Input } from "@shadcn/ui/input";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -162,7 +162,7 @@ export default function RegisterForm() {
                 {/* Login link */}
                 <div className="text-muted-foreground flex justify-center gap-2 text-sm">
                     <p>Déjà un compte ?</p>
-                    <Link href="/login" className="hover:text-foreground underline underline-offset-4">
+                    <Link href="/login" className="hover:text-foreground underline underline-offset-4" noStyle>
                         Se connecter
                     </Link>
                 </div>

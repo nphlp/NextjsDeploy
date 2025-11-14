@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@comps/SHADCN/components/link";
 import AnchorButton from "./_components/archor-button";
 import exampleLinks, { LinkGroupType } from "./_components/link";
 
@@ -33,7 +33,11 @@ const LinkGroup = (props: LinkGroupProps) => {
             <ul className="space-y-2">
                 {links.map((example, index) => (
                     <li key={index} className="ml-5 list-disc space-y-1 pl-1">
-                        <Link href={example.url} className="text-md h-fit p-0 font-semibold whitespace-normal">
+                        <Link
+                            href={example.url}
+                            className="text-md h-fit p-0 font-semibold whitespace-normal hover:underline"
+                            noStyle
+                        >
                             {example.title}
                         </Link>
                         <p className="text-muted-foreground text-xs">{example.description}</p>

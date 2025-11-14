@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "@comps/SHADCN/components/link";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -9,7 +10,6 @@ import {
 import { signOut, useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
 import { Loader, LogOut, UserPlus, UserRound } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -47,7 +47,7 @@ export default function ProfileIcon(props: ProfileIconProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent side="bottom" align="end" className="min-w-[140px]">
                 <DropdownMenuItem className="flex gap-4" asChild>
-                    <Link aria-label="Profile" href="/profile" className="flex w-full justify-start gap-4">
+                    <Link aria-label="Profile" href="/profile" className="flex w-full justify-start gap-4" noStyle>
                         <UserRound className="size-5" />
                         <span>Profile</span>
                     </Link>

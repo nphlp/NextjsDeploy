@@ -1,10 +1,10 @@
 "use client";
 
+import Link from "@comps/SHADCN/components/link";
 import { cn } from "@comps/SHADCN/lib/utils";
 import { useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
 import { Route } from "next";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 type LinkType = {
@@ -55,6 +55,7 @@ export default function Navigation(props: NavigationProps) {
                     aria-label={label}
                     href={href}
                     className={cn("text-lg", path === href && "font-bold")}
+                    noStyle
                 >
                     {label}
                 </Link>

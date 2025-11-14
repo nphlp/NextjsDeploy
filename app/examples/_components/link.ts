@@ -20,17 +20,17 @@ const exampleLinks: LinkGroupType[] = [
             {
                 url: "/examples/ssr/use-state",
                 title: "SSR + useState + Toggle",
-                description: "",
+                description: "Server-side fetch with client-side useState toggle, static data without refetching",
             },
             {
                 url: "/examples/ssr/use-fetch",
                 title: "SSR + useState + useFetch + Toggle",
-                description: "",
+                description: "SSR with reactive client-side useFetch hook for dynamic data refetching",
             },
             {
                 url: "/examples/ssr/use-query",
                 title: "SearchParams SSR + useFetch + useQuery + Toggle",
-                description: "",
+                description: "URL-based state persistence with SSR, useFetch and useQueryStates for shareable URLs",
             },
             {
                 url: "/examples/ssr/zustand-cookie",
@@ -78,17 +78,17 @@ const exampleLinks: LinkGroupType[] = [
             {
                 url: "/examples/cache-component/use-cache",
                 title: '"use cache" directive',
-                description: "",
+                description: "Shared cache for all users, ideal for public data and static content",
             },
             {
                 url: "/examples/cache-component/use-cache-remote",
                 title: '"use cache: remote" directive',
-                description: "",
+                description: "Remote CDN cache for distributed caching across multiple servers",
             },
             {
                 url: "/examples/cache-component/use-cache-private",
                 title: '"use cache: private" directive',
-                description: "",
+                description: "User-specific cache for personalized content and authenticated data",
             },
         ],
     },
