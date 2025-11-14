@@ -2,6 +2,7 @@ import B from "@app/examples/_components/bold";
 import I from "@app/examples/_components/italic";
 import ProsAndCons from "@app/examples/_components/pros-and-cons";
 import oRPC from "@lib/orpc";
+import { connection } from "next/server";
 import { Suspense } from "react";
 import Fruits from "./fruits";
 
@@ -14,6 +15,9 @@ export default async function Page() {
 }
 
 const SuspendedPage = async () => {
+    // Prevent prerendering at build time (DB not available during build)
+    await connection();
+
     // Fetch 3 fruits on the server
     const fruits = await oRPC.fruit.findMany({
         take: 3,

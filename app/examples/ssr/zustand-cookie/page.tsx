@@ -3,6 +3,7 @@ import I from "@app/examples/_components/italic";
 import ProsAndCons from "@app/examples/_components/pros-and-cons";
 import oRPC from "@lib/orpc";
 import { getZustandCookie } from "@lib/zustand-cookie-server";
+import { connection } from "next/server";
 import { Suspense } from "react";
 import Fruits from "./fruits";
 import { fruitDisplayCookieName, fruitDisplayCookieSchema } from "./schema";
@@ -16,6 +17,9 @@ export default async function Page() {
 }
 
 const SuspendedPage = async () => {
+    // Prevent prerendering at build time (DB not available during build)
+    await connection();
+
     // Read the cookie on the server side
     const cookie = await getZustandCookie(fruitDisplayCookieName, fruitDisplayCookieSchema);
     const take = cookie?.take ?? 3;
