@@ -14,7 +14,7 @@ export default function Layout(props: LayoutProps) {
     return (
         <div className="flex w-full flex-1 flex-row">
             <Sidebar sideBarWidth={sideBarWidth} />
-            <div className="flex w-full flex-col items-center justify-center">{children}</div>
+            <div className="flex w-full flex-col items-center justify-center p-7">{children}</div>
             <Navigation sideBarWidth={sideBarWidth} />
         </div>
     );
