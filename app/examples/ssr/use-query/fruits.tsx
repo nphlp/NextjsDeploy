@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader } from "@comps/SHADCN/ui/card";
 import oRPC from "@lib/orpc";
 import { useFetch } from "@lib/orpc-hook";
-import { Fruit } from "@prisma/client";
+import { Fruit } from "@prisma/client/client";
 import { useTakeQueryParams } from "./queryParamsClientHooks";
 import ToggleTake from "./toggle-take";
 

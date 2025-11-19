@@ -1,5 +1,5 @@
 import SessionService from "@class/SessionClass";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client/client";
 import {
     SessionCountProps,
     SessionCountResponse,

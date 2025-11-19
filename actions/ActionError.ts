@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client/client";
 import { ZodError } from "zod";
 
 type Response<T> = {

@@ -6,7 +6,7 @@ import InputUpdateTaskTitle, { InputUpdateTaskTitleSkeleton } from "@comps/SHARE
 import SelectUpdateTaskStatus, {
     SelectUpdateTaskStatusSkeleton,
 } from "@comps/SHARED/optimistics/select-update-task-status";
-import { Task } from "@prisma/client";
+import { Task } from "@prisma/client/client";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 

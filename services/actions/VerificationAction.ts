@@ -2,8 +2,8 @@
 
 import VerificationService from "@class/VerificationClass";
 // import { requiresSafeMessage } from "@permissions/requiresSafeMessage";
-import { Prisma } from "@prisma/client";
-import { GetResult, InternalArgs, PrismaClientOptions } from "@prisma/client/runtime/library";
+import { Prisma } from "@prisma/client/client";
+import { GetResult, InternalArgs, PrismaClientOptions } from "@prisma/client/runtime/client";
 
 /**
  * # Verification Action Services

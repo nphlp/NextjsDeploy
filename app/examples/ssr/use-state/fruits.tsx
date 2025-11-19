@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader } from "@comps/SHADCN/ui/card";
 import { Switch } from "@comps/SHADCN/ui/switch";
-import { Fruit } from "@prisma/client";
+import { Fruit } from "@prisma/client/client";
 import { useState } from "react";
 
 type FruitsProps = {

@@ -1,4 +1,4 @@
-import { Fruit } from "@prisma/client";
+import { Fruit } from "@prisma/client/client";
 import z, { ZodType } from "zod";
 
 const fruitOutputSchema: ZodType<Fruit> = z.object({

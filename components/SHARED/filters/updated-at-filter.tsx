@@ -3,7 +3,7 @@
 import { Label } from "@comps/SHADCN/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@comps/SHADCN/ui/select";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client/client";
 import { useUpdatedAtQueryParams } from "./queryParamsClientHooks";
 
 export default function UpdatedAtFilter() {

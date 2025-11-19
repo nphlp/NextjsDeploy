@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from "@comps/SHADCN/ui/card";
 import { Switch } from "@comps/SHADCN/ui/switch";
 import oRPC from "@lib/orpc";
 import { useFetch } from "@lib/orpc-hook";
-import { Fruit } from "@prisma/client";
+import { Fruit } from "@prisma/client/client";
 import { useFruitDisplayStore } from "./store";
 
 type FruitsProps = {

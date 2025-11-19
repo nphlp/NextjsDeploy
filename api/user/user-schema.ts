@@ -1,4 +1,4 @@
-import { $Enums, User } from "@prisma/client";
+import { $Enums, User } from "@prisma/client/client";
 import "server-only";
 import { ZodType, z } from "zod";
 

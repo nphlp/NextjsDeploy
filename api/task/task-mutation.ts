@@ -3,7 +3,7 @@
 import { getSession } from "@lib/auth-server";
 import PrismaInstance from "@lib/prisma";
 import { os } from "@orpc/server";
-import { $Enums } from "@prisma/client";
+import { $Enums } from "@prisma/client/client";
 import { formatStringArrayLineByLine } from "@utils/string-format";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { notFound, unauthorized } from "next/navigation";

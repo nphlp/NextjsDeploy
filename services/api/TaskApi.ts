@@ -1,5 +1,5 @@
-import { Prisma } from "@prisma/client";
-import { GetResult, InternalArgs, PrismaClientOptions } from "@prisma/client/runtime/library";
+import { Prisma } from "@prisma/client/client";
+import { GetResult, InternalArgs, PrismaClientOptions } from "@prisma/client/runtime/client";
 import { TaskCountCached, TaskFindFirstCached, TaskFindManyCached, TaskFindUniqueCached } from "@services/cached";
 import { decodeParams } from "@utils/url-parsers";
 import { NextRequest, NextResponse } from "next/server";

@@ -1,6 +1,6 @@
 import Link from "@comps/SHADCN/components/link";
 import oRPC from "@lib/orpc";
-import { Fruit } from "@prisma/client";
+import { Fruit } from "@prisma/client/client";
 import { Route } from "next";
 import { Suspense } from "react";
 

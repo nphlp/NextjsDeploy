@@ -1,6 +1,6 @@
 import { getSession } from "@lib/auth-server";
 import { os } from "@orpc/server";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client/client";
 import { deepPropsSort, formatStringArrayLineByLine } from "@utils/string-format";
 import { notFound, unauthorized } from "next/navigation";
 import "server-only";

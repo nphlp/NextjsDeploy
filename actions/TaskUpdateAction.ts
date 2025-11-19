@@ -3,7 +3,7 @@
 // import { taskIdPageParams } from "@app/task/[id]/components/fetch";
 import { getSession } from "@lib/auth-server";
 import PrismaInstance from "@lib/prisma";
-import { $Enums } from "@prisma/client";
+import { $Enums } from "@prisma/client/client";
 import { TaskModel } from "@services/types";
 import { revalidateTag } from "next/cache";
 import { unauthorized } from "next/navigation";

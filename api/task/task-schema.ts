@@ -1,4 +1,4 @@
-import { $Enums, Task } from "@prisma/client";
+import { $Enums, Task } from "@prisma/client/client";
 import z, { ZodType } from "zod";
 
 const taskOutputSchema: ZodType<Task> = z.object({

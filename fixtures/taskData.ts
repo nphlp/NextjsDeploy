@@ -1,5 +1,5 @@
 import PrismaInstance from "@lib/prisma";
-import { $Enums } from "@prisma/client";
+import { $Enums } from "@prisma/client/client";
 
 export const insertTasks = async () => {
     try {

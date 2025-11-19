@@ -1,5 +1,5 @@
 import TaskService from "@class/TaskClass";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client/client";
 import {
     TaskCountProps,
     TaskCountResponse,

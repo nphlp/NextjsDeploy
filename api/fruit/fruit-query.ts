@@ -1,5 +1,5 @@
 import { os } from "@orpc/server";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client/client";
 import { deepPropsSort, formatStringArrayLineByLine } from "@utils/string-format";
 import "server-only";
 import { z } from "zod";

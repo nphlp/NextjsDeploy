@@ -1,5 +1,5 @@
 import AccountService from "@class/AccountClass";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client/client";
 import {
     AccountCountProps,
     AccountCountResponse,

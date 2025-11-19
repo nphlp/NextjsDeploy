@@ -1,5 +1,5 @@
 import UserService from "@class/UserClass";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client/client";
 import {
     UserCountProps,
     UserCountResponse,
