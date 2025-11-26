@@ -20,10 +20,33 @@ import { getModelsInfo } from "./modelExtractor";
  * la génération, avec un formatage console lisible.
  */
 export const listModels = (): void => {
-    const { models } = getModelsInfo();
+    const { models, schema } = getModelsInfo();
 
-    console.log(`📋 ${models.length} modèles disponibles dans le Prisma Client:\n  - ${models.join("\n  - ")}`);
-    console.log("\n✅ Listage terminé avec succès!");
+    console.log(`\n📋 Schema Prisma`);
+
+    for (const modelName of models) {
+        const { fields, relations } = schema[modelName];
+
+        console.log(`\n📝 ${modelName}`);
+        console.log("─".repeat(20));
+
+        // Afficher les champs
+        console.log("   Fields:");
+        for (const field of fields) {
+            console.log(`     • ${field}`);
+        }
+
+        // Afficher les relations si présentes
+        if (relations.length > 0) {
+            console.log("\n   Relations:");
+            for (const relation of relations) {
+                console.log(`     → ${relation}`);
+            }
+        }
+    }
+
+    console.log(`\n🎉 ${models.length} modèles trouvés.`);
+    console.log("\n✅ Listage terminé avec succès!\n");
 };
 
 /**
