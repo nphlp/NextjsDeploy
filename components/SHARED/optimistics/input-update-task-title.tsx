@@ -36,7 +36,7 @@ export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
 
             try {
                 // Do mutation
-                const data = await oRPC.task.update({ id, title, revalidatePaths: ["/tasks", `/task/${id}`] });
+                const data = await oRPC.task.update({ id, title });
 
                 // If success, update the real state in a new transition to prevent key conflict
                 startTransition(() => setData(data));

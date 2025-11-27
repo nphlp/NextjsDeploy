@@ -1,6 +1,7 @@
+import { tag } from "@cache/api-utils";
 import { os } from "@orpc/server";
 import { Prisma } from "@prisma/client/client";
-import { deepPropsSort, formatStringArrayLineByLine } from "@utils/string-format";
+import { formatStringArrayLineByLine } from "@utils/string-format";
 import "server-only";
 import { z } from "zod";
 import { fruitFindManyCached, fruitFindUniqueCached } from "./fruit-cached";
@@ -67,8 +68,10 @@ const findMany = os
                 },
             },
             [
-                `fruitFindManyCached`,
-                `fruitFindManyCached-${deepPropsSort(input)}`,
+                // Default cache tags
+                tag("fruit"),
+                tag("fruit", "findMany"),
+                tag("fruit", "findMany", input),
                 // Provided cache tags
                 ...(input?.cacheTags ?? []),
             ],
@@ -118,8 +121,10 @@ const findUnique = os
                 },
             },
             [
-                `fruitFindUniqueCached`,
-                `fruitFindUniqueCached-${input.id}`,
+                // Default cache tags
+                tag("fruit"),
+                tag("fruit", "findUnique"),
+                tag("fruit", "findUnique", input.id),
                 // Provided cache tags
                 ...(input.cacheTags ?? []),
             ],
@@ -128,9 +133,9 @@ const findUnique = os
         return fruit;
     });
 
-export const fruitQueries = () => ({
+export const fruitQueries = {
     findMany,
     findUnique,
-});
+};
 
 export default fruitQueries;

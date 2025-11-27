@@ -32,7 +32,7 @@ export default function InputAddTask() {
 
             try {
                 // Do mutation
-                const data = await oRPC.task.create({ title: newItem.title, revalidatePaths: ["/tasks"] });
+                const data = await oRPC.task.create({ title: newItem.title });
 
                 // If success, update the real state in a new transition to prevent key conflict
                 startTransition(() =>

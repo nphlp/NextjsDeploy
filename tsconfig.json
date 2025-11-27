@@ -23,6 +23,7 @@
             "@actions/*": ["./actions/*"],
             "@app/*": ["./app/*"],
             "@api/*": ["./app/api/*"],
+            "@cache/*": ["./cache/*"],
             "@comps/*": ["./components/*"],
             "@core/*": ["./components/CORE/*"],
             "@ui/*": ["./components/UI/*"],

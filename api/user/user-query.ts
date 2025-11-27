@@ -1,3 +1,4 @@
+import { tag } from "@cache/api-utils";
 import { getSession } from "@lib/auth-server";
 import { os } from "@orpc/server";
 import { formatStringArrayLineByLine } from "@utils/string-format";
@@ -47,7 +48,12 @@ const findMany = os
                 take: input?.take,
                 skip: input?.skip,
             },
-            [`userFindManyCached`],
+            [
+                // Default cache tags
+                tag("user"),
+                tag("user", "findMany"),
+                tag("user", "findMany", input),
+            ],
         );
 
         return users;
@@ -80,8 +86,11 @@ const findUnique = os
 
         // Check if user exists (cached)
         const user = await userFindUniqueCached({ where: { id: input.id } }, [
-            `userFindUniqueCached`,
-            `userFindUniqueCached-${input.id}`,
+            // Default cache tags
+            tag("user"),
+            tag("user", "findUnique"),
+            tag("user", "findUnique", input.id),
+            tag("user", "findUnique", input),
         ]);
         if (!user) notFound();
 
@@ -126,7 +135,12 @@ const findFirst = os
                     lastname: { contains: input.lastname },
                 },
             },
-            [`userFindFirstCached`, `userFindFirstCached-${JSON.stringify(input)}`],
+            [
+                // Default cache tags
+                tag("user"),
+                tag("user", "findFirst"),
+                tag("user", "findFirst", input),
+            ],
         );
         if (!user) notFound();
 
@@ -137,10 +151,10 @@ const findFirst = os
         return user;
     });
 
-export const userQueries = () => ({
+export const userQueries = {
     findMany,
     findUnique,
     findFirst,
-});
+};
 
 export default userQueries;

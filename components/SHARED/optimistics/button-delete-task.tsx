@@ -39,7 +39,7 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
 
             try {
                 // Do mutation
-                const data = await oRPC.task.delete({ id: task.id, revalidatePaths: ["/tasks", `/task/${task.id}`] });
+                const data = await oRPC.task.delete({ id: task.id });
 
                 // Close modal
                 setIsModalOpen(false);

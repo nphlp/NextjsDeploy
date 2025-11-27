@@ -1,7 +1,8 @@
+import { tag } from "@cache/api-utils";
 import { getSession } from "@lib/auth-server";
 import { os } from "@orpc/server";
 import { Prisma } from "@prisma/client/client";
-import { deepPropsSort, formatStringArrayLineByLine } from "@utils/string-format";
+import { formatStringArrayLineByLine } from "@utils/string-format";
 import { notFound, unauthorized } from "next/navigation";
 import "server-only";
 import { z } from "zod";
@@ -78,9 +79,11 @@ const findMany = os
                 },
             },
             [
-                `taskFindManyCached`,
-                `taskFindManyCached-${userIdFilter}`,
-                `taskFindManyCached-${deepPropsSort(input)}`,
+                // Default cache tags
+                tag("task"),
+                tag("task", "findMany"),
+                tag("task", "findMany", userIdFilter),
+                tag("task", "findMany", input),
                 // Provided cache tags
                 ...(input?.cacheTags ?? []),
             ],
@@ -120,8 +123,11 @@ const findUnique = os
 
         // Check if task exists
         const task = await taskFindUniqueCached({ where: { id: input.id } }, [
-            `taskFindUniqueCached`,
-            `taskFindUniqueCached-${input.id}`,
+            // Default cache tags
+            tag("task"),
+            tag("task", "findUnique"),
+            tag("task", "findUnique", input.id),
+            tag("task", "findUnique", input),
             // Provided cache tags
             ...(input?.cacheTags ?? []),
         ]);
@@ -165,8 +171,10 @@ const findFirst = os
 
         // Check if task exists
         const task = await taskFindFirstCached({ where: { title: input.title } }, [
-            `taskFindFirstCached`,
-            `taskFindFirstCached-${deepPropsSort(input)}`,
+            // Default cache tags
+            tag("task"),
+            tag("task", "findFirst"),
+            tag("task", "findFirst", input),
             // Provided cache tags
             ...(input?.cacheTags ?? []),
         ]);
@@ -179,10 +187,10 @@ const findFirst = os
         return task;
     });
 
-export const taskQueries = () => ({
+export const taskQueries = {
     findMany,
     findUnique,
     findFirst,
-});
+};
 
 export default taskQueries;

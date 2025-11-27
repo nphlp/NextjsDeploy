@@ -7,15 +7,15 @@ import userQueries from "./user/user-query";
 
 export const appRouter = {
     task: {
-        ...taskQueries(),
-        ...taskMutations(),
+        ...taskQueries,
+        ...(await taskMutations()),
     },
     user: {
-        ...userQueries(),
-        ...userMutations(),
+        ...userQueries,
+        ...(await userMutations()),
     },
     fruit: {
-        ...fruitQueries(),
+        ...fruitQueries,
     },
 };
 

@@ -1,11 +1,12 @@
 "use server";
 
+import { tag } from "@cache/api-utils";
 import { getSession } from "@lib/auth-server";
 import PrismaInstance from "@lib/prisma";
 import { os } from "@orpc/server";
 import { $Enums } from "@prisma/client/client";
 import { formatStringArrayLineByLine } from "@utils/string-format";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag, updateTag } from "next/cache";
 import { notFound, unauthorized } from "next/navigation";
 import "server-only";
 import { z } from "zod";
@@ -22,6 +23,10 @@ const create = os
             "  - [ ] Create user with any role",
             "- **User**",
             "  - [ ] Cannot access this endpoint",
+            "**Cache revalidation**",
+            "  - [ ] Update specific tags after mutation",
+            "  - [ ] Revalidate specific tags after mutation",
+            "  - [ ] Revalidate specific paths after mutation",
         ]),
     })
     .input(
@@ -31,6 +36,9 @@ const create = os
             email: z.string().describe("Email address"),
             image: z.string().optional().describe("Profile image URL"),
             role: z.enum($Enums.Role).optional().describe("User role: ADMIN, USER (default)"),
+            updateTags: z.array(z.string()).optional().describe("Array of update tags"),
+            revalidateTags: z.array(z.string()).optional().describe("Array of revalidation tags"),
+            revalidatePaths: z.array(z.string()).optional().describe("Array of revalidation paths"),
         }),
     )
     .output(userOutputSchema)
@@ -59,9 +67,13 @@ const create = os
             },
         });
 
-        // Revalidate cache
-        revalidateTag(`userFindManyCached`, "hours");
-        // revalidateTag(`userFindFirstCached`, "hours");
+        // Update cache
+        updateTag(tag("user", "findMany"));
+
+        // Provided revalidation tags and paths
+        input.updateTags?.map((t) => updateTag(t));
+        input.revalidateTags?.map((t) => revalidateTag(t, "max"));
+        input.revalidatePaths?.map((p) => revalidatePath(p));
 
         return user;
     })
@@ -80,6 +92,10 @@ const update = os
             "- **User**",
             "  - [ ] Update its own user only",
             "  - [ ] Cannot change role",
+            "**Cache revalidation**",
+            "  - [ ] Update specific tags after mutation",
+            "  - [ ] Revalidate specific tags after mutation",
+            "  - [ ] Revalidate specific paths after mutation",
         ]),
     })
     .input(
@@ -89,6 +105,9 @@ const update = os
             lastname: z.string().nullable().optional().describe("Lastname"),
             image: z.string().nullable().optional().describe("Profile image URL"),
             role: z.enum($Enums.Role).optional().describe("User role: ADMIN, USER"),
+            updateTags: z.array(z.string()).optional().describe("Array of update tags"),
+            revalidateTags: z.array(z.string()).optional().describe("Array of revalidation tags"),
+            revalidatePaths: z.array(z.string()).optional().describe("Array of revalidation paths"),
         }),
     )
     .output(userOutputSchema)
@@ -120,11 +139,15 @@ const update = os
             where: { id: input.id },
         });
 
-        // Revalidate cache
-        revalidateTag(`userFindManyCached`, "hours");
-        revalidateTag(`userFindManyCached-${userExists.id}`, "hours");
-        revalidateTag(`userFindUniqueCached-${input.id}`, "hours");
-        // revalidateTag(`userFindFirstCached`, "hours");
+        // Update cache
+        updateTag(tag("user", "findMany"));
+        updateTag(tag("user", "findMany", userExists.id));
+        updateTag(tag("user", "findUnique", input.id));
+
+        // Provided revalidation tags and paths
+        input.updateTags?.map((t) => updateTag(t));
+        input.revalidateTags?.map((t) => revalidateTag(t, "max"));
+        input.revalidatePaths?.map((p) => revalidatePath(p));
 
         return user;
     })
@@ -142,11 +165,18 @@ const deleting = os
             "  - [ ] Cannot delete himself",
             "- **User**",
             "  - [ ] Cannot access this endpoint",
+            "**Cache revalidation**",
+            "  - [ ] Update specific tags after mutation",
+            "  - [ ] Revalidate specific tags after mutation",
+            "  - [ ] Revalidate specific paths after mutation",
         ]),
     })
     .input(
         z.object({
             id: z.string().describe("User ID"),
+            updateTags: z.array(z.string()).optional().describe("Array of update tags"),
+            revalidateTags: z.array(z.string()).optional().describe("Array of revalidation tags"),
+            revalidatePaths: z.array(z.string()).optional().describe("Array of revalidation paths"),
         }),
     )
     .output(userOutputSchema)
@@ -168,17 +198,21 @@ const deleting = os
         // Delete the user
         const user = await PrismaInstance.user.delete({ where: { id: input.id } });
 
-        // Revalidate cache
-        revalidateTag(`userFindManyCached`, "hours");
-        revalidateTag(`userFindManyCached-${userExists.id}`, "hours");
-        revalidateTag(`userFindUniqueCached-${input.id}`, "hours");
-        // revalidateTag(`userFindFirstCached`, "hours");
+        // Update cache
+        updateTag(tag("user", "findMany"));
+        updateTag(tag("user", "findMany", userExists.id));
+        updateTag(tag("user", "findUnique", input.id));
+
+        // Provided revalidation tags and paths
+        input.updateTags?.map((t) => updateTag(t));
+        input.revalidateTags?.map((t) => revalidateTag(t, "max"));
+        input.revalidatePaths?.map((p) => revalidatePath(p));
 
         return user;
     })
     .actionable();
 
-const userMutations = () => ({
+const userMutations = async () => ({
     create,
     update,
     delete: deleting,

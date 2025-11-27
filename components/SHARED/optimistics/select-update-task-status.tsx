@@ -67,11 +67,7 @@ export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProp
 
             try {
                 // Do mutation
-                const data = await oRPC.task.update({
-                    id,
-                    status: newStatusConst,
-                    revalidatePaths: ["/tasks", `/task/${id}`],
-                });
+                const data = await oRPC.task.update({ id, status: newStatusConst });
 
                 // If success, update the real state in a new transition to prevent key conflict
                 startTransition(() => setData(data));
