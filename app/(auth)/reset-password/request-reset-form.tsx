@@ -2,7 +2,7 @@
 
 import Link from "@comps/SHADCN/components/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { forgetPassword } from "@lib/auth-client";
+import { requestPasswordReset } from "@lib/auth-client";
 import { Button } from "@shadcn/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shadcn/ui/form";
 import { Input } from "@shadcn/ui/input";
@@ -27,7 +27,7 @@ export default function RequestResetForm() {
 
         const { email } = values;
 
-        const { data } = await forgetPassword({
+        const { data } = await requestPasswordReset({
             email,
             redirectTo: "/reset-password",
         });
