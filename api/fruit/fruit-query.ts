@@ -1,8 +1,8 @@
-import { tag } from "@cache/api-utils";
 import { os } from "@orpc/server";
 import { Prisma } from "@prisma/client/client";
 import "server-only";
 import { z } from "zod";
+import { tag } from "@/api/cache";
 import { fruitFindManyCached, fruitFindUniqueCached } from "./fruit-cached";
 import { fruitOutputSchema, fruitWithUserOutputSchema } from "./fruit-schema";
 

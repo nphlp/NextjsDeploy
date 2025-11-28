@@ -4,7 +4,7 @@ import oRPC from "@lib/orpc";
 import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import z, { ZodType } from "zod";
-import Edition, { EditionSkeleton } from "./components/edition";
+import Edition, { EditionSkeleton } from "./_components/edition";
 
 type Params = {
     id: string;

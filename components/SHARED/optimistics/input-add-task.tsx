@@ -1,6 +1,6 @@
 "use client";
 
-import { Context } from "@app/tasks/components/context";
+import { Context } from "@app/tasks/_components/context";
 import { Button } from "@comps/SHADCN/ui/button";
 import { Input } from "@comps/SHADCN/ui/input";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";

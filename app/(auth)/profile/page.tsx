@@ -3,10 +3,10 @@ import { Card, CardContent } from "@shadcn/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@shadcn/ui/tabs";
 import { unauthorized } from "next/navigation";
 import { Suspense } from "react";
-import EditionTab from "./components/edition-tab";
-import EmailConfirmModal from "./components/email-confirm-modal";
-import ProfileTab from "./components/profile-tab";
-import SessionTab from "./components/session-tab";
+import EditionTab from "./_components/edition-tab";
+import EmailConfirmModal from "./_components/email-confirm-modal";
+import ProfileTab from "./_components/profile-tab";
+import SessionTab from "./_components/session-tab";
 
 export default async function Page() {
     return (

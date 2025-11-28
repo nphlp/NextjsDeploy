@@ -1,9 +1,9 @@
-import { tag } from "@cache/api-utils";
 import { os } from "@orpc/server";
 import { Prisma } from "@prisma/client/client";
 import { notFound, unauthorized } from "next/navigation";
 import "server-only";
 import { z } from "zod";
+import { tag } from "@/api/cache";
 import { requiresSession } from "../permission";
 import { taskFindFirstCached, taskFindManyCached, taskFindUniqueCached } from "./task-cached";
 import { taskOutputSchema } from "./task-schema";

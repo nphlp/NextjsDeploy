@@ -3,8 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shad
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import z, { ZodType } from "zod";
-import RequestResetForm from "./request-reset-form";
-import ResetPasswordForm from "./reset-password-form";
+import RequestResetForm from "./_components/request-reset-form";
+import ResetPasswordForm from "./_components/reset-password-form";
 
 type Token = {
     token?: string;

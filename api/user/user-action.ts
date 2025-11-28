@@ -1,10 +1,10 @@
 "use server";
 
-import { tag } from "@cache/api-utils";
 import PrismaInstance from "@lib/prisma";
 import { os } from "@orpc/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { notFound, unauthorized } from "next/navigation";
+import { tag } from "@/api/cache";
 import { requiresSession } from "../permission";
 import { userCreateInputSchema, userDeleteInputSchema, userOutputSchema, userUpdateInputSchema } from "./user-schema";
 

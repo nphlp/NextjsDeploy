@@ -2,7 +2,7 @@ import { getSession } from "@lib/auth-server";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shadcn/ui/card";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import LoginForm from "./login-form";
+import LoginForm from "./_components/login-form";
 
 export default async function Page() {
     return (

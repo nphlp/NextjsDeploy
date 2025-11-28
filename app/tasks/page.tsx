@@ -6,9 +6,9 @@ import oRPC from "@lib/orpc";
 import { redirect } from "next/navigation";
 import { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
-import List, { ListSkeleton } from "./components/list";
-import Provider from "./components/provider";
-import { taskQueryParamsCached } from "./components/queryParams";
+import List, { ListSkeleton } from "./_components/list";
+import Provider from "./_components/provider";
+import { taskQueryParamsCached } from "./_components/queryParams";
 
 type PageProps = {
     searchParams: Promise<SearchParams>;

@@ -1,8 +1,8 @@
-import { tag } from "@cache/api-utils";
 import { os } from "@orpc/server";
 import { notFound, unauthorized } from "next/navigation";
 import "server-only";
 import { z } from "zod";
+import { tag } from "@/api/cache";
 import { requiresSession } from "../permission";
 import { userFindFirstCached, userFindManyCached, userFindUniqueCached } from "./user-cached";
 import { userOutputSchema } from "./user-schema";
