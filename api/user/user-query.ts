@@ -15,21 +15,21 @@ const findMany = os
         summary: "USER Find Many",
         description: formatStringArrayLineByLine([
             "**Pagination**",
-            "  - [ ] Take: Number of tasks to take (min: 1, max: 1000)",
-            "  - [ ] Skip: Number of tasks to skip (min: 0)",
+            "  - Take: Number of users to take (min: 1, max: 1000)",
+            "  - Skip: Number of users to skip (min: 0)",
             "\n",
             "**Permissions**",
             "- **Admin**",
-            "  - [ ] Get every users",
+            "  - Get every users",
             "- **User**",
-            "  - [ ] Cannot access this endpoint",
+            "  - Cannot access this endpoint",
         ]),
     })
     .input(
         z
             .object({
-                take: z.number().min(1).max(1000).optional().describe("Number of tasks to take"),
-                skip: z.number().min(0).optional().describe("Number of tasks to skip"),
+                take: z.number().min(1).max(1000).optional().describe("Number of users to take"),
+                skip: z.number().min(0).optional().describe("Number of users to skip"),
             })
             .optional(),
     )
@@ -67,9 +67,9 @@ const findUnique = os
         description: formatStringArrayLineByLine([
             "**Permissions**",
             "- **Admin**",
-            "  - [ ] Get user of any user",
+            "  - Get user of any user",
             "- **User**",
-            "  - [ ] Get its own user only",
+            "  - Get its own user only",
         ]),
     })
     .input(
@@ -109,9 +109,9 @@ const findFirst = os
         description: formatStringArrayLineByLine([
             "**Permissions**",
             "- **Admin**",
-            "  - [ ] Get user of any user",
+            "  - Get user of any user",
             "- **User**",
-            "  - [ ] Get its own user only",
+            "  - Get its own user only",
         ]),
     })
     .input(
