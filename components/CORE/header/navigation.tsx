@@ -28,8 +28,7 @@ const links: LinkType[] = [
     { label: "Home", href: "/" },
     { label: "Fruits", href: "/fruits" },
     { label: "Tasks", href: "/tasks", sessionRequired: true },
-    { label: "Examples", href: "/examples" },
-    { label: "Scalar", href: "/scalar", developmentOnly: true },
+    { label: "API", href: "/scalar", developmentOnly: true },
 ];
 
 type NavigationProps = {

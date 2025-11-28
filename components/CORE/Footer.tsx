@@ -5,14 +5,14 @@ import { usePathname } from "next/navigation";
 export default function Footer() {
     const pathname = usePathname();
 
-    if (pathname.startsWith("/examples")) {
+    if (pathname === "/") {
         return null;
     }
 
     return (
-        <footer className="flex flex-col items-center justify-center gap-2 p-6">
+        <footer className="mt-20 flex flex-col items-center justify-center p-6">
             <h2 className="text-2xl font-bold">Nextjs Deploy</h2>
-            <p>Template d&apos;application Next.js prêt pour le déploiement.</p>
+            <p>A ready to deploy application template</p>
         </footer>
     );
 }
