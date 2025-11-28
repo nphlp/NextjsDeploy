@@ -1,10 +1,10 @@
 import { createORPCClient } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
 import type { RouterClient } from "@orpc/server";
-import type { AppRouter } from "../api/router";
+import type { ApiRouter } from "../api/router";
 
 declare global {
-    var $client: RouterClient<AppRouter> | undefined;
+    var $client: RouterClient<ApiRouter> | undefined;
 }
 
 const link = new RPCLink({
@@ -17,6 +17,6 @@ const link = new RPCLink({
     },
 });
 
-const oRPC: RouterClient<AppRouter> = globalThis.$client ?? createORPCClient(link);
+const oRPC: RouterClient<ApiRouter> = globalThis.$client ?? createORPCClient(link);
 
 export default oRPC;

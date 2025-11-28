@@ -5,18 +5,18 @@ import taskQueries from "./task/task-query";
 import userMutations from "./user/user-mutation";
 import userQueries from "./user/user-query";
 
-export const appRouter = {
+export const apiRouter = {
     task: {
         ...taskQueries,
-        ...(await taskMutations()),
+        ...taskMutations,
     },
     user: {
         ...userQueries,
-        ...(await userMutations()),
+        ...userMutations,
     },
     fruit: {
         ...fruitQueries,
     },
 };
 
-export type AppRouter = typeof appRouter;
+export type ApiRouter = typeof apiRouter;

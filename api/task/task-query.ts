@@ -2,7 +2,6 @@ import { tag } from "@cache/api-utils";
 import { getSession } from "@lib/auth-server";
 import { os } from "@orpc/server";
 import { Prisma } from "@prisma/client/client";
-import { formatStringArrayLineByLine } from "@utils/string-format";
 import { notFound, unauthorized } from "next/navigation";
 import "server-only";
 import { z } from "zod";
@@ -14,29 +13,6 @@ const findMany = os
         method: "GET",
         path: "/tasks",
         summary: "TASK Find Many",
-        description: formatStringArrayLineByLine([
-            "**Search**",
-            "  - Search term to filter tasks by title",
-            "\n",
-            "**Filtering**",
-            "  - Filter by user ID (admin right)",
-            "\n",
-            "**Sorting**",
-            "  - Sort order for updatedAt",
-            "\n",
-            "**Pagination**",
-            "  - Take: Number of tasks to take (min: 1, max: 1000)",
-            "  - Skip: Number of tasks to skip (min: 0)",
-            "\n",
-            "**Permissions**",
-            "- **Admin**",
-            "  - Get every tasks",
-            "  - Get tasks of any user by filtering with user ID",
-            "- **User**",
-            "  - Get its own tasks only",
-            "**Cache tags**",
-            "  - Precise custom cache tags for revalidation",
-        ]),
     })
     .input(
         z
@@ -97,15 +73,6 @@ const findUnique = os
         method: "GET",
         path: "/tasks/{id}",
         summary: "TASK Find Unique",
-        description: formatStringArrayLineByLine([
-            "**Permissions**",
-            "- **Admin**",
-            "  - Get task of any user",
-            "- **User**",
-            "  - Get its own task only",
-            "**Cache tags**",
-            "  - Precise custom cache tags for revalidation",
-        ]),
     })
     .input(
         z.object({
@@ -145,15 +112,6 @@ const findFirst = os
         method: "GET",
         path: "/tasks/first",
         summary: "TASK Find First",
-        description: formatStringArrayLineByLine([
-            "**Permissions**",
-            "- **Admin**",
-            "  - Get task of any user",
-            "- **User**",
-            "  - Get its own task only",
-            "**Cache tags**",
-            "  - Precise custom cache tags for revalidation",
-        ]),
     })
     .input(
         z.object({

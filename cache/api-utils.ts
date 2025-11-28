@@ -34,49 +34,4 @@ const tag = (model: ModelNameLowerCase, operation?: FetchOps, custom?: string | 
     return tag;
 };
 
-/**
- * Invalidate cache tag
- *
- * #### Mode "update"
- * Delete cache entry -> Cache will be regenerated on next request
- * **Pros**: Fresh data
- * **Cons**: Slow for the next user
- *
- * #### Mode "revalidate"
- * Revalidate cache entry -> Cache will be kept until next request, then regenerated in the background
- * **Pros**: Fast for the next user
- * **Cons**: Deprecated data
- */
-// const invalidateCacheTag = (
-//     mode: "update" | "revalidate",
-//     model: ModelNameLowerCase,
-//     operation?: FetchOps,
-//     custom?: string | number | Record<string, unknown>,
-// ) => {
-//     const tagString = createCacheTag(model, operation, custom);
-
-//     /**
-//      * Delete cache entry
-//      * -> Cache will be regenerated on next request
-//      *
-//      * **Pros**: Fresh data
-//      * **Cons**: Slow for the next user
-//      */
-//     if (mode === "update") {
-//         updateTag(tagString);
-//     }
-
-//     /**
-//      * Revalidate cache entry
-//      *
-//      * -> Cache will be kept until next request, then regenerated in the background
-//      *
-//      * **Pros**: Fast for the next user
-//      * **Cons**: Deprecated data
-//      */
-//     if (mode === "revalidate") {
-//         revalidateTag(tagString, "max");
-//     }
-// };
-
 export { tag };

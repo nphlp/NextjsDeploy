@@ -1,7 +1,6 @@
 import { tag } from "@cache/api-utils";
 import { getSession } from "@lib/auth-server";
 import { os } from "@orpc/server";
-import { formatStringArrayLineByLine } from "@utils/string-format";
 import { notFound, unauthorized } from "next/navigation";
 import "server-only";
 import { z } from "zod";
@@ -13,17 +12,6 @@ const findMany = os
         method: "GET",
         path: "/users",
         summary: "USER Find Many",
-        description: formatStringArrayLineByLine([
-            "**Pagination**",
-            "  - Take: Number of users to take (min: 1, max: 1000)",
-            "  - Skip: Number of users to skip (min: 0)",
-            "\n",
-            "**Permissions**",
-            "- **Admin**",
-            "  - Get every users",
-            "- **User**",
-            "  - Cannot access this endpoint",
-        ]),
     })
     .input(
         z
@@ -64,13 +52,6 @@ const findUnique = os
         method: "GET",
         path: "/users/{id}",
         summary: "USER Find Unique",
-        description: formatStringArrayLineByLine([
-            "**Permissions**",
-            "- **Admin**",
-            "  - Get user of any user",
-            "- **User**",
-            "  - Get its own user only",
-        ]),
     })
     .input(
         z.object({
@@ -106,13 +87,6 @@ const findFirst = os
         method: "GET",
         path: "/users/first",
         summary: "USER Find First",
-        description: formatStringArrayLineByLine([
-            "**Permissions**",
-            "- **Admin**",
-            "  - Get user of any user",
-            "- **User**",
-            "  - Get its own user only",
-        ]),
     })
     .input(
         z.object({

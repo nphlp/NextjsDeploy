@@ -1,7 +1,6 @@
 import { tag } from "@cache/api-utils";
 import { os } from "@orpc/server";
 import { Prisma } from "@prisma/client/client";
-import { formatStringArrayLineByLine } from "@utils/string-format";
 import "server-only";
 import { z } from "zod";
 import { fruitFindManyCached, fruitFindUniqueCached } from "./fruit-cached";
@@ -12,25 +11,6 @@ const findMany = os
         method: "GET",
         path: "/fruits",
         summary: "FRUIT Find Many",
-        description: formatStringArrayLineByLine([
-            "**Search**",
-            "  - Search term to filter fruits by name",
-            "\n",
-            "**Filtering**",
-            "  - Filter by name",
-            "\n",
-            "**Sorting**",
-            "  - Sort order for name or updatedAt",
-            "\n",
-            "**Pagination**",
-            "  - Take: Number of fruits to take (min: 1, max: 1000)",
-            "  - Skip: Number of fruits to skip (min: 0)",
-            "\n",
-            "**Permissions**",
-            "  - Public access - no authentication required",
-            "**Cache tags**",
-            "  - Precise custom cache tags for revalidation",
-        ]),
     })
     .input(
         z
@@ -85,15 +65,6 @@ const findUnique = os
         method: "GET",
         path: "/fruit/{id}",
         summary: "FRUIT Find Unique",
-        description: formatStringArrayLineByLine([
-            "**Find unique fruit by ID**",
-            "  - Returns a single fruit by its unique identifier",
-            "\n",
-            "**Permissions**",
-            "  - Public access - no authentication required",
-            "**Cache tags**",
-            "  - Precise custom cache tags for revalidation",
-        ]),
     })
     .input(
         z.object({

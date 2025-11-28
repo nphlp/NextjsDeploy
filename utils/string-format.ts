@@ -14,10 +14,6 @@ export const stringToSlug = (text: string) => {
         .replace(/\s+/g, "-");
 };
 
-export const formatStringArrayLineByLine = (stringArray: string[]): string => {
-    return stringArray.join("\n");
-};
-
 /**
  * Sort object properties deeply and return a stringified version
  *
