@@ -8,6 +8,7 @@ export const create = os
         method: "POST",
         path: "/users",
         summary: "USER Create",
+        description: "Permission: admin",
     })
     .input(userCreateInputSchema)
     .output(userOutputSchema)
@@ -22,6 +23,7 @@ export const update = os
         method: "PUT",
         path: "/users/{id}",
         summary: "USER Update",
+        description: "Permission: owner | admin",
     })
     .input(userUpdateInputSchema)
     .output(userOutputSchema)
@@ -36,6 +38,7 @@ export const deleting = os
         method: "DELETE",
         path: "/users/{id}",
         summary: "USER Delete",
+        description: "Permission: admin",
     })
     .input(userDeleteInputSchema)
     .output(userOutputSchema)

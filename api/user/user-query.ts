@@ -1,9 +1,9 @@
 import { tag } from "@cache/api-utils";
-import { getSession } from "@lib/auth-server";
 import { os } from "@orpc/server";
 import { notFound, unauthorized } from "next/navigation";
 import "server-only";
 import { z } from "zod";
+import { requiresSession } from "../permission";
 import { userFindFirstCached, userFindManyCached, userFindUniqueCached } from "./user-cached";
 import { userOutputSchema } from "./user-schema";
 
@@ -12,6 +12,7 @@ const findMany = os
         method: "GET",
         path: "/users",
         summary: "USER Find Many",
+        description: "Permission: admin",
     })
     .input(
         z
@@ -22,12 +23,11 @@ const findMany = os
             .optional(),
     )
     .output(z.array(userOutputSchema))
-    .handler(async ({ input }) => {
-        const session = await getSession();
-        if (!session) unauthorized();
+    .use(requiresSession)
+    .handler(async ({ input, context }) => {
+        const { isAdmin } = context;
 
         // Only admin can get user list
-        const isAdmin = session.user.role === "ADMIN";
         if (!isAdmin) unauthorized();
 
         // Get user list
@@ -52,6 +52,7 @@ const findUnique = os
         method: "GET",
         path: "/users/{id}",
         summary: "USER Find Unique",
+        description: "Permission: owner | admin",
     })
     .input(
         z.object({
@@ -59,11 +60,9 @@ const findUnique = os
         }),
     )
     .output(userOutputSchema.nullable())
-    .handler(async ({ input }) => {
-        const session = await getSession();
-        if (!session) unauthorized();
-
-        const isAdmin = session.user.role === "ADMIN";
+    .use(requiresSession)
+    .handler(async ({ input, context }) => {
+        const { isOwnerOrAdmin } = context;
 
         // Check if user exists (cached)
         const user = await userFindUniqueCached({ where: { id: input.id } }, [
@@ -73,11 +72,12 @@ const findUnique = os
             tag("user", "findUnique", input.id),
             tag("user", "findUnique", input),
         ]);
+
+        // If user not found, return 404
         if (!user) notFound();
 
         // Check if user session is authorized to access this user
-        const isAuthorized = isAdmin || user.id === session.user.id;
-        if (!isAuthorized) unauthorized();
+        if (!isOwnerOrAdmin(user.id)) unauthorized();
 
         return user;
     });
@@ -87,6 +87,7 @@ const findFirst = os
         method: "GET",
         path: "/users/first",
         summary: "USER Find First",
+        description: "Permission: owner | admin",
     })
     .input(
         z.object({
@@ -95,11 +96,9 @@ const findFirst = os
         }),
     )
     .output(userOutputSchema.nullable())
-    .handler(async ({ input }) => {
-        const session = await getSession();
-        if (!session) unauthorized();
-
-        const isAdmin = session.user.role === "ADMIN";
+    .use(requiresSession)
+    .handler(async ({ input, context }) => {
+        const { isOwnerOrAdmin } = context;
 
         // Check if user exists (cached)
         const user = await userFindFirstCached(
@@ -116,11 +115,12 @@ const findFirst = os
                 tag("user", "findFirst", input),
             ],
         );
+
+        // If user not found, return 404
         if (!user) notFound();
 
         // Check if user session is authorized to access this user
-        const isAuthorized = isAdmin || user.id === session.user.id;
-        if (!isAuthorized) unauthorized();
+        if (!isOwnerOrAdmin(user.id)) unauthorized();
 
         return user;
     });

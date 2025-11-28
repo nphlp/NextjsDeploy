@@ -1,21 +1,19 @@
 "use server";
 
 import { tag } from "@cache/api-utils";
-import { getSession } from "@lib/auth-server";
 import PrismaInstance from "@lib/prisma";
 import { os } from "@orpc/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { notFound, unauthorized } from "next/navigation";
+import { requiresSession } from "../permission";
 import { taskCreateInputSchema, taskDeleteInputSchema, taskOutputSchema, taskUpdateInputSchema } from "./task-schema";
 
 export const taskCreate = os
     .input(taskCreateInputSchema)
     .output(taskOutputSchema)
-    .handler(async ({ input }) => {
-        const session = await getSession();
-        if (!session) unauthorized();
-
-        const isAdmin = session.user.role === "ADMIN";
+    .use(requiresSession)
+    .handler(async ({ input, context }) => {
+        const { session, isAdmin } = context;
 
         // Admin can create tasks for any user, User creates for themselves
         const userIdOwner = isAdmin ? (input.userId ?? session.user.id) : session.user.id;
@@ -47,19 +45,16 @@ export const taskCreate = os
 export const taskUpdate = os
     .input(taskUpdateInputSchema)
     .output(taskOutputSchema)
-    .handler(async ({ input }) => {
-        const session = await getSession();
-        if (!session) unauthorized();
-
-        const isAdmin = session.user.role === "ADMIN";
+    .use(requiresSession)
+    .handler(async ({ input, context }) => {
+        const { isOwnerOrAdmin } = context;
 
         // Check if task exists
         const taskExists = await PrismaInstance.task.findUnique({ where: { id: input.id } });
         if (!taskExists) notFound();
 
         // Check if user session is authorized to mutate this task
-        const isAuthorized = isAdmin || taskExists.userId === session.user.id;
-        if (!isAuthorized) unauthorized();
+        if (!isOwnerOrAdmin(taskExists.userId)) unauthorized();
 
         // Update the task
         const task = await PrismaInstance.task.update({
@@ -89,19 +84,16 @@ export const taskUpdate = os
 export const taskDeleting = os
     .input(taskDeleteInputSchema)
     .output(taskOutputSchema)
-    .handler(async ({ input }) => {
-        const session = await getSession();
-        if (!session) unauthorized();
-
-        const isAdmin = session.user.role === "ADMIN";
+    .use(requiresSession)
+    .handler(async ({ input, context }) => {
+        const { isOwnerOrAdmin } = context;
 
         // Check if task exists
         const taskExists = await PrismaInstance.task.findUnique({ where: { id: input.id } });
         if (!taskExists) notFound();
 
         // Check if user session is authorized to delete this task
-        const isAuthorized = isAdmin || taskExists.userId === session.user.id;
-        if (!isAuthorized) unauthorized();
+        if (!isOwnerOrAdmin(taskExists.userId)) unauthorized();
 
         // Delete the task
         const task = await PrismaInstance.task.delete({ where: { id: input.id } });

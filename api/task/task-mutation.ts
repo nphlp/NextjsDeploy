@@ -8,6 +8,7 @@ export const create = os
         method: "POST",
         path: "/tasks",
         summary: "TASK Create",
+        description: "Permission: authenticated",
     })
     .input(taskCreateInputSchema)
     .output(taskOutputSchema)
@@ -22,6 +23,7 @@ export const update = os
         method: "PUT",
         path: "/tasks/{id}",
         summary: "TASK Update",
+        description: "Permission: owner | admin",
     })
     .input(taskUpdateInputSchema)
     .output(taskOutputSchema)
@@ -36,6 +38,7 @@ export const deleting = os
         method: "DELETE",
         path: "/tasks/{id}",
         summary: "TASK Delete",
+        description: "Permission: owner | admin",
     })
     .input(taskDeleteInputSchema)
     .output(taskOutputSchema)

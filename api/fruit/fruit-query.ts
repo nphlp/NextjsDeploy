@@ -11,6 +11,7 @@ const findMany = os
         method: "GET",
         path: "/fruits",
         summary: "FRUIT Find Many",
+        description: "Permission: public",
     })
     .input(
         z
@@ -30,8 +31,6 @@ const findMany = os
     )
     .output(z.array(fruitOutputSchema))
     .handler(async ({ input }) => {
-        // No authentication required - public access
-
         // Get fruit list
         const fruits = await fruitFindManyCached(
             {
@@ -65,6 +64,7 @@ const findUnique = os
         method: "GET",
         path: "/fruit/{id}",
         summary: "FRUIT Find Unique",
+        description: "Permission: public",
     })
     .input(
         z.object({
@@ -74,8 +74,6 @@ const findUnique = os
     )
     .output(fruitWithUserOutputSchema.nullable())
     .handler(async ({ input }) => {
-        // No authentication required - public access
-
         // Get fruit by ID with user information
         const fruit = await fruitFindUniqueCached(
             {

@@ -1,10 +1,10 @@
 import { tag } from "@cache/api-utils";
-import { getSession } from "@lib/auth-server";
 import { os } from "@orpc/server";
 import { Prisma } from "@prisma/client/client";
 import { notFound, unauthorized } from "next/navigation";
 import "server-only";
 import { z } from "zod";
+import { requiresSession } from "../permission";
 import { taskFindFirstCached, taskFindManyCached, taskFindUniqueCached } from "./task-cached";
 import { taskOutputSchema } from "./task-schema";
 
@@ -13,6 +13,7 @@ const findMany = os
         method: "GET",
         path: "/tasks",
         summary: "TASK Find Many",
+        description: "Permission: owner | admin",
     })
     .input(
         z
@@ -32,11 +33,9 @@ const findMany = os
             .optional(),
     )
     .output(z.array(taskOutputSchema))
-    .handler(async ({ input }) => {
-        const session = await getSession();
-        if (!session) unauthorized();
-
-        const isAdmin = session.user.role === "ADMIN";
+    .use(requiresSession)
+    .handler(async ({ input, context }) => {
+        const { session, isAdmin } = context;
 
         // Admin can filter by userId, User can only see their own tasks
         const userIdFilter = isAdmin ? input?.userId : session.user.id;
@@ -48,9 +47,7 @@ const findMany = os
                 skip: input?.skip,
                 orderBy: { updatedAt: input?.updatedAt },
                 where: {
-                    ...(input?.search && {
-                        title: { contains: input?.search },
-                    }),
+                    title: { contains: input?.search },
                     userId: userIdFilter,
                 },
             },
@@ -73,6 +70,7 @@ const findUnique = os
         method: "GET",
         path: "/tasks/{id}",
         summary: "TASK Find Unique",
+        description: "Permission: owner | admin",
     })
     .input(
         z.object({
@@ -82,11 +80,9 @@ const findUnique = os
         }),
     )
     .output(taskOutputSchema.nullable())
-    .handler(async ({ input }) => {
-        const session = await getSession();
-        if (!session) unauthorized();
-
-        const isAdmin = session.user.role === "ADMIN";
+    .use(requiresSession)
+    .handler(async ({ input, context }) => {
+        const { isOwnerOrAdmin } = context;
 
         // Check if task exists
         const task = await taskFindUniqueCached({ where: { id: input.id } }, [
@@ -98,11 +94,12 @@ const findUnique = os
             // Provided cache tags
             ...(input?.cacheTags ?? []),
         ]);
+
+        // If task not found, return 404
         if (!task) notFound();
 
         // Check if user session is authorized to access this task
-        const isAuthorized = isAdmin || task.userId === session.user.id;
-        if (!isAuthorized) unauthorized();
+        if (!isOwnerOrAdmin(task.userId)) unauthorized();
 
         return task;
     });
@@ -112,6 +109,7 @@ const findFirst = os
         method: "GET",
         path: "/tasks/first",
         summary: "TASK Find First",
+        description: "Permission: owner | admin",
     })
     .input(
         z.object({
@@ -121,11 +119,9 @@ const findFirst = os
         }),
     )
     .output(taskOutputSchema.nullable())
-    .handler(async ({ input }) => {
-        const session = await getSession();
-        if (!session) unauthorized();
-
-        const isAdmin = session.user.role === "ADMIN";
+    .use(requiresSession)
+    .handler(async ({ input, context }) => {
+        const { isOwnerOrAdmin } = context;
 
         // Check if task exists
         const task = await taskFindFirstCached({ where: { title: input.title } }, [
@@ -136,11 +132,12 @@ const findFirst = os
             // Provided cache tags
             ...(input?.cacheTags ?? []),
         ]);
+
+        // If task not found, return 404
         if (!task) notFound();
 
         // Check if user session is authorized to access this task
-        const isAuthorized = isAdmin || task.userId === session.user.id;
-        if (!isAuthorized) unauthorized();
+        if (!isOwnerOrAdmin(task.userId)) unauthorized();
 
         return task;
     });

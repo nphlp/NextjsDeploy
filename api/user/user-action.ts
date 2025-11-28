@@ -1,23 +1,22 @@
 "use server";
 
 import { tag } from "@cache/api-utils";
-import { getSession } from "@lib/auth-server";
 import PrismaInstance from "@lib/prisma";
 import { os } from "@orpc/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { notFound, unauthorized } from "next/navigation";
+import { requiresSession } from "../permission";
 import { userCreateInputSchema, userDeleteInputSchema, userOutputSchema, userUpdateInputSchema } from "./user-schema";
 
 export const userCreate = os
     .input(userCreateInputSchema)
     .output(userOutputSchema)
-    .handler(async ({ input }) => {
-        const session = await getSession();
-        if (!session) unauthorized();
+    .use(requiresSession)
+    .handler(async ({ input, context }) => {
+        const { isAdmin } = context;
 
         // Only admin can create users manually
         // End users should sign up through the sign up flow
-        const isAdmin = session.user.role === "ADMIN";
         if (!isAdmin) unauthorized();
 
         // Check if email is already used
@@ -53,19 +52,16 @@ export const userCreate = os
 export const userUpdate = os
     .input(userUpdateInputSchema)
     .output(userOutputSchema)
-    .handler(async ({ input }) => {
-        const session = await getSession();
-        if (!session) unauthorized();
-
-        const isAdmin = session.user.role === "ADMIN";
+    .use(requiresSession)
+    .handler(async ({ input, context }) => {
+        const { isAdmin, isOwnerOrAdmin } = context;
 
         // Check if user exists
         const userExists = await PrismaInstance.user.findUnique({ where: { id: input.id } });
         if (!userExists) notFound();
 
         // Check if user session is authorized to mutate this user
-        const isAuthorized = isAdmin || userExists.id === session.user.id;
-        if (!isAuthorized) unauthorized();
+        if (!isOwnerOrAdmin(userExists.id)) unauthorized();
 
         // Only admin can change roles
         if (input.role && !isAdmin) unauthorized();
@@ -100,12 +96,11 @@ export const userUpdate = os
 export const userDeleting = os
     .input(userDeleteInputSchema)
     .output(userOutputSchema)
-    .handler(async ({ input }) => {
-        const session = await getSession();
-        if (!session) unauthorized();
+    .use(requiresSession)
+    .handler(async ({ input, context }) => {
+        const { session, isAdmin } = context;
 
         // Only admin can delete users
-        const isAdmin = session.user.role === "ADMIN";
         if (!isAdmin) unauthorized();
 
         // Prevent admin from deleting themselves
