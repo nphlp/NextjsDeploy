@@ -1,6 +1,7 @@
 import Link from "@comps/SHADCN/components/link";
 import { cn } from "@comps/SHADCN/lib/utils";
 import { Fruit } from "@prisma/client/client";
+import { formatMediumDate } from "@utils/date-format";
 import { Route } from "next";
 
 type FruitCardProps = {
@@ -37,7 +38,7 @@ export default async function FruitCard(props: FruitCardProps) {
 
             {/* Ajouté le xx / xx / xxxx */}
             <div className="flex items-center justify-between text-xs text-gray-500">
-                Ajouté le {new Date(fruit.createdAt).toLocaleDateString("fr-FR")}
+                Ajouté le {formatMediumDate(fruit.createdAt)}
             </div>
         </Link>
     );

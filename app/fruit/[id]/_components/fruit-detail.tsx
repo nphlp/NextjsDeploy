@@ -1,5 +1,7 @@
 import Link from "@comps/SHADCN/components/link";
+import { cn } from "@comps/SHADCN/lib/utils";
 import oRPC from "@lib/orpc";
+import { formatMediumDate } from "@utils/date-format";
 import { timeout } from "@utils/timout";
 import { ChevronRight } from "lucide-react";
 import { notFound } from "next/navigation";
@@ -27,47 +29,37 @@ export default async function FruitDetail(props: FruitDetailProps) {
 
     const fruit = await getFruitByIdCached({ id });
 
-    if (!fruit) {
-        notFound();
-    }
+    if (!fruit) notFound();
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4">
             <h1 className="flex items-center gap-2 text-2xl font-bold">
-                <Link href="/fruits" className="hover:underline" noStyle>
+                <Link href="/fruits" noStyle>
                     Fruits
                 </Link>
                 <ChevronRight className="size-4" />
                 {fruit.name}
             </h1>
 
-            {fruit.description && (
-                <div className="rounded-lg border p-6 shadow">
-                    <h2 className="mb-3 text-lg font-semibold">Description</h2>
-                    <p className="text-gray-700 dark:text-gray-300">{fruit.description}</p>
-                </div>
-            )}
+            <div className={cn("flex flex-col justify-between gap-2", "rounded-lg border p-5 shadow")}>
+                {/* Title */}
+                <h2 className="text-xl font-semibold">{fruit.name}</h2>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="rounded-lg border p-4 shadow">
-                    <div className="text-sm font-medium text-gray-500 dark:text-gray-400">Créé par</div>
-                    <div className="mt-1 text-lg">
-                        {fruit.User.name}
-                        {fruit.User.lastname && ` ${fruit.User.lastname}`}
-                    </div>
-                    <div className="mt-1 text-xs text-gray-500">{fruit.User.email}</div>
-                </div>
+                {/* Description */}
+                {fruit.description && <p>{fruit.description}</p>}
 
-                <div className="rounded-lg border p-4 shadow">
-                    <div className="text-sm font-medium text-gray-500 dark:text-gray-400">Date de création</div>
-                    <div className="mt-1 text-lg">
-                        {new Date(fruit.createdAt).toLocaleDateString("fr-FR", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                        })}
-                    </div>
-                </div>
+                {/* Présent dans X paniers */}
+                {/* <p>
+                    Présent dans {fruit.inBasketCount} {fruit.inBasketCount > 1 ? "paniers" : "panier"}
+                </p> */}
+
+                {/* Ajouté le xx / xx / xxxx */}
+                <p>Ajouté le {formatMediumDate(fruit.createdAt)}</p>
+
+                {/* Par Xxxxx Xxxxxx */}
+                <p>
+                    Par {fruit.User.name} {fruit.User.lastname}
+                </p>
             </div>
         </div>
     );
@@ -75,28 +67,24 @@ export default async function FruitDetail(props: FruitDetailProps) {
 
 export const FruitDetailSkeleton = () => {
     return (
-        <div className="animate-pulse space-y-6">
-            <div className="h-9 w-48 rounded bg-gray-200 dark:bg-gray-700"></div>
+        <div className="animate-pulse space-y-4">
+            <div className="h-8 w-48 rounded bg-gray-200 dark:bg-gray-700"></div>
 
-            <div className="rounded-lg border p-6 shadow">
-                <div className="mb-3 h-6 w-32 rounded bg-gray-200 dark:bg-gray-700"></div>
-                <div className="space-y-2">
-                    <div className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700"></div>
-                    <div className="h-4 w-5/6 rounded bg-gray-200 dark:bg-gray-700"></div>
-                </div>
-            </div>
+            <div className={cn("animate-pulse", "flex flex-col justify-between gap-2", "rounded-lg border p-5 shadow")}>
+                {/* Titre */}
+                <div className="bg-foreground/5 h-7 w-[100px] flex-none rounded"></div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="rounded-lg border p-4 shadow">
-                    <div className="h-4 w-32 rounded bg-gray-200 dark:bg-gray-700"></div>
-                    <div className="mt-2 h-6 w-40 rounded bg-gray-200 dark:bg-gray-700"></div>
-                    <div className="mt-2 h-3 w-48 rounded bg-gray-200 dark:bg-gray-700"></div>
-                </div>
+                {/* Description */}
+                <div className="bg-foreground/5 h-6 w-[340px] flex-none rounded"></div>
 
-                <div className="rounded-lg border p-4 shadow">
-                    <div className="h-4 w-32 rounded bg-gray-200 dark:bg-gray-700"></div>
-                    <div className="mt-2 h-6 w-40 rounded bg-gray-200 dark:bg-gray-700"></div>
-                </div>
+                {/* Présent dans X paniers */}
+                {/* <div className="bg-foreground/5 h-6 w-[150px] flex-none rounded"></div> */}
+
+                {/* Ajouté le xx / xx / xxxx */}
+                <div className="bg-foreground/5 h-6 w-[170px] flex-none rounded"></div>
+
+                {/* Par Xxxxx Xxxxxx */}
+                <div className="bg-foreground/5 h-6 w-[110px] flex-none rounded"></div>
             </div>
         </div>
     );
