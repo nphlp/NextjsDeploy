@@ -1,5 +1,6 @@
 import { os } from "@orpc/server";
 import { Prisma } from "@prisma/client/client";
+import projection from "@utils/projection";
 import "server-only";
 import { z } from "zod";
 import { tag } from "@/api/cache";
@@ -29,10 +30,10 @@ const findMany = os
             })
             .optional(),
     )
-    .output(z.array(fruitOutputSchema))
+    .output(z.array(z.intersection(fruitOutputSchema, z.object({ inBasketCount: z.number() }))))
     .handler(async ({ input }) => {
         // Get fruit list
-        const fruits = await fruitFindManyCached(
+        const fruitsRaw = await fruitFindManyCached(
             {
                 take: input?.take,
                 skip: input?.skip,
@@ -45,6 +46,15 @@ const findMany = os
                         name: { contains: input.search, mode: "insensitive" },
                     }),
                 },
+                // Count how many baskets contain each fruit
+                // For "inBasketCount" field
+                include: {
+                    _count: {
+                        select: {
+                            Quantities: true,
+                        },
+                    },
+                },
             },
             [
                 // Default cache tags
@@ -55,6 +65,11 @@ const findMany = os
                 ...(input?.cacheTags ?? []),
             ],
         );
+
+        const fruits = fruitsRaw.map((fruit) => ({
+            ...projection(fruit, ["id", "name", "description", "userId", "createdAt", "updatedAt"]),
+            inBasketCount: fruit._count.Quantities,
+        }));
 
         return fruits;
     });

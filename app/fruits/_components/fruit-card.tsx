@@ -1,9 +1,10 @@
 import Link from "@comps/SHADCN/components/link";
+import { cn } from "@comps/SHADCN/lib/utils";
 import { Fruit } from "@prisma/client/client";
 import { Route } from "next";
 
 type FruitCardProps = {
-    fruit: Fruit;
+    fruit: Fruit & { inBasketCount: number };
 };
 
 export default async function FruitCard(props: FruitCardProps) {
@@ -14,12 +15,28 @@ export default async function FruitCard(props: FruitCardProps) {
     return (
         <Link
             href={`/fruit/${fruit.id}` as Route}
-            className="block rounded-lg border p-5 shadow transition-all hover:scale-101 hover:shadow-lg"
+            className={cn(
+                "flex flex-col justify-between gap-2",
+                "rounded-lg border p-5 shadow",
+                "transition-all hover:scale-101 hover:shadow-lg",
+            )}
             noStyle
         >
+            {/* Titre */}
             <h2 className="text-lg font-semibold">{fruit.name}</h2>
-            {fruit.description && <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{fruit.description}</p>}
-            <div className="mt-4 text-xs text-gray-500">
+
+            {/* Description */}
+            {fruit.description && (
+                <p className="h-full text-sm text-gray-600 dark:text-gray-400">{fruit.description}</p>
+            )}
+
+            {/* Présent dans X paniers */}
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+                Présent dans {fruit.inBasketCount} {fruit.inBasketCount > 1 ? "paniers" : "panier"}
+            </div>
+
+            {/* Ajouté le xx / xx / xxxx */}
+            <div className="flex items-center justify-between text-xs text-gray-500">
                 Ajouté le {new Date(fruit.createdAt).toLocaleDateString("fr-FR")}
             </div>
         </Link>
@@ -28,11 +45,21 @@ export default async function FruitCard(props: FruitCardProps) {
 
 export const FruitCardSkeleton = () => {
     return (
-        <div className="block animate-pulse rounded-lg border p-5 shadow">
-            <div className="bg-foreground/5 h-7 w-3/4 rounded"></div>
-            <div className="bg-foreground/5 mt-2 h-5 w-full rounded"></div>
-            <div className="bg-foreground/5 mt-1 h-5 w-5/6 rounded"></div>
-            <div className="bg-foreground/5 mt-4 h-4 w-1/2 rounded"></div>
+        <div className={cn("animate-pulse", "flex flex-col justify-between gap-2", "rounded-lg border p-5 shadow")}>
+            {/* Titre */}
+            <div className="bg-foreground/5 h-7 w-1/2 flex-none rounded"></div>
+
+            {/* Description */}
+            <div className="h-full space-y-1">
+                <div className="bg-foreground/5 h-[18px] w-full flex-none rounded"></div>
+                <div className="bg-foreground/5 h-[18px] w-1/6 flex-none rounded"></div>
+            </div>
+
+            {/* Présent dans X paniers */}
+            <div className="bg-foreground/5 h-5 w-[150px] flex-none rounded"></div>
+
+            {/* Ajouté le xx / xx / xxxx */}
+            <div className="bg-foreground/5 h-4 w-[110px] flex-none rounded"></div>
         </div>
     );
 };
