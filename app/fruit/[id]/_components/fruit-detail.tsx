@@ -1,6 +1,7 @@
 import Link from "@comps/SHADCN/components/link";
 import oRPC from "@lib/orpc";
 import { timeout } from "@utils/timout";
+import { ChevronRight } from "lucide-react";
 import { notFound } from "next/navigation";
 
 type GetFruitByIdCachedProps = {
@@ -32,18 +33,13 @@ export default async function FruitDetail(props: FruitDetailProps) {
 
     return (
         <div className="space-y-6">
-            <Link
-                href="/fruits"
-                className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-                noStyle
-            >
-                <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-                Retour à la liste
-            </Link>
-
-            <h1 className="text-3xl font-bold">{fruit.name}</h1>
+            <h1 className="flex items-center gap-2 text-2xl font-bold">
+                <Link href="/fruits" className="hover:underline" noStyle>
+                    Fruits
+                </Link>
+                <ChevronRight className="size-4" />
+                {fruit.name}
+            </h1>
 
             {fruit.description && (
                 <div className="rounded-lg border p-6 shadow">

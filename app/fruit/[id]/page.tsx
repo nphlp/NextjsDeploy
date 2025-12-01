@@ -7,6 +7,7 @@ type PageProps = {
 
 export default async function Page(props: PageProps) {
     const { params } = props;
+
     const { id } = await params;
 
     return (

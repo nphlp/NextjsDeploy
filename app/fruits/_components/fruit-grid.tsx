@@ -16,13 +16,13 @@ const getFruitsCached = async (props: GetFruitsCachedProps) => {
 };
 
 type FruitsGridProps = {
-    searchParams: Promise<{ take?: string }>;
+    take?: string;
 };
 
 export default async function FruitsGrid(props: FruitsGridProps) {
-    const { searchParams } = props;
+    "use cache";
 
-    const { take } = await searchParams;
+    const { take } = props;
 
     const fruits = await getFruitsCached({ take: take ? Number(take) : undefined });
 
