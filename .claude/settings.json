@@ -1,12 +1,12 @@
 {
+    "enableAllProjectMcpServers": true,
     "permissions": {
         "allow": [
-            "Bash(pnpm run type)",
-            "Bash(pnpm run lint:*)",
-            "Bash(pnpm run format:*)",
-            "Bash(pnpm run checks)",
-            "Bash(pnpm run test:server:dev)",
-            "Bash(pnpm run test:server:prod)",
+            "Bash(pnpm type)",
+            "Bash(pnpm lint:*)",
+            "Bash(pnpm format:*)",
+            "Bash(pnpm checks)",
+            "Bash(pnpm test:run)",
 
             "Bash(make:*)",
             "Bash(docker:*)",
