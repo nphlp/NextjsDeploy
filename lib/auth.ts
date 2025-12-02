@@ -1,11 +1,10 @@
-import { UserFindUniqueAction } from "@actions/UserAction";
+import SendEmailAction from "@actions/SendEmailAction";
 import EmailTemplate from "@comps/UI/email";
 import PrismaInstance from "@lib/prisma";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { customSession } from "better-auth/plugins";
-import SendEmailAction from "@/actions/SendEmailAction";
 
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -39,18 +38,6 @@ export const auth = betterAuth({
             });
         },
     },
-    // user: {
-    //     changeEmail: {
-    //         enabled: true,
-    //         sendChangeEmailVerification: async ({ newEmail, url, user }) => {
-    //             await SendEmailAction({
-    //                 subject: `Hey ${user.name}! Let's verify your new email.`,
-    //                 email: newEmail,
-    //                 body: EmailTemplate({ buttonUrl: url, emailType: "change" }),
-    //             });
-    //         },
-    //     },
-    // },
     session: {
         expiresIn: 60 * 60 * 24, // 24 hours
         updateAge: 60 * 20, // 20 minutes
@@ -58,7 +45,7 @@ export const auth = betterAuth({
     plugins: [
         // Extends session with role and lastname
         customSession(async ({ session, user }) => {
-            const userData = await UserFindUniqueAction({ where: { id: user.id } });
+            const userData = await PrismaInstance.user.findUnique({ where: { id: user.id } });
 
             if (!userData) {
                 throw new Error("User not found");

@@ -1,18 +1,16 @@
 "use client";
 
-import Button from "@comps/UI/button/button";
-import { signOut } from "@lib/authClient";
+import { Button } from "@comps/SHADCN/ui/button";
+import { signOut } from "@lib/auth-client";
 import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
-import { ButtonVariant } from "./button/theme";
 
 type LogoutProps = {
-    variant?: ButtonVariant;
     children: ReactNode;
 };
 
 export default function Logout(props: LogoutProps) {
-    const { variant, children } = props;
+    const { children } = props;
 
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
@@ -30,13 +28,7 @@ export default function Logout(props: LogoutProps) {
     };
 
     return (
-        <Button
-            label="Se déconnecter"
-            className={{ text: "flex items-center gap-2" }}
-            onClick={handleClick}
-            variant={variant}
-            isLoading={isLoading}
-        >
+        <Button onClick={handleClick} disabled={isLoading}>
             {children}
         </Button>
     );

@@ -1,16 +1,18 @@
+"use client";
+
 import { cn } from "@shadcn/lib/utils";
 import * as React from "react";
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
     return (
-        <div className="relative w-full overflow-auto">
+        <div data-slot="table-container" className="relative w-full overflow-x-auto">
             <table data-slot="table" className={cn("w-full caption-bottom text-sm", className)} {...props} />
         </div>
     );
 }
 
 function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
-    return <thead data-slot="table-header" className={cn(className)} {...props} />;
+    return <thead data-slot="table-header" className={cn("[&_tr]:border-b", className)} {...props} />;
 }
 
 function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
@@ -42,7 +44,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
         <th
             data-slot="table-head"
             className={cn(
-                "text-muted-foreground h-12 px-3 text-left align-middle font-medium has-[role=checkbox]:w-px [&:has([role=checkbox])]:pr-0",
+                "text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
                 className,
             )}
             {...props}
@@ -54,7 +56,10 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     return (
         <td
             data-slot="table-cell"
-            className={cn("p-3 align-middle [&:has([role=checkbox])]:pr-0", className)}
+            className={cn(
+                "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+                className,
+            )}
             {...props}
         />
     );
@@ -66,4 +71,4 @@ function TableCaption({ className, ...props }: React.ComponentProps<"caption">) 
     );
 }
 
-export { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow };
+export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption };

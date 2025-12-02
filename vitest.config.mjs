@@ -3,10 +3,10 @@ import dotenv from "dotenv";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
-// Charger les variables d'environnement du fichier .env
 dotenv.config({ quiet: true });
 
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+if (!NEXT_PUBLIC_BASE_URL) throw new Error("NEXT_PUBLIC_BASE_URL environment variable is not defined");
 
 export default defineConfig({
     test: {

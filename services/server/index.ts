@@ -4,21 +4,6 @@ export {
     AccountFindManyServer,
     AccountFindUniqueServer,
 } from "./AccountServer";
-export { ClockCountServer, ClockFindFirstServer, ClockFindManyServer, ClockFindUniqueServer } from "./ClockServer";
-export {
-    ContractCountServer,
-    ContractFindFirstServer,
-    ContractFindManyServer,
-    ContractFindUniqueServer,
-} from "./ContractServer";
-export { DayCountServer, DayFindFirstServer, DayFindManyServer, DayFindUniqueServer } from "./DayServer";
-export { LeaveCountServer, LeaveFindFirstServer, LeaveFindManyServer, LeaveFindUniqueServer } from "./LeaveServer";
-export {
-    ScheduleCountServer,
-    ScheduleFindFirstServer,
-    ScheduleFindManyServer,
-    ScheduleFindUniqueServer,
-} from "./ScheduleServer";
 export {
     SessionCountServer,
     SessionFindFirstServer,
