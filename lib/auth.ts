@@ -38,18 +38,6 @@ export const auth = betterAuth({
             });
         },
     },
-    // user: {
-    //     changeEmail: {
-    //         enabled: true,
-    //         sendChangeEmailVerification: async ({ newEmail, url, user }) => {
-    //             await SendEmailAction({
-    //                 subject: `Hey ${user.name}! Let's verify your new email.`,
-    //                 email: newEmail,
-    //                 body: EmailTemplate({ buttonUrl: url, emailType: "change" }),
-    //             });
-    //         },
-    //     },
-    // },
     session: {
         expiresIn: 60 * 60 * 24, // 24 hours
         updateAge: 60 * 20, // 20 minutes

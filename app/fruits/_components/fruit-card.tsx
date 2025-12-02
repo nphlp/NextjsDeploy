@@ -1,3 +1,5 @@
+"use cache";
+
 import Link from "@comps/SHADCN/components/link";
 import { cn } from "@comps/SHADCN/lib/utils";
 import { Fruit } from "@prisma/client/client";
@@ -9,8 +11,6 @@ type FruitCardProps = {
 };
 
 export default async function FruitCard(props: FruitCardProps) {
-    "use cache";
-
     const { fruit } = props;
 
     return (
@@ -44,7 +44,7 @@ export default async function FruitCard(props: FruitCardProps) {
     );
 }
 
-export const FruitCardSkeleton = () => {
+export const FruitCardSkeleton = async () => {
     return (
         <div className={cn("animate-pulse", "flex flex-col justify-between gap-2", "rounded-lg border p-5 shadow")}>
             {/* Titre */}

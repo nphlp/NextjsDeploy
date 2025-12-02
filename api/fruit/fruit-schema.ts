@@ -25,7 +25,25 @@ const fruitWithUserOutputSchema = z.object({
     }),
 });
 
+const fruitCreateInputSchema = z.object({
+    name: z
+        .string()
+        .min(2, "Le nom doit contenir au moins 2 caractères")
+        .max(50, "Le nom ne peut pas dépasser 50 caractères")
+        .describe("Name of the fruit"),
+    description: z
+        .string()
+        .min(10, "La description doit contenir au moins 10 caractères")
+        .max(500, "La description ne peut pas dépasser 500 caractères")
+        .describe("Description of the fruit"),
+    updateTags: z.array(z.string()).optional().describe("Array of update tags"),
+    revalidateTags: z.array(z.string()).optional().describe("Array of revalidation tags"),
+    revalidatePaths: z.array(z.string()).optional().describe("Array of revalidation paths"),
+});
+
 export {
+    // Input schema
+    fruitCreateInputSchema,
     // Output schema
     fruitOutputSchema,
     fruitWithUserOutputSchema,

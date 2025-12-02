@@ -1,4 +1,6 @@
 import "server-only";
+import basketQueries from "./basket/basket-query";
+import fruitMutations from "./fruit/fruit-mutation";
 import fruitQueries from "./fruit/fruit-query";
 import taskMutations from "./task/task-mutation";
 import taskQueries from "./task/task-query";
@@ -16,6 +18,10 @@ export const apiRouter = {
     },
     fruit: {
         ...fruitQueries,
+        ...fruitMutations,
+    },
+    basket: {
+        ...basketQueries,
     },
 };
 

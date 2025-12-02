@@ -9,8 +9,8 @@ type GetFruitsCachedProps = {
 const getFruitsCached = async (props: GetFruitsCachedProps) => {
     "use cache";
 
-    // Wait 2 seconds to simulate a slow network or database
-    await timeout(2000);
+    // Wait 1 second to simulate a slow network or database
+    await timeout(1000);
 
     return await oRPC.fruit.findMany(props);
 };
@@ -35,7 +35,9 @@ export default async function FruitsGrid(props: FruitsGridProps) {
     );
 }
 
-export const FruitsGridSkeleton = () => {
+export const FruitsGridSkeleton = async () => {
+    "use cache";
+
     return (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 11 }).map((_, index) => (
