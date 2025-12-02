@@ -1,10 +1,10 @@
 "use client";
 
-import { UserUpdateAction } from "@actions/UserUpdateAction";
 import Link from "@comps/SHADCN/components/link";
 import PasswordInput from "@comps/SHADCN/components/password-input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@lib/auth-client";
+import oRPC from "@lib/orpc";
 import { Button } from "@shadcn/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shadcn/ui/form";
 import { Input } from "@shadcn/ui/input";
@@ -46,7 +46,7 @@ export default function RegisterForm() {
             return;
         }
 
-        await UserUpdateAction({ lastname });
+        await oRPC.user.update({ id: data.user.id, lastname });
 
         toast.success("Inscription réussie ! Bienvenue !");
         router.push("/");

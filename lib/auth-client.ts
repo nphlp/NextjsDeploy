@@ -32,3 +32,5 @@ export const {
  * Type for the session data
  */
 export type SessionClient = ReturnType<typeof useSession>["data"];
+
+export type SessionRefetch = ReturnType<typeof useSession>["refetch"];

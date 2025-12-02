@@ -1,10 +1,10 @@
 "use client";
 
-import { UserUpdateAction } from "@actions/UserUpdateAction";
 import PasswordInput from "@comps/SHADCN/components/password-input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { changePassword, updateUser, useSession } from "@lib/auth-client";
+import { SessionRefetch, changePassword, useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
+import oRPC from "@lib/orpc";
 import { Button } from "@shadcn/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@shadcn/ui/form";
 import { Input } from "@shadcn/ui/input";
@@ -22,7 +22,7 @@ type EditionTabProps = {
 
 export default function EditionTab(props: EditionTabProps) {
     const { session: serverSession } = props;
-    const { data: clientSession } = useSession();
+    const { data: clientSession, refetch } = useSession();
 
     // SSR session
     const session = clientSession ?? serverSession;
@@ -34,9 +34,9 @@ export default function EditionTab(props: EditionTabProps) {
                 <p className="text-muted-foreground text-sm">Modifier vos données personnelles.</p>
             </div>
             <div className="space-y-6">
-                <UpdateLastnameForm session={session} />
+                <UpdateLastnameForm session={session} refetch={refetch} />
                 <Separator />
-                <UpdateFirstnameForm session={session} />
+                <UpdateFirstnameForm session={session} refetch={refetch} />
                 <Separator />
                 <UpdatePasswordForm />
             </div>
@@ -46,10 +46,11 @@ export default function EditionTab(props: EditionTabProps) {
 
 type UpdateFormProps = {
     session: NonNullable<Session>;
+    refetch: SessionRefetch;
 };
 
 const UpdateLastnameForm = (props: UpdateFormProps) => {
-    const { session } = props;
+    const { session, refetch } = props;
     const [isLoading, setIsLoading] = useState(false);
 
     const form = useForm<UpdateLastnameFormValues>({
@@ -64,16 +65,17 @@ const UpdateLastnameForm = (props: UpdateFormProps) => {
 
         const { lastname } = values;
 
-        const updateResponse = await UserUpdateAction({ lastname });
+        await oRPC.user.update({ id: session.user.id, lastname });
 
-        if (!updateResponse) {
-            toast.error("Erreur lors de la modification du nom");
-            setIsLoading(false);
-            return;
+        try {
+            await oRPC.user.update({ id: session.user.id, lastname });
+            await refetch();
+            toast.success("Prénom modifié avec succès !");
+            form.reset();
+        } catch {
+            toast.error("Erreur lors de la modification du prénom");
         }
 
-        toast.success("Nom modifié avec succès !");
-        form.reset();
         setIsLoading(false);
     };
 
@@ -109,7 +111,7 @@ const UpdateLastnameForm = (props: UpdateFormProps) => {
 };
 
 const UpdateFirstnameForm = (props: UpdateFormProps) => {
-    const { session } = props;
+    const { session, refetch } = props;
     const [isLoading, setIsLoading] = useState(false);
 
     const form = useForm<UpdateFirstnameFormValues>({
@@ -125,7 +127,8 @@ const UpdateFirstnameForm = (props: UpdateFormProps) => {
         const { name } = values;
 
         try {
-            await updateUser({ name });
+            await oRPC.user.update({ id: session.user.id, name });
+            await refetch();
             toast.success("Prénom modifié avec succès !");
             form.reset();
         } catch {
