@@ -1,17 +1,11 @@
-// ⚠️ Custom SQL constraints (not visible in this schema)
-//
-// Migration 30000000000001_custom_constraint_work_schedule:
-//   - no_overlapping_schedules_periods_for_a_contract (Schedule)
-//     → EXCLUDE constraint: prevents overlapping periods for same contract
-
 generator client {
-    provider = "prisma-client-js"
-    output   = "./client"
+    provider   = "prisma-client"
+    output     = "./client"
+    engineType = "client"
 }
 
 datasource db {
     provider = "postgresql"
-    url      = env("DATABASE_URL")
 }
 
 model User {
@@ -21,22 +15,18 @@ model User {
     email         String  @unique
     emailVerified Boolean
     image         String? @db.Text
+    role          Role    @default(USER)
 
-    role Role @default(USER)
+    Tasks   Task[]
+    Fruits  Fruit[]
+    Baskets Basket[]
 
-    Task Task[]
-
-    Session Session[]
-    Account Account[]
-
-    Contracts   Contract[]
-    Leaves      Leave[]
-    TimeEntries Clock[]
+    Sessions Session[]
+    Accounts Account[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@index([id])
     @@index([email])
 }
 
@@ -53,7 +43,6 @@ model Session {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@index([id])
     @@index([userId])
     @@index([token])
 }
@@ -79,13 +68,9 @@ model Account {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@index([id])
     @@index([userId])
     @@index([accountId])
     @@index([providerId])
-    @@index([accessToken])
-    @@index([refreshToken])
-    @@index([idToken])
 }
 
 model Verification {
@@ -97,128 +82,29 @@ model Verification {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@index([id])
     @@index([identifier])
+}
+
+enum Role {
+    USER
+    VENDOR
+    ADMIN
 }
 
 model Task {
     id    String @id @default(nanoid())
-    title String @unique
-    slug  String @unique
+    title String
 
-    status Status @default(TODO)
+    status Status
 
-    authorId String
-    Author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    userId String
+    User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@index([id])
     @@index([title])
-    @@index([authorId])
-}
-
-/// Contrats d'un employé
-model Contract {
-    id String @id @default(nanoid())
-
-    contractType ContractType /// Type de contrat (CDI, CDD, etc.)
-
-    startDate DateTime /// Date de début du contrat
-    endDate   DateTime? /// Date de fin du contrat (null pour CDI ou contrat en cours)
-
-    employeeId String
-    Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-
-    Schedules Schedule[]
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@index([employeeId, startDate])
-    @@index([employeeId, endDate])
-}
-
-/// Semaine de travail d'un employé
-model Schedule {
-    id String @id @default(nanoid())
-
-    startDate DateTime /// Période de validité de cet horaire
-    endDate   DateTime? /// Fin de validité de cet horaire (NULL == valide indéfiniment jusqu'à nouvel horaire)
-
-    Days Day[] /// Liste des jours configurés
-
-    contractId String
-    Contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    // ⚠️ Custom SQL constraints (see top of file)
-    // @@constraint `no_overlapping_schedules_periods_for_a_contract`
-
-    @@index([contractId, startDate])
-    @@index([contractId, endDate])
-}
-
-// Jour de travail d'un employé
-model Day {
-    id String @id @default(nanoid())
-
-    dayOfWeek DayOfWeek /// Jour de la semaine concerné
-
-    arriving String // "09:00"
-    leaving  String // "17:00"
-
-    breack Int? @default(0) /// Pause en minutes (ex: 60 pour 1h de pause)
-
-    scheduleId String
-    Schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@unique([scheduleId, dayOfWeek]) /// IMPORTANT : Évite les doublons
-    @@index([scheduleId])
-}
-
-/// Congés et absences
-model Leave {
-    id String @id @default(nanoid())
-
-    leaveType LeaveType /// Type de congé (ex: CP, RTT, Maladie, etc.)
-    status    LeaveStatus /// Statut de la demande (ex: Pending, Approved, Rejected)
-
-    /// Période de congé
-    startDate DateTime
-    endDate   DateTime
-
-    employeeId String
-    Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@index([employeeId, status])
-    @@index([employeeId, startDate, endDate])
-}
-
-/// Pointages
-model Clock {
-    id String @id @default(nanoid())
-
-    date      DateTime
-    checkType CheckType
-
-    employeeId String
-    Employee   User   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@unique([employeeId, date]) /// Un seul pointage par jour
-    @@index([employeeId, date(sort: Desc)])
+    @@index([userId])
 }
 
 enum Status {
@@ -227,42 +113,57 @@ enum Status {
     DONE
 }
 
-enum Role {
-    USER
-    ADMIN
+model Fruit {
+    id          String @id @default(nanoid())
+    name        String @unique
+    description String @db.Text
+
+    Quantities Quantity[]
+
+    /// Author
+    userId String
+    User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([name])
+    @@index([userId])
 }
 
-enum ContractType {
-    CDI
-    CDD
-    INTERIM
-    STAGE
+model Basket {
+    id String @id @default(nanoid())
+
+    userId String
+    User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    /// Fruit quantities in the basket
+    Quantity Quantity[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([userId])
 }
 
-enum LeaveType {
-    CP
-    RTT
-    MALADIE
-    SANS_SOLDE
-}
+/// Fruit quantity in a basket
+model Quantity {
+    id       String @id @default(nanoid())
+    quantity Int
 
-enum LeaveStatus {
-    PENDING
-    APPROVED
-    REJECTED
-}
+    basketId String
+    Basket   Basket @relation(fields: [basketId], references: [id], onDelete: Cascade)
 
-enum DayOfWeek {
-    MONDAY
-    TUESDAY
-    WEDNESDAY
-    THURSDAY
-    FRIDAY
-    SATURDAY
-    SUNDAY
-}
+    fruitId String
+    Fruit   Fruit  @relation(fields: [fruitId], references: [id], onDelete: Cascade)
 
-enum CheckType {
-    CHECKIN
-    CHECKOUT
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Constraints
+    @@unique([basketId, fruitId])
+    // Indexes
+    @@index([basketId])
+    @@index([fruitId])
+    @@index([fruitId, basketId])
 }

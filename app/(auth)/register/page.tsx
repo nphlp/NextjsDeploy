@@ -1,20 +1,32 @@
-import Card from "@comps/UI/card";
-import { getSession } from "@lib/authServer";
+import { getSession } from "@lib/auth-server";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shadcn/ui/card";
 import { redirect } from "next/navigation";
-import RegisterForm from "./register-form";
+import { Suspense } from "react";
+import RegisterForm from "./_components/register-form";
 
 export default async function Page() {
-    const session = await getSession();
-
-    if (session) redirect("/task");
-
     return (
-        <Card className="max-w-[400px] space-y-4 p-7">
-            <div className="flex flex-col items-center gap-2">
-                <h1 className="text-2xl font-bold">S&apos;inscrire</h1>
-                <p className="text-gray-middle w-5/7 text-center text-sm">Saisissez vos informations personnelles.</p>
-            </div>
-            <RegisterForm />
-        </Card>
+        <Suspense>
+            <SuspendedPage />
+        </Suspense>
     );
 }
+
+const SuspendedPage = async () => {
+    "use cache: private";
+
+    const session = await getSession();
+    if (session) redirect("/");
+
+    return (
+        <Card className="w-[400px]">
+            <CardHeader>
+                <CardTitle className="text-center">S&apos;inscrire</CardTitle>
+                <CardDescription className="text-center">Saisissez vos informations personnelles.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <RegisterForm />
+            </CardContent>
+        </Card>
+    );
+};

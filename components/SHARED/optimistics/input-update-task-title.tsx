@@ -1,16 +1,17 @@
 "use client";
 
-import { TaskType } from "@app/task/components/fetch";
-import Input, { InputClassName } from "@comps/UI/input/input";
-import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
-import { combo } from "@lib/combo";
-import { startTransition, useState } from "react";
-import { UpdateTask } from "@/actions/TaskAction";
+import { Input } from "@comps/SHADCN/ui/input";
+import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import oRPC from "@lib/orpc";
+import { cn } from "@shadcn/lib/utils";
+import { startTransition, useRef, useState } from "react";
+import { toast } from "sonner";
+import { TaskType } from "./types";
 import useInstant from "./useInstant";
 
 type InputUpdateTaskTitleProps = {
     task: TaskType;
-    className?: InputClassName;
+    className?: string;
 };
 
 export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
@@ -19,40 +20,46 @@ export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
 
     const { setData, setOptimisticData } = useInstant(task);
 
+    const previousTitle = useRef<string>(task.title);
     const [title, setTitle] = useState<string>(task.title);
 
     const handleTitleUpdate = async () => {
-        if (title.length === 0) return setTitle(task.title);
+        if (title.length === 0) return setTitle(previousTitle.current);
+        if (title === previousTitle.current) return;
 
         startTransition(async () => {
             // New item
-            const newItem: TaskType = { id, title, status };
+            const updatedItem: TaskType = { id, title, status };
 
             // Set optimistic state
-            setOptimisticData(newItem);
+            setOptimisticData(updatedItem);
 
-            // Do mutation
-            const validatedItem = await UpdateTask({ id, title });
+            try {
+                // Do mutation
+                const data = await oRPC.task.update({ id, title });
 
-            // If failed, the optimistic state is rolled back at the end of the transition
-            if (!validatedItem) return console.log("❌ Update failed");
+                // If success, update the real state in a new transition to prevent key conflict
+                startTransition(() => setData(data));
 
-            // If success, update the real state in a new transition to prevent key conflict
-            startTransition(() => setData(validatedItem));
+                // Update previous title
+                previousTitle.current = title;
 
-            console.log("✅ Update succeeded");
+                toast.success("Titre mis à jour avec succès");
+            } catch (error) {
+                // If failed, the optimistic state is rolled back at the end of the transition
+                toast.error((error as Error).message ?? "Impossible de mettre à jour le titre");
+            }
         });
     };
 
     return (
         <form action={handleTitleUpdate} className="w-full">
             <Input
-                label="Tâche"
+                aria-label="Tâche"
                 onBlur={handleTitleUpdate}
-                setValue={setTitle}
+                onChange={(e) => setTitle(e.target.value)}
                 value={title}
                 className={className}
-                noLabel
                 autoComplete="off"
             />
         </form>
@@ -65,11 +72,7 @@ type InputUpdateTaskTitleSkeletonProps = {
 };
 
 export const InputUpdateTaskTitleSkeleton = (props: InputUpdateTaskTitleSkeletonProps) => {
-    const { index = 0, className } = props;
+    const { className } = props;
 
-    return (
-        <SkeletonContainer className={combo("rounded-none border-x-0 border-t-transparent px-0", className)}>
-            <SkeletonText minWidth={30} maxWidth={60} index={index} />
-        </SkeletonContainer>
-    );
+    return <Skeleton className={cn("h-9 w-full rounded-none border-x-0 border-t-transparent", className)} />;
 };

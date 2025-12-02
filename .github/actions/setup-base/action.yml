@@ -12,7 +12,7 @@ runs:
         - name: Install Node.js with cache
           uses: actions/setup-node@v4
           with:
-              node-version: 23
+              node-version: 24
               cache: "pnpm"
         - name: Install dependencies
           run: pnpm install --frozen-lockfile

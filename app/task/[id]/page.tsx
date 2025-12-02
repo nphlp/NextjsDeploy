@@ -1,11 +1,10 @@
-import Link from "@comps/UI/button/link";
-import { getSession } from "@lib/authServer";
-import { TaskFindUniqueServer } from "@services/server";
+import Link from "@comps/SHADCN/components/link";
+import { getSession } from "@lib/auth-server";
+import oRPC from "@lib/orpc";
 import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import z, { ZodType } from "zod";
-import Edition, { EditionSkeleton } from "./components/edition";
-import { taskIdPageParams } from "./components/fetch";
+import Edition, { EditionSkeleton } from "./_components/edition";
 
 type Params = {
     id: string;
@@ -18,30 +17,28 @@ type PageProps = {
 };
 
 export default async function Page(props: PageProps) {
-    const { params } = props;
-
-    const { id } = paramsSchema.parse(await params);
-
     return (
         <div className="w-full max-w-[600px] space-y-6 px-4 py-4 sm:px-12">
             <h1 className="text-2xl font-bold">Édition de la tâche 📝</h1>
             <Suspense fallback={<TaskSkeleton />}>
-                <Task id={id} />
+                <Task {...props} />
             </Suspense>
-            <Link label="Retour" href="/" />
+            <Link aria-label="Retour" href="/tasks">
+                Retour
+            </Link>
         </div>
     );
 }
 
-type TaskProps = Params;
+const Task = async (props: PageProps) => {
+    "use cache: private";
 
-const Task = async (props: TaskProps) => {
-    const { id } = props;
+    const { id } = paramsSchema.parse(await props.params);
 
     const session = await getSession();
     if (!session) redirect("/login");
 
-    const task = await TaskFindUniqueServer(taskIdPageParams(id, session));
+    const task = await oRPC.task.findUnique({ id });
 
     if (!task) notFound();
 

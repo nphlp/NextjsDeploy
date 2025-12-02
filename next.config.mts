@@ -18,7 +18,12 @@ const nextConfig: NextConfig = {
     typedRoutes: true,
 
     // Enable React memoryzing compiler
-    // reactCompiler: true,
+    reactCompiler: true,
+
+    // New nextjs rendering method (every page is dynamic by default)
+    // Directives: use cache, use cache private, use cache remote
+    // Functions: cacheTag, cacheLife, revalidateTag, updateTag
+    cacheComponents: true,
 
     experimental: {
         // View transition API
@@ -27,11 +32,9 @@ const nextConfig: NextConfig = {
         // Unauthorized redirection support
         authInterrupts: true,
 
-        // UseCache, cacheLife and cacheTag
-        useCache: true,
-
         // Turbopack persistent caching
         turbopackFileSystemCacheForDev: true,
+        turbopackFileSystemCacheForBuild: true,
     },
 };
 

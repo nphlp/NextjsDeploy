@@ -47,7 +47,7 @@ Generated files are created in `services/` directory with this structure:
 - `services/class/` - Service classes
 - `services/server/` - Server-only utilities
 
-Templates located in `templates/services/` and `templates/app/`
+Templates located in `solid/templates/services/` and `solid/templates/app/`
 
 ### Code Quality
 
@@ -81,7 +81,10 @@ Templates located in `templates/services/` and `templates/app/`
 - `scripts/` - Development and build scripts
 - `prisma/` - Database schema and migrations
 - `fixtures/` - Test data definitions
-- `templates/` - Code generation templates using Handlebars
+- `solid/` - Solid generator and templates (code generation using Handlebars)
+    - `solid/solid-generator.ts` - Main generator entry point
+    - `solid/scripts/` - Generator logic and commands
+    - `solid/templates/` - Code generation templates
 
 ### Database Layer
 

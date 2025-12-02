@@ -80,8 +80,11 @@ BASIC = docker/compose.basic.yml
 postgres:
 	@make setup-env
 	$(DC) --env-file .env -f $(POSTGRES) up -d --build
-	@echo "🚀 Postgres is running on port 5432 ✅"
+	@echo "🚀 Postgres is running on port 5432"
 	@echo "📝 Now start Nextjs with 'pnpm auto'"
+	@echo "🌍 Access the app at: http://localhost:3000 ✅"
+	@echo "🔐 Then start Prisma Studio with 'pnpm prisma:studio'"
+	@echo "🗃️ Visualise data at : http://localhost:5555 🔥"
 
 postgres-stop:
 	$(DC) --env-file .env -f $(POSTGRES) down
@@ -99,14 +102,12 @@ postgres-clear:
 dev:
 	@make postgres
 	@pnpm auto && make postgres-stop
-	@echo "🚀 Access the app at: http://localhost:3000 ✅"
 
 # For local build server for testing -> http://localhost:3000
 # -> Check everything works before deploying to VPS
 start:
 	@make postgres
 	@pnpm auto:start && make postgres-stop
-	@echo "🚀 Access the app at: http://localhost:3000 ✅"
 
 # For tunneling with Ngrok -> https://your-static-url.ngrok-free.app
 # -> Useful for mobile debugging, functional testing or sharing with others
@@ -149,6 +150,7 @@ basic:
 	@make merge-env-basic
 	$(DC) --env-file $(OUTPUT_BASIC) -f $(BASIC) up -d --build
 	@echo "🚀 Access the app at: http://localhost:3000 ✅"
+	@echo "🗃️ Visualise data at : http://localhost:5555 🔥"
 
 basic-stop:
 	@make merge-env-basic

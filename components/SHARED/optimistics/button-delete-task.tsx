@@ -1,93 +1,96 @@
 "use client";
 
-import { TaskType } from "@app/task/components/fetch";
-import Button, { ButtonClassName } from "@comps/UI/button/button";
-import Modal from "@comps/UI/modal/modal";
-import { SkeletonContainer, SkeletonText } from "@comps/UI/skeleton";
-import { combo } from "@lib/combo";
-import { RefetchType } from "@utils/FetchHook";
+import { Context } from "@app/tasks/_components/context";
+import { Button } from "@comps/SHADCN/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@comps/SHADCN/ui/dialog";
+import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import oRPC from "@lib/orpc";
+import { cn } from "@shadcn/lib/utils";
 import { Trash2 } from "lucide-react";
 import { Route } from "next";
 import { useRouter } from "next/navigation";
-import { startTransition, useRef, useState } from "react";
-import { DeleteTask } from "@/actions/TaskAction";
-import useInstant from "./useInstant";
+import { startTransition, useContext, useRef, useState } from "react";
+import { toast } from "sonner";
+import { TaskType } from "./types";
 
 type SelectUpdateTaskStatusProps = {
     task: TaskType;
-    className?: ButtonClassName;
-} & (
-    | {
-          redirectTo: Route;
-          refetch?: undefined;
-      }
-    | {
-          redirectTo?: undefined;
-          refetch?: RefetchType;
-      }
-);
+    className?: string;
+    redirectTo?: Route;
+};
 
 export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
-    const { task, className, redirectTo, refetch } = props;
+    const { task, className, redirectTo } = props;
+
+    // This context may be undefined if used outside of a provider
+    const setDataBypass = useContext(Context)?.setDataBypass;
+    const setOptimisticData = useContext(Context)?.setOptimisticData;
+    const optimisticMutations = useContext(Context)?.optimisticMutations;
 
     const router = useRouter();
-    const { setData, setOptimisticData } = useInstant(task);
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const buttonRef = useRef<HTMLButtonElement>(null);
 
     const handleDelete = () => {
         startTransition(async () => {
-            // New item
-            const newItem: TaskType = task;
-
             // Set optimistic state
-            setOptimisticData(newItem);
+            if (setOptimisticData) setOptimisticData({ type: "delete", newItem: task });
 
-            // Do mutation
-            const validatedItem = await DeleteTask({ id: newItem.id });
+            try {
+                // Do mutation
+                const data = await oRPC.task.delete({ id: task.id });
 
-            // If failed, the optimistic state is rolled back at the end of the transition
-            if (!validatedItem) return console.log("❌ Deletion failed");
+                // Close modal
+                setIsModalOpen(false);
 
-            // If success, update the real state in a new transition to prevent key conflict
-            startTransition(() => setData(validatedItem));
+                // If redirection is defined, do not need updating state
+                if (redirectTo) {
+                    setTimeout(() => {
+                        router.push(redirectTo);
+                    }, 200);
+                }
 
-            // If redirection or refetching, do it after the real state change
-            if (redirectTo) router.push(redirectTo);
-            if (refetch) refetch();
+                // If success, update the real state in a new transition to prevent key conflict
+                if (!redirectTo) {
+                    startTransition(async () =>
+                        setDataBypass((current) => optimisticMutations(current, { type: "delete", newItem: data })),
+                    );
+                }
 
-            console.log("✅ Deletion succeeded");
+                toast.success("Tâche supprimée avec succès");
+            } catch (error) {
+                // If failed, the optimistic state is rolled back at the end of the transition
+                toast.error((error as Error).message ?? "Impossible de supprimer la tâche");
+            }
         });
     };
 
     return (
         <>
             <Button
-                label={`Status ${task.status}`}
                 variant="outline"
                 className={className}
                 onClick={() => setIsModalOpen(true)}
+                aria-label={`Delete ${task.title}`}
             >
                 <Trash2 className="size-6" />
             </Button>
-            <Modal
-                className={{
-                    cardContainer: "px-5 py-16",
-                    card: "max-w-[500px] min-w-[250px] space-y-5",
-                }}
-                setIsModalOpen={setIsModalOpen}
-                isModalOpen={isModalOpen}
-                focusToRef={buttonRef}
-                withCloseButton
-            >
-                <h2 className="text-lg font-bold">Confirmer la suppression</h2>
-                <p>Êtes-vous sûr de vouloir supprimer cette tâche ?</p>
-                <div className="flex justify-center gap-2">
-                    <Button label="Annuler" variant="outline" onClick={() => setIsModalOpen(false)} />
-                    <Button ref={buttonRef} label="Supprimer" variant="destructive" onClick={handleDelete} />
-                </div>
-            </Modal>
+
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <DialogContent className="max-w-[500px]">
+                    <DialogTitle>Confirmer la suppression</DialogTitle>
+                    <DialogDescription>Êtes-vous sûr de vouloir supprimer cette tâche ?</DialogDescription>
+                    <div className="mt-4 flex justify-end gap-2">
+                        <DialogClose asChild>
+                            <Button variant="outline">Annuler</Button>
+                        </DialogClose>
+                        <Button ref={buttonRef} variant="destructive" onClick={handleDelete}>
+                            Supprimer
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }
@@ -99,9 +102,5 @@ type ButtonDeleteTaskSkeletonProps = {
 export const ButtonDeleteTaskSkeleton = (props: ButtonDeleteTaskSkeletonProps) => {
     const { className } = props;
 
-    return (
-        <SkeletonContainer className={combo("w-fit px-2", className)} noShrink>
-            <SkeletonText width="20px" />
-        </SkeletonContainer>
-    );
+    return <Skeleton className={cn("h-9 w-9", className)} />;
 };

@@ -23,3 +23,5 @@ runs:
           if: inputs.check-type == 'type'
           run: pnpm prisma:generate && pnpm type
           shell: bash
+          env:
+              DATABASE_URL: "postgresql://user:pass@localhost:5432/db"

@@ -1,9 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
+import csrfProtection from "./api/csrf";
 
-export default async function middleware() {
-    return NextResponse.next();
+export default async function proxy(request: NextRequest) {
+    const response = await csrfProtection(request);
+
+    return response;
 }
-
-export const config = {
-    runtime: "nodejs",
-};
