@@ -19,6 +19,7 @@ const eslintConfig = [
             "node_modules/**",
             ".next/**",
             ".github/**",
+            "coverage/**",
             "prettier.config.mjs",
             "postcss.config.mjs",
             "vitest.config.mjs",

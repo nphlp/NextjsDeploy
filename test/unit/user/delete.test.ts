@@ -1,12 +1,12 @@
 import { User } from "@prisma/client/client";
+import { oRPC_bypass_http as oRPC } from "@test/mocks/orpc";
+import { setMockSession } from "@test/mocks/session";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { oRPC_bypass_http as oRPC } from "../mocks/orpc";
-import { setMockSession } from "../mocks/session";
 
 // Node Modules mocks
-vi.mock("server-only", async () => import("../mocks/modules/server-only"));
-vi.mock("next/cache", async () => import("../mocks/modules/next-cache"));
-vi.mock("@lib/auth-server", async () => import("../mocks/modules/auth-server"));
+vi.mock("server-only", async () => import("@test/mocks/modules/server-only"));
+vi.mock("next/cache", async () => import("@test/mocks/modules/next-cache"));
+vi.mock("@lib/auth-server", async () => import("@test/mocks/modules/auth-server"));
 
 // PrismaInstance mock
 const createInitialData = (): User[] => [

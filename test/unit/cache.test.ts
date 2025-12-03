@@ -1,5 +1,5 @@
+import { tag } from "@orpc/cache";
 import { describe, expect, it } from "vitest";
-import { tag } from "../../cache";
 
 describe("Cache tag generation", () => {
     it("generates tag with model only", () => {

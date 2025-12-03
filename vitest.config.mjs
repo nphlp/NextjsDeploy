@@ -15,10 +15,15 @@ export default defineConfig({
         exclude: ["**/.next/**", "**/node_modules/**"],
         coverage: {
             provider: "v8",
+            // Files to include in coverage
             include: ["api/**/*.ts"],
-            exclude: ["api/test/**", "api/**/*-action.ts"],
+            // Files to exclude from coverage
+            exclude: [
+                // `*-action.ts` files are tested through `*-mutation.ts` files tests
+                "api/**/*-action.ts",
+            ],
             reporter: ["text", "html"],
-            reportsDirectory: "./coverage",
+            reportsDirectory: "./api/test/coverage",
         },
     },
     plugins: [tsconfigPaths(), react()],

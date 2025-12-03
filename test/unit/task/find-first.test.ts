@@ -1,12 +1,12 @@
 import { Status, Task } from "@prisma/client/client";
+import { oRPC_bypass_http as oRPC } from "@test/mocks/orpc";
+import { setMockSession } from "@test/mocks/session";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { oRPC_bypass_http as oRPC } from "../mocks/orpc";
-import { setMockSession } from "../mocks/session";
 
 // Node Modules mocks
-vi.mock("server-only", async () => import("../mocks/modules/server-only"));
-vi.mock("next/cache", async () => import("../mocks/modules/next-cache"));
-vi.mock("@lib/auth-server", async () => import("../mocks/modules/auth-server"));
+vi.mock("server-only", async () => import("@test/mocks/modules/server-only"));
+vi.mock("next/cache", async () => import("@test/mocks/modules/next-cache"));
+vi.mock("@lib/auth-server", async () => import("@test/mocks/modules/auth-server"));
 
 // PrismaInstance mock
 vi.mock("@lib/prisma", () => {
@@ -37,23 +37,23 @@ vi.mock("@lib/prisma", () => {
         },
     ];
 
-    const findUnique = async ({ where }: { where: { id: string } }) => {
-        return data.find((task) => task.id === where.id) ?? null;
+    const findFirst = async ({ where }: { where: { title: string } }) => {
+        return data.find((task) => task.title === where.title) ?? null;
     };
 
     return {
         default: {
-            task: { findUnique },
+            task: { findFirst },
         },
     };
 });
 
 /**
- * Test `GET /tasks/{id}` endpoint permissions
+ * Test `GET /tasks/first` endpoint permissions
  */
-const oRpcTaskFindUnique = oRPC.task.findUnique;
+const oRpcTaskFindFirst = oRPC.task.findFirst;
 
-describe("GET /tasks/{id} (permissions)", () => {
+describe("GET /tasks/first (permissions)", () => {
     /**
      * Reset session before each test
      */
@@ -66,15 +66,15 @@ describe("GET /tasks/{id} (permissions)", () => {
         setMockSession(null);
 
         // Expect unauthorized error (not logged in)
-        await expect(oRpcTaskFindUnique({ id: "taskId1" })).rejects.toThrow();
+        await expect(oRpcTaskFindFirst({ title: "User Task" })).rejects.toThrow();
     });
 
     it("Role user -> own task", async () => {
         // Set user session
         setMockSession("USER");
 
-        // Execute function (user accessing own task)
-        const task = await oRpcTaskFindUnique({ id: "taskId1" });
+        // Execute function (user searching for own task)
+        const task = await oRpcTaskFindFirst({ title: "User Task" });
 
         // Expect task object
         expect(task).toBeDefined();
@@ -87,15 +87,15 @@ describe("GET /tasks/{id} (permissions)", () => {
         setMockSession("USER");
 
         // Expect unauthorized error (not owner or admin)
-        await expect(oRpcTaskFindUnique({ id: "taskId2" })).rejects.toThrow();
+        await expect(oRpcTaskFindFirst({ title: "Admin Task" })).rejects.toThrow();
     });
 
     it("Role vendor -> own task", async () => {
         // Set vendor session
         setMockSession("VENDOR");
 
-        // Execute function (vendor accessing own task)
-        const task = await oRpcTaskFindUnique({ id: "taskId3" });
+        // Execute function (vendor searching for own task)
+        const task = await oRpcTaskFindFirst({ title: "Vendor Task" });
 
         // Expect task object
         expect(task).toBeDefined();
@@ -108,15 +108,15 @@ describe("GET /tasks/{id} (permissions)", () => {
         setMockSession("VENDOR");
 
         // Expect unauthorized error (not owner or admin)
-        await expect(oRpcTaskFindUnique({ id: "taskId1" })).rejects.toThrow();
+        await expect(oRpcTaskFindFirst({ title: "User Task" })).rejects.toThrow();
     });
 
     it("Role admin -> own task", async () => {
         // Set admin session
         setMockSession("ADMIN");
 
-        // Execute function (admin accessing own task)
-        const task = await oRpcTaskFindUnique({ id: "taskId2" });
+        // Execute function (admin searching for own task)
+        const task = await oRpcTaskFindFirst({ title: "Admin Task" });
 
         // Expect task object
         expect(task).toBeDefined();
@@ -128,8 +128,8 @@ describe("GET /tasks/{id} (permissions)", () => {
         // Set admin session
         setMockSession("ADMIN");
 
-        // Execute function (admin accessing other user's task)
-        const task = await oRpcTaskFindUnique({ id: "taskId1" });
+        // Execute function (admin searching for other user's task)
+        const task = await oRpcTaskFindFirst({ title: "User Task" });
 
         // Expect task object (admin can access any task)
         expect(task).toBeDefined();
@@ -138,21 +138,21 @@ describe("GET /tasks/{id} (permissions)", () => {
     });
 });
 
-describe("GET /tasks/{id} (params)", () => {
+describe("GET /tasks/first (params)", () => {
     it("Task not found", async () => {
         // Set admin session
         setMockSession("ADMIN");
 
         // Expect not found error
-        await expect(oRpcTaskFindUnique({ id: "nonExistentId" })).rejects.toThrow();
+        await expect(oRpcTaskFindFirst({ title: "Non Existent Task" })).rejects.toThrow();
     });
 
-    it("Get user task", async () => {
+    it("Find User Task", async () => {
         // Set admin session
         setMockSession("ADMIN");
 
         // Execute function
-        const task = await oRpcTaskFindUnique({ id: "taskId1" });
+        const task = await oRpcTaskFindFirst({ title: "User Task" });
 
         // Expect task object
         expect(task).toBeDefined();
@@ -161,12 +161,12 @@ describe("GET /tasks/{id} (params)", () => {
         expect(task?.status).toBe("TODO");
     });
 
-    it("Get admin task", async () => {
+    it("Find Admin Task", async () => {
         // Set admin session
         setMockSession("ADMIN");
 
         // Execute function
-        const task = await oRpcTaskFindUnique({ id: "taskId2" });
+        const task = await oRpcTaskFindFirst({ title: "Admin Task" });
 
         // Expect task object
         expect(task).toBeDefined();
@@ -175,12 +175,12 @@ describe("GET /tasks/{id} (params)", () => {
         expect(task?.status).toBe("DONE");
     });
 
-    it("Get vendor task", async () => {
+    it("Find Vendor Task", async () => {
         // Set admin session
         setMockSession("ADMIN");
 
         // Execute function
-        const task = await oRpcTaskFindUnique({ id: "taskId3" });
+        const task = await oRpcTaskFindFirst({ title: "Vendor Task" });
 
         // Expect task object
         expect(task).toBeDefined();

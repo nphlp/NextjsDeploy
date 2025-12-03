@@ -1,5 +1,5 @@
+import { apiRouter } from "@orpc/router";
 import { createRouterClient } from "@orpc/server";
-import { apiRouter } from "../../router";
 
 /**
  * Mock oRPC direct client

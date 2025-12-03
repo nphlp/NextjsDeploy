@@ -78,7 +78,7 @@ describe("CSRF Protection", () => {
             vi.resetModules();
             vi.stubEnv("NEXT_PUBLIC_BASE_URL", "");
 
-            await expect(import("../../csrf")).rejects.toThrow(
+            await expect(import("@orpc/csrf")).rejects.toThrow(
                 "NEXT_PUBLIC_BASE_URL environment variable is not defined",
             );
         });
@@ -91,7 +91,7 @@ describe("CSRF Protection", () => {
         // Set env before importing
         vi.stubEnv("NEXT_PUBLIC_BASE_URL", MOCK_BASE_URL);
         // Dynamic import
-        const csrfModule = await import("../../csrf");
+        const csrfModule = await import("@orpc/csrf");
         return csrfModule.default;
     };
 
