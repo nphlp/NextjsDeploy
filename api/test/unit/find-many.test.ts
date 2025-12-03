@@ -1,3 +1,4 @@
+import { User } from "@prisma/client/client";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { oRPC_bypass_http as oRPC } from "../mocks/orpc";
 import { setMockSession } from "../mocks/session";
@@ -9,7 +10,7 @@ vi.mock("@lib/auth-server", async () => import("../mocks/modules/auth-server"));
 
 // PrismaInstance mock
 vi.mock("@lib/prisma", () => {
-    const data = [
+    const data: User[] = [
         {
             id: "adminId",
             name: "Admin",
