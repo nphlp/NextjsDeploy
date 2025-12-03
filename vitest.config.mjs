@@ -12,7 +12,14 @@ export default defineConfig({
     test: {
         environment: "jsdom",
         env: { NEXT_PUBLIC_BASE_URL },
-        exclude: ["**/.next/**", "**/.next-test/**", "**/node_modules/**"],
+        exclude: ["**/.next/**", "**/node_modules/**"],
+        coverage: {
+            provider: "v8",
+            include: ["api/**/*.ts"],
+            exclude: ["api/test/**"],
+            reporter: ["text", "html"],
+            reportsDirectory: "./coverage",
+        },
     },
     plugins: [tsconfigPaths(), react()],
 });
