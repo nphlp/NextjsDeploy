@@ -23,8 +23,8 @@ const SuspendedPage = async () => {
     if (!session) unauthorized();
 
     return (
-        <div className="flex-1 space-y-4 p-7">
-            <Card className="w-[600px]">
+        <div className="w-full max-w-[400px] flex-1 p-4">
+            <Card className="w-full">
                 <CardContent>
                     <Tabs defaultValue="profile" className="w-full">
                         <TabsList className="mb-4 grid w-full grid-cols-3">
