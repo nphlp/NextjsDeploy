@@ -23,7 +23,7 @@ export default defineConfig({
                 "api/**/*-action.ts",
             ],
             reporter: ["text", "html"],
-            reportsDirectory: "./api/test/coverage",
+            reportsDirectory: "./test/coverage",
         },
     },
     plugins: [tsconfigPaths(), react()],
