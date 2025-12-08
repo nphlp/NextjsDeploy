@@ -39,3 +39,6 @@ prisma/client/
 
 # PDF files
 PDF/
+
+# Vitest
+coverage/

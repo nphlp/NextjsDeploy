@@ -39,6 +39,6 @@ declare const globalThis: {
  */
 const NodemailerInstance = globalThis.nodemailerGlobal ?? nodemailerTransporterSingleton();
 
-export default NodemailerInstance;
-
 if (process.env.NODE_ENV !== "production") globalThis.nodemailerGlobal = NodemailerInstance;
+
+export default NodemailerInstance;

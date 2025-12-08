@@ -24,7 +24,13 @@ export default async function Html(props: HtmlProps) {
     }
 
     return (
-        <Suspense>
+        <Suspense
+            fallback={
+                <html lang="fr" className="h-full antialiased">
+                    {children}
+                </html>
+            }
+        >
             <SuspendedHtml {...props} />
         </Suspense>
     );

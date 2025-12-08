@@ -1,9 +1,10 @@
 "use client";
 
-import { ReactNode, useEffect, useRef, useState } from "react";
-import { getSystemTheme, setThemeClass, setThemeCookie } from "./theme-client";
+import { ReactNode, useEffect, useState } from "react";
+import { setThemeClass, setThemeCookie } from "./theme-client";
 import { ThemeContext } from "./theme-context";
-import { SystemTheme, Theme, defaultTheme } from "./theme-utils";
+import { Theme, defaultTheme } from "./theme-utils";
+import { useSystemTheme } from "./use-system-theme";
 
 type ContextProviderProps = {
     initialTheme: Theme | undefined;
@@ -16,8 +17,9 @@ export default function ThemeProvider(props: ContextProviderProps) {
     // Use initial data to prevent hydration issues
     const [theme, setTheme] = useState<Theme>(initialTheme ?? defaultTheme);
 
+    // Sync system theme using useSyncExternalStore (SSR safe)
     // Do not trust server, start with undefined system theme
-    const resolvedThemeRef = useRef<SystemTheme>(undefined);
+    const systemTheme = useSystemTheme();
 
     const toggleTheme = () => {
         if (theme === "system") setTheme("dark");
@@ -25,49 +27,18 @@ export default function ThemeProvider(props: ContextProviderProps) {
         if (theme === "light") setTheme("system");
     };
 
-    // Update resolvedTheme (on first load)
+    // Update CSS class and cookie
     useEffect(() => {
-        resolvedThemeRef.current = getSystemTheme();
-        setThemeClass(defaultTheme, resolvedThemeRef.current);
-        setThemeCookie(defaultTheme);
-    }, []);
+        if (systemTheme === undefined) return;
 
-    // Update CSS and cookie when user change theme
-    useEffect(() => {
-        const systemTheme = getSystemTheme();
-        resolvedThemeRef.current = systemTheme;
+        // Update CSS class
         setThemeClass(theme, systemTheme);
+
+        // Update cookie
         setThemeCookie(theme);
-    }, [theme]);
+    }, [theme, systemTheme]);
 
-    // Update theme if system preference changes and theme is "system"
-    useEffect(() => {
-        const mediaLight = window.matchMedia("(prefers-color-scheme: light)");
-        const mediaDark = window.matchMedia("(prefers-color-scheme: dark)");
-
-        const handleChange = (e: MediaQueryListEvent) => {
-            // Must match to "light" or "dark" and current theme must be "system"
-            if (!e.matches || theme !== "system") return;
-
-            const newSystemTheme = getSystemTheme();
-            resolvedThemeRef.current = newSystemTheme;
-
-            setThemeClass("system", newSystemTheme);
-            setThemeCookie("system");
-        };
-
-        // Add listener
-        mediaLight.addEventListener("change", handleChange);
-        mediaDark.addEventListener("change", handleChange);
-
-        // Cleanup listener on unmount
-        return () => {
-            mediaLight.removeEventListener("change", handleChange);
-            mediaDark.removeEventListener("change", handleChange);
-        };
-    }, [theme]);
-
-    const value = { theme, systemTheme: resolvedThemeRef.current, setTheme, toggleTheme };
+    const value = { theme, systemTheme, setTheme, toggleTheme };
 
     return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

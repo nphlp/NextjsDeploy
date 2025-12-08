@@ -22,7 +22,7 @@ OVERRIDE_PRODUCTION = env/.env.override.production
 
 OUTPUT_BASIC = .env.basic
 OUTPUT_PREVIEW = .env.preview
-OUTPUT_PRODUCTION = .env.prod
+OUTPUT_PRODUCTION = .env.production
 
 # Setup environment files if they don't exist
 .PHONY: setup-env merge-env-basic merge-env-preview merge-env-production

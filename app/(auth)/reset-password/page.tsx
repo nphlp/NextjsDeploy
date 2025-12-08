@@ -35,18 +35,20 @@ const SuspendedPage = async (props: PageProps) => {
     if (session) redirect("/");
 
     return (
-        <Card className="w-[400px]">
-            <CardHeader>
-                <CardTitle className="text-center">
-                    {token ? "Réinitialiser le mot de passe" : "Mot de passe oublié"}
-                </CardTitle>
-                <CardDescription className="text-center">
-                    {token
-                        ? "Saisissez votre nouveau mot de passe."
-                        : "Saisissez votre email de connexion pour recevoir un email de réinitialisation."}
-                </CardDescription>
-            </CardHeader>
-            <CardContent>{token ? <ResetPasswordForm token={token} /> : <RequestResetForm />}</CardContent>
-        </Card>
+        <div className="w-full max-w-[400px] p-4">
+            <Card className="w-full">
+                <CardHeader>
+                    <CardTitle className="text-center">
+                        {token ? "Réinitialiser le mot de passe" : "Mot de passe oublié"}
+                    </CardTitle>
+                    <CardDescription className="text-center">
+                        {token
+                            ? "Saisissez votre nouveau mot de passe."
+                            : "Saisissez votre email de connexion pour recevoir un email de réinitialisation."}
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>{token ? <ResetPasswordForm token={token} /> : <RequestResetForm />}</CardContent>
+            </Card>
+        </div>
     );
 };

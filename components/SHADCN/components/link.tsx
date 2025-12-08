@@ -1,6 +1,7 @@
 import { VariantProps } from "class-variance-authority";
 import { Route } from "next";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
+import { ReactNode } from "react";
 import { cn } from "../lib/utils";
 import { buttonVariants } from "../ui/button";
 
@@ -8,6 +9,8 @@ export type LinkProps = {
     href: Route;
     noStyle?: boolean;
     disabled?: boolean;
+    className?: string;
+    children?: ReactNode;
 } & NextLinkProps<Route> &
     VariantProps<typeof buttonVariants>;
 

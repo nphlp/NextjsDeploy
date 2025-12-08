@@ -19,14 +19,16 @@ const SuspendedPage = async () => {
     if (session) redirect("/");
 
     return (
-        <Card className="w-[400px]">
-            <CardHeader>
-                <CardTitle className="text-center">S&apos;inscrire</CardTitle>
-                <CardDescription className="text-center">Saisissez vos informations personnelles.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <RegisterForm />
-            </CardContent>
-        </Card>
+        <div className="w-full max-w-[400px] p-4">
+            <Card className="w-full">
+                <CardHeader>
+                    <CardTitle className="text-center">S&apos;inscrire</CardTitle>
+                    <CardDescription className="text-center">Saisissez vos informations personnelles.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <RegisterForm />
+                </CardContent>
+            </Card>
+        </div>
     );
 };
