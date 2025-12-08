@@ -71,5 +71,4 @@ function ButtonGroupSeparator({
     );
 }
 
-// eslint-disable-next-line
 export { ButtonGroup, ButtonGroupSeparator, ButtonGroupText, buttonGroupVariants };

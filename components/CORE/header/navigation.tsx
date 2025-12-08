@@ -55,6 +55,8 @@ export default function Navigation(props: NavigationProps) {
         return true;
     });
 
+    if (!linksToRender.length) return null;
+
     return (
         <>
             <div className="flex gap-8 px-4 max-sm:hidden">

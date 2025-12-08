@@ -25,3 +25,11 @@ runs:
           shell: bash
           env:
               DATABASE_URL: "postgresql://user:pass@localhost:5432/db"
+
+        - name: Run tests
+          if: inputs.check-type == 'test'
+          run: pnpm prisma:generate && pnpm test:run
+          shell: bash
+          env:
+              DATABASE_URL: "postgresql://user:pass@localhost:5432/db"
+              NEXT_PUBLIC_BASE_URL: "https://example.com"

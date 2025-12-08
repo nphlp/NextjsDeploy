@@ -675,6 +675,5 @@ export {
     SidebarRail,
     SidebarSeparator,
     SidebarTrigger,
-    // eslint-disable-next-line
     useSidebar,
 };
