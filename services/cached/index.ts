@@ -4,6 +4,14 @@ export {
     AccountFindManyCached,
     AccountFindUniqueCached,
 } from "./AccountCached";
+export { BasketCountCached, BasketFindFirstCached, BasketFindManyCached, BasketFindUniqueCached } from "./BasketCached";
+export { FruitCountCached, FruitFindFirstCached, FruitFindManyCached, FruitFindUniqueCached } from "./FruitCached";
+export {
+    QuantityCountCached,
+    QuantityFindFirstCached,
+    QuantityFindManyCached,
+    QuantityFindUniqueCached,
+} from "./QuantityCached";
 export {
     SessionCountCached,
     SessionFindFirstCached,
