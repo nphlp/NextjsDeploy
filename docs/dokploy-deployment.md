@@ -7,10 +7,11 @@ In this example, we will create two environments: `preview` and `production`. Bu
 
 <h2>Summary</h2>
 
-- [Prerequisites](#prerequisites)
-- [Setup Github Environments](#setup-github-environments)
-- [Setup Github Secrets](#setup-github-secrets)
-- [Deploy on Dokploy](#deploy-on-dokploy)
+- [Dokploy Deployment](#dokploy-deployment)
+    - [Prerequisites](#prerequisites)
+    - [Setup Github Environments](#setup-github-environments)
+    - [Setup Github Secrets](#setup-github-secrets)
+    - [Deploy on Dokploy](#deploy-on-dokploy)
 
 ## Prerequisites
 
@@ -73,7 +74,7 @@ Add environment variables in the corresponding tab.
 
 1. Use `make merge-env-production` or `make merge-env-preview` to generate a realistic environment sample file (e.g. `.env.production` or `.env.preview`)
 2. Adjust the environment variables
-    - Choose a subdomain for each environment (e.g., `preview.my-domain.com` and `my-domain.com` for production)
+    - Choose a subdomain for each environment (e.g., `preview-my-domain.com` and `my-domain.com` for production)
     - Generate strong passwords for your database, authentication, etc.
 3. Paste the content of the generated environment file in the `Environment Settings` tab
 

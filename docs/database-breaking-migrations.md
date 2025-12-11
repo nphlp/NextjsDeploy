@@ -43,13 +43,13 @@ services:
 Pour activer le mode maintenance, créez le fichier `enabled.lock` :
 
 ```bash
-docker exec nextjs-pulse-work touch /app/maintenance/enabled.lock
+docker exec nextjs touch /app/maintenance/enabled.lock
 ```
 
 Pour désactiver le mode maintenance, supprimez le fichier `enabled.lock` :
 
 ```bash
-docker exec nextjs-pulse-work rm /app/maintenance/enabled.lock
+docker exec nextjs rm /app/maintenance/enabled.lock
 ```
 
 **Avantages :**
