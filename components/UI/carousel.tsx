@@ -13,7 +13,7 @@ type ContextType = {
 };
 
 const Context = createContext<ContextType>({
-    gap: "1.5rem",
+    gap: "1rem",
     emblaApi: undefined,
 });
 
@@ -105,7 +105,7 @@ const Carousel = (props: CarouselProps) => {
         gap = "1rem",
         shadowSpace = "2rem",
         manageLastCardOverflow = "clip-path",
-        clippingOffset: clipingOffset = "0.8rem",
+        clippingOffset = "0.8rem",
         children,
         withArrows = false,
     } = props;
@@ -116,37 +116,40 @@ const Carousel = (props: CarouselProps) => {
 
     return (
         <Provider value={{ gap, emblaApi }}>
-            <div
-                className="bg.-red-50 relative max-w-full min-w-full"
-                // Manage last card overflow: specify a clip-path to hide overflowed part
-                // Ideal for round slidePerView settings, problematic for float slidePerView settings
-                style={{ clipPath: manageLastCardOverflow === "clip-path" ? `inset(0 -${clipingOffset})` : undefined }}
-            >
+            <div className="bg.-red-50 relative max-w-full min-w-full">
                 <div
+                    // Manage last card overflow: specify a clip-path to hide overflowed part
+                    // Ideal for round slidePerView settings, problematic for float slidePerView settings
                     style={{
-                        // Negative margin on wrapper (for shadow overflow)
-                        margin: `calc(${shadowSpace} * -1)`,
+                        clipPath: manageLastCardOverflow === "clip-path" ? `inset(0 -${clippingOffset})` : undefined,
                     }}
                 >
                     <div
-                        className="overflow-hidden"
                         style={{
-                            // Positive padding on overflow-hidden container (for shadow overflow)
-                            padding: `${shadowSpace}`,
-                            // Manage last card overflow: use margin to distort the container width
-                            // Ideal for float slidePerView settings, problematic for round slidePerView settings
-                            marginRight: manageLastCardOverflow === "margin" ? `calc(${shadowSpace})` : undefined,
+                            // Negative margin on wrapper (for shadow overflow)
+                            margin: `calc(${shadowSpace} * -1)`,
                         }}
-                        ref={emblaRef}
                     >
                         <div
-                            className="bg.-green-50 grid touch-pan-y touch-pinch-zoom grid-flow-col backface-hidden"
+                            className="overflow-hidden"
                             style={{
-                                gridAutoColumns: `calc(100% / ${slidePerView[breakpoint]})`,
-                                marginLeft: `calc(${gap} * -1)`,
+                                // Positive padding on overflow-hidden container (for shadow overflow)
+                                padding: `${shadowSpace}`,
+                                // Manage last card overflow: use margin to distort the container width
+                                // Ideal for float slidePerView settings, problematic for round slidePerView settings
+                                marginRight: manageLastCardOverflow === "margin" ? `calc(${shadowSpace})` : undefined,
                             }}
+                            ref={emblaRef}
                         >
-                            {children}
+                            <div
+                                className="bg.-green-50 grid touch-pan-y touch-pinch-zoom grid-flow-col backface-hidden"
+                                style={{
+                                    gridAutoColumns: `calc(100% / ${slidePerView[breakpoint]})`,
+                                    marginLeft: `calc(${gap} * -1)`,
+                                }}
+                            >
+                                {children}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -205,7 +208,7 @@ const Arrow = () => {
         <>
             <Button
                 aria-label="Previous"
-                className={cn(style, "left-0")}
+                className={cn(style, "-left-2 sm:-left-4 lg:-left-12")}
                 onClick={() => emblaApi?.scrollPrev()}
                 disabled={!canScroll.prev}
             >
@@ -213,7 +216,7 @@ const Arrow = () => {
             </Button>
             <Button
                 aria-label="Next"
-                className={cn(style, "right-0")}
+                className={cn(style, "-right-2 sm:-right-4 lg:-right-12")}
                 onClick={() => emblaApi?.scrollNext()}
                 disabled={!canScroll.next}
             >
