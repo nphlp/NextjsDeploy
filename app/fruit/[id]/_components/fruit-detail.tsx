@@ -13,8 +13,8 @@ type GetFruitByIdCachedProps = {
 const getFruitByIdCached = async (props: GetFruitByIdCachedProps) => {
     "use cache";
 
-    // Wait 1 second to simulate a slow network or database
-    await timeout(1000);
+    // Wait 0.5 second to simulate a slow network or database
+    await timeout(500);
 
     return await oRPC.fruit.findUnique(props);
 };

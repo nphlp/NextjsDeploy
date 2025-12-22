@@ -19,6 +19,8 @@ const findMany = os
             .object({
                 // Search
                 search: z.string().optional().describe("Search term to filter fruits by name"),
+                // Exclude
+                excludeIds: z.array(z.string()).optional().describe("Array of fruit IDs to exclude"),
                 // Sorting
                 name: z.enum(Prisma.SortOrder).optional().describe("Sort order for name"),
                 updatedAt: z.enum(Prisma.SortOrder).optional().describe("Sort order for updatedAt"),
@@ -45,6 +47,10 @@ const findMany = os
                     ...(input?.search && {
                         name: { contains: input.search, mode: "insensitive" },
                     }),
+                    ...(input?.excludeIds &&
+                        input.excludeIds.length > 0 && {
+                            id: { notIn: input.excludeIds },
+                        }),
                 },
                 // Count how many baskets contain each fruit
                 // For "inBasketCount" field

@@ -48,7 +48,7 @@ vi.mock("@lib/prisma", () => {
         take?: number;
         skip?: number;
         orderBy?: { name?: "asc" | "desc"; updatedAt?: "asc" | "desc" };
-        where?: { name?: { contains: string; mode: string } };
+        where?: { name?: { contains: string; mode: string }; id?: { notIn: string[] } };
         include?: { _count: { select: { Quantities: boolean } } };
     }) => {
         let result = [...data];
@@ -57,6 +57,11 @@ vi.mock("@lib/prisma", () => {
         if (where?.name?.contains) {
             const search = where.name.contains.toLowerCase();
             result = result.filter((fruit) => fruit.name.toLowerCase().includes(search));
+        }
+
+        // Filter by excludeIds
+        if (where?.id?.notIn) {
+            result = result.filter((fruit) => !where.id!.notIn.includes(fruit.id));
         }
 
         // Sort
@@ -214,5 +219,34 @@ describe("GET /fruits (params)", () => {
         expect(fruits).toBeDefined();
         expect(fruits[0].id).toBe("fruitId3");
         expect(fruits[2].id).toBe("fruitId1");
+    });
+
+    it("Exclude one fruit by id", async () => {
+        // Execute function
+        const fruits = await oRpcFruitFindMany({ excludeIds: ["fruitId1"] });
+
+        // Expect 2 fruits (excluded fruitId1)
+        expect(fruits).toBeDefined();
+        expect(fruits.length).toBe(2);
+        expect(fruits.map((f) => f.id)).not.toContain("fruitId1");
+    });
+
+    it("Exclude multiple fruits by id", async () => {
+        // Execute function
+        const fruits = await oRpcFruitFindMany({ excludeIds: ["fruitId1", "fruitId3"] });
+
+        // Expect 1 fruit (excluded fruitId1 and fruitId3)
+        expect(fruits).toBeDefined();
+        expect(fruits.length).toBe(1);
+        expect(fruits[0].id).toBe("fruitId2");
+    });
+
+    it("Exclude with empty array returns all", async () => {
+        // Execute function
+        const fruits = await oRpcFruitFindMany({ excludeIds: [] });
+
+        // Expect all fruits (empty excludeIds should be ignored)
+        expect(fruits).toBeDefined();
+        expect(fruits.length).toBe(3);
     });
 });
