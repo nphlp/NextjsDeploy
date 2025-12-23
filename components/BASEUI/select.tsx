@@ -12,7 +12,7 @@ type PlaceholderItem = { type: "placeholder"; label: string };
 
 export type SelectItem = SelectableItem | SeparatorItem | GroupItem;
 
-const exampleItems: SelectItem[] = [
+const itemsExample: SelectItem[] = [
     { type: "group", label: "Sans-serif" },
     { type: "item", label: "Arial", value: "arial" },
     { type: "item", label: "Helvetica", value: "helvetica" },
@@ -73,7 +73,7 @@ type SelectProps = {
 export default function Select(props: SelectProps) {
     const {
         placeholder: providedPlaceholder,
-        items = exampleItems,
+        items = itemsExample,
         multiple = false,
         displayMode = "joinedByComma",
         sideOffset = 8,
@@ -83,8 +83,8 @@ export default function Select(props: SelectProps) {
         onSelect,
     } = props;
 
-    const examplePlaceholder = multiple ? "Select multiple options" : "Select an option";
-    const placeholder = providedPlaceholder ?? examplePlaceholder;
+    const placeholderExample = multiple ? "Select multiple options" : "Select an option";
+    const placeholder = providedPlaceholder ?? placeholderExample;
 
     const selectableItems: SelectableItem[] = items.filter((item) => item.type === "item");
 
