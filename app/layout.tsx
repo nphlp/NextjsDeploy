@@ -40,7 +40,7 @@ export default async function Layout(props: LayoutProps) {
 
     return (
         <Html ssrTheme={false}>
-            <body className={cn(geistSans.variable, geistMono.variable, "h-full")}>
+            <body className={cn(geistSans.variable, geistMono.variable, "isolate h-full")}>
                 <NuqsAdapter>
                     <Theme>
                         <Header headerHeight={headerHeight} />
