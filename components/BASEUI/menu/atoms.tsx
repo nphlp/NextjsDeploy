@@ -4,177 +4,27 @@ import { Menu as MenuBaseUi } from "@base-ui/react/menu";
 import { cn } from "@comps/SHADCN/lib/utils";
 import { CheckIcon, ChevronDown, ChevronRightIcon, CircleSmallIcon } from "lucide-react";
 import { ReactNode } from "react";
+import type { CheckboxItemType, GroupType, MenuItem, RadioGroupType, RadioItemType, SubMenuItemsType } from "./types";
 
-type ButtonItem = { type: "button"; label: string; value: string; onItemClick?: (value: string) => void };
-type CheckboxItem = {
-    type: "checkbox";
-    label: string;
-    value: string;
-    defaultChecked?: boolean;
-    checked?: boolean;
-    setCheckedChange?: (checked: boolean) => void;
-};
-type SeparatorItem = { type: "separator" };
-
-// Radio selector requires a group wrapper
-type RadioItem = { label: string; value: string };
-type RadioGroup = {
-    type: "radio-group";
-    items: RadioItem[];
-    defaultValue?: string;
-    selectedRadio?: string;
-    setSelectedRadio?: (value: string) => void;
-};
-
-// Atomic structure for a menu item
-type MenuAtomItem = ButtonItem | CheckboxItem | SeparatorItem | RadioGroup;
-
-// Group or sub-menu that contains any other type of menu items
-type Group = { type: "group"; label: string; items: MenuItem[] };
-type SubMenuItems = { type: "sub-menu"; label: string; items: MenuItem[] };
-
-// Reccursive type of menu items, groups, sub-menus, etc
-export type MenuItem = MenuAtomItem | SubMenuItems | Group;
-
-const exampleItems: MenuItem[] = [
-    { type: "button", label: "Play/Pause", value: "play-pause", onItemClick: (value: string) => console.log(value) },
-    { type: "separator" },
-    {
-        type: "group",
-        label: "Repeat mode",
-        items: [
-            { type: "checkbox", label: "Like", value: "like", defaultChecked: true },
-            { type: "checkbox", label: "Favorite", value: "favorite" },
-        ],
-    },
-    { type: "separator" },
-    {
-        type: "group",
-        label: "Repeat mode",
-        items: [
-            {
-                type: "radio-group",
-                defaultValue: "disabled",
-                items: [
-                    { label: "Disabled", value: "disabled" },
-                    { label: "Random", value: "random" },
-                    { label: "One-time", value: "one-time" },
-                ],
-            },
-        ],
-    },
-    { type: "separator" },
-    {
-        type: "group",
-        label: "Share",
-        items: [
-            {
-                type: "sub-menu",
-                label: "Social",
-                items: [
-                    {
-                        type: "button",
-                        label: "To Facebook",
-                        value: "to-facebook",
-                        onItemClick: (value: string) => console.log(value),
-                    },
-                    {
-                        type: "button",
-                        label: "To Instagram",
-                        value: "to-instagram",
-                        onItemClick: (value: string) => console.log(value),
-                    },
-                    {
-                        type: "button",
-                        label: "To Twitter",
-                        value: "to-twitter",
-                        onItemClick: (value: string) => console.log(value),
-                    },
-                    {
-                        type: "sub-menu",
-                        label: "More",
-                        items: [
-                            {
-                                type: "button",
-                                label: "To Reddit",
-                                value: "to-reddit",
-                                onItemClick: (value: string) => console.log(value),
-                            },
-                            {
-                                type: "button",
-                                label: "To LinkedIn",
-                                value: "to-linkedin",
-                                onItemClick: (value: string) => console.log(value),
-                            },
-                        ],
-                    },
-                ],
-            },
-            {
-                type: "button",
-                label: "Copy link",
-                value: "copy-link",
-                onItemClick: (value: string) => console.log(value),
-            },
-        ],
-    },
-];
-
-type MenuProps = {
-    /** Menu trigger label */
-    label?: string;
-    items?: MenuItem[];
-
-    /**
-     * Offset distance between the trigger and the popover
-     */
-    sideOffset?: number;
-    /**
-     * Display an arrow pointing to the trigger
-     */
-    popoverWithoutArrow?: boolean;
-    /**
-     * Open the menu when hovering over the trigger
-     */
-    openOnHover?: boolean;
-};
-
-export default function Menu(props: MenuProps) {
-    const {
-        label = "Song action",
-        items = exampleItems,
-        sideOffset = 8,
-        popoverWithoutArrow = false,
-        openOnHover = false,
-    } = props;
+export const Root = (props: { children: ReactNode }) => {
+    const { children } = props;
 
     return (
         // This `div` prevents "space-y-*" layout shifting when the menu popup is opened
         // caused BaseUI creates `span` children elements to listen behaviors
         <div>
-            <Root>
-                <Trigger label={label} openOnHover={openOnHover} />
-                <Portal>
-                    <Positioner sideOffset={sideOffset}>
-                        <Popup>
-                            {/* Popup arrow */}
-                            {!popoverWithoutArrow && <Arrow />}
-
-                            {/* Popup items */}
-                            {items.map((item, index) => Item({ item, index }))}
-                        </Popup>
-                    </Positioner>
-                </Portal>
-            </Root>
+            <MenuBaseUi.Root>{children}</MenuBaseUi.Root>
         </div>
     );
-}
+};
 
-// Subcomponents
-const { Root, Portal } = MenuBaseUi;
-
-const Trigger = (props: { label: string; openOnHover: boolean }) => {
-    const { label, openOnHover } = props;
+export const Trigger = (
+    props: { openOnHover?: boolean; className?: string } & (
+        | { label: string; children?: undefined }
+        | { label?: undefined; children: ReactNode }
+    ),
+) => {
+    const { label, openOnHover = false, children, className } = props;
 
     return (
         <MenuBaseUi.Trigger
@@ -188,17 +38,29 @@ const Trigger = (props: { label: string; openOnHover: boolean }) => {
                 "bg-gray-50 hover:bg-gray-100 active:bg-gray-100 data-popup-open:bg-gray-100",
                 // Text
                 "text-base font-medium text-gray-900 select-none",
+                className,
             )}
             openOnHover={openOnHover}
         >
-            <span>{label}</span>
-            <ChevronDown className="-mr-1 size-4" />
+            {children}
+            {label && (
+                <>
+                    <span>{label}</span>
+                    <ChevronDown className="-mr-1 size-4" />
+                </>
+            )}
         </MenuBaseUi.Trigger>
     );
 };
 
-const Positioner = (props: { children: ReactNode; sideOffset: number }) => {
-    const { children, sideOffset } = props;
+export const Portal = (props: { children: ReactNode }) => {
+    const { children } = props;
+
+    return <MenuBaseUi.Portal>{children}</MenuBaseUi.Portal>;
+};
+
+export const Positioner = (props: { children: ReactNode; sideOffset?: number }) => {
+    const { children, sideOffset = 8 } = props;
 
     return (
         <MenuBaseUi.Positioner className="outline-none" sideOffset={sideOffset}>
@@ -207,8 +69,8 @@ const Positioner = (props: { children: ReactNode; sideOffset: number }) => {
     );
 };
 
-const Popup = (props: { children: ReactNode }) => {
-    const { children } = props;
+export const Popup = (props: { popoverWithoutArrow?: boolean; children: ReactNode }) => {
+    const { popoverWithoutArrow = false, children } = props;
 
     return (
         <MenuBaseUi.Popup
@@ -230,13 +92,15 @@ const Popup = (props: { children: ReactNode }) => {
                 "data-starting-style:scale-90 data-starting-style:opacity-0",
             )}
         >
+            {!popoverWithoutArrow && <Arrow />}
+
             {children}
         </MenuBaseUi.Popup>
     );
 };
 
 // Generic item dispatcher
-const Item = (props: { item: MenuItem; index: number }) => {
+export const Item = (props: { item: MenuItem; index: number }) => {
     const { item, index } = props;
 
     switch (item.type) {
@@ -251,16 +115,16 @@ const Item = (props: { item: MenuItem; index: number }) => {
         case "sub-menu":
             return <Submenu key={index} item={item} />;
         default:
-            return <Button key={item.value} item={item} />;
+            return <Button key={item.value} label={item.label} value={item.value} onItemClick={item.onItemClick} />;
     }
 };
 
-const Separator = () => {
+export const Separator = () => {
     return <MenuBaseUi.Separator className="mx-4 my-1.5 h-px bg-gray-200" />;
 };
 
 // Composant pour les checkboxes
-const CheckboxItem = (props: { item: CheckboxItem }) => {
+export const CheckboxItem = (props: { item: CheckboxItemType }) => {
     const { item } = props;
 
     return (
@@ -291,7 +155,7 @@ const CheckboxItem = (props: { item: CheckboxItem }) => {
 };
 
 // Composant pour les radio groups
-const RadioGroup = (props: { item: RadioGroup }) => {
+export const RadioGroup = (props: { item: RadioGroupType }) => {
     const { item } = props;
 
     return (
@@ -301,14 +165,18 @@ const RadioGroup = (props: { item: RadioGroup }) => {
             defaultValue={item.defaultValue}
         >
             {item.items.map((radioItem) => (
-                <RadioItem key={radioItem.value} radioItem={radioItem} />
+                <RadioItem
+                    key={radioItem.value}
+                    radioItem={radioItem}
+                    displayUnselectedIcon={item.displayUnselectedIcon}
+                />
             ))}
         </MenuBaseUi.RadioGroup>
     );
 };
 
-const RadioItem = (props: { radioItem: RadioItem }) => {
-    const { radioItem } = props;
+export const RadioItem = (props: { radioItem: RadioItemType; displayUnselectedIcon?: boolean }) => {
+    const { radioItem, displayUnselectedIcon = false } = props;
 
     return (
         <MenuBaseUi.RadioItem
@@ -330,7 +198,7 @@ const RadioItem = (props: { radioItem: RadioItem }) => {
             )}
         >
             {/* Unselected icon (hidden when checked via group) */}
-            <CircleSmallIcon className="col-start-1 size-4 group-data-checked:hidden" />
+            {displayUnselectedIcon && <CircleSmallIcon className="col-start-1 size-4 group-data-checked:hidden" />}
 
             {/* Selected icon */}
             <MenuBaseUi.RadioItemIndicator className="col-start-1">
@@ -342,7 +210,7 @@ const RadioItem = (props: { radioItem: RadioItem }) => {
 };
 
 // Composant pour les groupes
-const Group = (props: { item: Group }) => {
+export const Group = (props: { item: GroupType }) => {
     const { item } = props;
 
     return (
@@ -355,14 +223,13 @@ const Group = (props: { item: Group }) => {
     );
 };
 
-// Offset pour les submenus (défini hors composant pour stabilité)
-const getSubmenuOffset = ({ side }: { side: MenuBaseUi.Positioner.Props["side"] }) => {
-    return side === "top" || side === "bottom" ? 4 : -4;
-};
-
 // Composant pour les submenus
-const Submenu = (props: { item: SubMenuItems }) => {
+export const Submenu = (props: { item: SubMenuItemsType }) => {
     const { item } = props;
+
+    const getSubmenuOffset = ({ side }: { side: MenuBaseUi.Positioner.Props["side"] }) => {
+        return side === "top" || side === "bottom" ? 4 : -4;
+    };
 
     return (
         <MenuBaseUi.SubmenuRoot>
@@ -424,15 +291,20 @@ const Submenu = (props: { item: SubMenuItems }) => {
 };
 
 // Composant pour les boutons
-const Button = (props: { item: ButtonItem }) => {
-    const { item } = props;
+export const Button = (
+    props: { value: string; onItemClick?: (value: string) => void } & (
+        | { label: string; children?: undefined }
+        | { label?: undefined; children: ReactNode }
+    ),
+) => {
+    const { label, value, onItemClick, children } = props;
 
     return (
         <MenuBaseUi.Item
-            onClick={() => item.onItemClick?.(item.value)}
+            onClick={() => onItemClick?.(value)}
             className={cn(
                 // Layout
-                "flex py-2 pr-8 pl-4",
+                "flex gap-3 py-2 pr-8 pl-4",
                 "data-highlighted:relative data-highlighted:z-0",
                 "data-highlighted:before:absolute data-highlighted:before:inset-x-1 data-highlighted:before:inset-y-0 data-highlighted:before:z-[-1]",
                 // Border
@@ -444,12 +316,13 @@ const Button = (props: { item: ButtonItem }) => {
                 "data-highlighted:text-gray-50",
             )}
         >
-            {item.label}
+            {children}
+            {label}
         </MenuBaseUi.Item>
     );
 };
 
-const Arrow = () => {
+export const Arrow = () => {
     return (
         <MenuBaseUi.Arrow
             className={cn(
@@ -465,7 +338,7 @@ const Arrow = () => {
     );
 };
 
-const ArrowSvg = (props: React.ComponentProps<"svg">) => {
+export const ArrowSvg = (props: React.ComponentProps<"svg">) => {
     return (
         <svg width="20" height="10" viewBox="0 0 20 10" fill="none" {...props}>
             <path

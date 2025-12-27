@@ -1,5 +1,7 @@
 import Field from "@comps/BASEUI/field";
-import Menu from "@comps/BASEUI/menu";
+import MenuTheme from "@comps/BASEUI/menu/example/menu-theme";
+import Menu from "@comps/BASEUI/menu/menu";
+// import MenuTheme from "@comps/BASEUI/menu/example/menu-theme";
 import Select from "@comps/BASEUI/select";
 
 export default function Page() {
@@ -22,19 +24,7 @@ export default function Page() {
 
             <div className="space-y-1">
                 <h2 className="text-sm font-medium text-gray-900">Theme mode</h2>
-                <Menu
-                    items={[
-                        {
-                            type: "radio-group",
-                            defaultValue: "system",
-                            items: [
-                                { label: "Light", value: "light" },
-                                { label: "Dark", value: "dark" },
-                                { label: "System", value: "system" },
-                            ],
-                        },
-                    ]}
-                />
+                <MenuTheme />
             </div>
         </div>
     );
