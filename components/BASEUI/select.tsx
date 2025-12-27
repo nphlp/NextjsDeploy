@@ -70,6 +70,14 @@ type SelectProps = {
       }
 );
 
+/**
+ * TODO
+ * - Default value
+ * - Disabled component
+ * - Disabled items
+ * - Est-ce 'isItemEqualToValue' que peut être utile ?
+ */
+
 export default function Select(props: SelectProps) {
     const {
         placeholder: providedPlaceholder,
@@ -148,7 +156,7 @@ const Trigger = (props: { children: ReactNode }) => {
                 "rounded-md border border-gray-200",
                 "focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800",
                 // Background
-                "bg-[canvas] hover:bg-gray-100 data-popup-open:bg-gray-100",
+                "bg-white hover:bg-gray-100 data-popup-open:bg-gray-100",
                 // Text
                 "text-base text-gray-900 select-none",
             )}
@@ -174,7 +182,7 @@ const Popup = (props: { children: ReactNode }) => {
                 // Border
                 "rounded-md outline outline-gray-200 dark:outline-gray-300",
                 // Background
-                "bg-[canvas] bg-clip-padding",
+                "bg-white bg-clip-padding",
                 // Text
                 "text-gray-900",
                 // Shadow
@@ -217,7 +225,7 @@ const Item = (props: { item: SelectableItem | SeparatorItem | GroupItem | Placeh
     if (item.type === "group") {
         return (
             <SelectBaseUi.Group>
-                <SelectBaseUi.GroupLabel className="cursor-default pt-4 pr-8 pb-2 pl-6.5 text-sm leading-4 text-gray-500 select-none">
+                <SelectBaseUi.GroupLabel className="cursor-default py-2 pr-8 pl-6.5 text-sm leading-4 text-gray-500 select-none">
                     {item.label}
                 </SelectBaseUi.GroupLabel>
             </SelectBaseUi.Group>
@@ -275,7 +283,7 @@ const ScrollArrow = (props: { visible: boolean; direction: "up" | "down" }) => {
                 // Border
                 "rounded-md",
                 // Background
-                "bg-[canvas]",
+                "bg-white",
                 // Text
                 "cursor-default text-center text-xs before:content-['']",
             )}

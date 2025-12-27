@@ -17,19 +17,24 @@ export default function Page() {
 
             <div className="space-y-1">
                 <h2 className="text-sm font-medium text-gray-900">Menus</h2>
-                <div className="flex gap-4">
-                    <Menu />
-                    <Menu
-                        label="Share"
-                        items={[
-                            { type: "item", label: "Copy link", value: "copy-link" },
-                            { type: "separator" },
-                            { type: "item", label: "To Facebook", value: "to-facebook" },
-                            { type: "item", label: "To Instagram", value: "to-instagram" },
-                            { type: "item", label: "To Twitter", value: "to-twitter" },
-                        ]}
-                    />
-                </div>
+                <Menu />
+            </div>
+
+            <div className="space-y-1">
+                <h2 className="text-sm font-medium text-gray-900">Theme mode</h2>
+                <Menu
+                    items={[
+                        {
+                            type: "radio-group",
+                            defaultValue: "system",
+                            items: [
+                                { label: "Light", value: "light" },
+                                { label: "Dark", value: "dark" },
+                                { label: "System", value: "system" },
+                            ],
+                        },
+                    ]}
+                />
             </div>
         </div>
     );
