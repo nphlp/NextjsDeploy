@@ -59,11 +59,14 @@ export const Portal = (props: { children: ReactNode }) => {
     return <MenuBaseUi.Portal>{children}</MenuBaseUi.Portal>;
 };
 
-export const Positioner = (props: { children: ReactNode; sideOffset?: number }) => {
-    const { children, sideOffset = 8 } = props;
+type Side = "top" | "right" | "bottom" | "left";
+type Align = "start" | "center" | "end";
+
+export const Positioner = (props: { children: ReactNode; sideOffset?: number; side?: Side; align?: Align }) => {
+    const { children, sideOffset = 8, side = "bottom", align = "center" } = props;
 
     return (
-        <MenuBaseUi.Positioner className="outline-none" sideOffset={sideOffset}>
+        <MenuBaseUi.Positioner className="outline-none" sideOffset={sideOffset} side={side} align={align}>
             {children}
         </MenuBaseUi.Positioner>
     );

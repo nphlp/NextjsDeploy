@@ -10,6 +10,9 @@ type SeparatorItem = { type: "separator" };
 type GroupItem = { type: "group"; label: string };
 type PlaceholderItem = { type: "placeholder"; label: string };
 
+type Side = "top" | "right" | "bottom" | "left";
+type Align = "start" | "center" | "end";
+
 export type SelectItem = SelectableItem | SeparatorItem | GroupItem;
 
 const itemsExample: SelectItem[] = [
@@ -47,6 +50,8 @@ type SelectProps = {
      * Offset distance between the trigger and the popover
      */
     sideOffset?: number;
+    side?: Side;
+    align?: Align;
     /** Replace default popup dropdown alignment with trigger alignment */
     alignItemWithTrigger?: boolean;
     /** Replace default scroll bar with up and down arrows */
@@ -85,6 +90,8 @@ export default function Select(props: SelectProps) {
         multiple = false,
         displayMode = "joinedByComma",
         sideOffset = 8,
+        side = "bottom",
+        align = "center",
         alignItemWithTrigger = false,
         withScrollArrows = false,
         selected,
@@ -118,6 +125,8 @@ export default function Select(props: SelectProps) {
                 <Positioner
                     className={cn("z-10", "outline-none", "select-none")}
                     sideOffset={sideOffset}
+                    side={side}
+                    align={align}
                     alignItemWithTrigger={alignItemWithTrigger}
                 >
                     <Popup>

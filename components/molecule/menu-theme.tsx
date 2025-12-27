@@ -10,13 +10,13 @@ export default function MenuTheme() {
 
     return (
         <Menu>
-            <Trigger className="px-2">
+            <Trigger className="border-none bg-transparent px-2 hover:bg-gray-100">
                 {theme === "system" && <SunMoon className="size-6" />}
                 {theme === "dark" && <Moon className="size-6" />}
                 {theme === "light" && <Sun className="size-6" />}
             </Trigger>
             <Portal>
-                <Positioner>
+                <Positioner align="end">
                     <Popup>
                         <Button value="light" onItemClick={() => setTheme("light")}>
                             <Sun className="size-4" />

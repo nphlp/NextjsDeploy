@@ -1,9 +1,9 @@
+import MenuNavigation from "@comps/molecule/menu-navigation";
+import MenuProfile from "@comps/molecule/menu-profile";
 import MenuTheme from "@comps/molecule/menu-theme";
 import { getSession } from "@lib/auth-server";
 import { cn } from "@shadcn/lib/utils";
 import { Suspense } from "react";
-import Navigation from "./header/navigation";
-import ProfileIcon from "./header/profile";
 
 type HeaderProps = {
     headerHeight: number;
@@ -37,8 +37,8 @@ const SuspendedHeader = async (props: HeaderProps) => {
                 className,
             )}
         >
-            <Navigation serverSession={session} />
-            <ProfileIcon serverSession={session} />
+            <MenuNavigation serverSession={session} />
+            <MenuProfile serverSession={session} />
             <MenuTheme />
         </header>
     );

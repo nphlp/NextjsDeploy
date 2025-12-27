@@ -64,6 +64,63 @@ Ajouter le tableau de features du nouveau composant.
 
 ---
 
+## Pattern dual : items / children
+
+Les composants atomiques supportent deux modes d'utilisation :
+
+### Mode déclaratif (items)
+
+Utilisation simple avec un tableau d'items en props :
+
+```tsx
+import Menu from "@comps/atoms/menu/menu";
+
+// Utilisation avec items par défaut ou custom
+<Menu items={myItems} label="Actions" />;
+```
+
+### Mode compositionnel (children)
+
+Contrôle total avec les atomes exportés :
+
+```tsx
+import { Button, Popup, Portal, Positioner, Trigger } from "@comps/atoms/menu/atoms";
+import Menu from "@comps/atoms/menu/menu";
+
+<Menu>
+    <Trigger className="px-2">
+        <CustomIcon />
+    </Trigger>
+    <Portal>
+        <Positioner>
+            <Popup>
+                <Button value="action1" onItemClick={handleAction1}>
+                    <Icon /> Action 1
+                </Button>
+                <Button value="action2" onItemClick={handleAction2}>
+                    <Icon /> Action 2
+                </Button>
+            </Popup>
+        </Positioner>
+    </Portal>
+</Menu>;
+```
+
+### Quand utiliser quel mode ?
+
+| Mode               | Cas d'usage                                       |
+| ------------------ | ------------------------------------------------- |
+| **Déclaratif**     | Menus simples, données statiques, structure fixe  |
+| **Compositionnel** | Logique custom, icônes dynamiques, hooks internes |
+
+Exemples :
+
+- `components/molecule/menu-theme.tsx` - Mode compositionnel (useTheme + icônes dynamiques)
+- `components/molecule/menu-profile.tsx` - Mode compositionnel (useSession + navigation)
+- `app/test/page.tsx` - Mode déclaratif (items par défaut)
+
+---
+
 ## Select (~75%)
 
 Basé sur : https://base-ui.com/react/components/select
