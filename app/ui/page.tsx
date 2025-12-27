@@ -2,7 +2,7 @@ import Field from "@comps/atoms/field";
 import Menu from "@comps/atoms/menu/menu";
 // import MenuTheme from "@comps/BASEUI/menu/example/menu-theme";
 import Select from "@comps/atoms/select";
-import MenuTheme from "@comps/molecule/menu-theme";
+import MenuTheme from "@comps/molecules/menu-theme";
 
 export default function Page() {
     return (

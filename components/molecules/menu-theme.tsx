@@ -3,7 +3,7 @@
 import Menu from "@comps/atoms/menu/menu";
 import useTheme from "@core/theme/useTheme";
 import { Monitor, Moon, Sun, SunMoon } from "lucide-react";
-import { Button, Popup, Portal, Positioner, Trigger } from "../atoms/menu/atoms";
+import { ButtonItem, Popup, Portal, Positioner, Trigger } from "../atoms/menu/atoms";
 
 export default function MenuTheme() {
     const { theme, setTheme } = useTheme();
@@ -18,18 +18,18 @@ export default function MenuTheme() {
             <Portal>
                 <Positioner align="end">
                     <Popup>
-                        <Button value="light" onItemClick={() => setTheme("light")}>
+                        <ButtonItem value="light" onItemClick={() => setTheme("light")}>
                             <Sun className="size-4" />
                             <span>Light</span>
-                        </Button>
-                        <Button value="dark" onItemClick={() => setTheme("dark")}>
+                        </ButtonItem>
+                        <ButtonItem value="dark" onItemClick={() => setTheme("dark")}>
                             <Moon className="size-4" />
                             <span>Dark</span>
-                        </Button>
-                        <Button value="system" onItemClick={() => setTheme("system")}>
+                        </ButtonItem>
+                        <ButtonItem value="system" onItemClick={() => setTheme("system")}>
                             <Monitor className="size-4" />
                             <span>System</span>
-                        </Button>
+                        </ButtonItem>
                     </Popup>
                 </Positioner>
             </Portal>

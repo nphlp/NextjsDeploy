@@ -42,7 +42,6 @@ export default async function BasketCardList() {
             {baskets.map((basket) => (
                 <BasketCard key={basket.id} basket={basket} />
             ))}
-            <BasketCardListSkeleton />
         </div>
     );
 }

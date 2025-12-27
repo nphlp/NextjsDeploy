@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Popup, Portal, Positioner, Separator, Trigger } from "@comps/atoms/menu/atoms";
+import { ButtonItem, Popup, Portal, Positioner, Separator, Trigger } from "@comps/atoms/menu/atoms";
 import Menu from "@comps/atoms/menu/menu";
 import { signOut, useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
@@ -47,34 +47,34 @@ export default function MenuProfile(props: MenuProfileProps) {
                         {session ? (
                             <>
                                 <Link href="/profile" aria-label="Profile">
-                                    <Button value="profile">
+                                    <ButtonItem value="profile">
                                         <UserRound className="size-4" />
                                         <span>Profile</span>
-                                    </Button>
+                                    </ButtonItem>
                                 </Link>
                                 <Separator />
-                                <Button value="logout" onItemClick={handleLogout}>
+                                <ButtonItem value="logout" onItemClick={handleLogout}>
                                     {isLoading ? (
                                         <Loader className="size-4 animate-spin" />
                                     ) : (
                                         <LogOut className="size-4" />
                                     )}
                                     <span>Déconnexion</span>
-                                </Button>
+                                </ButtonItem>
                             </>
                         ) : (
                             <>
                                 <Link href="/login" aria-label="Connexion">
-                                    <Button value="login">
+                                    <ButtonItem value="login">
                                         <UserRound className="size-4" />
                                         <span>Connexion</span>
-                                    </Button>
+                                    </ButtonItem>
                                 </Link>
                                 <Link href="/register" aria-label="Inscription">
-                                    <Button value="register">
+                                    <ButtonItem value="register">
                                         <UserPlus className="size-4" />
                                         <span>Inscription</span>
-                                    </Button>
+                                    </ButtonItem>
                                 </Link>
                             </>
                         )}

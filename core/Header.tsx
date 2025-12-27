@@ -1,6 +1,6 @@
-import MenuNavigation from "@comps/molecule/menu-navigation";
-import MenuProfile from "@comps/molecule/menu-profile";
-import MenuTheme from "@comps/molecule/menu-theme";
+import MenuNavigation from "@comps/molecules/menu-navigation";
+import MenuProfile from "@comps/molecules/menu-profile";
+import MenuTheme from "@comps/molecules/menu-theme";
 import { getSession } from "@lib/auth-server";
 import { cn } from "@shadcn/lib/utils";
 import { Suspense } from "react";

@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@comps/SHADCN/lib/utils";
-import { Button, Popup, Portal, Positioner, Trigger } from "@comps/atoms/menu/atoms";
+import { ButtonItem, Popup, Portal, Positioner, Trigger } from "@comps/atoms/menu/atoms";
 import Menu from "@comps/atoms/menu/menu";
 import { useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
@@ -82,10 +82,10 @@ export default function MenuNavigation(props: MenuNavigationProps) {
                             <Popup className="w-40">
                                 {linksToRender.map(({ href, label, icon: Icon }) => (
                                     <Link key={href} href={href} aria-label={label}>
-                                        <Button value={href}>
+                                        <ButtonItem value={href}>
                                             <Icon className="size-4" />
                                             <span className={cn(path === href && "font-bold")}>{label}</span>
-                                        </Button>
+                                        </ButtonItem>
                                     </Link>
                                 ))}
                             </Popup>
