@@ -1,8 +1,8 @@
-import Field from "@comps/BASEUI/field";
-import MenuTheme from "@comps/BASEUI/menu/example/menu-theme";
-import Menu from "@comps/BASEUI/menu/menu";
+import Field from "@comps/atoms/field";
+import Menu from "@comps/atoms/menu/menu";
 // import MenuTheme from "@comps/BASEUI/menu/example/menu-theme";
-import Select from "@comps/BASEUI/select";
+import Select from "@comps/atoms/select";
+import MenuTheme from "@comps/molecule/menu-theme";
 
 export default function Page() {
     return (

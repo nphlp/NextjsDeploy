@@ -1,9 +1,9 @@
 "use client";
 
-import Menu from "@comps/BASEUI/menu/menu";
-import useTheme from "@comps/CORE/theme/useTheme";
+import Menu from "@comps/atoms/menu/menu";
+import useTheme from "@core/theme/useTheme";
 import { Monitor, Moon, Sun, SunMoon } from "lucide-react";
-import { Button, Popup, Portal, Positioner, Trigger } from "../atoms";
+import { Button, Popup, Portal, Positioner, Trigger } from "../atoms/menu/atoms";
 
 export default function MenuTheme() {
     const { theme, setTheme } = useTheme();

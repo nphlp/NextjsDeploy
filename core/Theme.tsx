@@ -1,4 +1,4 @@
-import ThemeProvider from "@comps/CORE/theme/theme-provider";
+import ThemeProvider from "@core/theme/theme-provider";
 import { ReactNode, Suspense } from "react";
 import { getTheme } from "./theme/theme-server";
 

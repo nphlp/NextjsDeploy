@@ -1,6 +1,6 @@
 "use client";
 
-import useTheme from "@comps/CORE/theme/useTheme";
+import useTheme from "@core/theme/useTheme";
 import { CircleCheckIcon, InfoIcon, Loader2Icon, OctagonXIcon, TriangleAlertIcon } from "lucide-react";
 import { Toaster as Sonner, type ToasterProps } from "sonner";
 

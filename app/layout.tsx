@@ -1,10 +1,10 @@
-import Footer from "@comps/CORE/Footer";
-import Header from "@comps/CORE/Header";
-import Html from "@comps/CORE/Html";
-import Main from "@comps/CORE/Main";
-import Theme from "@comps/CORE/Theme";
 import { cn } from "@comps/SHADCN/lib/utils";
 import Breakpoints from "@comps/UI/breakpoints";
+import Footer from "@core/Footer";
+import Header from "@core/Header";
+import Html from "@core/Html";
+import Main from "@core/Main";
+import Theme from "@core/Theme";
 import "@lib/orpc-server";
 import { Toaster } from "@shadcn/ui/sonner";
 import type { Metadata } from "next";

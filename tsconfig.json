@@ -26,7 +26,7 @@
             "@cache/*": ["./cache/*"],
             "@class/*": ["./services/class/*"],
             "@comps/*": ["./components/*"],
-            "@core/*": ["./components/CORE/*"],
+            "@core/*": ["./core/*"],
             "@fixtures/*": ["./fixtures/*"],
             "@lib/*": ["./lib/*"],
             "@orpc/*": ["./api/*"],
