@@ -5,7 +5,7 @@ import { Button, Popup, Portal, Positioner, Trigger } from "@comps/atoms/menu/at
 import Menu from "@comps/atoms/menu/menu";
 import { useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
-import { Menu as MenuIcon } from "lucide-react";
+import { Apple, Code, Home, ListTodo, LucideIcon, Menu as MenuIcon, Palette } from "lucide-react";
 import { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -13,6 +13,7 @@ import { usePathname } from "next/navigation";
 type LinkType = {
     label: string;
     href: Route;
+    icon: LucideIcon;
 
     // Displaying conditions
     developmentOnly?: boolean;
@@ -21,11 +22,11 @@ type LinkType = {
 };
 
 const links: LinkType[] = [
-    { label: "Home", href: "/" },
-    { label: "Fruits", href: "/fruits" },
-    { label: "UI", href: "/ui", developmentOnly: true },
-    { label: "Tasks", href: "/tasks", sessionRequired: true },
-    { label: "API", href: "/scalar", developmentOnly: true },
+    { label: "Home", href: "/", icon: Home },
+    { label: "Fruits", href: "/fruits", icon: Apple },
+    { label: "UI", href: "/ui", icon: Palette, developmentOnly: true },
+    { label: "Tasks", href: "/tasks", icon: ListTodo, sessionRequired: true },
+    { label: "API", href: "/scalar", icon: Code, developmentOnly: true },
 ];
 
 type MenuNavigationProps = {
@@ -78,10 +79,11 @@ export default function MenuNavigation(props: MenuNavigationProps) {
                     </Trigger>
                     <Portal>
                         <Positioner align="start">
-                            <Popup>
-                                {linksToRender.map(({ href, label }) => (
+                            <Popup className="w-40">
+                                {linksToRender.map(({ href, label, icon: Icon }) => (
                                     <Link key={href} href={href} aria-label={label}>
                                         <Button value={href}>
+                                            <Icon className="size-4" />
                                             <span className={cn(path === href && "font-bold")}>{label}</span>
                                         </Button>
                                     </Link>

@@ -72,8 +72,8 @@ export const Positioner = (props: { children: ReactNode; sideOffset?: number; si
     );
 };
 
-export const Popup = (props: { popoverWithoutArrow?: boolean; children: ReactNode }) => {
-    const { popoverWithoutArrow = false, children } = props;
+export const Popup = (props: { popoverWithoutArrow?: boolean; children: ReactNode; className?: string }) => {
+    const { popoverWithoutArrow = false, children, className } = props;
 
     return (
         <MenuBaseUi.Popup
@@ -93,6 +93,7 @@ export const Popup = (props: { popoverWithoutArrow?: boolean; children: ReactNod
                 "transition-[transform,scale,opacity]",
                 "data-ending-style:scale-90 data-ending-style:opacity-0",
                 "data-starting-style:scale-90 data-starting-style:opacity-0",
+                className,
             )}
         >
             {!popoverWithoutArrow && <Arrow />}
