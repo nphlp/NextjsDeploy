@@ -1,7 +1,6 @@
 import Field from "@comps/atoms/field";
 import Menu from "@comps/atoms/menu/menu";
-// import MenuTheme from "@comps/BASEUI/menu/example/menu-theme";
-import Select from "@comps/atoms/select";
+import Select from "@comps/atoms/select/select";
 import MenuTheme from "@comps/molecules/menu-theme";
 
 export default function Page() {
@@ -10,7 +9,7 @@ export default function Page() {
             <Field label="Your name" description="Your name will be visible by everyone" />
 
             <Field label="Font" description="Select the main font for the app">
-                <Select alignItemWithTrigger withScrollArrows />
+                <Select />
             </Field>
 
             <Field label="Other fonts" description="Select some other fonts">
