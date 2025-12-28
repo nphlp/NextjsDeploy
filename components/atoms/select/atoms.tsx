@@ -213,12 +213,12 @@ export const Placeholder = (props: { label: string; className?: string }) => {
         </SelectBaseUi.Item>
     );
 };
-export const Item = (props: { label: string; value: string; className?: string }) => {
-    const { label, value, className } = props;
+export const Item = (props: { label: string; itemKey: string; className?: string }) => {
+    const { label, itemKey, className } = props;
 
     return (
         <SelectBaseUi.Item
-            value={value}
+            value={itemKey}
             className={cn(
                 // Layout
                 "grid grid-cols-[1rem_1fr] items-center gap-2.5 py-2 pr-4 pl-3",

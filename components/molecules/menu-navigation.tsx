@@ -24,7 +24,7 @@ type LinkType = {
 const links: LinkType[] = [
     { label: "Home", href: "/", icon: Home },
     { label: "Fruits", href: "/fruits", icon: Apple },
-    { label: "UI", href: "/ui", icon: Palette, developmentOnly: true },
+    { label: "UI", href: "/ui", icon: Palette },
     { label: "Tasks", href: "/tasks", icon: ListTodo, sessionRequired: true },
     { label: "API", href: "/scalar", icon: Code, developmentOnly: true },
 ];

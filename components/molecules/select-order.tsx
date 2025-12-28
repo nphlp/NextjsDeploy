@@ -20,12 +20,12 @@ export default function SelectOrder() {
                 <Value>{(value) => (value ? items[value as string] : placeholder)}</Value>
             </Trigger>
             <Portal>
-                <Positioner>
+                <Positioner alignItemWithTrigger>
                     <Popup>
                         <List>
                             <Placeholder label={placeholder} />
-                            <Item label="Ascending" value="asc" />
-                            <Item label="Descending" value="desc" />
+                            <Item label="Ascending" itemKey="asc" />
+                            <Item label="Descending" itemKey="desc" />
                         </List>
                     </Popup>
                 </Positioner>

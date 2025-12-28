@@ -62,31 +62,31 @@ export default function Select(props: SelectProps) {
             </Trigger>
 
             <Portal>
-                <Positioner alignItemWithTrigger>
+                <Positioner alignItemWithTrigger={!multiple}>
                     <Popup withScrollArrows>
                         <List>
                             {!multiple && <Placeholder label={placeholder} />}
 
                             <Group label="Sans-serif">
-                                <Item label="Arial" value="arial" />
-                                <Item label="Helvetica" value="helvetica" />
-                                <Item label="Inter" value="inter" />
+                                <Item label="Arial" itemKey="arial" />
+                                <Item label="Helvetica" itemKey="helvetica" />
+                                <Item label="Inter" itemKey="inter" />
                             </Group>
 
                             <Separator />
 
                             <Group label="Serif">
-                                <Item label="Times New Roman" value="times-new-roman" />
-                                <Item label="Georgia" value="georgia" />
-                                <Item label="Garamond" value="garamond" />
+                                <Item label="Times New Roman" itemKey="timesNewRoman" />
+                                <Item label="Georgia" itemKey="georgia" />
+                                <Item label="Garamond" itemKey="garamond" />
                             </Group>
 
                             <Separator />
 
                             <Group label="Monospace">
-                                <Item label="Courier New" value="courier-new" />
-                                <Item label="Fira Code" value="fira-code" />
-                                <Item label="JetBrains Mono" value="jetbrains-mono" />
+                                <Item label="Courier New" itemKey="courierNew" />
+                                <Item label="Fira Code" itemKey="firaCode" />
+                                <Item label="JetBrains Mono" itemKey="jetbrainsMono" />
                             </Group>
                         </List>
                     </Popup>

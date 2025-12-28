@@ -121,46 +121,49 @@ Exemples :
 
 ---
 
-## Select (~75%)
+## Select (~80%)
 
 Basé sur : https://base-ui.com/react/components/select
 
-| Feature                         | Implémenté | Doc | Notes                              |
-| ------------------------------- | :--------: | :-: | ---------------------------------- |
+| Feature                         | Implémenté | Doc | Notes                                      |
+| ------------------------------- | :--------: | :-: | ------------------------------------------ |
 | **Sous-composants de base**     |
-| Root, Trigger, Value, Icon      |     ✅     | ✅  |                                    |
-| Portal, Positioner, Popup, List |     ✅     | ✅  |                                    |
-| Item, ItemText, ItemIndicator   |     ✅     | ✅  |                                    |
-| Group, GroupLabel               |     ✅     | ✅  |                                    |
-| Separator                       |     ✅     | ✅  |                                    |
-| ScrollUpArrow, ScrollDownArrow  |     ✅     | ✅  |                                    |
-| Arrow (flèche popup)            |     ❌     | ✅  | Flèche positionnée vers le trigger |
-| Backdrop (overlay)              |     ❌     | ✅  | Fond semi-transparent              |
+| Root, Trigger, Value, Icon      |     ✅     | ✅  |                                            |
+| Portal, Positioner, Popup, List |     ✅     | ✅  |                                            |
+| Item, ItemText, ItemIndicator   |     ✅     | ✅  |                                            |
+| Group, GroupLabel               |     ✅     | ✅  |                                            |
+| Separator                       |     ✅     | ✅  |                                            |
+| ScrollUpArrow, ScrollDownArrow  |     ✅     | ✅  |                                            |
+| Arrow (flèche popup)            |     ❌     | ✅  | Flèche positionnée vers le trigger         |
+| Backdrop (overlay)              |     ❌     | ✅  | Fond semi-transparent                      |
 | **Props Root**                  |
-| value (controlled)              |     ✅     | ✅  | `selected` prop                    |
-| onValueChange                   |     ✅     | ✅  | `onSelect` prop                    |
-| multiple                        |     ✅     | ✅  |                                    |
-| items (lookup labels)           |     ✅     | ✅  |                                    |
-| defaultValue (uncontrolled)     |     ❌     | ✅  | Mode non-contrôlé                  |
-| open / onOpenChange             |     ❌     | ✅  | Contrôle ouverture popup           |
-| defaultOpen                     |     ❌     | ✅  | État initial popup                 |
-| disabled                        |     ❌     | ✅  | Désactiver le select               |
-| modal                           |     ❌     | ✅  | Verrouille la page (défaut: true)  |
-| highlightItemOnHover            |     ❌     | ✅  | Surbrillance au survol             |
-| isItemEqualToValue              |     ❌     | ✅  | Comparaison custom                 |
-| itemToStringLabel               |     ❌     | ✅  | Objets → label                     |
+| value (controlled)              |     ✅     | ✅  | `selected` prop                            |
+| onValueChange                   |     ✅     | ✅  | `onSelect` prop                            |
+| multiple                        |     ✅     | ✅  |                                            |
+| defaultValue (uncontrolled)     |     ❌     | ✅  | Mode non-contrôlé                          |
+| open / onOpenChange             |     ❌     | ✅  | Contrôle ouverture popup                   |
+| defaultOpen                     |     ❌     | ✅  | État initial popup                         |
+| disabled                        |     ❌     | ✅  | Désactiver le select                       |
+| modal                           |     ❌     | ✅  | Verrouille la page (défaut: true)          |
+| highlightItemOnHover            |     ❌     | ✅  | Surbrillance au survol                     |
+| isItemEqualToValue              |     ❌     | ✅  | Comparaison custom                         |
+| itemToStringLabel               |     ❌     | ✅  | Objets → label                             |
 | **Props Positioner**            |
-| sideOffset                      |     ✅     | ✅  |                                    |
-| alignItemWithTrigger            |     ✅     | ✅  |                                    |
-| side (top/bottom/left/right)    |     ❌     | ✅  | Position relative                  |
-| align (start/center/end)        |     ❌     | ✅  | Alignement                         |
-| collisionAvoidance              |     ❌     | ✅  | Gestion collisions                 |
-| collisionBoundary               |     ❌     | ✅  | Zone de confinement                |
+| sideOffset                      |     ✅     | ✅  |                                            |
+| alignItemWithTrigger            |     ✅     | ✅  |                                            |
+| side (top/bottom/left/right)    |     ✅     | ✅  | Props exposées                             |
+| align (start/center/end)        |     ✅     | ✅  | Props exposées                             |
+| collisionAvoidance              |     ❌     | ✅  | Gestion collisions                         |
+| collisionBoundary               |     ❌     | ✅  | Zone de confinement                        |
 | **Props Item**                  |
-| disabled (par item)             |     ❌     | ✅  | Désactiver items individuels       |
+| disabled (par item)             |     ❌     | ✅  | Désactiver items individuels               |
 | **Features custom**             |
-| displayMode (comma/counter)     |     ✅     | ❌  | Feature custom ajoutée             |
-| placeholder item                |     ✅     | ❌  | Item placeholder dans la liste     |
+| Value render function           |     ✅     | ❌  | `(value) => ReactNode`                     |
+| items lookup object             |     ✅     | ❌  | `{ [key: string]: string \| null }`        |
+| renderValue utility             |     ✅     | ❌  | Formatage multi-mode dans `utils.tsx`      |
+| formattingFn modes              |     ✅     | ❌  | joinedByComma, selectedCounter, firstItem+ |
+| customDisplayLabelArray         |     ✅     | ❌  | Fonction de rendu personnalisée            |
+| placeholder item                |     ✅     | ❌  | Item placeholder dans la liste             |
 
 ---
 
