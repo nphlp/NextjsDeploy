@@ -11,7 +11,6 @@ export type ItemType = {
 };
 
 type SelectProps = {
-    items?: ItemType;
     children?: ReactNode;
     multiple?: boolean;
 
@@ -33,9 +32,9 @@ type SelectProps = {
  */
 
 export default function Select(props: SelectProps) {
-    const { items, selected, setSelected, children, multiple } = props;
+    const { selected, setSelected, children, multiple } = props;
 
-    if (items && children)
+    if (children)
         return (
             <Root selected={selected} onSelect={setSelected} multiple={multiple}>
                 {children}
@@ -44,7 +43,7 @@ export default function Select(props: SelectProps) {
 
     const placeholder = multiple ? "Select multiple options" : "Select an option";
 
-    const demoItems: ItemType = {
+    const items: ItemType = {
         arial: "Arial",
         helvetica: "Helvetica",
         inter: "Inter",
@@ -59,7 +58,7 @@ export default function Select(props: SelectProps) {
     return (
         <Root selected={selected} onSelect={setSelected} multiple={multiple}>
             <Trigger>
-                <Value>{(value) => renderValue({ placeholder, value, items: demoItems })}</Value>
+                <Value>{(value) => renderValue({ placeholder, value, items })}</Value>
             </Trigger>
 
             <Portal>

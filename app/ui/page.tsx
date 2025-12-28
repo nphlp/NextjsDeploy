@@ -2,11 +2,14 @@ import Field from "@comps/atoms/field";
 import Menu from "@comps/atoms/menu/menu";
 import Select from "@comps/atoms/select/select";
 import MenuTheme from "@comps/molecules/menu-theme";
+import SelectOrder from "@comps/molecules/select-order";
 
 export default function Page() {
     return (
         <div className="space-y-6 p-7">
             <Field label="Your name" description="Your name will be visible by everyone" />
+
+            <SelectOrder />
 
             <Field label="Font" description="Select the main font for the app">
                 <Select />
