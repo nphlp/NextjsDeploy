@@ -61,9 +61,9 @@ export const Trigger = (props: { children: ReactNode }) => {
                 "flex min-h-10 max-w-60 min-w-36 items-center justify-between gap-3 py-1.5 pr-3 pl-3.5",
                 // Border
                 "rounded-md border border-gray-200",
-                "focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800",
+                "focus-visible:outline-outline focus-visible:outline-2 focus-visible:-outline-offset-1",
                 // Background
-                "bg-white hover:bg-gray-100 data-popup-open:bg-gray-100",
+                "bg-background hover:bg-gray-100 data-popup-open:bg-gray-100",
                 // Text
                 "text-base text-gray-900 select-none",
             )}
@@ -94,7 +94,7 @@ export const Popup = (props: { withScrollArrows?: boolean; children: ReactNode }
                 // Border
                 "rounded-md outline outline-gray-200 dark:outline-gray-300",
                 // Background
-                "bg-white bg-clip-padding",
+                "bg-background bg-clip-padding",
                 // Text
                 "text-gray-900",
                 // Shadow
@@ -134,7 +134,7 @@ export const ScrollArrow = (props: { visible: boolean; direction: "up" | "down" 
                 // Border
                 "rounded-md",
                 // Background
-                "bg-white",
+                "bg-background",
                 // Text
                 "cursor-default text-center text-xs before:content-['']",
             )}

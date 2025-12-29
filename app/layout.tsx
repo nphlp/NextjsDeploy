@@ -35,16 +35,15 @@ type LayoutProps = Readonly<{
 export default async function Layout(props: LayoutProps) {
     const { children } = props;
 
-    // Height relative to font-size 16px
-    const headerHeight = 4; // 64px = 4rem
-
     return (
         <Html ssrTheme={false}>
-            <body className={cn(geistSans.variable, geistMono.variable, "isolate h-full")}>
+            <body
+                className={cn(geistSans.variable, geistMono.variable, "bg-background text-foreground isolate h-full")}
+            >
                 <NuqsAdapter>
                     <Theme>
-                        <Header headerHeight={headerHeight} />
-                        <Main offsetHeader={headerHeight}>{children}</Main>
+                        <Header />
+                        <Main>{children}</Main>
                         <Footer />
                         <Breakpoints mode="onResize" />
                         <Toaster />

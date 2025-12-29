@@ -33,7 +33,7 @@ export const Trigger = (
                 "flex h-10 items-center justify-center gap-1.5 px-3.5",
                 // Border
                 "rounded-md border border-gray-200",
-                "focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800",
+                "focus-visible:outline-outline focus-visible:outline-2 focus-visible:-outline-offset-1",
                 // Background
                 "bg-gray-50 hover:bg-gray-100 active:bg-gray-100 data-popup-open:bg-gray-100",
                 // Text
@@ -65,7 +65,7 @@ export const Positioner = (props: { children: ReactNode; sideOffset?: number; si
     const { children, sideOffset = 8, side = "bottom", align = "center" } = props;
 
     return (
-        <MenuBaseUi.Positioner className="outline-none" sideOffset={sideOffset} side={side} align={align}>
+        <MenuBaseUi.Positioner className="z-10 outline-none" sideOffset={sideOffset} side={side} align={align}>
             {children}
         </MenuBaseUi.Positioner>
     );
@@ -83,7 +83,7 @@ export const Popup = (props: { popoverWithoutArrow?: boolean; children: ReactNod
                 "rounded-md outline-1 outline-gray-200",
                 "dark:-outline-offset-1 dark:outline-gray-300",
                 // Background
-                "bg-white",
+                "bg-background",
                 // Text
                 "text-gray-900",
                 // Shadow
@@ -122,7 +122,7 @@ export const ArrowSvg = (props: React.ComponentProps<"svg">) => {
         <svg width="20" height="10" viewBox="0 0 20 10" fill="none" {...props}>
             <path
                 d="M9.66437 2.60207L4.80758 6.97318C4.07308 7.63423 3.11989 8 2.13172 8H0V10H20V8H18.5349C17.5468 8 16.5936 7.63423 15.8591 6.97318L11.0023 2.60207C10.622 2.2598 10.0447 2.25979 9.66437 2.60207Z"
-                className="fill-white"
+                className="fill-background"
             />
             <path
                 d="M8.99542 1.85876C9.75604 1.17425 10.9106 1.17422 11.6713 1.85878L16.5281 6.22989C17.0789 6.72568 17.7938 7.00001 18.5349 7.00001L15.89 7L11.0023 2.60207C10.622 2.2598 10.0447 2.2598 9.66436 2.60207L4.77734 7L2.13171 7.00001C2.87284 7.00001 3.58774 6.72568 4.13861 6.22989L8.99542 1.85876Z"
@@ -248,7 +248,7 @@ export const RadioItem = (props: { label: string; value: string; displayUnselect
 
             {/* Selected icon */}
             <MenuBaseUi.RadioItemIndicator className="col-start-1">
-                <CircleSmallIcon className="size-4 fill-black group-data-highlighted:fill-gray-50" />
+                <CircleSmallIcon className="fill-foreground size-4 group-data-highlighted:fill-gray-50" />
             </MenuBaseUi.RadioItemIndicator>
             <span className="col-start-2">{label}</span>
         </MenuBaseUi.RadioItem>
@@ -318,7 +318,11 @@ export const SubPositioner = (props: { children: ReactNode; sideOffset?: number 
     };
 
     return (
-        <MenuBaseUi.Positioner className="outline-none" sideOffset={getSubmenuOffset} alignOffset={getSubmenuOffset}>
+        <MenuBaseUi.Positioner
+            className="z-10 outline-none"
+            sideOffset={getSubmenuOffset}
+            alignOffset={getSubmenuOffset}
+        >
             {children}
         </MenuBaseUi.Positioner>
     );
@@ -336,7 +340,7 @@ export const SubPopup = (props: { children: ReactNode }) => {
                 "rounded-md outline-1 outline-gray-200",
                 "dark:-outline-offset-1 dark:outline-gray-300",
                 // Background
-                "bg-white",
+                "bg-background",
                 // Text
                 "text-gray-900",
                 // Shadow

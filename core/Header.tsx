@@ -4,16 +4,15 @@ import MenuTheme from "@comps/molecules/menu-theme";
 import { getSession } from "@lib/auth-server";
 import { cn } from "@shadcn/lib/utils";
 import { Suspense } from "react";
+import { HEADER_HEIGHT } from "./config";
 
 type HeaderProps = {
-    headerHeight: number;
     className?: string;
 };
 
 export default async function Header(props: HeaderProps) {
-    const { headerHeight } = props;
     return (
-        <Suspense fallback={<header style={{ height: `${headerHeight}rem` }} className="w-full" />}>
+        <Suspense fallback={<header style={{ height: `${HEADER_HEIGHT}rem` }} className="w-full" />}>
             <SuspendedHeader {...props} />
         </Suspense>
     );
@@ -22,16 +21,16 @@ export default async function Header(props: HeaderProps) {
 const SuspendedHeader = async (props: HeaderProps) => {
     "use cache: private";
 
-    const { headerHeight, className } = props;
+    const { className } = props;
 
     const session = await getSession();
 
     return (
         <header
-            style={{ height: `${headerHeight}rem` }}
+            style={{ height: `${HEADER_HEIGHT}rem` }}
             className={cn(
                 "bg-background",
-                "sticky inset-x-0 top-0",
+                "sticky inset-x-0 top-0 z-10",
                 "flex items-center justify-end gap-4",
                 "px-5 py-3",
                 className,

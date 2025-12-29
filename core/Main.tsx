@@ -1,18 +1,18 @@
 import { cn } from "@shadcn/lib/utils";
 import { ReactNode } from "react";
+import { HEADER_HEIGHT } from "./config";
 
 type MainProps = {
-    offsetHeader: number;
     className?: string;
     children: ReactNode;
 };
 
 export default async function Main(props: MainProps) {
-    const { offsetHeader, className, children } = props;
+    const { className, children } = props;
 
     return (
         <main
-            style={{ minHeight: `calc(100vh - ${offsetHeader}rem)` }}
+            style={{ minHeight: `calc(100vh - ${HEADER_HEIGHT}rem)` }}
             className={cn("flex flex-col items-center justify-center", className)}
         >
             {children}
