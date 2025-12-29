@@ -1,4 +1,4 @@
-import Link from "@comps/SHADCN/components/link";
+import Link from "@comps/atoms/button/link";
 import { getSession } from "@lib/auth-server";
 import oRPC from "@lib/orpc";
 import { notFound, redirect } from "next/navigation";

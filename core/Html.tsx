@@ -1,4 +1,4 @@
-import { cn } from "@comps/SHADCN/lib/utils";
+import cn from "@lib/cn";
 import { ReactNode, Suspense } from "react";
 import { getTheme } from "./theme/theme-server";
 

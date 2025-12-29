@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu as MenuBaseUi } from "@base-ui/react/menu";
-import { cn } from "@comps/SHADCN/lib/utils";
+import cn from "@lib/cn";
 import { CheckIcon, ChevronDown, ChevronRightIcon, CircleSmallIcon } from "lucide-react";
 import { ReactNode } from "react";
 

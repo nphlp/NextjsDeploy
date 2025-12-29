@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@comps/SHADCN/ui/button";
+import Button from "@comps/atoms/button/button";
 import { useEffect } from "react";
 
 type ErrorProps = {
@@ -21,7 +21,7 @@ export default function Error(props: ErrorProps) {
             <div className="max-w-3/4 space-y-4 p-7">
                 <h2 className="text-2xl font-bold">Oups!</h2>
                 <div>{error.message}</div>
-                <Button onClick={reset}>Try Again</Button>
+                <Button label="Try Again" onClick={reset} />
             </div>
         </div>
     );

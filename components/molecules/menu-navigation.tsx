@@ -1,10 +1,10 @@
 "use client";
 
-import { cn } from "@comps/SHADCN/lib/utils";
 import { ButtonItem, Popup, Portal, Positioner, Trigger } from "@comps/atoms/menu/atoms";
 import Menu from "@comps/atoms/menu/menu";
 import { useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
+import cn from "@lib/cn";
 import { Apple, Code, Home, ListTodo, LucideIcon, Menu as MenuIcon, Palette } from "lucide-react";
 import { Route } from "next";
 import Link from "next/link";

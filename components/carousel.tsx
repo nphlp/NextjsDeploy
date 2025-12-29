@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@comps/SHADCN/lib/utils";
 import { Button } from "@comps/SHADCN/ui/button";
+import cn from "@lib/cn";
 import useBreakpoint, { Breakpoint } from "@utils/use-breakpoint";
 import useEmblaCarousel, { UseEmblaCarouselType } from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";

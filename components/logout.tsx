@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "@comps/SHADCN/ui/button";
 import { signOut } from "@lib/auth-client";
 import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
+import Button from "./atoms/button/button";
 
 type LogoutProps = {
     children: ReactNode;
@@ -28,7 +28,7 @@ export default function Logout(props: LogoutProps) {
     };
 
     return (
-        <Button onClick={handleClick} disabled={isLoading}>
+        <Button label="Logout" onClick={handleClick} isLoading={isLoading}>
             {children}
         </Button>
     );

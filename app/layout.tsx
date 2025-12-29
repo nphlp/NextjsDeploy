@@ -1,12 +1,12 @@
-import { cn } from "@comps/SHADCN/lib/utils";
-import Breakpoints from "@comps/UI/breakpoints";
+import Toaster from "@comps/atoms/toast";
+import Breakpoints from "@comps/breakpoints";
 import Footer from "@core/Footer";
 import Header from "@core/Header";
 import Html from "@core/Html";
 import Main from "@core/Main";
 import Theme from "@core/Theme";
+import cn from "@lib/cn";
 import "@lib/orpc-server";
-import { Toaster } from "@shadcn/ui/sonner";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";

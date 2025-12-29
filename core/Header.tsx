@@ -2,7 +2,7 @@ import MenuNavigation from "@comps/molecules/menu-navigation";
 import MenuProfile from "@comps/molecules/menu-profile";
 import MenuTheme from "@comps/molecules/menu-theme";
 import { getSession } from "@lib/auth-server";
-import { cn } from "@shadcn/lib/utils";
+import cn from "@lib/cn";
 import { Suspense } from "react";
 import { HEADER_HEIGHT } from "./config";
 

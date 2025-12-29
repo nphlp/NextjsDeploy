@@ -1,6 +1,6 @@
 "use cache";
 
-import { cn } from "@comps/SHADCN/lib/utils";
+import cn from "@lib/cn";
 import { formatMediumDate } from "@utils/date-format";
 import FruitCardList, { FruitCardListSkeleton } from "./fruit-card-list";
 

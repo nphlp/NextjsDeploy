@@ -2,8 +2,8 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@comps/SHADCN/ui/select";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import cn from "@lib/cn";
 import oRPC from "@lib/orpc";
-import { cn } from "@shadcn/lib/utils";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
 import { ReactNode, startTransition } from "react";
 import { toast } from "sonner";

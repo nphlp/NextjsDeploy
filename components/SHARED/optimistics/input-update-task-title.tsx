@@ -2,8 +2,8 @@
 
 import { Input } from "@comps/SHADCN/ui/input";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import cn from "@lib/cn";
 import oRPC from "@lib/orpc";
-import { cn } from "@shadcn/lib/utils";
 import { startTransition, useRef, useState } from "react";
 import { toast } from "sonner";
 import { TaskType } from "./types";

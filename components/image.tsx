@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@shadcn/lib/utils";
+import cn from "@lib/cn";
 import { Image as ImageTemplate } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";

@@ -1,5 +1,5 @@
-import Link from "@comps/SHADCN/components/link";
-import { cn } from "@comps/SHADCN/lib/utils";
+import Link from "@comps/atoms/button/link";
+import cn from "@lib/cn";
 import oRPC from "@lib/orpc";
 import { formatMediumDate } from "@utils/date-format";
 import { timeout } from "@utils/timout";

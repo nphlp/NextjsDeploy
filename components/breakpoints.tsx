@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@shadcn/lib/utils";
+import cn from "@lib/cn";
 import { useEffect, useRef, useState } from "react";
 
 const env = process.env.NODE_ENV;

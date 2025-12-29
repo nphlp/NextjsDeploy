@@ -1,5 +1,5 @@
 import SendEmailAction from "@actions/SendEmailAction";
-import EmailTemplate from "@comps/UI/email";
+import EmailTemplate from "@comps/email";
 import PrismaInstance from "@lib/prisma";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";

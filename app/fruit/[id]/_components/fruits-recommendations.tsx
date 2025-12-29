@@ -1,4 +1,4 @@
-import { Carousel, Slide } from "@comps/UI/carousel";
+import { Carousel, Slide } from "@comps/carousel";
 import oRPC from "@lib/orpc";
 import { timeout } from "@utils/timout";
 import { Breakpoint } from "@utils/use-breakpoint";

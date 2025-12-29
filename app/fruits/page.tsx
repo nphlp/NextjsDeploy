@@ -1,4 +1,4 @@
-import Link from "@comps/SHADCN/components/link";
+import Link from "@comps/atoms/button/link";
 import { Plus, ShoppingBasket } from "lucide-react";
 import { Suspense } from "react";
 import FruitsGrid, { FruitsGridSkeleton } from "./_components/fruit-grid";

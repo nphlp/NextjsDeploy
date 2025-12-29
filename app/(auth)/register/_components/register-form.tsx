@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "@comps/SHADCN/components/link";
 import PasswordInput from "@comps/SHADCN/components/password-input";
+import Link from "@comps/atoms/button/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@lib/auth-client";
 import oRPC from "@lib/orpc";

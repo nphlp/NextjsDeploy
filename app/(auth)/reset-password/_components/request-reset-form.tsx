@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "@comps/SHADCN/components/link";
+import Link from "@comps/atoms/button/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { requestPasswordReset } from "@lib/auth-client";
 import { Button } from "@shadcn/ui/button";

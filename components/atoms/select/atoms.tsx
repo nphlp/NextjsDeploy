@@ -1,7 +1,7 @@
 "use client";
 
 import { Select as SelectBaseUi, SelectRootChangeEventDetails } from "@base-ui/react/select";
-import { cn } from "@comps/SHADCN/lib/utils";
+import cn from "@lib/cn";
 import { CheckIcon, ChevronDown, ChevronUp, ChevronsUpDown } from "lucide-react";
 import { ReactNode } from "react";
 

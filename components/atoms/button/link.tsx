@@ -1,12 +1,12 @@
-"use client";
-
-import { Button as ButtonBaseUi } from "@base-ui/react/button";
 import cn from "@lib/cn";
 import { Loader } from "lucide-react";
-import { ButtonHTMLAttributes, FocusEvent, MouseEvent, ReactNode, RefObject } from "react";
+import { Route } from "next";
+import NextLink, { LinkProps as NextLinkProps } from "next/link";
+import { LinkHTMLAttributes, ReactNode, RefObject } from "react";
 import buttonVariants from "./button-variants";
 
-type ButtonProps = {
+export type LinkProps = {
+    href: Route;
     label: string;
     children?: ReactNode;
 
@@ -27,16 +27,17 @@ type ButtonProps = {
     isDisabled?: boolean;
 
     // Legacy Props
-    legacyProps?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonProps>;
+    legacyProps?: Omit<LinkHTMLAttributes<HTMLAnchorElement>, keyof LinkProps>;
 
     // Others
-    ref?: RefObject<HTMLButtonElement>;
+    ref?: RefObject<HTMLAnchorElement>;
     onClick?: (e: MouseEvent) => void;
     onFocus?: (e: FocusEvent) => void;
-};
+} & NextLinkProps<Route>;
 
-export default function Button(props: ButtonProps) {
+export default function Link(props: LinkProps) {
     const {
+        href,
         label,
         children,
         // Styles
@@ -74,11 +75,11 @@ export default function Button(props: ButtonProps) {
     };
 
     return (
-        <ButtonBaseUi
+        <NextLink
+            href={href}
             aria-label={label}
             className={cn(buttonVariants(noStyle ? noStyleMode : styledMode), "relative", className)}
-            disabled={isDisabled || isLoading}
-            focusableWhenDisabled
+            data-disabled={isDisabled || isLoading}
             {...legacyProps}
             {...othersProps}
         >
@@ -88,6 +89,6 @@ export default function Button(props: ButtonProps) {
                 </div>
             )}
             <div className={cn(isLoading && "invisible")}>{label ?? children}</div>
-        </ButtonBaseUi>
+        </NextLink>
     );
 }

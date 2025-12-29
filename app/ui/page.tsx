@@ -1,4 +1,5 @@
 import Button from "@comps/atoms/button/button";
+import Link from "@comps/atoms/button/link";
 import Field from "@comps/atoms/field";
 import Menu from "@comps/atoms/menu/menu";
 import Select from "@comps/atoms/select/select";
@@ -7,6 +8,8 @@ import SelectOrder from "@comps/molecules/select-order";
 export default function Page() {
     return (
         <div className="space-y-6 p-7">
+            <Link href="/" label="Go to home page" />
+
             <div className="border bg-white p-2">
                 <h2 className="text-md mb-2 font-medium text-gray-900 dark:text-gray-100">Colors</h2>
                 <div className="grid h-10 grid-cols-2 text-sm *:flex *:items-center *:justify-center *:px-1">

@@ -1,4 +1,4 @@
-import Link from "@comps/SHADCN/components/link";
+import Link from "@comps/atoms/button/link";
 import { ChevronRight } from "lucide-react";
 import { Suspense } from "react";
 import FormCard, { FormCardSkeleton } from "./_components/form-card";

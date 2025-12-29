@@ -1,7 +1,7 @@
 "use cache";
 
-import Link from "@comps/SHADCN/components/link";
-import { cn } from "@comps/SHADCN/lib/utils";
+import Link from "@comps/atoms/button/link";
+import cn from "@lib/cn";
 import { Route } from "next";
 
 type FruitCardProps = {

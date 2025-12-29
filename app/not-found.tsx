@@ -1,4 +1,4 @@
-import Link from "@comps/SHADCN/components/link";
+import Link from "@comps/atoms/button/link";
 
 export default async function NotFound() {
     return (

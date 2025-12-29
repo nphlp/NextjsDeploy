@@ -1,5 +1,5 @@
+import cn from "@lib/cn";
 import { Body, Button, Container, Html, Section, Tailwind } from "@react-email/components";
-import { cn } from "@shadcn/lib/utils";
 
 type EmailTemplateProps = {
     buttonUrl: string;

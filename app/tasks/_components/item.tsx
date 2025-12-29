@@ -1,4 +1,3 @@
-import Link from "@comps/SHADCN/components/link";
 import { Skeleton } from "@comps/SHADCN/ui/skeleton";
 import ButtonDeleteTask, { ButtonDeleteTaskSkeleton } from "@comps/SHARED/optimistics/button-delete-task";
 import InputUpdateTaskTitle, { InputUpdateTaskTitleSkeleton } from "@comps/SHARED/optimistics/input-update-task-title";
@@ -6,6 +5,7 @@ import SelectUpdateTaskStatus, {
     SelectUpdateTaskStatusSkeleton,
 } from "@comps/SHARED/optimistics/select-update-task-status";
 import { TaskType } from "@comps/SHARED/optimistics/types";
+import Link from "@comps/atoms/button/link";
 import { Pencil } from "lucide-react";
 import { Route } from "next";
 

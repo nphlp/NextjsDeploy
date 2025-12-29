@@ -1,4 +1,4 @@
-import { cn } from "@shadcn/lib/utils";
+import cn from "@lib/cn";
 import { ReactNode } from "react";
 import { HEADER_HEIGHT } from "./config";
 
