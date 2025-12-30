@@ -1,4 +1,4 @@
-import Toaster from "@comps/atoms/toast";
+import ToastProvider from "@atoms/toast/toast";
 import Breakpoints from "@comps/breakpoints";
 import Footer from "@core/Footer";
 import Header from "@core/Header";
@@ -40,15 +40,16 @@ export default async function Layout(props: LayoutProps) {
             <body
                 className={cn(geistSans.variable, geistMono.variable, "bg-background text-foreground isolate h-full")}
             >
-                <NuqsAdapter>
-                    <Theme>
-                        <Header />
-                        <Main>{children}</Main>
-                        <Footer />
-                        <Breakpoints mode="onResize" />
-                        <Toaster />
-                    </Theme>
-                </NuqsAdapter>
+                <ToastProvider>
+                    <NuqsAdapter>
+                        <Theme>
+                            <Header />
+                            <Main>{children}</Main>
+                            <Footer />
+                            <Breakpoints mode="onResize" />
+                        </Theme>
+                    </NuqsAdapter>
+                </ToastProvider>
             </body>
         </Html>
     );

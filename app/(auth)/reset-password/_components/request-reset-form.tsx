@@ -4,11 +4,11 @@ import Button, { Link } from "@atoms/button";
 import Field, { Error, Label } from "@atoms/filed";
 import Form from "@atoms/form";
 import Input from "@atoms/input/input";
+import { useToast } from "@atoms/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { requestPasswordReset } from "@lib/auth-client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 const requestResetSchema = z.object({
@@ -19,6 +19,7 @@ type RequestResetFormValues = z.infer<typeof requestResetSchema>;
 
 export default function RequestResetForm() {
     const [emailSent, setEmailSent] = useState(false);
+    const toast = useToast();
 
     const {
         register,
@@ -38,12 +39,16 @@ export default function RequestResetForm() {
         });
 
         if (!data) {
-            toast.error("Erreur lors de l'envoi de l'email...");
+            toast.add({
+                title: "Erreur",
+                description: "Impossible d'envoyer l'email de réinitialisation.",
+                type: "error",
+            });
             return;
         }
 
         setEmailSent(true);
-        toast.success("Email de réinitialisation envoyé ! Vérifiez votre boîte de réception.");
+        toast.add({ title: "Email envoyé", description: "Vérifiez votre boîte de réception.", type: "success" });
     };
 
     return (

@@ -1,12 +1,12 @@
 "use client";
 
+import { useToast } from "@atoms/toast";
 import { Item, List, Popup, Portal, Positioner, Root, Trigger, Value } from "@comps/atoms/select/atoms";
 import Skeleton from "@comps/atoms/skeleton";
 import cn from "@lib/cn";
 import oRPC from "@lib/orpc";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
 import { ReactNode, startTransition } from "react";
-import { toast } from "sonner";
 import { TaskType } from "./types";
 import useInstant from "./useInstant";
 
@@ -51,8 +51,9 @@ type SelectUpdateTaskStatusProps = {
 };
 
 export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProps) {
-    const { task, className } = props;
+    const { task } = props;
     const { id, title } = task;
+    const toast = useToast();
 
     const { optimisticData, setData, setOptimisticData } = useInstant(task);
 
@@ -72,10 +73,14 @@ export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProp
                 // If success, update the real state in a new transition to prevent key conflict
                 startTransition(() => setData(data));
 
-                toast.success("Statut mis à jour avec succès");
-            } catch (error) {
+                toast.add({
+                    title: "Statut modifié",
+                    description: "Les modifications ont été enregistrées.",
+                    type: "success",
+                });
+            } catch {
                 // If failed, the optimistic state is rolled back at the end of the transition
-                toast.error((error as Error).message ?? "Impossible de mettre à jour le statut");
+                toast.add({ title: "Erreur", description: "Impossible de modifier le statut.", type: "error" });
             }
         });
     };

@@ -14,7 +14,7 @@ type SearchFilterProps = {
 };
 
 export default function SearchFilter(props: SearchFilterProps) {
-    const { noLabel, className } = props;
+    const { noLabel } = props;
 
     const { search, setSearch } = useSearchQueryParams();
 

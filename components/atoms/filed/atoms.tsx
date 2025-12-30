@@ -35,7 +35,7 @@ export const Control = (props: InputHTMLAttributes<HTMLInputElement>) => {
 export const Description = (props: { children: ReactNode }) => {
     const { children } = props;
 
-    return <FieldBaseUI.Description className="text-sm text-gray-600">{children}</FieldBaseUI.Description>;
+    return <FieldBaseUI.Description className="text-xs text-gray-600">{children}</FieldBaseUI.Description>;
 };
 
 type ErrorProps = {

@@ -5,12 +5,12 @@ import Field, { Error, Label } from "@atoms/filed";
 import Form from "@atoms/form";
 import Input from "@atoms/input/input";
 import InputPassword from "@atoms/input/input-password";
+import { useToast } from "@atoms/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@lib/auth-client";
 import oRPC from "@lib/orpc";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 const registerSchema = z.object({
@@ -24,6 +24,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterForm() {
     const router = useRouter();
+    const toast = useToast();
 
     const {
         register,
@@ -49,13 +50,13 @@ export default function RegisterForm() {
         });
 
         if (!data) {
-            toast.error("Échec de l'inscription, veuillez réessayer.");
+            toast.add({ title: "Échec de l'inscription", description: "Veuillez réessayer.", type: "error" });
             return;
         }
 
         await oRPC.user.update({ id: data.user.id, lastname });
 
-        toast.success("Inscription réussie ! Bienvenue !");
+        toast.add({ title: "Inscription réussie", description: "Bienvenue sur l'application !", type: "success" });
         router.push("/");
     };
 

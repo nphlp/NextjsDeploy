@@ -4,11 +4,11 @@ import Button, { Link } from "@atoms/button";
 import Field, { Error, Label } from "@atoms/filed";
 import Form from "@atoms/form";
 import InputPassword from "@atoms/input/input-password";
+import { useToast } from "@atoms/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { resetPassword } from "@lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 const resetPasswordSchema = z.object({
@@ -23,6 +23,7 @@ type ResetPasswordFormProps = {
 
 export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const router = useRouter();
+    const toast = useToast();
 
     const {
         register,
@@ -42,11 +43,15 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         });
 
         if (!data) {
-            toast.error("Erreur lors de la réinitialisation...");
+            toast.add({ title: "Erreur", description: "Impossible de réinitialiser le mot de passe.", type: "error" });
             return;
         }
 
-        toast.success("Mot de passe réinitialisé avec succès !");
+        toast.add({
+            title: "Mot de passe réinitialisé",
+            description: "Vous allez être redirigé vers la connexion.",
+            type: "success",
+        });
         setTimeout(() => router.push("/login"), 1000);
     };
 

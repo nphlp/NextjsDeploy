@@ -5,13 +5,13 @@ import Field, { Error } from "@atoms/filed";
 import Form from "@atoms/form";
 import Input from "@atoms/input/input";
 import InputPassword from "@atoms/input/input-password";
+import { useToast } from "@atoms/toast";
 import { Separator } from "@base-ui/react/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SessionRefetch, changePassword, useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
 import oRPC from "@lib/orpc";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 const updateLastnameSchema = z.object({
@@ -65,6 +65,7 @@ type UpdateFormProps = {
 
 const UpdateLastnameForm = (props: UpdateFormProps) => {
     const { session, refetch } = props;
+    const toast = useToast();
 
     const {
         register,
@@ -80,10 +81,14 @@ const UpdateLastnameForm = (props: UpdateFormProps) => {
         try {
             await oRPC.user.update({ id: session.user.id, lastname: values.lastname });
             await refetch();
-            toast.success("Nom modifié avec succès !");
+            toast.add({
+                title: "Nom modifié",
+                description: "Vos modifications ont été enregistrées.",
+                type: "success",
+            });
             reset();
         } catch {
-            toast.error("Erreur lors de la modification du nom");
+            toast.add({ title: "Erreur", description: "Impossible de modifier le nom.", type: "error" });
         }
     };
 
@@ -108,6 +113,7 @@ const UpdateLastnameForm = (props: UpdateFormProps) => {
 
 const UpdateFirstnameForm = (props: UpdateFormProps) => {
     const { session, refetch } = props;
+    const toast = useToast();
 
     const {
         register,
@@ -123,10 +129,14 @@ const UpdateFirstnameForm = (props: UpdateFormProps) => {
         try {
             await oRPC.user.update({ id: session.user.id, name: values.name });
             await refetch();
-            toast.success("Prénom modifié avec succès !");
+            toast.add({
+                title: "Prénom modifié",
+                description: "Vos modifications ont été enregistrées.",
+                type: "success",
+            });
             reset();
         } catch {
-            toast.error("Erreur lors de la modification du prénom");
+            toast.add({ title: "Erreur", description: "Impossible de modifier le prénom.", type: "error" });
         }
     };
 
@@ -150,6 +160,8 @@ const UpdateFirstnameForm = (props: UpdateFormProps) => {
 };
 
 const UpdatePasswordForm = () => {
+    const toast = useToast();
+
     const {
         register,
         handleSubmit,
@@ -168,11 +180,19 @@ const UpdatePasswordForm = () => {
         });
 
         if (!data) {
-            toast.error("Échec du changement de mot de passe, le mot de passe actuel est peut-être incorrect.");
+            toast.add({
+                title: "Échec",
+                description: "Le mot de passe actuel est peut-être incorrect.",
+                type: "error",
+            });
             return;
         }
 
-        toast.success("Mot de passe modifié avec succès !");
+        toast.add({
+            title: "Mot de passe modifié",
+            description: "Vos modifications ont été enregistrées.",
+            type: "success",
+        });
         reset();
     };
 

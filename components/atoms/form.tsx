@@ -11,7 +11,7 @@ export default function Form(props: InputProps) {
     const { className, children, ...othersProps } = props;
 
     return (
-        <FormBaseUi className={cn("flex w-full flex-col gap-4", className)} {...othersProps}>
+        <FormBaseUi className={cn("flex w-full flex-col gap-3", className)} {...othersProps}>
             {children}
         </FormBaseUi>
     );

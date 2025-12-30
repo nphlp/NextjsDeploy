@@ -1,10 +1,10 @@
 "use client";
 
+import { useToast } from "@atoms/toast";
 import Button from "@comps/atoms/button/button";
 import { SessionClient, sendVerificationEmail, useSession } from "@lib/auth-client";
 import { CircleCheck, CircleX, Mail } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
 
 type ProfileTabProps = {
     session: NonNullable<SessionClient>;
@@ -13,6 +13,7 @@ type ProfileTabProps = {
 export default function ProfileTab(props: ProfileTabProps) {
     const { session: serverSession } = props;
     const { data: clientSession } = useSession();
+    const toast = useToast();
 
     // SSR session
     const session = clientSession ?? serverSession;
@@ -27,12 +28,12 @@ export default function ProfileTab(props: ProfileTabProps) {
         });
 
         if (!data) {
-            toast.error("Erreur lors de l'envoi de l'email de vérification");
+            toast.add({ title: "Erreur", description: "Impossible d'envoyer l'email de vérification.", type: "error" });
             setIsLoading(false);
             return;
         }
 
-        toast.success("Email de vérification envoyé !");
+        toast.add({ title: "Email envoyé", description: "Vérifiez votre boîte de réception.", type: "success" });
         setIsLoading(false);
     };
 

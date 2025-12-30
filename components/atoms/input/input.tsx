@@ -9,6 +9,9 @@ type InputProps = {
     value?: string;
     disabled?: boolean;
 
+    // Syles
+    className?: string;
+
     // Form integration
     required?: boolean;
     autoComplete?: HTMLInputAutoCompleteAttribute;
@@ -26,7 +29,7 @@ type InputProps = {
 };
 
 export default function Input(props: InputProps) {
-    const { type = "text", legacyProps, ...othersProps } = props;
+    const { type = "text", className, legacyProps, ...othersProps } = props;
 
     return (
         <InputBaseUi
@@ -45,6 +48,7 @@ export default function Input(props: InputProps) {
                 // Base UI state
                 "data-disabled:bg-gray-50",
                 "data-invalid:border-red-800",
+                className,
             )}
             {...legacyProps}
             {...othersProps}

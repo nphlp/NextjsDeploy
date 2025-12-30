@@ -51,8 +51,8 @@ export const Positioner = (props: {
     );
 };
 
-export const Trigger = (props: { children: ReactNode }) => {
-    const { children } = props;
+export const Trigger = (props: { className?: string; children: ReactNode }) => {
+    const { className, children } = props;
 
     return (
         <SelectBaseUi.Trigger
@@ -66,6 +66,7 @@ export const Trigger = (props: { children: ReactNode }) => {
                 "bg-background hover:bg-gray-100 data-popup-open:bg-gray-100",
                 // Text
                 "text-base text-gray-900 select-none",
+                className,
             )}
         >
             {children}

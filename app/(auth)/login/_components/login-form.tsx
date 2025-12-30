@@ -5,11 +5,11 @@ import Field, { Error, Label } from "@atoms/filed";
 import Form from "@atoms/form";
 import Input from "@atoms/input/input";
 import InputPassword from "@atoms/input/input-password";
+import { useToast } from "@atoms/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "@lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -21,6 +21,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
     const router = useRouter();
+    const toast = useToast();
 
     const {
         register,
@@ -38,11 +39,11 @@ export default function LoginForm() {
         const { data } = await signIn.email(values);
 
         if (!data) {
-            toast.error("Échec de la connexion, identifiants invalides.");
+            toast.add({ title: "Échec de la connexion", description: "Identifiants invalides.", type: "error" });
             return;
         }
 
-        toast.success("Connexion réussie !");
+        toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
         router.push("/");
     };
 

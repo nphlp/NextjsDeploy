@@ -1,6 +1,7 @@
 "use client";
 
 import { Context } from "@app/tasks/_components/context";
+import { useToast } from "@atoms/toast";
 import Button from "@comps/atoms/button/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@comps/atoms/dialog";
 import Skeleton from "@comps/atoms/skeleton";
@@ -10,7 +11,6 @@ import { Trash2 } from "lucide-react";
 import { Route } from "next";
 import { useRouter } from "next/navigation";
 import { startTransition, useContext, useState } from "react";
-import { toast } from "sonner";
 import { TaskType } from "./types";
 
 type SelectUpdateTaskStatusProps = {
@@ -21,6 +21,7 @@ type SelectUpdateTaskStatusProps = {
 
 export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
     const { task, className, redirectTo } = props;
+    const toast = useToast();
 
     // This context may be undefined if used outside of a provider
     const setDataBypass = useContext(Context)?.setDataBypass;
@@ -57,10 +58,14 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
                     );
                 }
 
-                toast.success("Tâche supprimée avec succès");
-            } catch (error) {
+                toast.add({
+                    title: "Tâche supprimée",
+                    description: "La tâche a été retirée de la liste.",
+                    type: "success",
+                });
+            } catch {
                 // If failed, the optimistic state is rolled back at the end of the transition
-                toast.error((error as Error).message ?? "Impossible de supprimer la tâche");
+                toast.add({ title: "Erreur", description: "Impossible de supprimer la tâche.", type: "error" });
             }
         });
     };
