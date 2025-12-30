@@ -30,7 +30,7 @@ export default async function Page(props: PageProps) {
 
 const AddFruitButton = () => {
     return (
-        <Link label="Create a fruit" href="/fruit/create" colors="outline">
+        <Link label="Create a fruit" href="/fruit/create" colors="outline" padding="smallText">
             <Plus className="size-4" />
             Ajouter un fruit
         </Link>
@@ -39,7 +39,7 @@ const AddFruitButton = () => {
 
 const BasketButton = () => {
     return (
-        <Link label="My basket" href="/baskets" colors="outline">
+        <Link label="My basket" href="/baskets" colors="outline" padding="smallText">
             <ShoppingBasket className="size-4" />
             Mon panier
         </Link>

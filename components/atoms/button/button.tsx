@@ -4,7 +4,7 @@ import { Button as ButtonBaseUi } from "@base-ui/react/button";
 import cn from "@lib/cn";
 import { Loader } from "lucide-react";
 import { ButtonHTMLAttributes, FocusEvent, MouseEvent, ReactNode, RefObject } from "react";
-import buttonVariants from "./button-variants";
+import buttonVariants, { ButtonColorsType, ButtonPaddingType, ButtonRoundedType } from "./button-variants";
 
 type ButtonProps = {
     type?: "button" | "submit" | "reset";
@@ -12,9 +12,9 @@ type ButtonProps = {
     children?: ReactNode;
 
     // Styles
-    colors?: "primary" | "foreground" | "outline" | "ghost" | "destructive" | "link" | false;
-    rounded?: "md" | "full" | false;
-    padding?: "text" | "icon" | false;
+    colors?: ButtonColorsType;
+    rounded?: ButtonRoundedType;
+    padding?: ButtonPaddingType;
     /** Disable flex styles */
     noFlex?: boolean;
     /** Disable outline styles */

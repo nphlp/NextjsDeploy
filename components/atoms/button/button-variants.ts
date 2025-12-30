@@ -181,6 +181,7 @@ const buttonVariants = cva(structure, {
         },
         padding: {
             text: "h-10 px-3.5",
+            smallText: "h-8 px-2",
             icon: "size-10",
             false: "p-0",
         },
@@ -195,6 +196,12 @@ const buttonVariants = cva(structure, {
     },
 });
 
-export type ButtonVariantsType = VariantProps<typeof buttonVariants>;
+type ButtonVariantsType = VariantProps<typeof buttonVariants>;
+
+type ButtonColorsType = ButtonVariantsType["colors"];
+type ButtonRoundedType = ButtonVariantsType["rounded"];
+type ButtonPaddingType = ButtonVariantsType["padding"];
+
+export type { ButtonVariantsType, ButtonColorsType, ButtonRoundedType, ButtonPaddingType };
 
 export default buttonVariants;

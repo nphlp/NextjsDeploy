@@ -5,7 +5,7 @@ import { Loader } from "lucide-react";
 import { Route } from "next";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import { LinkHTMLAttributes, ReactNode, RefObject } from "react";
-import buttonVariants from "./button-variants";
+import buttonVariants, { ButtonColorsType, ButtonPaddingType, ButtonRoundedType } from "./button-variants";
 
 type OnNavigateEvent = { preventDefault: () => void };
 
@@ -15,9 +15,9 @@ export type LinkProps = {
     children?: ReactNode;
 
     // Styles
-    colors?: "primary" | "foreground" | "outline" | "ghost" | "destructive" | "link" | false;
-    rounded?: "md" | "full" | false;
-    padding?: "text" | "icon" | false;
+    colors?: ButtonColorsType;
+    rounded?: ButtonRoundedType;
+    padding?: ButtonPaddingType;
     /** Disable flex styles */
     noFlex?: boolean;
     /** Disable outline styles */
