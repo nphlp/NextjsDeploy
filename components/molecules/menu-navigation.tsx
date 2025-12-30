@@ -24,7 +24,9 @@ type LinkType = {
 const links: LinkType[] = [
     { label: "Home", href: "/", icon: Home },
     { label: "Fruits", href: "/fruits", icon: Apple },
-    { label: "UI", href: "/ui", icon: Palette },
+    { label: "UI", href: "/theme/ui", icon: Palette },
+    { label: "Skeleton", href: "/theme/skeleton", icon: Palette },
+    { label: "Colors", href: "/theme/colors", icon: Palette },
     { label: "Tasks", href: "/tasks", icon: ListTodo, sessionRequired: true },
     { label: "API", href: "/scalar", icon: Code, developmentOnly: true },
 ];
@@ -58,7 +60,7 @@ export default function MenuNavigation(props: MenuNavigationProps) {
     return (
         <>
             {/* Desktop: inline links */}
-            <div className="flex gap-8 px-4 max-sm:hidden">
+            <div className="flex gap-8 px-4 max-md:hidden">
                 {linksToRender.map(({ href, label }) => (
                     <Link
                         key={label}
@@ -72,7 +74,7 @@ export default function MenuNavigation(props: MenuNavigationProps) {
             </div>
 
             {/* Mobile: dropdown menu */}
-            <div className="w-full sm:hidden">
+            <div className="w-full md:hidden">
                 <Menu>
                     <Trigger className="border-none bg-transparent px-2 hover:bg-gray-100">
                         <MenuIcon className="size-6" />

@@ -1,15 +1,15 @@
 "use client";
 
 import { Context } from "@app/tasks/_components/context";
-import { Button } from "@comps/SHADCN/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@comps/SHADCN/ui/dialog";
-import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import Button from "@comps/atoms/button/button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@comps/atoms/dialog";
+import Skeleton from "@comps/atoms/skeleton";
 import cn from "@lib/cn";
 import oRPC from "@lib/orpc";
 import { Trash2 } from "lucide-react";
 import { Route } from "next";
 import { useRouter } from "next/navigation";
-import { startTransition, useContext, useRef, useState } from "react";
+import { startTransition, useContext, useState } from "react";
 import { toast } from "sonner";
 import { TaskType } from "./types";
 
@@ -30,7 +30,6 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
     const router = useRouter();
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const buttonRef = useRef<HTMLButtonElement>(null);
 
     const handleDelete = () => {
         startTransition(async () => {
@@ -69,10 +68,10 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
     return (
         <>
             <Button
-                variant="outline"
+                label={`Delete ${task.title}`}
+                colors="outline"
                 className={className}
                 onClick={() => setIsModalOpen(true)}
-                aria-label={`Delete ${task.title}`}
             >
                 <Trash2 className="size-6" />
             </Button>
@@ -82,10 +81,8 @@ export default function ButtonDeleteTask(props: SelectUpdateTaskStatusProps) {
                     <DialogTitle>Confirmer la suppression</DialogTitle>
                     <DialogDescription>Êtes-vous sûr de vouloir supprimer cette tâche ?</DialogDescription>
                     <div className="mt-4 flex justify-end gap-2">
-                        <DialogClose asChild>
-                            <Button variant="outline">Annuler</Button>
-                        </DialogClose>
-                        <Button ref={buttonRef} variant="destructive" onClick={handleDelete}>
+                        <DialogClose>Annuler</DialogClose>
+                        <Button label="Supprimer" colors="destructive" onClick={handleDelete}>
                             Supprimer
                         </Button>
                     </div>

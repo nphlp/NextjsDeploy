@@ -13,7 +13,7 @@ export default async function Page(props: PageProps) {
     const { take } = await searchParams;
 
     return (
-        <div className="w-full max-w-[900px] flex-1 space-y-4 px-4 py-4 sm:px-12">
+        <div className="w-full max-w-225 flex-1 space-y-4 px-4 py-4 sm:px-12">
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold">Fruits</h1>
                 <div className="flex gap-2">
@@ -30,7 +30,7 @@ export default async function Page(props: PageProps) {
 
 const AddFruitButton = () => {
     return (
-        <Link href="/fruit/create" variant="outline" size="sm">
+        <Link label="Create a fruit" href="/fruit/create" colors="outline">
             <Plus className="size-4" />
             Ajouter un fruit
         </Link>
@@ -39,7 +39,7 @@ const AddFruitButton = () => {
 
 const BasketButton = () => {
     return (
-        <Link href="/baskets" variant="outline" size="sm">
+        <Link label="My basket" href="/baskets" colors="outline">
             <ShoppingBasket className="size-4" />
             Mon panier
         </Link>

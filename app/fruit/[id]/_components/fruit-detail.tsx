@@ -1,3 +1,4 @@
+import Card from "@atoms/card";
 import Link from "@comps/atoms/button/link";
 import cn from "@lib/cn";
 import oRPC from "@lib/orpc";
@@ -34,14 +35,14 @@ export default async function FruitDetail(props: FruitDetailProps) {
     return (
         <div className="space-y-4">
             <h1 className="flex items-center gap-2 text-2xl font-bold">
-                <Link href="/fruits" noStyle>
+                <Link label="Back to fruits" href="/fruits" className="text-2xl font-bold" noStyle>
                     Fruits
                 </Link>
                 <ChevronRight className="size-4" />
                 {fruit.name}
             </h1>
 
-            <div className={cn("flex flex-col justify-between gap-2", "rounded-lg border p-5 shadow")}>
+            <Card>
                 {/* Title */}
                 <h2 className="text-xl font-semibold">{fruit.name}</h2>
 
@@ -53,14 +54,11 @@ export default async function FruitDetail(props: FruitDetailProps) {
                     Présent dans {fruit.inBasketCount} {fruit.inBasketCount > 1 ? "paniers" : "panier"}
                 </p> */}
 
-                {/* Ajouté le xx / xx / xxxx */}
-                <p>Ajouté le {formatMediumDate(fruit.createdAt)}</p>
-
-                {/* Par Xxxxx Xxxxxx */}
-                <p>
-                    Par {fruit.User.name} {fruit.User.lastname}
+                {/* Ajouté le xx / xx / xxxx par Xxxxxx Xxxxxxxxx */}
+                <p className="flex items-center justify-between text-xs text-gray-500">
+                    Ajouté le {formatMediumDate(fruit.createdAt)} par {fruit.User.name} {fruit.User.lastname}
                 </p>
-            </div>
+            </Card>
         </div>
     );
 }
@@ -74,19 +72,16 @@ export const FruitDetailSkeleton = async () => {
 
             <div className={cn("animate-pulse", "flex flex-col justify-between gap-2", "rounded-lg border p-5 shadow")}>
                 {/* Titre */}
-                <div className="bg-foreground/5 h-7 w-[100px] flex-none rounded"></div>
+                <div className="bg-foreground/5 h-7 w-25 flex-none rounded"></div>
 
                 {/* Description */}
-                <div className="bg-foreground/5 h-6 w-[340px] flex-none rounded"></div>
+                <div className="bg-foreground/5 h-6 w-85 flex-none rounded"></div>
 
                 {/* Présent dans X paniers */}
                 {/* <div className="bg-foreground/5 h-6 w-[150px] flex-none rounded"></div> */}
 
-                {/* Ajouté le xx / xx / xxxx */}
-                <div className="bg-foreground/5 h-6 w-[170px] flex-none rounded"></div>
-
-                {/* Par Xxxxx Xxxxxx */}
-                <div className="bg-foreground/5 h-6 w-[110px] flex-none rounded"></div>
+                {/* Ajouté le xx / xx / xxxx par Xxxxxx Xxxxxxxxx */}
+                <div className="bg-foreground/5 h-6 w-60 flex-none rounded"></div>
             </div>
         </div>
     );

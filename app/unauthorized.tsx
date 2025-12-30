@@ -6,7 +6,7 @@ export default async function Unauthorized() {
             <div className="max-w-3/4 space-y-4 p-7">
                 <h2 className="text-2xl font-bold">Mmm. You&apos;re not authorized</h2>
                 <p>Please login with an authorized account before accessing this page.</p>
-                <Link href="/">Go back Home</Link>
+                <Link label="Go back Home" href="/" />
             </div>
         </div>
     );

@@ -6,8 +6,6 @@ const structure = cn(
     "m-0 outline-0 block w-fit",
     // Cursor
     "cursor-pointer data-disabled:cursor-default",
-    // Border
-    "border border-transparent",
     // Text
     "font-inherit text-base leading-6 font-medium select-none",
     // Transition
@@ -19,7 +17,7 @@ const buttonVariants = cva(structure, {
         colors: {
             primary: cn(
                 // Border
-                "border-primary",
+                "border border-primary",
                 // Border (hover)
                 "hover:border-primary-100",
                 // Border (active)
@@ -54,7 +52,7 @@ const buttonVariants = cva(structure, {
             ),
             foreground: cn(
                 // Border
-                "border-gray-950",
+                "border border-gray-950",
                 // Border (hover)
                 "hover:border-gray-900",
                 // Border (active)
@@ -89,7 +87,7 @@ const buttonVariants = cva(structure, {
             ),
             outline: cn(
                 // Border
-                "border-gray-200",
+                "border border-gray-200",
                 // Border (hover)
                 "hover:border-gray-300",
                 // Border (active)
@@ -122,6 +120,7 @@ const buttonVariants = cva(structure, {
             ),
             ghost: "",
             destructive: "",
+            link: "",
             false: "",
         },
         rounded: {
@@ -135,7 +134,7 @@ const buttonVariants = cva(structure, {
             false: "p-0",
         },
         flex: {
-            true: "flex items-center justify-center",
+            true: "flex items-center justify-center gap-2",
             false: "",
         },
         outline: {

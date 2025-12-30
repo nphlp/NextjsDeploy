@@ -1,3 +1,5 @@
+"use client";
+
 import cn from "@lib/cn";
 import { Loader } from "lucide-react";
 import { Route } from "next";
@@ -5,13 +7,15 @@ import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import { LinkHTMLAttributes, ReactNode, RefObject } from "react";
 import buttonVariants from "./button-variants";
 
+type OnNavigateEvent = { preventDefault: () => void };
+
 export type LinkProps = {
     href: Route;
     label: string;
     children?: ReactNode;
 
     // Styles
-    colors?: "primary" | "foreground" | "outline" | "ghost" | "destructive" | false;
+    colors?: "primary" | "foreground" | "outline" | "ghost" | "destructive" | "link" | false;
     rounded?: "md" | "full" | false;
     padding?: "text" | "icon" | false;
     /** Disable flex styles */
@@ -23,17 +27,18 @@ export type LinkProps = {
     className?: string;
 
     // States
-    isLoading?: boolean;
-    isDisabled?: boolean;
+    loading?: boolean;
+    disabled?: boolean;
+
+    // Nextjs Link Props
+    onNavigate?: (e: OnNavigateEvent) => void;
 
     // Legacy Props
     legacyProps?: Omit<LinkHTMLAttributes<HTMLAnchorElement>, keyof LinkProps>;
 
     // Others
     ref?: RefObject<HTMLAnchorElement>;
-    onClick?: (e: MouseEvent) => void;
-    onFocus?: (e: FocusEvent) => void;
-} & NextLinkProps<Route>;
+} & Pick<NextLinkProps<Route>, "replace" | "scroll" | "prefetch">;
 
 export default function Link(props: LinkProps) {
     const {
@@ -49,9 +54,10 @@ export default function Link(props: LinkProps) {
         noStyle = false,
         className,
         // States
-        isLoading,
-        isDisabled,
+        loading,
+        disabled,
         // Others
+        onNavigate,
         legacyProps,
         ...othersProps
     } = props;
@@ -74,21 +80,35 @@ export default function Link(props: LinkProps) {
         outline: !noOutline,
     };
 
+    const handleNavigate = (e: OnNavigateEvent) => {
+        if (disabled || loading) {
+            e.preventDefault();
+        }
+        onNavigate?.(e);
+    };
+
     return (
         <NextLink
             href={href}
             aria-label={label}
-            className={cn(buttonVariants(noStyle ? noStyleMode : styledMode), "relative", className)}
-            data-disabled={isDisabled || isLoading}
+            className={cn(
+                buttonVariants(noStyle ? noStyleMode : styledMode),
+                "relative",
+                // Not first child invisible when loading
+                loading && "text-transparent! [&>*:not([data-loader])]:invisible",
+                className,
+            )}
+            data-disabled={disabled || loading}
+            onNavigate={handleNavigate}
             {...legacyProps}
             {...othersProps}
         >
-            {isLoading && (
-                <div className="absolute">
+            {loading && (
+                <div data-loader className="absolute text-gray-500">
                     <Loader className="size-5 animate-spin" />
                 </div>
             )}
-            <div className={cn(isLoading && "invisible")}>{label ?? children}</div>
+            {children ?? label}
         </NextLink>
     );
 }

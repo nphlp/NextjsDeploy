@@ -1,6 +1,6 @@
+import { Card, CardContent } from "@comps/atoms/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@comps/atoms/tabs";
 import { getSession } from "@lib/auth-server";
-import { Card, CardContent } from "@shadcn/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@shadcn/ui/tabs";
 import { unauthorized } from "next/navigation";
 import { Suspense } from "react";
 import EditionTab from "./_components/edition-tab";

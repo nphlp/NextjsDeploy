@@ -1,7 +1,7 @@
 "use client";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@comps/SHADCN/ui/select";
-import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import { Item, List, Popup, Portal, Positioner, Root, Trigger, Value } from "@comps/atoms/select/atoms";
+import Skeleton from "@comps/atoms/skeleton";
 import cn from "@lib/cn";
 import oRPC from "@lib/orpc";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
@@ -80,19 +80,29 @@ export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProp
         });
     };
 
+    const renderValue = (value: string | string[] | null) => {
+        if (!value || Array.isArray(value)) return null;
+        const option = options.find((o) => o.slug === value);
+        return option?.label ?? value;
+    };
+
     return (
-        <Select value={optimisticData.status} onValueChange={handleStatusUpdate}>
-            <SelectTrigger className={className} aria-label="Update status">
-                <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-                {options.map((option) => (
-                    <SelectItem key={option.slug} value={option.slug}>
-                        {option.label}
-                    </SelectItem>
-                ))}
-            </SelectContent>
-        </Select>
+        <Root selected={optimisticData.status} onSelect={(value) => handleStatusUpdate(value as string)}>
+            <Trigger>
+                <Value>{renderValue}</Value>
+            </Trigger>
+            <Portal>
+                <Positioner>
+                    <Popup>
+                        <List>
+                            {options.map((option) => (
+                                <Item key={option.slug} label={option.slug} itemKey={option.slug} />
+                            ))}
+                        </List>
+                    </Popup>
+                </Positioner>
+            </Portal>
+        </Root>
     );
 }
 

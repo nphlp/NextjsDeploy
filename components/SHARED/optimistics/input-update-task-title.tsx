@@ -1,10 +1,10 @@
 "use client";
 
-import { Input } from "@comps/SHADCN/ui/input";
-import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import Input from "@comps/atoms/input/input";
+import Skeleton from "@comps/atoms/skeleton";
 import cn from "@lib/cn";
 import oRPC from "@lib/orpc";
-import { startTransition, useRef, useState } from "react";
+import { ChangeEvent, startTransition, useRef, useState } from "react";
 import { toast } from "sonner";
 import { TaskType } from "./types";
 import useInstant from "./useInstant";
@@ -55,12 +55,11 @@ export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
     return (
         <form action={handleTitleUpdate} className="w-full">
             <Input
-                aria-label="Tâche"
                 onBlur={handleTitleUpdate}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
                 value={title}
-                className={className}
                 autoComplete="off"
+                legacyProps={{ className }}
             />
         </form>
     );

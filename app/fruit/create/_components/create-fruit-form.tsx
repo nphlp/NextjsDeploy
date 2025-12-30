@@ -1,22 +1,40 @@
 "use client";
 
+import Button from "@atoms/button";
+import Field, { Description, Error, Label } from "@atoms/filed";
+import Form from "@atoms/form";
+import Input from "@atoms/input/input";
+import TextArea from "@atoms/input/text-area";
 import { zodResolver } from "@hookform/resolvers/zod";
 import oRPC from "@lib/orpc";
-import { Button } from "@shadcn/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shadcn/ui/form";
-import { Input } from "@shadcn/ui/input";
-import { Textarea } from "@shadcn/ui/textarea";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { FruitCreateFormValues, createFruitSchema } from "./create-fruit-schema";
+import { z } from "zod";
+
+const createFruitSchema = z.object({
+    name: z
+        .string()
+        .min(2, "Le nom doit contenir au moins 2 caractères")
+        .max(50, "Le nom ne doit pas dépasser 50 caractères")
+        .regex(/^[\p{L}\s'-]+$/u, "Lettres, espaces, apostrophes et tirets uniquement"),
+    description: z
+        .string()
+        .min(10, "La description doit contenir au moins 10 caractères")
+        .max(500, "La description ne doit pas dépasser 500 caractères"),
+});
+
+type FruitCreateFormValues = z.infer<typeof createFruitSchema>;
 
 export default function CreateFruitForm() {
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
 
-    const form = useForm<FruitCreateFormValues>({
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<FruitCreateFormValues>({
+        mode: "onChange",
         resolver: zodResolver(createFruitSchema),
         defaultValues: {
             name: "",
@@ -24,102 +42,49 @@ export default function CreateFruitForm() {
         },
     });
 
-    const handleCreate = async (values: FruitCreateFormValues) => {
-        setIsLoading(true);
-
-        const { name, description } = values;
-
+    const onSubmit = async (values: FruitCreateFormValues) => {
         try {
-            await oRPC.fruit.create({ name, description });
+            await oRPC.fruit.create(values);
             toast.success("Fruit créé avec succès !");
             router.push("/fruits");
         } catch (error) {
             toast.error((error as Error).message ?? "Erreur lors de la création du fruit");
-            setIsLoading(false);
         }
     };
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleCreate)} className="space-y-4">
-                {/* Name */}
-                <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Nom</FormLabel>
-                            <FormControl>
-                                <Input
-                                    type="text"
-                                    placeholder="Nom du fruit"
-                                    autoComplete="off"
-                                    autoFocus
-                                    disabled={isLoading}
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                {/* Description */}
-                <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Description</FormLabel>
-                            <FormControl>
-                                <Textarea
-                                    placeholder="Description du fruit..."
-                                    disabled={isLoading}
-                                    rows={4}
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                {/* Submit button */}
-                <div className="flex justify-center">
-                    <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
-                        {isLoading ? "Création en cours..." : "Créer le fruit"}
-                    </Button>
-                </div>
-            </form>
-        </Form>
-    );
-}
-
-export const CreateFruitFormSkeleton = () => {
-    return (
-        <div className="animate-pulse space-y-4">
+        <Form onSubmit={handleSubmit(onSubmit)}>
             {/* Name */}
-            <div className="space-y-2">
-                <div className="bg-foreground/5 h-3.5 w-[38px] flex-none rounded"></div>
-                <div className="rounded-md border px-3 py-2 shadow-xs">
-                    <div className="bg-foreground/5 h-4.5 w-[120px] flex-none rounded"></div>
-                </div>
-            </div>
+            <Field invalid={!!errors.name}>
+                <Label>Nom du fruit</Label>
+                <Description>Entrer le nom du fruit</Description>
+                <Input
+                    {...register("name")}
+                    placeholder="Mangue"
+                    disabled={isSubmitting}
+                    autoComplete="off"
+                    autoFocus
+                />
+                <Error match>{errors.name?.message}</Error>
+            </Field>
 
             {/* Description */}
-            <div className="space-y-2">
-                <div className="bg-foreground/5 h-3.5 w-[82px] flex-none rounded"></div>
-                <div className="rounded-md border px-3 pt-2 pb-9 shadow-xs">
-                    <div className="bg-foreground/5 h-4.5 w-[170px] flex-none rounded"></div>
-                </div>
-            </div>
+            <Field invalid={!!errors.description}>
+                <Label>Description du fruit</Label>
+                <Description>Entrer une courte description pour le fruit</Description>
+                <TextArea
+                    {...register("description")}
+                    placeholder="Un fruit tropical sucré et juteux."
+                    disabled={isSubmitting}
+                    autoComplete="off"
+                />
+                <Error match>{errors.description?.message}</Error>
+            </Field>
 
             {/* Submit button */}
             <div className="flex justify-center">
-                <div className="bg-foreground rounded-md px-5 py-2.5 shadow-xs">
-                    <div className="bg-background/80 h-4 w-[76px] flex-none rounded"></div>
-                </div>
+                <Button type="submit" label="Créer le fruit" loading={isSubmitting} className="w-full sm:w-auto" />
             </div>
-        </div>
+        </Form>
     );
-};
+}

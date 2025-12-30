@@ -1,6 +1,5 @@
 "use client";
 
-import { Session } from "@lib/auth-server";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -9,7 +8,8 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@shadcn/ui/alert-dialog";
+} from "@comps/atoms/alert-dialog";
+import { Session } from "@lib/auth-server";
 import { useState } from "react";
 
 type EmailConfirmModalProps = {

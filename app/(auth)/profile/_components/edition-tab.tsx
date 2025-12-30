@@ -1,20 +1,34 @@
 "use client";
 
-import PasswordInput from "@comps/SHADCN/components/password-input";
+import Button from "@atoms/button";
+import Field, { Error } from "@atoms/filed";
+import Form from "@atoms/form";
+import Input from "@atoms/input/input";
+import InputPassword from "@atoms/input/input-password";
+import { Separator } from "@base-ui/react/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SessionRefetch, changePassword, useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
 import oRPC from "@lib/orpc";
-import { Button } from "@shadcn/ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@shadcn/ui/form";
-import { Input } from "@shadcn/ui/input";
-import { Separator } from "@shadcn/ui/separator";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { UpdateFirstnameFormValues, updateFirstnameSchema } from "./update-firstname-schema";
-import { UpdateLastnameFormValues, updateLastnameSchema } from "./update-lastname-schema";
-import { UpdatePasswordFormValues, updatePasswordSchema } from "./update-password-schema";
+import { z } from "zod";
+
+const updateLastnameSchema = z.object({
+    lastname: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
+});
+type UpdateLastnameFormValues = z.infer<typeof updateLastnameSchema>;
+
+const updateFirstnameSchema = z.object({
+    name: z.string().min(2, { message: "Le prénom doit contenir au moins 2 caractères" }),
+});
+type UpdateFirstnameFormValues = z.infer<typeof updateFirstnameSchema>;
+
+const updatePasswordSchema = z.object({
+    currentPassword: z.string().min(1, { message: "Le mot de passe actuel est requis" }),
+    newPassword: z.string().min(8, { message: "Le nouveau mot de passe doit contenir au moins 8 caractères" }),
+});
+type UpdatePasswordFormValues = z.infer<typeof updatePasswordSchema>;
 
 type EditionTabProps = {
     session: NonNullable<Session>;
@@ -31,13 +45,13 @@ export default function EditionTab(props: EditionTabProps) {
         <div>
             <div className="mb-4">
                 <h2 className="text-lg font-bold">Édition</h2>
-                <p className="text-muted-foreground text-sm">Modifier vos données personnelles.</p>
+                <p className="text-sm text-gray-500">Modifier vos données personnelles.</p>
             </div>
             <div className="space-y-6">
                 <UpdateLastnameForm session={session} refetch={refetch} />
-                <Separator />
+                <Separator className="h-px bg-gray-200" />
                 <UpdateFirstnameForm session={session} refetch={refetch} />
-                <Separator />
+                <Separator className="h-px bg-gray-200" />
                 <UpdatePasswordForm />
             </div>
         </div>
@@ -51,60 +65,42 @@ type UpdateFormProps = {
 
 const UpdateLastnameForm = (props: UpdateFormProps) => {
     const { session, refetch } = props;
-    const [isLoading, setIsLoading] = useState(false);
 
-    const form = useForm<UpdateLastnameFormValues>({
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors, isSubmitting },
+    } = useForm<UpdateLastnameFormValues>({
         resolver: zodResolver(updateLastnameSchema),
-        defaultValues: {
-            lastname: "",
-        },
+        defaultValues: { lastname: "" },
     });
 
-    const handleSubmit = async (values: UpdateLastnameFormValues) => {
-        setIsLoading(true);
-
-        const { lastname } = values;
-
-        await oRPC.user.update({ id: session.user.id, lastname });
-
+    const onSubmit = async (values: UpdateLastnameFormValues) => {
         try {
-            await oRPC.user.update({ id: session.user.id, lastname });
+            await oRPC.user.update({ id: session.user.id, lastname: values.lastname });
             await refetch();
-            toast.success("Prénom modifié avec succès !");
-            form.reset();
+            toast.success("Nom modifié avec succès !");
+            reset();
         } catch {
-            toast.error("Erreur lors de la modification du prénom");
+            toast.error("Erreur lors de la modification du nom");
         }
-
-        setIsLoading(false);
     };
 
     return (
         <div>
-            <h3 className="text-muted-foreground mb-2 text-sm font-bold">Modifier mon nom</h3>
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col items-center gap-2">
-                    <FormField
-                        control={form.control}
-                        name="lastname"
-                        render={({ field }) => (
-                            <FormItem className="w-full">
-                                <FormControl>
-                                    <Input
-                                        placeholder={session.user.lastname ?? "Votre nom"}
-                                        autoComplete="family-name"
-                                        disabled={isLoading}
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
+            <h3 className="mb-2 text-sm font-bold text-gray-500">Modifier mon nom</h3>
+            <Form onSubmit={handleSubmit(onSubmit)} className="gap-2">
+                <Field invalid={!!errors.lastname}>
+                    <Input
+                        {...register("lastname")}
+                        placeholder={session.user.lastname ?? "Votre nom"}
+                        autoComplete="family-name"
+                        disabled={isSubmitting}
                     />
-                    <Button type="submit" disabled={isLoading} size="sm" className="w-full">
-                        {isLoading ? "Modification..." : "Valider"}
-                    </Button>
-                </form>
+                    <Error match>{errors.lastname?.message}</Error>
+                </Field>
+                <Button type="submit" label="Valider" loading={isSubmitting} className="w-full" />
             </Form>
         </div>
     );
@@ -112,135 +108,97 @@ const UpdateLastnameForm = (props: UpdateFormProps) => {
 
 const UpdateFirstnameForm = (props: UpdateFormProps) => {
     const { session, refetch } = props;
-    const [isLoading, setIsLoading] = useState(false);
 
-    const form = useForm<UpdateFirstnameFormValues>({
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors, isSubmitting },
+    } = useForm<UpdateFirstnameFormValues>({
         resolver: zodResolver(updateFirstnameSchema),
-        defaultValues: {
-            name: "",
-        },
+        defaultValues: { name: "" },
     });
 
-    const handleSubmit = async (values: UpdateFirstnameFormValues) => {
-        setIsLoading(true);
-
-        const { name } = values;
-
+    const onSubmit = async (values: UpdateFirstnameFormValues) => {
         try {
-            await oRPC.user.update({ id: session.user.id, name });
+            await oRPC.user.update({ id: session.user.id, name: values.name });
             await refetch();
             toast.success("Prénom modifié avec succès !");
-            form.reset();
+            reset();
         } catch {
             toast.error("Erreur lors de la modification du prénom");
         }
-
-        setIsLoading(false);
     };
 
     return (
         <div>
-            <h3 className="text-muted-foreground mb-2 text-sm font-bold">Modifier mon prénom</h3>
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col items-center gap-2">
-                    <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                            <FormItem className="w-full">
-                                <FormControl>
-                                    <Input
-                                        placeholder={session.user.name}
-                                        autoComplete="given-name"
-                                        disabled={isLoading}
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
+            <h3 className="mb-2 text-sm font-bold text-gray-500">Modifier mon prénom</h3>
+            <Form onSubmit={handleSubmit(onSubmit)} className="gap-2">
+                <Field invalid={!!errors.name}>
+                    <Input
+                        {...register("name")}
+                        placeholder={session.user.name}
+                        autoComplete="given-name"
+                        disabled={isSubmitting}
                     />
-                    <Button type="submit" disabled={isLoading} size="sm" className="w-full">
-                        {isLoading ? "Modification..." : "Valider"}
-                    </Button>
-                </form>
+                    <Error match>{errors.name?.message}</Error>
+                </Field>
+                <Button type="submit" label="Valider" loading={isSubmitting} className="w-full" />
             </Form>
         </div>
     );
 };
 
 const UpdatePasswordForm = () => {
-    const [isLoading, setIsLoading] = useState(false);
-
-    const form = useForm<UpdatePasswordFormValues>({
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors, isSubmitting },
+    } = useForm<UpdatePasswordFormValues>({
         resolver: zodResolver(updatePasswordSchema),
-        defaultValues: {
-            currentPassword: "",
-            newPassword: "",
-        },
+        defaultValues: { currentPassword: "", newPassword: "" },
     });
 
-    const handleSubmit = async (values: UpdatePasswordFormValues) => {
-        setIsLoading(true);
-
-        const { currentPassword, newPassword } = values;
-
-        const { data } = await changePassword({ currentPassword, newPassword, revokeOtherSessions: true });
+    const onSubmit = async (values: UpdatePasswordFormValues) => {
+        const { data } = await changePassword({
+            currentPassword: values.currentPassword,
+            newPassword: values.newPassword,
+            revokeOtherSessions: true,
+        });
 
         if (!data) {
             toast.error("Échec du changement de mot de passe, le mot de passe actuel est peut-être incorrect.");
-            setIsLoading(false);
             return;
         }
 
         toast.success("Mot de passe modifié avec succès !");
-        form.reset();
-        setIsLoading(false);
+        reset();
     };
 
     return (
         <div>
-            <h3 className="text-muted-foreground mb-2 text-sm font-bold">Modifier mon mot de passe</h3>
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col items-center gap-4">
-                    <FormField
-                        control={form.control}
-                        name="currentPassword"
-                        render={({ field }) => (
-                            <FormItem className="w-full">
-                                <FormControl>
-                                    <PasswordInput
-                                        placeholder="Mot de passe actuel"
-                                        autoComplete="current-password"
-                                        disabled={isLoading}
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
+            <h3 className="mb-2 text-sm font-bold text-gray-500">Modifier mon mot de passe</h3>
+            <Form onSubmit={handleSubmit(onSubmit)} className="gap-4">
+                <Field invalid={!!errors.currentPassword}>
+                    <InputPassword
+                        {...register("currentPassword")}
+                        placeholder="Mot de passe actuel"
+                        autoComplete="current-password"
+                        disabled={isSubmitting}
                     />
-                    <FormField
-                        control={form.control}
-                        name="newPassword"
-                        render={({ field }) => (
-                            <FormItem className="w-full">
-                                <FormControl>
-                                    <PasswordInput
-                                        placeholder="Nouveau mot de passe"
-                                        autoComplete="new-password"
-                                        disabled={isLoading}
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
+                    <Error match>{errors.currentPassword?.message}</Error>
+                </Field>
+                <Field invalid={!!errors.newPassword}>
+                    <InputPassword
+                        {...register("newPassword")}
+                        placeholder="Nouveau mot de passe"
+                        autoComplete="new-password"
+                        disabled={isSubmitting}
                     />
-                    <Button type="submit" disabled={isLoading} size="sm" className="w-full">
-                        {isLoading ? "Modification..." : "Valider"}
-                    </Button>
-                </form>
+                    <Error match>{errors.newPassword?.message}</Error>
+                </Field>
+                <Button type="submit" label="Valider" loading={isSubmitting} className="w-full" />
             </Form>
         </div>
     );

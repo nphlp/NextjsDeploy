@@ -16,7 +16,7 @@ type PageProps = {
 
 export default async function Page(props: PageProps) {
     return (
-        <div className="w-full max-w-[900px] flex-1 space-y-4 px-4 py-4 sm:px-12">
+        <div className="w-full max-w-225 flex-1 space-y-4 px-4 py-4 sm:px-12">
             <h1 className="text-2xl font-bold">Ma liste de tâches 📝</h1>
             <section className="space-y-8">
                 <Suspense fallback={<TodoSkeleton />}>

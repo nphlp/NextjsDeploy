@@ -1,40 +1,16 @@
 "use client";
 import { Toast } from "@base-ui/react/toast";
-import { useState } from "react";
 
 export default function Toaster() {
     return (
         <Toast.Provider>
-            <ToastButton />
+            {/* <ToastButton /> */}
             <Toast.Portal>
-                <Toast.Viewport className="fixed top-auto right-[1rem] bottom-[1rem] z-10 mx-auto flex w-[250px] sm:right-[2rem] sm:bottom-[2rem] sm:w-[300px]">
+                <Toast.Viewport className="fixed top-auto right-4 bottom-4 z-10 mx-auto flex w-62.5 sm:right-8 sm:bottom-8 sm:w-75">
                     <ToastList />
                 </Toast.Viewport>
             </Toast.Portal>
         </Toast.Provider>
-    );
-}
-
-function ToastButton() {
-    const toastManager = Toast.useToastManager();
-    const [count, setCount] = useState(0);
-
-    function createToast() {
-        setCount((prev) => prev + 1);
-        toastManager.add({
-            title: `Toast ${count + 1} created`,
-            description: "This is a toast notification.",
-        });
-    }
-
-    return (
-        <button
-            type="button"
-            className="focus-visible:outline-blue box-border flex h-10 items-center justify-center rounded-md border border-gray-200 bg-gray-50 px-3.5 py-0 font-medium text-gray-900 outline-0 select-none hover:bg-gray-100 focus-visible:outline-2 focus-visible:-outline-offset-1 active:bg-gray-100"
-            onClick={createToast}
-        >
-            Create toast
-        </button>
     );
 }
 

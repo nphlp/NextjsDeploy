@@ -1,10 +1,11 @@
 "use client";
 
-import { Button } from "@comps/SHADCN/ui/button";
-import { Input } from "@comps/SHADCN/ui/input";
-import { Label } from "@comps/SHADCN/ui/label";
-import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import Button from "@comps/atoms/button/button";
+import Input from "@comps/atoms/input/input";
+import Label from "@comps/atoms/label";
+import Skeleton from "@comps/atoms/skeleton";
 import { X } from "lucide-react";
+import { ChangeEvent } from "react";
 import { useSearchQueryParams } from "./queryParamsClientHooks";
 
 type SearchFilterProps = {
@@ -22,19 +23,17 @@ export default function SearchFilter(props: SearchFilterProps) {
             {!noLabel && <Label>Search</Label>}
             <div className="relative">
                 <Input
-                    aria-label="Rechercher"
                     placeholder="Rechercher"
-                    className={className}
                     autoComplete="off"
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
                     value={search}
                 />
                 {!!search.length && (
                     <Button
-                        aria-label="Effacer la recherche"
+                        label="Effacer la recherche"
                         onClick={() => setSearch("")}
                         className="absolute top-1/2 right-0 -translate-y-1/2 rounded p-0.5"
-                        variant="link"
+                        colors="link"
                     >
                         <X className="size-5" />
                     </Button>

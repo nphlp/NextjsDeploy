@@ -1,12 +1,12 @@
 "use client";
 
 import { Context } from "@app/tasks/_components/context";
-import { Button } from "@comps/SHADCN/ui/button";
-import { Input } from "@comps/SHADCN/ui/input";
-import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import Button from "@comps/atoms/button/button";
+import Input from "@comps/atoms/input/input";
+import Skeleton from "@comps/atoms/skeleton";
 import oRPC from "@lib/orpc";
 import { ArrowUp } from "lucide-react";
-import { startTransition, useContext, useState } from "react";
+import { ChangeEvent, startTransition, useContext, useState } from "react";
 import { toast } from "sonner";
 import { TaskType } from "./types";
 
@@ -50,13 +50,12 @@ export default function InputAddTask() {
     return (
         <form action={handleSubmit} className="flex w-full items-center gap-2">
             <Input
-                aria-label="Ajouter une tâche"
                 placeholder="Ajouter une tâche"
                 autoComplete="off"
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
                 value={title}
             />
-            <Button type="submit" aria-label="Ajouter" variant="outline" className="p-1.5">
+            <Button type="submit" label="Ajouter" colors="outline" className="p-1.5">
                 <ArrowUp className="size-6" />
             </Button>
         </form>

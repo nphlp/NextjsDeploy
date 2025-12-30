@@ -1,6 +1,6 @@
 "use client";
 
-import { ButtonItem, Popup, Portal, Positioner, Separator, Trigger } from "@comps/atoms/menu/atoms";
+import { ButtonItem, Popup, Portal, Positioner, Trigger } from "@comps/atoms/menu/atoms";
 import Menu from "@comps/atoms/menu/menu";
 import { signOut, useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
@@ -52,7 +52,6 @@ export default function MenuProfile(props: MenuProfileProps) {
                                         <span>Profile</span>
                                     </ButtonItem>
                                 </Link>
-                                <Separator />
                                 <ButtonItem value="logout" onItemClick={handleLogout}>
                                     {isLoading ? (
                                         <Loader className="size-4 animate-spin" />

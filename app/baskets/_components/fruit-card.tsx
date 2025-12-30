@@ -18,6 +18,7 @@ export default async function FruitCard(props: FruitCardProps) {
 
     return (
         <Link
+            label={fruit.name}
             href={`/fruit/${fruit.id}` as Route}
             className={cn(
                 "flex items-center justify-between rounded-md p-3",

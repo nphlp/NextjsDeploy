@@ -1,16 +1,21 @@
 "use client";
 
-import PasswordInput from "@comps/SHADCN/components/password-input";
-import Link from "@comps/atoms/button/link";
+import Button, { Link } from "@atoms/button";
+import Field, { Error, Label } from "@atoms/filed";
+import Form from "@atoms/form";
+import InputPassword from "@atoms/input/input-password";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { resetPassword } from "@lib/auth-client";
-import { Button } from "@shadcn/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shadcn/ui/form";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { ResetPasswordFormValues, resetPasswordSchema } from "./reset-password-schema";
+import { z } from "zod";
+
+const resetPasswordSchema = z.object({
+    password: z.string().min(8, { message: "Le mot de passe doit contenir au moins 8 caractères" }),
+});
+
+type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
 type ResetPasswordFormProps = {
     token: string;
@@ -18,97 +23,57 @@ type ResetPasswordFormProps = {
 
 export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
 
-    const form = useForm<ResetPasswordFormValues>({
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<ResetPasswordFormValues>({
         resolver: zodResolver(resetPasswordSchema),
         defaultValues: {
             password: "",
-            confirmPassword: "",
         },
     });
 
-    const handleResetPassword = async (values: ResetPasswordFormValues) => {
-        setIsLoading(true);
-
-        const { password } = values;
-
+    const onSubmit = async (values: ResetPasswordFormValues) => {
         const { data } = await resetPassword({
-            newPassword: password,
+            newPassword: values.password,
             token,
         });
 
         if (!data) {
             toast.error("Erreur lors de la réinitialisation...");
-            setIsLoading(false);
             return;
         }
 
         toast.success("Mot de passe réinitialisé avec succès !");
-
-        setTimeout(() => {
-            router.push("/login");
-        }, 1000);
+        setTimeout(() => router.push("/login"), 1000);
     };
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleResetPassword)} className="space-y-4">
-                {/* Password */}
-                <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Nouveau mot de passe</FormLabel>
-                            <FormControl>
-                                <PasswordInput
-                                    placeholder="Minimum 8 caractères"
-                                    autoComplete="new-password"
-                                    disabled={isLoading}
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
+        <Form onSubmit={handleSubmit(onSubmit)}>
+            {/* Password */}
+            <Field invalid={!!errors.password}>
+                <Label>Nouveau mot de passe</Label>
+                <InputPassword
+                    {...register("password")}
+                    placeholder="Minimum 8 caractères"
+                    autoComplete="new-password"
+                    disabled={isSubmitting}
                 />
+                <Error match>{errors.password?.message}</Error>
+            </Field>
 
-                {/* Confirm Password */}
-                <FormField
-                    control={form.control}
-                    name="confirmPassword"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Confirmer le mot de passe</FormLabel>
-                            <FormControl>
-                                <PasswordInput
-                                    placeholder="Confirmez votre mot de passe"
-                                    autoComplete="new-password"
-                                    disabled={isLoading}
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+            {/* Login link */}
+            <div className="flex justify-center gap-2 text-sm text-gray-500">
+                <p>Mot de passe retrouvé ?</p>
+                <Link href="/login" label="Se connecter" className="text-sm hover:underline" noStyle />
+            </div>
 
-                {/* Login link */}
-                <div className="text-muted-foreground flex justify-center gap-2 text-sm">
-                    <p>Mot de passe retrouvé ?</p>
-                    <Link href="/login" className="hover:text-foreground underline underline-offset-4" noStyle>
-                        Se connecter
-                    </Link>
-                </div>
-
-                {/* Submit button */}
-                <div className="flex justify-center">
-                    <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
-                        {isLoading ? "Réinitialisation en cours..." : "Réinitialiser"}
-                    </Button>
-                </div>
-            </form>
+            {/* Submit button */}
+            <div className="flex justify-center">
+                <Button type="submit" label="Réinitialiser" loading={isSubmitting} className="w-full sm:w-auto" />
+            </div>
         </Form>
     );
 }

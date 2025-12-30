@@ -1,8 +1,6 @@
 "use client";
 
 import { LocationResponse } from "@app/api/location/route";
-import { revokeOtherSessions, revokeSession } from "@lib/auth-client";
-import { SessionList } from "@lib/auth-server";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -12,11 +10,12 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@shadcn/ui/alert-dialog";
-import { Button } from "@shadcn/ui/button";
+} from "@comps/atoms/alert-dialog";
+import Button from "@comps/atoms/button/button";
+import { revokeOtherSessions, revokeSession } from "@lib/auth-client";
+import { SessionList } from "@lib/auth-server";
 import { X } from "lucide-react";
-import { Dispatch, SetStateAction } from "react";
-import { Fragment, ReactNode, createContext, useContext, useState } from "react";
+import { Dispatch, Fragment, ReactNode, SetStateAction, createContext, useContext, useState } from "react";
 import { getBrowser, getOs, locationString } from "./utils";
 
 export type SessionAndLocation = {
@@ -64,7 +63,7 @@ const DisplaySessionList = () => {
                 <div className="text-lg font-bold">Autres appareils</div>
                 {/* Revoke other sessions button */}
                 {data.length ? (
-                    <Button variant="link" size="sm" onClick={() => setIsAlertOpen(true)}>
+                    <Button label="Revoquer les sessions" colors="link" onClick={() => setIsAlertOpen(true)}>
                         Revoquer les sessions
                     </Button>
                 ) : null}
@@ -157,10 +156,10 @@ const SessionItem = (props: SessionItemProps) => {
             </div>
             {/* Revoke this session button */}
             <Button
-                variant="outline"
-                size="icon-sm"
+                label={`Déconnecter la session du ${formattedDate} à ${formattedTime}`}
+                colors="outline"
+                padding="icon"
                 onClick={() => setIsAlertOpen(true)}
-                aria-label={`Déconnecter la session du ${formattedDate} à ${formattedTime}`}
             >
                 <X className="size-4" />
             </Button>

@@ -1,7 +1,7 @@
 "use client";
 
+import Button from "@comps/atoms/button/button";
 import { SessionClient, sendVerificationEmail, useSession } from "@lib/auth-client";
-import { Button } from "@shadcn/ui/button";
 import { CircleCheck, CircleX, Mail } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -62,7 +62,7 @@ export default function ProfileTab(props: ProfileTabProps) {
                         </div>
                     </div>
                     {!session.user.emailVerified && (
-                        <Button variant="outline" onClick={handleResend} disabled={isLoading} size="sm">
+                        <Button label="Resend" colors="outline" onClick={handleResend} disabled={isLoading}>
                             <span>Resend</span>
                             <Mail className="size-4" />
                         </Button>

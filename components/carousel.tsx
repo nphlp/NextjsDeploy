@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@comps/SHADCN/ui/button";
+import Button from "@atoms/button";
 import cn from "@lib/cn";
 import useBreakpoint, { Breakpoint } from "@utils/use-breakpoint";
 import useEmblaCarousel, { UseEmblaCarouselType } from "embla-carousel-react";
@@ -207,7 +207,7 @@ const Arrow = () => {
     return (
         <>
             <Button
-                aria-label="Previous"
+                label="Previous"
                 className={cn(style, "-left-2 sm:-left-4 lg:-left-12")}
                 onClick={() => emblaApi?.scrollPrev()}
                 disabled={!canScroll.prev}
@@ -215,7 +215,7 @@ const Arrow = () => {
                 <ArrowLeft className="size-5" />
             </Button>
             <Button
-                aria-label="Next"
+                label="Next"
                 className={cn(style, "-right-2 sm:-right-4 lg:-right-12")}
                 onClick={() => emblaApi?.scrollNext()}
                 disabled={!canScroll.next}

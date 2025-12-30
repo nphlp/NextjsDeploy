@@ -1,5 +1,5 @@
+import Card from "@atoms/card";
 import { getSession } from "@lib/auth-server";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shadcn/ui/card";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import z, { ZodType } from "zod";
@@ -35,19 +35,19 @@ const SuspendedPage = async (props: PageProps) => {
     if (session) redirect("/");
 
     return (
-        <div className="w-full max-w-[400px] p-4">
-            <Card className="w-full">
-                <CardHeader>
-                    <CardTitle className="text-center">
+        <div className="flex w-full justify-center p-7">
+            <Card className="max-w-80">
+                <div className="space-y-2 text-center">
+                    <h3 className="text-xl font-semibold">
                         {token ? "Réinitialiser le mot de passe" : "Mot de passe oublié"}
-                    </CardTitle>
-                    <CardDescription className="text-center">
+                    </h3>
+                    <p className="text-sm text-gray-500">
                         {token
                             ? "Saisissez votre nouveau mot de passe."
                             : "Saisissez votre email de connexion pour recevoir un email de réinitialisation."}
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>{token ? <ResetPasswordForm token={token} /> : <RequestResetForm />}</CardContent>
+                    </p>
+                </div>
+                {token ? <ResetPasswordForm token={token} /> : <RequestResetForm />}
             </Card>
         </div>
     );

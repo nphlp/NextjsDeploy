@@ -1,8 +1,8 @@
 "use client";
 
-import { Label } from "@comps/SHADCN/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@comps/SHADCN/ui/select";
-import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import Label from "@comps/atoms/label";
+import { Item, List, Popup, Portal, Positioner, Root, Trigger, Value } from "@comps/atoms/select/atoms";
+import Skeleton from "@comps/atoms/skeleton";
 import { Prisma } from "@prisma/client/client";
 import { useUpdatedAtQueryParams } from "./queryParamsClientHooks";
 
@@ -12,15 +12,24 @@ export default function UpdatedAtFilter() {
     return (
         <div className="space-y-1">
             <Label>Tri par date</Label>
-            <Select value={updatedAt} onValueChange={(value) => setUpdatedAt(value as Prisma.SortOrder)}>
-                <SelectTrigger className="w-full">
-                    <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="asc">Asc</SelectItem>
-                    <SelectItem value="desc">Desc</SelectItem>
-                </SelectContent>
-            </Select>
+            <Root
+                selected={updatedAt}
+                onSelect={(value: string | string[] | null) => setUpdatedAt(value as Prisma.SortOrder)}
+            >
+                <Trigger>
+                    <Value />
+                </Trigger>
+                <Portal>
+                    <Positioner>
+                        <Popup>
+                            <List>
+                                <Item label="Asc" itemKey="asc" />
+                                <Item label="Desc" itemKey="desc" />
+                            </List>
+                        </Popup>
+                    </Positioner>
+                </Portal>
+            </Root>
         </div>
     );
 }

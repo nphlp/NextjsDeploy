@@ -28,7 +28,7 @@ export default function Logout(props: LogoutProps) {
     };
 
     return (
-        <Button label="Logout" onClick={handleClick} isLoading={isLoading}>
+        <Button label="Logout" onClick={handleClick} loading={isLoading}>
             {children}
         </Button>
     );

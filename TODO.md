@@ -1,5 +1,21 @@
 # TODO
 
+## Clean code
+
+- Design et Layouts
+- Atoms, Molecules, Organisms
+- Skeletons
+
+- Centraliser les styles
+
+- useOtimistic et mutations
+- useQuery et filtres
+
+- useForm et formulaires
+
+- Organisation des fichiers
+- Tester toutes les pages, faire un plan
+
 ## Redis cache handler
 
 ## Tests automatissé

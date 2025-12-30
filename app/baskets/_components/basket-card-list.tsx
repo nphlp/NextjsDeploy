@@ -30,7 +30,7 @@ export default async function BasketCardList() {
             <div className="flex flex-col items-center justify-center gap-4 rounded-lg border p-12 text-center">
                 <ShoppingBasket className="text-muted-foreground size-16" strokeWidth={1} />
                 <p className="text-muted-foreground">Vous n&apos;avez aucun panier pour le moment.</p>
-                <Link href="/fruits" className="text-sm underline underline-offset-4">
+                <Link label="Découvrir les fruits" href="/fruits" className="text-sm underline underline-offset-4">
                     Découvrir les fruits
                 </Link>
             </div>

@@ -1,37 +1,45 @@
 "use client";
 
-import PasswordInput from "@comps/SHADCN/components/password-input";
-import Link from "@comps/atoms/button/link";
+import Button, { Link } from "@atoms/button";
+import Field, { Error, Label } from "@atoms/filed";
+import Form from "@atoms/form";
+import Input from "@atoms/input/input";
+import InputPassword from "@atoms/input/input-password";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@lib/auth-client";
 import oRPC from "@lib/orpc";
-import { Button } from "@shadcn/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shadcn/ui/form";
-import { Input } from "@shadcn/ui/input";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { RegisterFormValues, registerSchema } from "./register-schema";
+import { z } from "zod";
+
+const registerSchema = z.object({
+    firstname: z.string().min(2, { message: "Le prénom doit contenir au moins 2 caractères" }),
+    lastname: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
+    email: z.email({ message: "Email invalide" }),
+    password: z.string().min(8, { message: "Le mot de passe doit contenir au moins 8 caractères" }),
+});
+
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterForm() {
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
 
-    const form = useForm<RegisterFormValues>({
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<RegisterFormValues>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
             firstname: "",
             lastname: "",
             email: "",
             password: "",
-            confirmPassword: "",
         },
     });
 
-    const handleRegister = async (values: RegisterFormValues) => {
-        setIsLoading(true);
-
+    const onSubmit = async (values: RegisterFormValues) => {
         const { firstname, lastname, email, password } = values;
 
         const { data } = await signUp.email({
@@ -42,7 +50,6 @@ export default function RegisterForm() {
 
         if (!data) {
             toast.error("Échec de l'inscription, veuillez réessayer.");
-            setIsLoading(false);
             return;
         }
 
@@ -53,127 +60,67 @@ export default function RegisterForm() {
     };
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleRegister)} className="space-y-4">
-                {/* Firstname */}
-                <FormField
-                    control={form.control}
-                    name="firstname"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Prénom</FormLabel>
-                            <FormControl>
-                                <Input
-                                    type="text"
-                                    placeholder="Jean"
-                                    autoComplete="given-name"
-                                    autoFocus
-                                    disabled={isLoading}
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
+        <Form onSubmit={handleSubmit(onSubmit)}>
+            {/* Firstname */}
+            <Field invalid={!!errors.firstname}>
+                <Label>Prénom</Label>
+                <Input
+                    {...register("firstname")}
+                    placeholder="Jean"
+                    autoComplete="given-name"
+                    autoFocus
+                    disabled={isSubmitting}
                 />
+                <Error match>{errors.firstname?.message}</Error>
+            </Field>
 
-                {/* Lastname */}
-                <FormField
-                    control={form.control}
-                    name="lastname"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Nom</FormLabel>
-                            <FormControl>
-                                <Input
-                                    type="text"
-                                    placeholder="Dupont"
-                                    autoComplete="family-name"
-                                    disabled={isLoading}
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
+            {/* Lastname */}
+            <Field invalid={!!errors.lastname}>
+                <Label>Nom</Label>
+                <Input
+                    {...register("lastname")}
+                    placeholder="Dupont"
+                    autoComplete="family-name"
+                    disabled={isSubmitting}
                 />
+                <Error match>{errors.lastname?.message}</Error>
+            </Field>
 
-                {/* Email */}
-                <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                                <Input
-                                    type="email"
-                                    placeholder="exemple@email.com"
-                                    autoComplete="email"
-                                    disabled={isLoading}
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
+            {/* Email */}
+            <Field invalid={!!errors.email}>
+                <Label>Email</Label>
+                <Input
+                    {...register("email")}
+                    type="email"
+                    placeholder="exemple@email.com"
+                    autoComplete="email"
+                    disabled={isSubmitting}
                 />
+                <Error match>{errors.email?.message}</Error>
+            </Field>
 
-                {/* Password */}
-                <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Mot de passe</FormLabel>
-                            <FormControl>
-                                <PasswordInput
-                                    placeholder="Minimum 8 caractères"
-                                    autoComplete="new-password"
-                                    disabled={isLoading}
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
+            {/* Password */}
+            <Field invalid={!!errors.password}>
+                <Label>Mot de passe</Label>
+                <InputPassword
+                    {...register("password")}
+                    placeholder="Minimum 8 caractères"
+                    autoComplete="new-password"
+                    disabled={isSubmitting}
                 />
+                <Error match>{errors.password?.message}</Error>
+            </Field>
 
-                {/* Confirm Password */}
-                <FormField
-                    control={form.control}
-                    name="confirmPassword"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Confirmation mot de passe</FormLabel>
-                            <FormControl>
-                                <PasswordInput
-                                    placeholder="Confirmez votre mot de passe"
-                                    autoComplete="new-password"
-                                    disabled={isLoading}
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+            {/* Login link */}
+            <div className="flex justify-center gap-2 text-sm text-gray-500">
+                <p>Déjà un compte ?</p>
+                <Link href="/login" label="Se connecter" className="text-sm hover:underline" noStyle />
+            </div>
 
-                {/* Login link */}
-                <div className="text-muted-foreground flex justify-center gap-2 text-sm">
-                    <p>Déjà un compte ?</p>
-                    <Link href="/login" className="hover:text-foreground underline underline-offset-4" noStyle>
-                        Se connecter
-                    </Link>
-                </div>
-
-                {/* Submit button */}
-                <div className="flex justify-center">
-                    <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
-                        {isLoading ? "Inscription en cours..." : "S'inscrire"}
-                    </Button>
-                </div>
-            </form>
+            {/* Submit button */}
+            <div className="flex justify-center">
+                <Button type="submit" label="S'inscrire" loading={isSubmitting} className="w-full sm:w-auto" />
+            </div>
         </Form>
     );
 }

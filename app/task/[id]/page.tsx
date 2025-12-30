@@ -23,7 +23,7 @@ export default async function Page(props: PageProps) {
             <Suspense fallback={<TaskSkeleton />}>
                 <Task {...props} />
             </Suspense>
-            <Link aria-label="Retour" href="/tasks">
+            <Link label="Retour" href="/tasks">
                 Retour
             </Link>
         </div>

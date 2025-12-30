@@ -7,11 +7,12 @@ import { ButtonHTMLAttributes, FocusEvent, MouseEvent, ReactNode, RefObject } fr
 import buttonVariants from "./button-variants";
 
 type ButtonProps = {
+    type?: "button" | "submit" | "reset";
     label: string;
     children?: ReactNode;
 
     // Styles
-    colors?: "primary" | "foreground" | "outline" | "ghost" | "destructive" | false;
+    colors?: "primary" | "foreground" | "outline" | "ghost" | "destructive" | "link" | false;
     rounded?: "md" | "full" | false;
     padding?: "text" | "icon" | false;
     /** Disable flex styles */
@@ -23,8 +24,8 @@ type ButtonProps = {
     className?: string;
 
     // States
-    isLoading?: boolean;
-    isDisabled?: boolean;
+    loading?: boolean;
+    disabled?: boolean;
 
     // Legacy Props
     legacyProps?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonProps>;
@@ -37,6 +38,7 @@ type ButtonProps = {
 
 export default function Button(props: ButtonProps) {
     const {
+        type = "button",
         label,
         children,
         // Styles
@@ -48,8 +50,8 @@ export default function Button(props: ButtonProps) {
         noStyle = false,
         className,
         // States
-        isLoading,
-        isDisabled,
+        loading,
+        disabled,
         // Others
         legacyProps,
         ...othersProps
@@ -75,19 +77,26 @@ export default function Button(props: ButtonProps) {
 
     return (
         <ButtonBaseUi
+            type={type}
             aria-label={label}
-            className={cn(buttonVariants(noStyle ? noStyleMode : styledMode), "relative", className)}
-            disabled={isDisabled || isLoading}
+            className={cn(
+                buttonVariants(noStyle ? noStyleMode : styledMode),
+                "relative",
+                // Not first child invisible when loading
+                loading && "text-transparent! [&>*:not([data-loader])]:invisible",
+                className,
+            )}
+            disabled={disabled || loading}
             focusableWhenDisabled
             {...legacyProps}
             {...othersProps}
         >
-            {isLoading && (
-                <div className="absolute">
+            {loading && (
+                <div data-loader className="absolute text-gray-500">
                     <Loader className="size-5 animate-spin" />
                 </div>
             )}
-            <div className={cn(isLoading && "invisible")}>{label ?? children}</div>
+            {children ?? label}
         </ButtonBaseUi>
     );
 }
