@@ -7,19 +7,6 @@ export default function Page() {
         <div className="space-y-6 p-7">
             <div className="grid grid-cols-3 gap-4">
                 <Field>
-                    <Label>Primary</Label>
-                    <Button label="Button" colors="primary" />
-                </Field>
-                <Field>
-                    <Label>Primary</Label>
-                    <Button label="Button" colors="primary" disabled />
-                </Field>
-                <Field>
-                    <Label>Primary</Label>
-                    <Button label="Button" colors="primary" loading />
-                </Field>
-
-                <Field>
                     <Label>Foreground</Label>
                     <Button label="Button" colors="foreground" />
                 </Field>
@@ -59,6 +46,19 @@ export default function Page() {
                 </Field>
 
                 <Field>
+                    <Label>Primary</Label>
+                    <Button label="Button" colors="primary" />
+                </Field>
+                <Field>
+                    <Label>Primary</Label>
+                    <Button label="Button" colors="primary" disabled />
+                </Field>
+                <Field>
+                    <Label>Primary</Label>
+                    <Button label="Button" colors="primary" loading />
+                </Field>
+
+                <Field>
                     <Label>Destructive</Label>
                     <Button label="Button" colors="destructive" />
                 </Field>
@@ -69,6 +69,19 @@ export default function Page() {
                 <Field>
                     <Label>Destructive</Label>
                     <Button label="Button" colors="destructive" loading />
+                </Field>
+
+                <Field>
+                    <Label>Link</Label>
+                    <Button label="Button" colors="link" />
+                </Field>
+                <Field>
+                    <Label>Link</Label>
+                    <Button label="Button" colors="link" disabled />
+                </Field>
+                <Field>
+                    <Label>Link</Label>
+                    <Button label="Button" colors="link" loading />
                 </Field>
 
                 <Field>

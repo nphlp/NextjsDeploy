@@ -22,6 +22,7 @@ type ButtonProps = {
     /** Disable all styles (except outline) */
     noStyle?: boolean;
     className?: string;
+    loaderColorClass?: string;
 
     // States
     loading?: boolean;
@@ -49,6 +50,7 @@ export default function Button(props: ButtonProps) {
         noOutline = false,
         noStyle = false,
         className,
+        loaderColorClass,
         // States
         loading,
         disabled,
@@ -75,6 +77,18 @@ export default function Button(props: ButtonProps) {
         outline: !noOutline,
     };
 
+    // Loader color default
+    const loaderDefaultColor = cn(
+        colors === "foreground" && "text-gray-300",
+        colors === "outline" && "text-gray-700",
+        colors === "ghost" && "text-gray-700",
+        colors === "primary" && "text-gray-200",
+        colors === "destructive" && "text-gray-200",
+        colors === "link" && "text-gray-500",
+        noStyle && "text-foreground",
+        noStyle && loaderColorClass,
+    );
+
     return (
         <ButtonBaseUi
             type={type}
@@ -92,7 +106,7 @@ export default function Button(props: ButtonProps) {
             {...othersProps}
         >
             {loading && (
-                <div data-loader className="absolute text-gray-500">
+                <div data-loader className={cn("absolute", loaderDefaultColor)}>
                     <Loader className="size-5 animate-spin" />
                 </div>
             )}

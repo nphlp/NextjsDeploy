@@ -11,12 +11,13 @@
     --foreground: hsl(0, 0%, 5%);
 
     --color-primary: hsl(207, 80%, 60%);
-    --color-primary-100: hsl(207, 80%, 50%);
-    --color-primary-200: hsl(207, 80%, 40%);
-    --color-primary-300: hsl(207, 80%, 30%);
-    --color-primary-400: hsl(207, 80%, 20%);
+    --color-primary-hover: hsl(207, 80%, 50%);
+    --color-primary-active: hsl(207, 80%, 40%);
 
-    --color-destructive: hsl(0, 80%, 40%);
+    --color-destructive: hsl(0, 80%, 50%);
+    --color-destructive-hover: hsl(0, 80%, 40%);
+    --color-destructive-active: hsl(0, 80%, 30%);
+
     --color-outline: hsl(176, 80%, 40%);
 
     /* Gray colors from background 100% to foreground 5% */
@@ -39,12 +40,13 @@
     --foreground: hsl(0, 0%, 95%);
 
     --color-primary: hsl(207, 80%, 60%);
-    --color-primary-100: hsl(207, 80%, 50%);
-    --color-primary-200: hsl(207, 80%, 40%);
-    --color-primary-300: hsl(207, 80%, 30%);
-    --color-primary-400: hsl(207, 80%, 20%);
+    --color-primary-hover: hsl(207, 80%, 50%);
+    --color-primary-active: hsl(207, 80%, 40%);
 
-    --color-destructive: hsl(0, 80%, 40%);
+    --color-destructive: hsl(0, 80%, 50%);
+    --color-destructive-hover: hsl(0, 80%, 40%);
+    --color-destructive-active: hsl(0, 80%, 30%);
+
     --color-outline: hsl(176, 80%, 40%);
 
     /* Gray colors from background 5% to foreground 95% */
@@ -67,12 +69,13 @@
     --color-foreground: var(--foreground);
 
     --color-primary: var(--color-primary);
-    --color-primary-100: var(--color-primary-100);
-    --color-primary-200: var(--color-primary-200);
-    --color-primary-300: var(--color-primary-300);
-    --color-primary-400: var(--color-primary-400);
+    --color-primary-hover: var(--color-primary-hover);
+    --color-primary-active: var(--color-primary-active);
 
     --color-destructive: var(--color-destructive);
+    --color-destructive-hover: var(--color-destructive-hover);
+    --color-destructive-active: var(--color-destructive-active);
+
     --color-outline: var(--color-outline);
 }
 

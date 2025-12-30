@@ -19,36 +19,29 @@ const buttonVariants = cva(structure, {
                 // Border
                 "border border-primary",
                 // Border (hover)
-                "hover:border-primary-100",
+                "hover:border-primary-hover",
                 // Border (active)
-                "active:border-t-primary-300",
-                "active:border-x-primary-200",
-                "active:border-b-primary-200",
+                "active:border-primary-active",
                 // Border (disabled)
-                "data-disabled:border-primary-200",
-                "data-disabled:hover:border-primary-200",
-                "data-disabled:active:border-primary-200",
+                "data-disabled:border-primary-active",
+                "data-disabled:hover:border-primary-active",
+                "data-disabled:active:border-primary-active",
 
                 // Background
                 "bg-primary",
                 // Background (hover)
-                "hover:bg-primary-100",
+                "hover:bg-primary-hover",
                 // Background (active)
-                "active:bg-primary-200",
+                "active:bg-primary-active",
                 // Background (disabled)
-                "data-disabled:bg-primary-200",
-                "data-disabled:hover:bg-primary-200",
-                "data-disabled:active:bg-primary-200",
+                "data-disabled:bg-primary-active",
+                "data-disabled:hover:bg-primary-active",
+                "data-disabled:active:bg-primary-active",
 
                 // Text
                 "text-background",
                 // Text (disabled)
-                "data-disabled:text-primary-300",
-
-                // Shadow
-                "active:inset-shadow-sm active:inset-shadow-primary-300",
-                // Shadow (disabled)
-                "active:data-disabled:inset-shadow-none",
+                "data-disabled:text-gray-300",
             ),
             foreground: cn(
                 // Border
@@ -56,9 +49,7 @@ const buttonVariants = cva(structure, {
                 // Border (hover)
                 "hover:border-gray-900",
                 // Border (active)
-                "active:border-t-gray-950",
-                "active:border-x-gray-900",
-                "active:border-b-gray-800",
+                "active:border-gray-800",
                 // Border (disabled)
                 "data-disabled:border-gray-800",
                 "data-disabled:hover:border-gray-800",
@@ -79,11 +70,6 @@ const buttonVariants = cva(structure, {
                 "text-gray-100",
                 // Text (disabled)
                 "data-disabled:text-gray-400",
-
-                // Shadow
-                "active:inset-shadow-sm active:inset-shadow-gray-950",
-                // Shadow (disabled)
-                "active:data-disabled:inset-shadow-none",
             ),
             outline: cn(
                 // Border
@@ -109,18 +95,83 @@ const buttonVariants = cva(structure, {
                 "data-disabled:active:bg-gray-100",
 
                 // Text
+                "text-gray-900",
+                // Text (disabled)
+                "data-disabled:text-gray-400",
+            ),
+            ghost: cn(
+                // Border
+                "border border-transparent",
+                // Border (hover)
+                "hover:border-gray-50",
+                // Border (active)
+                "active:border-gray-100",
+                // Border (disabled)
+                "data-disabled:border-gray-100",
+                "data-disabled:hover:border-gray-100",
+                "data-disabled:active:border-gray-100",
+
+                // Background
+                "bg-gray-transparent",
+                // Background (hover)
+                "hover:bg-gray-50",
+                // Background (active)
+                "active:bg-gray-100",
+                // Background (disabled)
+                "data-disabled:bg-gray-100",
+                "data-disabled:hover:bg-gray-100",
+                "data-disabled:active:bg-gray-100",
+
+                // Text
                 "text-gray-800",
                 // Text (disabled)
                 "data-disabled:text-gray-400",
-
-                // Shadow
-                "active:inset-shadow-sm active:inset-shadow-gray-400",
-                // Shadow (disabled)
-                "active:data-disabled:inset-shadow-none",
             ),
-            ghost: "",
-            destructive: "",
-            link: "",
+            destructive: cn(
+                // Border
+                "border border-destructive",
+                // Border (hover)
+                "hover:border-destructive-hover",
+                // Border (active)
+                "active:border-destructive-active",
+                // Border (disabled)
+                "data-disabled:border-destructive-active",
+                "data-disabled:hover:border-destructive-active",
+                "data-disabled:active:border-destructive-active",
+
+                // Background
+                "bg-destructive",
+                // Background (hover)
+                "hover:bg-destructive-hover",
+                // Background (active)
+                "active:bg-destructive-active",
+                // Background (disabled)
+                "data-disabled:bg-destructive-active",
+                "data-disabled:hover:bg-destructive-active",
+                "data-disabled:active:bg-destructive-active",
+
+                // Text
+                "text-background",
+                // Text (disabled)
+                "data-disabled:text-gray-300",
+            ),
+            link: cn(
+                // Decoration
+                "underline-offset-2",
+                // Decoration (hover)
+                "hover:underline",
+                // Decoration (active)
+                "active:underline-offset-3",
+                // Decoration (disabled)
+                "data-disabled:no-underline",
+                "data-disabled:hover:no-underline",
+                "data-disabled:active:no-underline",
+
+                // Text
+                "text-foreground",
+                // Text (disabled)
+                "data-disabled:text-gray-300",
+            ),
             false: "",
         },
         rounded: {
