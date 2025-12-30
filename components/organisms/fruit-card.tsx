@@ -21,7 +21,7 @@ export default async function FruitCard(props: FruitCardProps) {
             className="size-full"
             noStyle
         >
-            <Card className="h-full transition-all hover:scale-101 hover:shadow-lg">
+            <Card className="h-full font-normal transition-all hover:scale-101 hover:shadow-lg">
                 {/* Titre */}
                 <h2 className="text-lg font-semibold">{fruit.name}</h2>
 

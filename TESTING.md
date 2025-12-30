@@ -2,6 +2,6 @@
 
 - [x] /
 - [x] /fruits
+- [x] /fruit/[id]
 - [ ] /fruit/create
-- [ ] /fruit/[id]
 - [ ] /baskets

@@ -11,6 +11,7 @@ vi.mock("@lib/auth-server", async () => import("@test/mocks/modules/auth-server"
 vi.mock("@lib/prisma", () => {
     type FruitWithUser = Fruit & {
         User: { id: string; name: string; lastname: string | null; email: string };
+        _count: { Quantities: number };
     };
 
     const users = [
@@ -28,6 +29,7 @@ vi.mock("@lib/prisma", () => {
             createdAt: new Date("2024-01-01"),
             updatedAt: new Date("2024-01-01"),
             User: users[0],
+            _count: { Quantities: 2 },
         },
         {
             id: "fruitId2",
@@ -37,6 +39,7 @@ vi.mock("@lib/prisma", () => {
             createdAt: new Date("2024-01-02"),
             updatedAt: new Date("2024-01-02"),
             User: users[1],
+            _count: { Quantities: 1 },
         },
         {
             id: "fruitId3",
@@ -46,6 +49,7 @@ vi.mock("@lib/prisma", () => {
             createdAt: new Date("2024-01-03"),
             updatedAt: new Date("2024-01-03"),
             User: users[2],
+            _count: { Quantities: 0 },
         },
     ];
 
@@ -82,6 +86,24 @@ describe("GET /fruit/{id} (public)", () => {
 
         // Expect null
         expect(fruit).toBeNull();
+    });
+
+    it("Returns fruit with inBasketCount", async () => {
+        // Execute function
+        const fruit = await oRpcFruitFindUnique({ id: "fruitId1" });
+
+        // Expect inBasketCount field
+        expect(fruit).toBeDefined();
+        expect(fruit?.inBasketCount).toBe(2);
+    });
+
+    it("Returns fruit with inBasketCount = 0", async () => {
+        // Execute function
+        const fruit = await oRpcFruitFindUnique({ id: "fruitId3" });
+
+        // Expect inBasketCount field = 0
+        expect(fruit).toBeDefined();
+        expect(fruit?.inBasketCount).toBe(0);
     });
 });
 
