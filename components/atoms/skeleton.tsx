@@ -13,11 +13,11 @@ export default function Skeleton(props: SkeletonProps) {
 type SkeletonTextProps = {
     className?: string;
     fontSize?: "3xs" | "2xs" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
+    width?: string;
 };
 
 export const SkeletonText = (props: SkeletonTextProps) => {
-    const { className, fontSize = "md" } = props;
-
+    const { className, fontSize = "md", width } = props;
     const heightClass = () => {
         switch (fontSize) {
             case "3xs":
@@ -46,9 +46,11 @@ export const SkeletonText = (props: SkeletonTextProps) => {
     const { height, marginBlock, borderRadius } = heightClass();
 
     return (
-        <div
-            style={{ height, marginBlock, borderRadius }}
-            className={cn("w-20 animate-pulse rounded bg-gray-200", className)}
-        ></div>
+        <div className="flex flex-col">
+            <p
+                style={{ height, marginBlock, borderRadius, width }}
+                className={cn("w-20 animate-pulse rounded bg-gray-200", className)}
+            ></p>
+        </div>
     );
 };

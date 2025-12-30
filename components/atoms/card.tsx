@@ -10,7 +10,15 @@ export function Card(props: CardProps) {
     const { className, children } = props;
 
     return (
-        <div className={cn("w-full space-y-3 rounded-lg border border-gray-200 p-6 shadow-sm", className)}>
+        <div
+            className={cn(
+                "flex w-full flex-col gap-3",
+                "rounded-lg border border-gray-200",
+                "p-6",
+                "shadow-sm",
+                className,
+            )}
+        >
             {children}
         </div>
     );

@@ -1,8 +1,8 @@
 "use cache";
 
 import Card from "@atoms/card";
+import { SkeletonText } from "@atoms/skeleton";
 import Link from "@comps/atoms/button/link";
-import cn from "@lib/cn";
 import { Fruit } from "@prisma/client/client";
 import { formatMediumDate } from "@utils/date-format";
 import { Route } from "next";
@@ -16,17 +16,20 @@ export default async function FruitCard(props: FruitCardProps) {
 
     return (
         <Link label={`View details for ${fruit.name}`} href={`/fruit/${fruit.id}` as Route} className="w-full" noStyle>
-            <Card className="max-w-full transition-all hover:scale-101 hover:shadow-lg">
+            <Card className="h-full transition-all hover:scale-101 hover:shadow-lg">
                 {/* Titre */}
                 <h2 className="text-lg font-semibold">{fruit.name}</h2>
+
                 {/* Description */}
-                {fruit.description && (
-                    <p className="h-full text-sm text-gray-600 dark:text-gray-400">{fruit.description}</p>
-                )}
+                <div className="flex-1">
+                    {fruit.description && <p className="text-sm text-gray-600">{fruit.description}</p>}
+                </div>
+
                 {/* Présent dans X paniers */}
-                <div className="text-sm text-gray-600 dark:text-gray-400">
+                <div className="text-sm text-gray-600">
                     Présent dans {fruit.inBasketCount} {fruit.inBasketCount > 1 ? "paniers" : "panier"}
                 </div>
+
                 {/* Ajouté le xx / xx / xxxx */}
                 <div className="flex items-center justify-between text-xs text-gray-500">
                     Ajouté le {formatMediumDate(fruit.createdAt)}
@@ -38,21 +41,21 @@ export default async function FruitCard(props: FruitCardProps) {
 
 export const FruitCardSkeleton = async () => {
     return (
-        <div className={cn("animate-pulse", "flex flex-col justify-between gap-2", "rounded-lg border p-5 shadow")}>
+        <Card className="@container h-full">
             {/* Titre */}
-            <div className="bg-foreground/5 h-7 w-1/2 flex-none rounded"></div>
+            <SkeletonText fontSize="lg" />
 
             {/* Description */}
-            <div className="h-full space-y-1">
-                <div className="bg-foreground/5 h-4.5 w-full flex-none rounded"></div>
-                <div className="bg-foreground/5 h-4.5 w-1/6 flex-none rounded"></div>
+            <div className="flex-1">
+                <SkeletonText fontSize="sm" width="90%" />
+                <SkeletonText fontSize="sm" width="40%" className="@xs:hidden" />
             </div>
 
             {/* Présent dans X paniers */}
-            <div className="bg-foreground/5 h-5 w-37.5 flex-none rounded"></div>
+            <SkeletonText fontSize="sm" width="150px" />
 
             {/* Ajouté le xx / xx / xxxx */}
-            <div className="bg-foreground/5 h-4 w-27.5 flex-none rounded"></div>
-        </div>
+            <SkeletonText fontSize="xs" width="100px" />
+        </Card>
     );
 };
