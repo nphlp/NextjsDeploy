@@ -1,9 +1,9 @@
-import { Carousel, Slide } from "@comps/carousel";
+import { Carousel, Slide } from "@atoms/carousel";
 import oRPC from "@lib/orpc";
+import FruitCard, { FruitCardSkeleton } from "@organisms/fruit-card";
 import { timeout } from "@utils/timout";
 import { Breakpoint } from "@utils/use-breakpoint";
 import { notFound } from "next/navigation";
-import FruitCard, { FruitCardSkeleton } from "./fruit-card";
 
 const slidePerView: Record<Breakpoint, number> = {
     mobile: 1,

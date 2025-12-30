@@ -199,15 +199,14 @@ const Arrow = () => {
         };
     }, [emblaApi]);
 
-    const style = cn(
-        "absolute top-1/2 -translate-y-1/2 rounded-full p-2 has-[>svg]:px-2",
-        "disabled:hover:bg-primary disabled:cursor-not-allowed disabled:pointer-events-auto",
-    );
+    const style = cn("absolute top-1/2 -translate-y-1/2", "data-disabled:opacity-50");
 
     return (
         <>
             <Button
                 label="Previous"
+                padding="icon"
+                rounded="full"
                 className={cn(style, "-left-2 sm:-left-4 lg:-left-12")}
                 onClick={() => emblaApi?.scrollPrev()}
                 disabled={!canScroll.prev}
@@ -216,6 +215,8 @@ const Arrow = () => {
             </Button>
             <Button
                 label="Next"
+                padding="icon"
+                rounded="full"
                 className={cn(style, "-right-2 sm:-right-4 lg:-right-12")}
                 onClick={() => emblaApi?.scrollNext()}
                 disabled={!canScroll.next}

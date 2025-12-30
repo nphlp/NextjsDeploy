@@ -1,6 +1,6 @@
 import oRPC from "@lib/orpc";
+import FruitCard, { FruitCardSkeleton } from "@organisms/fruit-card";
 import { timeout } from "@utils/timout";
-import FruitCard, { FruitCardSkeleton } from "./fruit-card";
 
 type GetFruitsCachedProps = {
     take?: number;

@@ -15,7 +15,12 @@ export default async function FruitCard(props: FruitCardProps) {
     const { fruit } = props;
 
     return (
-        <Link label={`View details for ${fruit.name}`} href={`/fruit/${fruit.id}` as Route} className="w-full" noStyle>
+        <Link
+            label={`View details for ${fruit.name}`}
+            href={`/fruit/${fruit.id}` as Route}
+            className="size-full"
+            noStyle
+        >
             <Card className="h-full transition-all hover:scale-101 hover:shadow-lg">
                 {/* Titre */}
                 <h2 className="text-lg font-semibold">{fruit.name}</h2>
