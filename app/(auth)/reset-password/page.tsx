@@ -1,4 +1,5 @@
 import Card from "@atoms/card";
+import Main from "@core/Main";
 import { getSession } from "@lib/auth-server";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -35,7 +36,7 @@ const SuspendedPage = async (props: PageProps) => {
     if (session) redirect("/");
 
     return (
-        <div className="flex w-full justify-center p-7">
+        <Main>
             <Card className="max-w-80">
                 <div className="space-y-2 text-center">
                     <h3 className="text-xl font-semibold">
@@ -49,6 +50,6 @@ const SuspendedPage = async (props: PageProps) => {
                 </div>
                 {token ? <ResetPasswordForm token={token} /> : <RequestResetForm />}
             </Card>
-        </div>
+        </Main>
     );
 };

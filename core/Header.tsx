@@ -22,7 +22,7 @@ export default async function Header(props: HeaderProps) {
                         "bg-background",
                         "sticky inset-x-0 top-0 z-10",
                         "flex items-center justify-end gap-4",
-                        "px-5 py-3",
+                        "px-4 py-3 md:px-7",
                         className,
                     )}
                 >
@@ -51,7 +51,7 @@ const SuspendedHeader = async (props: HeaderProps) => {
                 "bg-background",
                 "sticky inset-x-0 top-0 z-10",
                 "flex items-center justify-end gap-4",
-                "px-5 py-3",
+                "px-4 py-3 md:px-7",
                 className,
             )}
         >

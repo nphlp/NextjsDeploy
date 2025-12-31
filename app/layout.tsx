@@ -3,7 +3,6 @@ import Breakpoints from "@comps/breakpoints";
 import Footer from "@core/Footer";
 import Header from "@core/Header";
 import Html from "@core/Html";
-import Main from "@core/Main";
 import Theme from "@core/Theme";
 import cn from "@lib/cn";
 import "@lib/orpc-server";
@@ -44,7 +43,7 @@ export default async function Layout(props: LayoutProps) {
                     <NuqsAdapter>
                         <Theme>
                             <Header />
-                            <Main>{children}</Main>
+                            {children}
                             <Footer />
                             <Breakpoints mode="onResize" />
                         </Theme>

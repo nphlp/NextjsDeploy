@@ -18,7 +18,7 @@ export default async function FruitCardList(props: FruitCardListProps) {
     const { items } = props;
 
     return (
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
             {items.map((item) => (
                 <FruitCard key={item.id} fruit={item.Fruit} quantity={item.quantity} />
             ))}
@@ -34,7 +34,7 @@ export const FruitCardListSkeleton = async (props: FruitCardListSkeletonProps) =
     const { fruitCardCount = 2 } = props;
 
     return (
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
             {Array.from({ length: fruitCardCount }).map((_, index) => (
                 <FruitCardSkeleton key={index} />
             ))}

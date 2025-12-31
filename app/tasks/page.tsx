@@ -1,6 +1,7 @@
 import SearchFilter, { SearchFilterSkeleton } from "@comps/SHARED/filters/search-filter";
 import UpdatedAtFilter, { UpdatedAtFilterSkeleton } from "@comps/SHARED/filters/updated-at-filter";
 import InputAddTask, { InputAddTaskSkeleton } from "@comps/SHARED/optimistics/input-add-task";
+import Main from "@core/Main";
 import { getSession } from "@lib/auth-server";
 import oRPC from "@lib/orpc";
 import { redirect } from "next/navigation";
@@ -16,14 +17,14 @@ type PageProps = {
 
 export default async function Page(props: PageProps) {
     return (
-        <div className="w-full max-w-225 flex-1 space-y-4 px-4 py-4 sm:px-12">
+        <Main className="items-stretch justify-start">
             <h1 className="text-2xl font-bold">Ma liste de tâches 📝</h1>
             <section className="space-y-8">
                 <Suspense fallback={<TodoSkeleton />}>
                     <Todo {...props} />
                 </Suspense>
             </section>
-        </div>
+        </Main>
     );
 }
 

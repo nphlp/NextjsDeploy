@@ -1,4 +1,5 @@
 import Link from "@comps/atoms/button/link";
+import Main from "@core/Main";
 import { getSession } from "@lib/auth-server";
 import oRPC from "@lib/orpc";
 import { notFound, redirect } from "next/navigation";
@@ -18,15 +19,17 @@ type PageProps = {
 
 export default async function Page(props: PageProps) {
     return (
-        <div className="w-full max-w-[600px] space-y-6 px-4 py-4 sm:px-12">
-            <h1 className="text-2xl font-bold">Édition de la tâche 📝</h1>
-            <Suspense fallback={<TaskSkeleton />}>
-                <Task {...props} />
-            </Suspense>
-            <Link label="Retour" href="/tasks">
-                Retour
-            </Link>
-        </div>
+        <Main>
+            <div className="w-full max-w-120 space-y-6">
+                <h1 className="text-2xl font-bold">Édition de la tâche 📝</h1>
+                <Suspense fallback={<TaskSkeleton />}>
+                    <Task {...props} />
+                </Suspense>
+                <Link label="Retour" href="/tasks">
+                    Retour
+                </Link>
+            </div>
+        </Main>
     );
 }
 

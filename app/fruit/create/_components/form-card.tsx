@@ -10,14 +10,12 @@ export default async function FormCard() {
     if (!session) redirect("/login");
 
     return (
-        <div className="mt-8 flex w-full items-center justify-center">
-            <Card className="max-w-80">
-                <div className="space-y-2 text-center">
-                    <h3 className="text-xl font-semibold">Créer un fruit</h3>
-                    <p className="text-sm text-gray-500">Ajoutez un nouveau fruit à la liste.</p>
-                </div>
-                <CreateFruitForm />
-            </Card>
-        </div>
+        <Card className="max-w-80">
+            <div className="space-y-2 text-center">
+                <h3 className="text-xl font-semibold">Créer un fruit</h3>
+                <p className="text-sm text-gray-500">Ajoutez un nouveau fruit à la liste.</p>
+            </div>
+            <CreateFruitForm />
+        </Card>
     );
 }

@@ -6,6 +6,8 @@
 - Atoms, Molecules, Organisms
 - Skeletons
 
+- Supprimer les résidus de Shadcn -> ex: "-muted", "-border", etc
+
 - Centraliser les styles
 
 - useOtimistic et mutations

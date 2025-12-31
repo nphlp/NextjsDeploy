@@ -7,13 +7,13 @@ type MainProps = {
     children: ReactNode;
 };
 
-export default async function Main(props: MainProps) {
+export default function Main(props: MainProps) {
     const { className, children } = props;
 
     return (
         <main
             style={{ minHeight: `calc(100vh - ${HEADER_HEIGHT}rem)` }}
-            className={cn("flex flex-col items-center justify-center", className)}
+            className={cn("flex flex-col items-center justify-center gap-4", "mx-auto max-w-225 p-4 md:p-7", className)}
         >
             {children}
         </main>

@@ -1,6 +1,8 @@
 "use client";
 
+import Card from "@atoms/card";
 import Button from "@comps/atoms/button/button";
+import Main from "@core/Main";
 import { useEffect } from "react";
 
 type ErrorProps = {
@@ -17,12 +19,17 @@ export default function Error(props: ErrorProps) {
     }, [error]);
 
     return (
-        <div className="flex h-full items-center justify-center">
-            <div className="max-w-3/4 space-y-4 p-7">
-                <h2 className="text-2xl font-bold">Oups!</h2>
-                <div>{error.message}</div>
-                <Button label="Try Again" onClick={reset} />
+        <Main>
+            <div className="w-full max-w-150 space-y-4">
+                <div className="space-y-2">
+                    <h2 className="text-2xl font-bold">Oups!</h2>
+                    <p>Something went wrong. Please try again.</p>
+                </div>
+                <Card>{error.message}</Card>
+                <div className="flex justify-center">
+                    <Button label="Try Again" onClick={reset} />
+                </div>
             </div>
-        </div>
+        </Main>
     );
 }

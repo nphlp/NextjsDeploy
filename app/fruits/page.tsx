@@ -1,4 +1,5 @@
 import Link from "@comps/atoms/button/link";
+import Main from "@core/Main";
 import cn from "@lib/cn";
 import { Plus, ShoppingBasket } from "lucide-react";
 import { Suspense } from "react";
@@ -14,7 +15,7 @@ export default async function Page(props: PageProps) {
     const { take } = await searchParams;
 
     return (
-        <div className="w-full max-w-225 flex-1 space-y-4 px-4 py-4 sm:px-12">
+        <Main className="items-stretch">
             <div className={cn("flex flex-col gap-2", "xs:flex-row xs:items-center xs:justify-between")}>
                 <h1 className="text-2xl font-bold">Fruits</h1>
                 <div className="flex gap-2">
@@ -22,10 +23,11 @@ export default async function Page(props: PageProps) {
                     <BasketButton />
                 </div>
             </div>
+
             <Suspense fallback={<FruitsGridSkeleton />}>
                 <FruitsGrid take={take} />
             </Suspense>
-        </div>
+        </Main>
     );
 }
 
