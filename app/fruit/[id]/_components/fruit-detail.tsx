@@ -67,21 +67,30 @@ export const FruitDetailSkeleton = async () => {
     "use cache";
 
     return (
-        <Card className="@container h-full">
-            {/* Titre */}
-            <SkeletonText fontSize="lg" />
+        <div className="space-y-4">
+            <h1 className="flex items-center gap-2 text-2xl font-bold">
+                <Link label="Back to fruits" href="/fruits" className="text-2xl font-bold" noStyle>
+                    Fruits
+                </Link>
+                <ChevronRight className="size-4" />
+                <SkeletonText fontSize="2xl" width="80px" />
+            </h1>
+            <Card className="@container h-full">
+                {/* Titre */}
+                <SkeletonText fontSize="lg" />
 
-            {/* Description */}
-            <div className="flex-1">
-                <SkeletonText fontSize="sm" width="90%" />
-                <SkeletonText fontSize="sm" width="40%" className="@xs:hidden" />
-            </div>
+                {/* Description */}
+                <div className="flex-1">
+                    <SkeletonText fontSize="sm" width="90%" />
+                    <SkeletonText fontSize="sm" width="40%" className="@xs:hidden" />
+                </div>
 
-            {/* Présent dans X paniers */}
-            <SkeletonText fontSize="sm" width="150px" />
+                {/* Présent dans X paniers */}
+                <SkeletonText fontSize="sm" width="150px" />
 
-            {/* Ajouté le xx / xx / xxxx */}
-            <SkeletonText fontSize="xs" width="100px" />
-        </Card>
+                {/* Ajouté le xx / xx / xxxx */}
+                <SkeletonText fontSize="xs" width="100px" />
+            </Card>
+        </div>
     );
 };
