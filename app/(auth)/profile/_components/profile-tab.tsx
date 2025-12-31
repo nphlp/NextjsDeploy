@@ -1,75 +1,78 @@
-"use client";
-
-import { useToast } from "@atoms/toast";
-import Button from "@comps/atoms/button/button";
-import { SessionClient, sendVerificationEmail, useSession } from "@lib/auth-client";
-import { CircleCheck, CircleX, Mail } from "lucide-react";
-import { useState } from "react";
+import { Session, getSessionList } from "@lib/auth-server";
+import Solid from "@/solid/solid-fetch";
+import CurrentSession from "./current-session";
+import ProfileInfo from "./profile-info";
+import SessionManager, { SessionAndLocation } from "./sessionManager";
 
 type ProfileTabProps = {
-    session: NonNullable<SessionClient>;
+    session: NonNullable<Session>;
 };
 
-export default function ProfileTab(props: ProfileTabProps) {
-    const { session: serverSession } = props;
-    const { data: clientSession } = useSession();
-    const toast = useToast();
+export default async function ProfileTab(props: ProfileTabProps) {
+    const { session } = props;
 
-    // SSR session
-    const session = clientSession ?? serverSession;
+    const sessionList = await getSessionList();
 
-    const [isLoading, setIsLoading] = useState(false);
+    const sessionListWithoutCurrentSession = sessionList.filter(
+        (sessionFromList) => sessionFromList.token !== session.session.token,
+    );
 
-    const handleResend = async () => {
-        setIsLoading(true);
-
-        const { data } = await sendVerificationEmail({
-            email: session.user.email,
-        });
-
-        if (!data) {
-            toast.add({ title: "Erreur", description: "Impossible d'envoyer l'email de vérification.", type: "error" });
-            setIsLoading(false);
-            return;
-        }
-
-        toast.add({ title: "Email envoyé", description: "Vérifiez votre boîte de réception.", type: "success" });
-        setIsLoading(false);
-    };
+    const userAgent = session.session.userAgent ?? "";
+    const ipAddress = session.session.ipAddress ?? "";
+    const currentLocation = await Solid({ route: "/location", params: { ipAddress } });
 
     return (
-        <div>
-            <div className="mb-2">
-                <h2 className="text-lg font-bold">Profil</h2>
-                <p className="text-muted-foreground text-sm">Consulter vos informations personnelles.</p>
-            </div>
-            <div className="flex flex-row items-center gap-5">
-                <div className="flex w-full items-center justify-between gap-2">
-                    <div>
-                        <div className="text-md text-foreground font-bold">
-                            <span>{session.user.name}</span>
-                            <span> </span>
-                            <span>{session.user.lastname}</span>
-                        </div>
-                        <div className="text-muted-foreground line-clamp-1 flex flex-row items-center gap-2 text-sm">
-                            <div>{session.user.email}</div>
-                            <div>
-                                {session.user.emailVerified ? (
-                                    <CircleCheck className="size-4 stroke-green-500" />
-                                ) : (
-                                    <CircleX className="size-4 stroke-red-400" />
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                    {!session.user.emailVerified && (
-                        <Button label="Resend" colors="outline" onClick={handleResend} disabled={isLoading}>
-                            <span>Resend</span>
-                            <Mail className="size-4" />
-                        </Button>
-                    )}
+        <div className="space-y-6">
+            {/* Informations du profil */}
+            <section>
+                <div className="mb-2">
+                    <h2 className="text-lg font-bold">Profil</h2>
+                    <p className="text-muted-foreground text-sm">Consulter vos informations personnelles.</p>
                 </div>
-            </div>
+                <ProfileInfo session={session} />
+            </section>
+
+            {/* Sessions */}
+            <section>
+                <div className="mb-4">
+                    <h2 className="text-lg font-bold">Sessions</h2>
+                    <p className="text-muted-foreground text-sm">Gérer vos sessions actives.</p>
+                </div>
+                <div className="space-y-5">
+                    <CurrentSession userAgent={userAgent} location={currentLocation} />
+                    <OtherSessions sessionList={sessionListWithoutCurrentSession} />
+                </div>
+            </section>
         </div>
     );
 }
+
+type SessionList = Awaited<ReturnType<typeof getSessionList>>;
+
+type OtherSessionsProps = {
+    sessionList: SessionList;
+};
+
+const OtherSessions = async (props: OtherSessionsProps) => {
+    const { sessionList } = props;
+
+    const orderedSessionList = sessionList.sort(
+        (a, b) => new Date(b.expiresAt).getTime() - new Date(a.expiresAt).getTime(),
+    );
+
+    const location = await Promise.all(
+        orderedSessionList.map(({ ipAddress }) =>
+            Solid({
+                route: "/location",
+                params: { ipAddress: ipAddress ?? "" },
+            }),
+        ),
+    );
+
+    const sessionAndLocationList: SessionAndLocation[] = orderedSessionList.map((session, index) => ({
+        session,
+        location: location[index],
+    }));
+
+    return <SessionManager sessionAndLocationList={sessionAndLocationList} />;
+};

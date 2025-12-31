@@ -1,12 +1,12 @@
 import { Card, CardContent } from "@comps/atoms/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@comps/atoms/tabs";
+import Tabs, { Indicator, List, Panel, Tab } from "@comps/atoms/tabs";
+import Main from "@core/Main";
 import { getSession } from "@lib/auth-server";
 import { unauthorized } from "next/navigation";
 import { Suspense } from "react";
 import EditionTab from "./_components/edition-tab";
 import EmailConfirmModal from "./_components/email-confirm-modal";
 import ProfileTab from "./_components/profile-tab";
-import SessionTab from "./_components/session-tab";
 
 export default async function Page() {
     return (
@@ -23,28 +23,25 @@ const SuspendedPage = async () => {
     if (!session) unauthorized();
 
     return (
-        <div className="w-full max-w-[400px] flex-1 p-4">
+        <Main className="justify-start">
             <Card className="w-full">
                 <CardContent>
                     <Tabs defaultValue="profile" className="w-full">
-                        <TabsList className="mb-4 grid w-full grid-cols-3">
-                            <TabsTrigger value="profile">Profil</TabsTrigger>
-                            <TabsTrigger value="sessions">Sessions</TabsTrigger>
-                            <TabsTrigger value="edition">Édition</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="profile" className="space-y-4">
+                        <List className="mb-4">
+                            <Tab value="profile">Profil</Tab>
+                            <Tab value="edition">Édition</Tab>
+                            <Indicator />
+                        </List>
+                        <Panel value="profile">
                             <ProfileTab session={session} />
-                        </TabsContent>
-                        <TabsContent value="sessions" className="space-y-4">
-                            <SessionTab session={session} />
-                        </TabsContent>
-                        <TabsContent value="edition" className="space-y-4">
+                        </Panel>
+                        <Panel value="edition">
                             <EditionTab session={session} />
-                        </TabsContent>
+                        </Panel>
                     </Tabs>
                 </CardContent>
             </Card>
             <EmailConfirmModal session={session} />
-        </div>
+        </Main>
     );
 };

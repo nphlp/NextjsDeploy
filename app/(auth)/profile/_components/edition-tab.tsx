@@ -104,7 +104,9 @@ const UpdateLastnameForm = (props: UpdateFormProps) => {
                         disabled={isSubmitting}
                     />
                 </Field>
-                <Button type="submit" label="Valider" loading={isSubmitting} className="w-full" />
+                <div className="flex justify-center">
+                    <Button type="submit" label="Valider" loading={isSubmitting} className="w-full md:w-fit" />
+                </div>
             </Form>
         </div>
     );
@@ -151,7 +153,9 @@ const UpdateFirstnameForm = (props: UpdateFormProps) => {
                         disabled={isSubmitting}
                     />
                 </Field>
-                <Button type="submit" label="Valider" loading={isSubmitting} className="w-full" />
+                <div className="flex justify-center">
+                    <Button type="submit" label="Valider" loading={isSubmitting} className="w-full md:w-fit" />
+                </div>
             </Form>
         </div>
     );
@@ -214,7 +218,9 @@ const UpdatePasswordForm = () => {
                         disabled={isSubmitting}
                     />
                 </Field>
-                <Button type="submit" label="Valider" loading={isSubmitting} className="w-full" />
+                <div className="flex justify-center">
+                    <Button type="submit" label="Valider" loading={isSubmitting} className="w-full md:w-fit" />
+                </div>
             </Form>
         </div>
     );

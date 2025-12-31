@@ -91,11 +91,11 @@ const DisplaySessionList = () => {
                 </AlertDialog>
             </div>
             {/* Other sessions list */}
-            <div className="border-border bg-card space-y-2 rounded-lg border px-5 py-3">
+            <div className="bg-card space-y-2 rounded-lg border border-gray-200 px-5 py-3">
                 {data.length ? (
                     data.map((sessionAndLocation, index) => (
                         <Fragment key={index}>
-                            {index > 0 && <hr className="border-border" />}
+                            {index > 0 && <hr className="border-gray-200" />}
                             <SessionItem sessionAndLocation={sessionAndLocation} />
                         </Fragment>
                     ))
@@ -170,7 +170,7 @@ const SessionItem = (props: SessionItemProps) => {
                         <AlertDialogTitle className="text-center">Déconnexion</AlertDialogTitle>
                         <AlertDialogDescription className="flex flex-col items-center gap-4">
                             <div className="flex flex-row justify-center">
-                                <div className="border-border w-fit rounded-lg border px-7 py-2 text-center">
+                                <div className="w-fit rounded-lg border border-gray-200 px-7 py-2 text-center">
                                     <div className="text-xs">Dernière activité le</div>
                                     <div className="text-sm font-semibold">
                                         {formattedDate} à {formattedTime}
