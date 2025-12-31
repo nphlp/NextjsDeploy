@@ -15,35 +15,7 @@ const structure = cn(
 const buttonVariants = cva(structure, {
     variants: {
         colors: {
-            primary: cn(
-                // Border
-                "border border-primary",
-                // Border (hover)
-                "hover:border-primary-hover",
-                // Border (active)
-                "active:border-primary-active",
-                // Border (disabled)
-                "data-disabled:border-primary-active",
-                "data-disabled:hover:border-primary-active",
-                "data-disabled:active:border-primary-active",
-
-                // Background
-                "bg-primary",
-                // Background (hover)
-                "hover:bg-primary-hover",
-                // Background (active)
-                "active:bg-primary-active",
-                // Background (disabled)
-                "data-disabled:bg-primary-active",
-                "data-disabled:hover:bg-primary-active",
-                "data-disabled:active:bg-primary-active",
-
-                // Text
-                "text-background",
-                // Text (disabled)
-                "data-disabled:text-gray-300",
-            ),
-            foreground: cn(
+            default: cn(
                 // Border
                 "border border-gray-950",
                 // Border (hover)
@@ -127,6 +99,34 @@ const buttonVariants = cva(structure, {
                 // Text (disabled)
                 "data-disabled:text-gray-400",
             ),
+            primary: cn(
+                // Border
+                "border border-primary",
+                // Border (hover)
+                "hover:border-primary-hover",
+                // Border (active)
+                "active:border-primary-active",
+                // Border (disabled)
+                "data-disabled:border-primary-active",
+                "data-disabled:hover:border-primary-active",
+                "data-disabled:active:border-primary-active",
+
+                // Background
+                "bg-primary",
+                // Background (hover)
+                "hover:bg-primary-hover",
+                // Background (active)
+                "active:bg-primary-active",
+                // Background (disabled)
+                "data-disabled:bg-primary-active",
+                "data-disabled:hover:bg-primary-active",
+                "data-disabled:active:bg-primary-active",
+
+                // Text
+                "text-background",
+                // Text (disabled)
+                "data-disabled:text-gray-300",
+            ),
             destructive: cn(
                 // Border
                 "border border-destructive",
@@ -180,8 +180,9 @@ const buttonVariants = cva(structure, {
             false: "rounded-none",
         },
         padding: {
-            text: "min-h-10 px-3.5",
-            smallText: "min-h-8 px-2",
+            md: "min-h-10 px-3.5 py-0.5",
+            sm: "min-h-8 px-2 py-0.5",
+            xs: "min-h-6 px-1",
             icon: "size-10",
             false: "p-0",
         },

@@ -35,7 +35,7 @@ const AddFruitButton = () => {
             label="Create a fruit"
             href="/fruit/create"
             colors="outline"
-            padding="smallText"
+            padding="sm"
             className="max-2xs:text-xs max-2xs:py-1"
         >
             <Plus className="size-4 flex-none" />
@@ -46,13 +46,7 @@ const AddFruitButton = () => {
 
 const BasketButton = () => {
     return (
-        <Link
-            label="My basket"
-            href="/baskets"
-            colors="outline"
-            padding="smallText"
-            className="max-2xs:text-xs max-2xs:py-1"
-        >
+        <Link label="My basket" href="/baskets" colors="outline" padding="sm" className="max-2xs:text-xs max-2xs:py-1">
             <ShoppingBasket className="size-4 flex-none" />
             Mon panier
         </Link>

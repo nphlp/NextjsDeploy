@@ -1,22 +1,23 @@
 import Button from "@comps/atoms/button/button";
 import { Label } from "@comps/atoms/filed/atoms";
 import Field from "@comps/atoms/filed/field";
+import { Bell } from "lucide-react";
 
 export default function Page() {
     return (
         <div className="space-y-6 p-7">
             <div className="grid grid-cols-3 gap-4">
                 <Field>
-                    <Label>Foreground</Label>
-                    <Button label="Button" colors="foreground" />
+                    <Label>Default</Label>
+                    <Button label="Button" colors="default" />
                 </Field>
                 <Field>
-                    <Label>Foreground</Label>
-                    <Button label="Button" colors="foreground" disabled />
+                    <Label>Default</Label>
+                    <Button label="Button" colors="default" disabled />
                 </Field>
                 <Field>
-                    <Label>Foreground</Label>
-                    <Button label="Button" colors="foreground" loading />
+                    <Label>Default</Label>
+                    <Button label="Button" colors="default" loading />
                 </Field>
 
                 <Field>
@@ -101,15 +102,33 @@ export default function Page() {
                     <Label>No outline</Label>
                     <Button label="Button" noOutline />
                 </Field>
-
                 <Field>
                     <Label>No rounded</Label>
                     <Button label="Button" rounded={false} />
                 </Field>
-
                 <Field>
                     <Label>No padding</Label>
                     <Button label="Button" padding={false} />
+                </Field>
+
+                <Field>
+                    <Label>Padding XS</Label>
+                    <Button label="Button" padding="xs" />
+                </Field>
+                <Field>
+                    <Label>Padding SM</Label>
+                    <Button label="Button" padding="sm" />
+                </Field>
+                <Field>
+                    <Label>Padding MD</Label>
+                    <Button label="Button" padding="md" />
+                </Field>
+
+                <Field>
+                    <Label>Padding icon</Label>
+                    <Button label="Button" padding="icon">
+                        <Bell className="size-5" />
+                    </Button>
                 </Field>
             </div>
         </div>
