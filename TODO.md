@@ -16,6 +16,10 @@
 - Organisation des fichiers
 - Tester toutes les pages, faire un plan
 
+## Feature
+
+- Si redirection pour loging -> redirection après login vers la page initiale
+
 ## Redis cache handler
 
 ## Tests automatissé

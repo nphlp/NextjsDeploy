@@ -11,8 +11,27 @@ type HeaderProps = {
 };
 
 export default async function Header(props: HeaderProps) {
+    const { className } = props;
+
     return (
-        <Suspense fallback={<header style={{ height: `${HEADER_HEIGHT}rem` }} className="w-full" />}>
+        <Suspense
+            fallback={
+                <header
+                    style={{ height: `${HEADER_HEIGHT}rem` }}
+                    className={cn(
+                        "bg-background",
+                        "sticky inset-x-0 top-0 z-10",
+                        "flex items-center justify-end gap-4",
+                        "px-5 py-3",
+                        className,
+                    )}
+                >
+                    <MenuNavigation serverSession={null} />
+                    <MenuProfile serverSession={null} />
+                    <MenuTheme />
+                </header>
+            }
+        >
             <SuspendedHeader {...props} />
         </Suspense>
     );
