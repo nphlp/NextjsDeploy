@@ -180,8 +180,8 @@ const buttonVariants = cva(structure, {
             false: "rounded-none",
         },
         padding: {
-            text: "h-10 px-3.5",
-            smallText: "h-8 px-2",
+            text: "min-h-10 px-3.5",
+            smallText: "min-h-8 px-2",
             icon: "size-10",
             false: "p-0",
         },
