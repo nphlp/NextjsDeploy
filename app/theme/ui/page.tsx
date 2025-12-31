@@ -1,5 +1,4 @@
 import Button from "@comps/atoms/button/button";
-import { Label } from "@comps/atoms/filed/atoms";
 import Field from "@comps/atoms/filed/field";
 import { Bell } from "lucide-react";
 
@@ -7,125 +6,97 @@ export default function Page() {
     return (
         <div className="space-y-6 p-7">
             <div className="grid grid-cols-3 gap-4">
-                <Field>
-                    <Label>Default</Label>
+                <Field label="Default">
                     <Button label="Button" colors="default" />
                 </Field>
-                <Field>
-                    <Label>Default</Label>
+                <Field label="Default">
                     <Button label="Button" colors="default" disabled />
                 </Field>
-                <Field>
-                    <Label>Default</Label>
+                <Field label="Default">
                     <Button label="Button" colors="default" loading />
                 </Field>
 
-                <Field>
-                    <Label>Outline</Label>
+                <Field label="Outline">
                     <Button label="Button" colors="outline" />
                 </Field>
-                <Field>
-                    <Label>Outline</Label>
+                <Field label="Outline">
                     <Button label="Button" colors="outline" disabled />
                 </Field>
-                <Field>
-                    <Label>Outline</Label>
+                <Field label="Outline">
                     <Button label="Button" colors="outline" loading />
                 </Field>
 
-                <Field>
-                    <Label>Ghost</Label>
+                <Field label="Ghost">
                     <Button label="Button" colors="ghost" />
                 </Field>
-                <Field>
-                    <Label>Ghost</Label>
+                <Field label="Ghost">
                     <Button label="Button" colors="ghost" disabled />
                 </Field>
-                <Field>
-                    <Label>Ghost</Label>
+                <Field label="Ghost">
                     <Button label="Button" colors="ghost" loading />
                 </Field>
 
-                <Field>
-                    <Label>Primary</Label>
+                <Field label="Primary">
                     <Button label="Button" colors="primary" />
                 </Field>
-                <Field>
-                    <Label>Primary</Label>
+                <Field label="Primary">
                     <Button label="Button" colors="primary" disabled />
                 </Field>
-                <Field>
-                    <Label>Primary</Label>
+                <Field label="Primary">
                     <Button label="Button" colors="primary" loading />
                 </Field>
 
-                <Field>
-                    <Label>Destructive</Label>
+                <Field label="Destructive">
                     <Button label="Button" colors="destructive" />
                 </Field>
-                <Field>
-                    <Label>Destructive</Label>
+                <Field label="Destructive">
                     <Button label="Button" colors="destructive" disabled />
                 </Field>
-                <Field>
-                    <Label>Destructive</Label>
+                <Field label="Destructive">
                     <Button label="Button" colors="destructive" loading />
                 </Field>
 
-                <Field>
-                    <Label>Link</Label>
+                <Field label="Link">
                     <Button label="Button" colors="link" />
                 </Field>
-                <Field>
-                    <Label>Link</Label>
+                <Field label="Link">
                     <Button label="Button" colors="link" disabled />
                 </Field>
-                <Field>
-                    <Label>Link</Label>
+                <Field label="Link">
                     <Button label="Button" colors="link" loading />
                 </Field>
 
-                <Field>
-                    <Label>No style</Label>
+                <Field label="No">
                     <Button label="Button" noStyle />
                 </Field>
-                <Field>
-                    <Label>No style</Label>
+                <Field label="No">
                     <Button label="Button" noStyle disabled />
                 </Field>
-                <Field>
-                    <Label>No style</Label>
+                <Field label="No">
                     <Button label="Button" noStyle loading />
                 </Field>
 
-                <Field>
-                    <Label>No outline</Label>
+                <Field label="No">
                     <Button label="Button" noOutline />
                 </Field>
-                <Field>
-                    <Label>No rounded</Label>
+                <Field label="No">
                     <Button label="Button" rounded={false} />
                 </Field>
-                <Field>
-                    <Label>No padding</Label>
+                <Field label="No">
                     <Button label="Button" padding={false} />
                 </Field>
 
-                <Field>
-                    <Label>Padding XS</Label>
+                <Field label="Padding">
                     <Button label="Button" padding="xs" />
                 </Field>
-                <Field>
-                    <Label>Padding SM</Label>
+                <Field label="Padding">
                     <Button label="Button" padding="sm" />
                 </Field>
-                <Field>
-                    <Label>Padding MD</Label>
+                <Field label="Padding">
                     <Button label="Button" padding="md" />
                 </Field>
 
-                <Field>
-                    <Label>Padding icon</Label>
+                <Field label="Padding">
                     <Button label="Button" padding="icon">
                         <Bell className="size-5" />
                     </Button>
