@@ -5,7 +5,7 @@ import Menu from "@comps/atoms/menu/menu";
 import { useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
 import cn from "@lib/cn";
-import { Apple, Code, Home, ListTodo, LucideIcon, Menu as MenuIcon, Palette } from "lucide-react";
+import { Apple, Code, Combine, Copy, Home, ListTodo, LucideIcon, Menu as MenuIcon, Palette } from "lucide-react";
 import { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -24,10 +24,10 @@ type LinkType = {
 const links: LinkType[] = [
     { label: "Home", href: "/", icon: Home },
     { label: "Fruits", href: "/fruits", icon: Apple },
-    { label: "UI", href: "/theme/ui", icon: Palette },
-    { label: "Skeleton", href: "/theme/skeleton", icon: Palette },
-    { label: "Colors", href: "/theme/colors", icon: Palette },
     { label: "Tasks", href: "/tasks", icon: ListTodo, sessionRequired: true },
+    { label: "UI", href: "/theme/ui", icon: Combine },
+    { label: "Skeleton", href: "/theme/skeleton", icon: Copy },
+    { label: "Colors", href: "/theme/colors", icon: Palette },
     { label: "API", href: "/scalar", icon: Code, developmentOnly: true },
 ];
 
