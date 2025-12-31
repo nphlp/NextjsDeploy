@@ -36,7 +36,7 @@ const AddFruitButton = () => {
             href="/fruit/create"
             colors="outline"
             padding="smallText"
-            className="max-2xs:text-xs max-2xs:leading-4 max-2xs:py-1"
+            className="max-2xs:text-xs max-2xs:py-1"
         >
             <Plus className="size-4 flex-none" />
             Ajouter un fruit
@@ -51,7 +51,7 @@ const BasketButton = () => {
             href="/baskets"
             colors="outline"
             padding="smallText"
-            className="max-2xs:text-xs max-2xs:leading-4 max-2xs:py-1"
+            className="max-2xs:text-xs max-2xs:py-1"
         >
             <ShoppingBasket className="size-4 flex-none" />
             Mon panier

@@ -7,7 +7,7 @@ const structure = cn(
     // Cursor
     "cursor-pointer data-disabled:cursor-default",
     // Text
-    "font-inherit text-base leading-6 font-medium select-none",
+    "font-inherit text-base font-medium select-none",
     // Transition
     "transition-all duration-100 ease-in-out",
 );
