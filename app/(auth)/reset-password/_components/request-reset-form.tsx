@@ -1,7 +1,7 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Field, { Error, Label } from "@atoms/filed";
+import Field from "@atoms/filed";
 import Form from "@atoms/form";
 import Input from "@atoms/input/input";
 import { useToast } from "@atoms/toast";
@@ -54,8 +54,7 @@ export default function RequestResetForm() {
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
             {/* Email */}
-            <Field invalid={!!errors.email}>
-                <Label>Email</Label>
+            <Field label="Email" error={errors.email?.message}>
                 <Input
                     {...register("email")}
                     type="email"
@@ -64,13 +63,12 @@ export default function RequestResetForm() {
                     autoFocus
                     disabled={isSubmitting || emailSent}
                 />
-                <Error match>{errors.email?.message}</Error>
             </Field>
 
             {/* Login link */}
-            <div className="flex justify-center gap-2 text-sm text-gray-500">
-                <p>Mot de passe retrouvé ?</p>
-                <Link href="/login" label="Se connecter" className="text-sm hover:underline" noStyle />
+            <div className="space-x-2 text-center text-sm text-gray-500">
+                <span>Mot de passe retrouvé ?</span>
+                <Link href="/login" label="Se connecter" className="inline text-sm hover:underline" noStyle />
             </div>
 
             {/* Submit button */}

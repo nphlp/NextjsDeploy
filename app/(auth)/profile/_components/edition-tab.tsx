@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@atoms/button";
-import Field, { Error } from "@atoms/filed";
+import Field from "@atoms/filed";
 import Form from "@atoms/form";
 import Input from "@atoms/input/input";
 import InputPassword from "@atoms/input/input-password";
@@ -96,14 +96,13 @@ const UpdateLastnameForm = (props: UpdateFormProps) => {
         <div>
             <h3 className="mb-2 text-sm font-bold text-gray-500">Modifier mon nom</h3>
             <Form onSubmit={handleSubmit(onSubmit)} className="gap-2">
-                <Field invalid={!!errors.lastname}>
+                <Field label="Nom de famille" error={errors.lastname?.message}>
                     <Input
                         {...register("lastname")}
                         placeholder={session.user.lastname ?? "Votre nom"}
                         autoComplete="family-name"
                         disabled={isSubmitting}
                     />
-                    <Error match>{errors.lastname?.message}</Error>
                 </Field>
                 <Button type="submit" label="Valider" loading={isSubmitting} className="w-full" />
             </Form>
@@ -144,14 +143,13 @@ const UpdateFirstnameForm = (props: UpdateFormProps) => {
         <div>
             <h3 className="mb-2 text-sm font-bold text-gray-500">Modifier mon prénom</h3>
             <Form onSubmit={handleSubmit(onSubmit)} className="gap-2">
-                <Field invalid={!!errors.name}>
+                <Field label="Prénom" error={errors.name?.message}>
                     <Input
                         {...register("name")}
                         placeholder={session.user.name}
                         autoComplete="given-name"
                         disabled={isSubmitting}
                     />
-                    <Error match>{errors.name?.message}</Error>
                 </Field>
                 <Button type="submit" label="Valider" loading={isSubmitting} className="w-full" />
             </Form>
@@ -200,23 +198,21 @@ const UpdatePasswordForm = () => {
         <div>
             <h3 className="mb-2 text-sm font-bold text-gray-500">Modifier mon mot de passe</h3>
             <Form onSubmit={handleSubmit(onSubmit)} className="gap-4">
-                <Field invalid={!!errors.currentPassword}>
+                <Field label="Mot de passe actuel" error={errors.currentPassword?.message}>
                     <InputPassword
                         {...register("currentPassword")}
                         placeholder="Mot de passe actuel"
                         autoComplete="current-password"
                         disabled={isSubmitting}
                     />
-                    <Error match>{errors.currentPassword?.message}</Error>
                 </Field>
-                <Field invalid={!!errors.newPassword}>
+                <Field label="Nouveau mot de passe" error={errors.newPassword?.message}>
                     <InputPassword
                         {...register("newPassword")}
                         placeholder="Nouveau mot de passe"
                         autoComplete="new-password"
                         disabled={isSubmitting}
                     />
-                    <Error match>{errors.newPassword?.message}</Error>
                 </Field>
                 <Button type="submit" label="Valider" loading={isSubmitting} className="w-full" />
             </Form>

@@ -1,7 +1,7 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Field, { Error, Label } from "@atoms/filed";
+import Field from "@atoms/filed";
 import Form from "@atoms/form";
 import Input from "@atoms/input/input";
 import InputPassword from "@atoms/input/input-password";
@@ -50,8 +50,7 @@ export default function LoginForm() {
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
             {/* Email */}
-            <Field invalid={!!errors.email}>
-                <Label>Email</Label>
+            <Field label="Email" error={errors.email?.message}>
                 <Input
                     {...register("email")}
                     type="email"
@@ -60,33 +59,32 @@ export default function LoginForm() {
                     autoFocus
                     disabled={isSubmitting}
                 />
-                <Error match>{errors.email?.message}</Error>
             </Field>
 
             {/* Password */}
-            <Field invalid={!!errors.password}>
-                <Label>Mot de passe</Label>
+            <Field label="Mot de passe" error={errors.password?.message}>
                 <InputPassword
                     {...register("password")}
                     placeholder="Votre mot de passe"
                     autoComplete="current-password"
                     disabled={isSubmitting}
                 />
-                <Error match>{errors.password?.message}</Error>
-                <div className="flex w-full justify-end">
-                    <Link
-                        href="/reset-password"
-                        label="Mot de passe oublié ?"
-                        className="text-xs text-gray-500 hover:underline"
-                        noStyle
-                    />
-                </div>
             </Field>
 
+            {/* Forgot password link */}
+            <div className="flex w-full justify-end">
+                <Link
+                    href="/reset-password"
+                    label="Mot de passe oublié ?"
+                    className="text-xs text-gray-500 hover:underline"
+                    noStyle
+                />
+            </div>
+
             {/* Register link */}
-            <div className="flex justify-center gap-2 text-sm text-gray-500">
-                <p>Pas encore de compte ?</p>
-                <Link href="/register" label="S'inscrire" className="text-sm hover:underline" noStyle />
+            <div className="space-x-2 text-center text-sm text-gray-500">
+                <span>Pas encore de compte ?</span>
+                <Link href="/register" label="S'inscrire" className="inline text-sm hover:underline" noStyle />
             </div>
 
             {/* Submit button */}

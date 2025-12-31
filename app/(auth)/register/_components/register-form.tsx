@@ -1,7 +1,7 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Field, { Error, Label } from "@atoms/filed";
+import Field from "@atoms/filed";
 import Form from "@atoms/form";
 import Input from "@atoms/input/input";
 import InputPassword from "@atoms/input/input-password";
@@ -63,8 +63,7 @@ export default function RegisterForm() {
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
             {/* Firstname */}
-            <Field invalid={!!errors.firstname}>
-                <Label>Prénom</Label>
+            <Field label="Prénom" error={errors.firstname?.message}>
                 <Input
                     {...register("firstname")}
                     placeholder="Jean"
@@ -72,24 +71,20 @@ export default function RegisterForm() {
                     autoFocus
                     disabled={isSubmitting}
                 />
-                <Error match>{errors.firstname?.message}</Error>
             </Field>
 
             {/* Lastname */}
-            <Field invalid={!!errors.lastname}>
-                <Label>Nom</Label>
+            <Field label="Nom" error={errors.lastname?.message}>
                 <Input
                     {...register("lastname")}
                     placeholder="Dupont"
                     autoComplete="family-name"
                     disabled={isSubmitting}
                 />
-                <Error match>{errors.lastname?.message}</Error>
             </Field>
 
             {/* Email */}
-            <Field invalid={!!errors.email}>
-                <Label>Email</Label>
+            <Field label="Email" error={errors.email?.message}>
                 <Input
                     {...register("email")}
                     type="email"
@@ -97,25 +92,22 @@ export default function RegisterForm() {
                     autoComplete="email"
                     disabled={isSubmitting}
                 />
-                <Error match>{errors.email?.message}</Error>
             </Field>
 
             {/* Password */}
-            <Field invalid={!!errors.password}>
-                <Label>Mot de passe</Label>
+            <Field label="Mot de passe" error={errors.password?.message}>
                 <InputPassword
                     {...register("password")}
                     placeholder="Minimum 8 caractères"
                     autoComplete="new-password"
                     disabled={isSubmitting}
                 />
-                <Error match>{errors.password?.message}</Error>
             </Field>
 
             {/* Login link */}
-            <div className="flex justify-center gap-2 text-sm text-gray-500">
-                <p>Déjà un compte ?</p>
-                <Link href="/login" label="Se connecter" className="text-sm hover:underline" noStyle />
+            <div className="space-x-2 text-center text-sm text-gray-500">
+                <span>Déjà un compte ?</span>
+                <Link href="/login" label="Se connecter" className="inline text-sm hover:underline" noStyle />
             </div>
 
             {/* Submit button */}

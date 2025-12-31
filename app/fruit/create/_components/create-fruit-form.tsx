@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@atoms/button";
-import Field, { Description, Error, Label } from "@atoms/filed";
+import Field from "@atoms/filed";
 import Form from "@atoms/form";
 import Input from "@atoms/input/input";
 import TextArea from "@atoms/input/text-area";
@@ -56,8 +56,7 @@ export default function CreateFruitForm() {
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
             {/* Name */}
-            <Field invalid={!!errors.name}>
-                <Label>Nom du fruit</Label>
+            <Field label="Nom du fruit" description="Entrer le nom du fruit" error={errors.name?.message}>
                 <Input
                     {...register("name")}
                     placeholder="Mangue"
@@ -65,21 +64,20 @@ export default function CreateFruitForm() {
                     autoComplete="off"
                     autoFocus
                 />
-                <Description>Entrer le nom du fruit</Description>
-                <Error match>{errors.name?.message}</Error>
             </Field>
 
             {/* Description */}
-            <Field invalid={!!errors.description}>
-                <Label>Description du fruit</Label>
+            <Field
+                label="Description du fruit"
+                description="Entrer une courte description pour le fruit"
+                error={errors.description?.message}
+            >
                 <TextArea
                     {...register("description")}
                     placeholder="Un fruit tropical sucré et juteux."
                     disabled={isSubmitting}
                     autoComplete="off"
                 />
-                <Description>Entrer une courte description pour le fruit</Description>
-                <Error match>{errors.description?.message}</Error>
             </Field>
 
             {/* Submit button */}

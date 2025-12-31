@@ -5,26 +5,34 @@ import { ReactNode } from "react";
 import { Control, Description, Error, Label, Root } from "./atoms";
 
 type FieldProps = {
+    label: string;
+    description?: string;
+    error?: string;
     className?: string;
     children?: ReactNode;
-} & FieldRootProps;
+} & Omit<FieldRootProps, "invalid">;
 
 export default function Field(props: FieldProps) {
-    const { className, children, ...fieldProps } = props;
+    const { className, children, label, description, error, ...fieldProps } = props;
 
-    if (children)
+    const hasError = !!error;
+
+    if (children) {
         return (
-            <Root className={className} {...fieldProps}>
+            <Root className={className} invalid={hasError} {...fieldProps}>
+                <Label>{label}</Label>
                 {children}
+                {hasError ? <Error match>{error}</Error> : description && <Description>{description}</Description>}
             </Root>
         );
+    }
 
     return (
         <Root>
             <Label>Label</Label>
             <Control />
-            <Error />
             <Description>Veuillez remplir ce champ</Description>
+            <Error>Erreur</Error>
         </Root>
     );
 }
