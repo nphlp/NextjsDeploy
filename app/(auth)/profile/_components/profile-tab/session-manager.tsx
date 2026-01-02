@@ -1,16 +1,7 @@
 "use client";
 
 import { LocationResponse } from "@app/api/location/route";
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@comps/atoms/alert-dialog";
+import AlertDialog, { Backdrop, Close, Description, Popup, Portal, Title } from "@comps/atoms/alert-dialog";
 import Button from "@comps/atoms/button/button";
 import { revokeOtherSessions, revokeSession } from "@lib/auth-client";
 import { SessionList } from "@lib/auth-server";
@@ -69,25 +60,25 @@ const DisplaySessionList = () => {
                 ) : null}
                 {/* Revoke other sessions dialog */}
                 <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Déconnexion globale</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                Souhaitez-vous vraiment déconnecter toutes vos autres sessions ?
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>Annuler</AlertDialogCancel>
-                            <AlertDialogAction
-                                onClick={() => {
-                                    revokeOtherSessions();
-                                    setData([]);
-                                }}
-                            >
-                                Déconnecter
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
+                    <Portal>
+                        <Backdrop />
+                        <Popup>
+                            <Title>Déconnexion globale</Title>
+                            <Description>Souhaitez-vous vraiment déconnecter toutes vos autres sessions ?</Description>
+                            <div className="flex justify-end gap-4">
+                                <Close>Annuler</Close>
+                                <Close
+                                    className="text-destructive"
+                                    onClick={() => {
+                                        revokeOtherSessions();
+                                        setData([]);
+                                    }}
+                                >
+                                    Déconnecter
+                                </Close>
+                            </div>
+                        </Popup>
+                    </Portal>
                 </AlertDialog>
             </div>
             {/* Other sessions list */}
@@ -165,10 +156,11 @@ const SessionItem = (props: SessionItemProps) => {
             </Button>
             {/* Revoke this session dialog */}
             <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle className="text-center">Déconnexion</AlertDialogTitle>
-                        <AlertDialogDescription className="flex flex-col items-center gap-4">
+                <Portal>
+                    <Backdrop />
+                    <Popup>
+                        <Title className="text-center">Déconnexion</Title>
+                        <Description className="flex flex-col items-center gap-4">
                             <div className="flex flex-row justify-center">
                                 <div className="w-fit rounded-lg border border-gray-200 px-7 py-2 text-center">
                                     <div className="text-xs">Dernière activité le</div>
@@ -178,22 +170,25 @@ const SessionItem = (props: SessionItemProps) => {
                                 </div>
                             </div>
                             <div className="text-sm">Souhaitez-vous vraiment déconnecter cette session ?</div>
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Annuler</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={() => {
-                                revokeSession({ token: session.token });
-                                setData((prevData: SessionAndLocation[]) =>
-                                    prevData.filter((item: SessionAndLocation) => item.session.token !== session.token),
-                                );
-                            }}
-                        >
-                            Déconnecter
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
+                        </Description>
+                        <div className="flex justify-end gap-4">
+                            <Close>Annuler</Close>
+                            <Close
+                                className="text-destructive"
+                                onClick={() => {
+                                    revokeSession({ token: session.token });
+                                    setData((prevData: SessionAndLocation[]) =>
+                                        prevData.filter(
+                                            (item: SessionAndLocation) => item.session.token !== session.token,
+                                        ),
+                                    );
+                                }}
+                            >
+                                Déconnecter
+                            </Close>
+                        </div>
+                    </Popup>
+                </Portal>
             </AlertDialog>
         </div>
     );

@@ -4,7 +4,7 @@ import { LocationResponse } from "@app/api/location/route";
 import dynamic from "next/dynamic";
 import { getBrowser, getOs, locationString } from "./utils";
 
-const LocationMap = dynamic(() => import("./locationMap"), { ssr: false });
+const LocationMap = dynamic(() => import("./location-map"), { ssr: false });
 
 type CurrentSessionProps = {
     userAgent: string;

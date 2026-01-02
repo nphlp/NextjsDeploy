@@ -2,23 +2,22 @@
 
 import { Tabs as TabsBaseUI } from "@base-ui/react/tabs";
 import cn from "@lib/cn";
-import { ReactNode } from "react";
+import { ComponentProps, ReactNode } from "react";
 
-export const Root = (props: {
-    defaultValue?: string;
-    value?: string;
-    onValueChange?: (value: string) => void;
-    className?: string;
-    children: ReactNode;
-}) => {
-    const { defaultValue, value, onValueChange, className, children } = props;
+export type TabsProps = { children?: ReactNode } & ComponentProps<typeof TabsBaseUI.Root>;
+
+export const Root = (props: TabsProps) => {
+    const { className, children, ...otherProps } = props;
 
     return (
         <TabsBaseUI.Root
-            defaultValue={defaultValue}
-            value={value}
-            onValueChange={(v) => onValueChange?.(v as string)}
-            className={className}
+            className={cn(
+                // Border
+                "rounded-md border border-gray-200",
+                // Overrides
+                className,
+            )}
+            {...otherProps}
         >
             {children}
         </TabsBaseUI.Root>
@@ -60,11 +59,9 @@ export const Tab = (props: { value: string; disabled?: boolean; className?: stri
                 "focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2",
                 // Text
                 "text-sm font-medium break-keep whitespace-nowrap select-none",
-                "text-muted-foreground",
-                "hover:text-foreground",
-                "data-selected:text-foreground",
-                // State
-                "disabled:pointer-events-none disabled:opacity-50",
+                "text-gray-600",
+                "hover:text-gray-900",
+                "data-active:text-gray-900",
                 // Overrides
                 className,
             )}
@@ -105,7 +102,7 @@ export const Panel = (props: { value: string; className?: string; children: Reac
             value={value}
             className={cn(
                 // Layout
-                "relative mt-4",
+                "relative",
                 // Border
                 "outline-outline -outline-offset-1",
                 "focus-visible:rounded-md focus-visible:outline-2",

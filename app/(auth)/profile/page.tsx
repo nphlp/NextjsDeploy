@@ -1,6 +1,5 @@
-import { Card, CardContent } from "@comps/atoms/card";
-import Tabs, { Indicator, List, Panel, Tab } from "@comps/atoms/tabs";
-import Main from "@core/Main";
+import Tabs, { Indicator, List, Panel, Tab } from "@atoms/tabs";
+import Main, { MainSuspense } from "@core/Main";
 import { getSession } from "@lib/auth-server";
 import { unauthorized } from "next/navigation";
 import { Suspense } from "react";
@@ -10,7 +9,7 @@ import ProfileTab from "./_components/profile-tab";
 
 export default async function Page() {
     return (
-        <Suspense>
+        <Suspense fallback={<MainSuspense />}>
             <SuspendedPage />
         </Suspense>
     );
@@ -24,24 +23,29 @@ const SuspendedPage = async () => {
 
     return (
         <Main className="justify-start">
-            <Card className="w-full">
-                <CardContent>
-                    <Tabs defaultValue="profile" className="w-full">
-                        <List className="mb-4">
-                            <Tab value="profile">Profil</Tab>
-                            <Tab value="edition">Édition</Tab>
-                            <Indicator />
-                        </List>
-                        <Panel value="profile">
-                            <ProfileTab session={session} />
-                        </Panel>
-                        <Panel value="edition">
-                            <EditionTab session={session} />
-                        </Panel>
-                    </Tabs>
-                </CardContent>
-            </Card>
-            <EmailConfirmModal session={session} />
+            <Tabs defaultValue="profile" className="w-full border-none">
+                <List className="px-0 shadow-none">
+                    <Tab className="h-auto cursor-pointer px-4 py-1.5" value="profile">
+                        Profil
+                    </Tab>
+                    <Tab className="h-auto cursor-pointer px-4 py-1.5" value="edition">
+                        Édition
+                    </Tab>
+                    <Indicator className="h-8" />
+                </List>
+                <hr className="mt-2 mb-4 h-px border-gray-200" />
+                <Panel value="profile">
+                    <ProfileTab session={session} />
+                </Panel>
+                <Panel value="edition">
+                    <EditionTab session={session} />
+                </Panel>
+            </Tabs>
+
+            {/* Dialog */}
+            <Suspense>
+                <EmailConfirmModal session={session} />
+            </Suspense>
         </Main>
     );
 };

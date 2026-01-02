@@ -22,10 +22,7 @@ export default function LocationMap(props: LocationMapProps) {
 
     const iconSize = 40;
     const iconMarkup = renderToStaticMarkup(
-        <MapPin
-            style={{ height: iconSize, width: iconSize }}
-            className="fill-gray-low stroke-gray-high stroke-[1.2px]"
-        />,
+        <MapPin style={{ height: iconSize, width: iconSize }} className="fill-background stroke-1" />,
     );
     const customIcon = L.divIcon({
         html: iconMarkup,
@@ -41,7 +38,7 @@ export default function LocationMap(props: LocationMapProps) {
                     height: "100%",
                     width: "100%",
                     position: "relative",
-                    zIndex: 1,
+                    zIndex: 0,
                 }}
                 center={position}
                 zoom={15}

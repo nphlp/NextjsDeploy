@@ -2,6 +2,8 @@
 
 ## Clean code
 
+- Lien de confirmation adresse email en localhost ?
+
 - Design et Layouts
 - Atoms, Molecules, Organisms
 - Skeletons

@@ -1,37 +1,32 @@
 "use client";
 
-import { ReactNode } from "react";
-import { Indicator, List, Panel, Root, Tab } from "./atoms";
-
-type TabsProps = {
-    children?: ReactNode;
-    defaultValue?: string;
-    value?: string;
-    onValueChange?: (value: string) => void;
-    className?: string;
-};
+import { FolderKanban, LayoutDashboard, User } from "lucide-react";
+import { Indicator, List, Panel, Root, Tab, TabsProps } from "./atoms";
 
 export default function Tabs(props: TabsProps) {
-    const { children, defaultValue, value, onValueChange, className } = props;
+    const { children, ...otherProps } = props;
 
-    if (children)
-        return (
-            <Root defaultValue={defaultValue} value={value} onValueChange={onValueChange} className={className}>
-                {children}
-            </Root>
-        );
+    if (children) {
+        return <Root {...otherProps}>{children}</Root>;
+    }
 
     return (
-        <Root defaultValue="tab1" className={className}>
+        <Root defaultValue="overview" {...otherProps}>
             <List>
-                <Tab value="tab1">Overview</Tab>
-                <Tab value="tab2">Projects</Tab>
-                <Tab value="tab3">Account</Tab>
+                <Tab value="overview">Overview</Tab>
+                <Tab value="projects">Projects</Tab>
+                <Tab value="account">Account</Tab>
                 <Indicator />
             </List>
-            <Panel value="tab1">Contenu de l&apos;onglet Overview</Panel>
-            <Panel value="tab2">Contenu de l&apos;onglet Projects</Panel>
-            <Panel value="tab3">Contenu de l&apos;onglet Account</Panel>
+            <Panel value="overview" className="flex h-32 items-center justify-center">
+                <LayoutDashboard className="size-10 text-gray-300" />
+            </Panel>
+            <Panel value="projects" className="flex h-32 items-center justify-center">
+                <FolderKanban className="size-10 text-gray-300" />
+            </Panel>
+            <Panel value="account" className="flex h-32 items-center justify-center">
+                <User className="size-10 text-gray-300" />
+            </Panel>
         </Root>
     );
 }

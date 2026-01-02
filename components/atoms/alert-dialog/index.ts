@@ -1,10 +1,2 @@
-export {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "./alert-dialog";
+export { default } from "./alert-dialog";
+export * from "./atoms";
