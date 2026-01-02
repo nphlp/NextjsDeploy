@@ -1,16 +1,21 @@
 "use client";
 
-import Link from "@comps/SHADCN/components/link";
-import PasswordInput from "@comps/SHADCN/components/password-input";
+import Button, { Link } from "@atoms/button";
+import Field from "@atoms/filed";
+import Form from "@atoms/form";
+import InputPassword from "@atoms/input/input-password";
+import { useToast } from "@atoms/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { resetPassword } from "@lib/auth-client";
-import { Button } from "@shadcn/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shadcn/ui/form";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { ResetPasswordFormValues, resetPasswordSchema } from "./reset-password-schema";
+import { z } from "zod";
+
+const resetPasswordSchema = z.object({
+    password: z.string().min(8, { message: "Le mot de passe doit contenir au moins 8 caractères" }),
+});
+
+type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
 type ResetPasswordFormProps = {
     token: string;
@@ -18,97 +23,60 @@ type ResetPasswordFormProps = {
 
 export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
+    const toast = useToast();
 
-    const form = useForm<ResetPasswordFormValues>({
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<ResetPasswordFormValues>({
         resolver: zodResolver(resetPasswordSchema),
         defaultValues: {
             password: "",
-            confirmPassword: "",
         },
     });
 
-    const handleResetPassword = async (values: ResetPasswordFormValues) => {
-        setIsLoading(true);
-
-        const { password } = values;
-
+    const onSubmit = async (values: ResetPasswordFormValues) => {
         const { data } = await resetPassword({
-            newPassword: password,
+            newPassword: values.password,
             token,
         });
 
         if (!data) {
-            toast.error("Erreur lors de la réinitialisation...");
-            setIsLoading(false);
+            toast.add({ title: "Erreur", description: "Impossible de réinitialiser le mot de passe.", type: "error" });
             return;
         }
 
-        toast.success("Mot de passe réinitialisé avec succès !");
-
-        setTimeout(() => {
-            router.push("/login");
-        }, 1000);
+        toast.add({
+            title: "Mot de passe réinitialisé",
+            description: "Vous allez être redirigé vers la connexion.",
+            type: "success",
+        });
+        setTimeout(() => router.push("/login"), 1000);
     };
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleResetPassword)} className="space-y-4">
-                {/* Password */}
-                <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Nouveau mot de passe</FormLabel>
-                            <FormControl>
-                                <PasswordInput
-                                    placeholder="Minimum 8 caractères"
-                                    autoComplete="new-password"
-                                    disabled={isLoading}
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
+        <Form onSubmit={handleSubmit(onSubmit)}>
+            {/* Password */}
+            <Field label="Nouveau mot de passe" error={errors.password?.message}>
+                <InputPassword
+                    {...register("password")}
+                    placeholder="Minimum 8 caractères"
+                    autoComplete="new-password"
+                    disabled={isSubmitting}
                 />
+            </Field>
 
-                {/* Confirm Password */}
-                <FormField
-                    control={form.control}
-                    name="confirmPassword"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Confirmer le mot de passe</FormLabel>
-                            <FormControl>
-                                <PasswordInput
-                                    placeholder="Confirmez votre mot de passe"
-                                    autoComplete="new-password"
-                                    disabled={isLoading}
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+            {/* Login link */}
+            <div className="space-x-2 text-center text-sm text-gray-500">
+                <span>Mot de passe retrouvé ?</span>
+                <Link href="/login" label="Se connecter" className="inline text-sm hover:underline" noStyle />
+            </div>
 
-                {/* Login link */}
-                <div className="text-muted-foreground flex justify-center gap-2 text-sm">
-                    <p>Mot de passe retrouvé ?</p>
-                    <Link href="/login" className="hover:text-foreground underline underline-offset-4" noStyle>
-                        Se connecter
-                    </Link>
-                </div>
-
-                {/* Submit button */}
-                <div className="flex justify-center">
-                    <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
-                        {isLoading ? "Réinitialisation en cours..." : "Réinitialiser"}
-                    </Button>
-                </div>
-            </form>
+            {/* Submit button */}
+            <div className="flex justify-center">
+                <Button type="submit" label="Réinitialiser" loading={isSubmitting} className="w-full sm:w-auto" />
+            </div>
         </Form>
     );
 }

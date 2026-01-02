@@ -1,13 +1,14 @@
-import Link from "@comps/SHADCN/components/link";
+import Link from "@comps/atoms/button/link";
+import Main from "@core/Main";
 import { ChevronRight } from "lucide-react";
 import { Suspense } from "react";
 import BasketCardList, { BasketCardListSkeleton } from "./_components/basket-card-list";
 
 export default async function Page() {
     return (
-        <div className="w-full max-w-[900px] flex-1 space-y-4 px-4 py-4 sm:px-12">
+        <Main className="items-stretch justify-start">
             <h1 className="flex items-center gap-2 text-2xl font-bold">
-                <Link href="/fruits" noStyle>
+                <Link label="Fruits" href="/fruits" className="text-2xl font-bold" noStyle>
                     Fruits
                 </Link>
                 <ChevronRight className="size-4" />
@@ -17,6 +18,6 @@ export default async function Page() {
             <Suspense fallback={<BasketCardListSkeleton />}>
                 <BasketCardList />
             </Suspense>
-        </div>
+        </Main>
     );
 }

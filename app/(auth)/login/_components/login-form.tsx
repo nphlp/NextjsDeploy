@@ -1,23 +1,33 @@
 "use client";
 
-import Link from "@comps/SHADCN/components/link";
-import PasswordInput from "@comps/SHADCN/components/password-input";
+import Button, { Link } from "@atoms/button";
+import Field from "@atoms/filed";
+import Form from "@atoms/form";
+import Input from "@atoms/input/input";
+import InputPassword from "@atoms/input/input-password";
+import { useToast } from "@atoms/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "@lib/auth-client";
-import { Button } from "@shadcn/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shadcn/ui/form";
-import { Input } from "@shadcn/ui/input";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { LoginFormValues, loginSchema } from "./login-schema";
+import { z } from "zod";
+
+const loginSchema = z.object({
+    email: z.email({ message: "Email invalide" }),
+    password: z.string().min(1, { message: "Le mot de passe est requis" }),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
+    const toast = useToast();
 
-    const form = useForm<LoginFormValues>({
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
             email: "",
@@ -25,98 +35,62 @@ export default function LoginForm() {
         },
     });
 
-    const handleLogin = async (values: LoginFormValues) => {
-        setIsLoading(true);
-
-        const { email, password } = values;
-
-        const { data } = await signIn.email({
-            email,
-            password,
-        });
+    const onSubmit = async (values: LoginFormValues) => {
+        const { data } = await signIn.email(values);
 
         if (!data) {
-            toast.error("Échec de la connexion, identifiants invalides.");
-            setIsLoading(false);
+            toast.add({ title: "Échec de la connexion", description: "Identifiants invalides.", type: "error" });
             return;
         }
 
-        toast.success("Connexion réussie !");
-
+        toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
         router.push("/");
     };
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-4">
-                {/* Email */}
-                <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                                <Input
-                                    type="email"
-                                    placeholder="exemple@email.com"
-                                    autoComplete="email"
-                                    autoFocus
-                                    disabled={isLoading}
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
+        <Form onSubmit={handleSubmit(onSubmit)}>
+            {/* Email */}
+            <Field label="Email" error={errors.email?.message}>
+                <Input
+                    {...register("email")}
+                    type="email"
+                    placeholder="exemple@email.com"
+                    autoComplete="email"
+                    autoFocus
+                    disabled={isSubmitting}
                 />
+            </Field>
 
-                {/* Password */}
-                <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Mot de passe</FormLabel>
-                            <FormControl>
-                                <PasswordInput
-                                    placeholder="Votre mot de passe"
-                                    autoComplete="current-password"
-                                    disabled={isLoading}
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
+            {/* Password */}
+            <Field label="Mot de passe" error={errors.password?.message}>
+                <InputPassword
+                    {...register("password")}
+                    placeholder="Votre mot de passe"
+                    autoComplete="current-password"
+                    disabled={isSubmitting}
                 />
+            </Field>
 
-                {/* Forgot password link */}
-                <div className="flex justify-end">
-                    <Link
-                        href="/reset-password"
-                        className="text-muted-foreground hover:text-foreground text-xs underline underline-offset-4"
-                        noStyle
-                    >
-                        Mot de passe oublié ?
-                    </Link>
-                </div>
+            {/* Forgot password link */}
+            <div className="flex w-full justify-end">
+                <Link
+                    href="/reset-password"
+                    label="Mot de passe oublié ?"
+                    className="text-xs text-gray-500 hover:underline"
+                    noStyle
+                />
+            </div>
 
-                {/* Register link */}
-                <div className="text-muted-foreground flex justify-center gap-2 text-sm">
-                    <p>Pas encore de compte ?</p>
-                    <Link href="/register" className="hover:text-foreground underline underline-offset-4" noStyle>
-                        S&apos;inscrire
-                    </Link>
-                </div>
+            {/* Register link */}
+            <div className="space-x-2 text-center text-sm text-gray-500">
+                <span>Pas encore de compte ?</span>
+                <Link href="/register" label="S'inscrire" className="inline text-sm hover:underline" noStyle />
+            </div>
 
-                {/* Submit button */}
-                <div className="flex justify-center">
-                    <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
-                        {isLoading ? "Connexion en cours..." : "Connexion"}
-                    </Button>
-                </div>
-            </form>
+            {/* Submit button */}
+            <div className="flex justify-center">
+                <Button type="submit" label="Connexion" loading={isSubmitting} className="w-full sm:w-auto" />
+            </div>
         </Form>
     );
 }

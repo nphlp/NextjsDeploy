@@ -1,12 +1,12 @@
 "use client";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@comps/SHADCN/ui/select";
-import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import { useToast } from "@atoms/toast";
+import { Item, List, Popup, Portal, Positioner, Root, Trigger, Value } from "@comps/atoms/select/atoms";
+import Skeleton from "@comps/atoms/skeleton";
+import cn from "@lib/cn";
 import oRPC from "@lib/orpc";
-import { cn } from "@shadcn/lib/utils";
 import { CircleCheckBig, CircleDashed, LoaderCircle } from "lucide-react";
 import { ReactNode, startTransition } from "react";
-import { toast } from "sonner";
 import { TaskType } from "./types";
 import useInstant from "./useInstant";
 
@@ -51,8 +51,9 @@ type SelectUpdateTaskStatusProps = {
 };
 
 export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProps) {
-    const { task, className } = props;
+    const { task } = props;
     const { id, title } = task;
+    const toast = useToast();
 
     const { optimisticData, setData, setOptimisticData } = useInstant(task);
 
@@ -72,27 +73,41 @@ export default function SelectUpdateTaskStatus(props: SelectUpdateTaskStatusProp
                 // If success, update the real state in a new transition to prevent key conflict
                 startTransition(() => setData(data));
 
-                toast.success("Statut mis à jour avec succès");
-            } catch (error) {
+                toast.add({
+                    title: "Statut modifié",
+                    description: "Les modifications ont été enregistrées.",
+                    type: "success",
+                });
+            } catch {
                 // If failed, the optimistic state is rolled back at the end of the transition
-                toast.error((error as Error).message ?? "Impossible de mettre à jour le statut");
+                toast.add({ title: "Erreur", description: "Impossible de modifier le statut.", type: "error" });
             }
         });
     };
 
+    const renderValue = (value: string | string[] | null) => {
+        if (!value || Array.isArray(value)) return null;
+        const option = options.find((o) => o.slug === value);
+        return option?.label ?? value;
+    };
+
     return (
-        <Select value={optimisticData.status} onValueChange={handleStatusUpdate}>
-            <SelectTrigger className={className} aria-label="Update status">
-                <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-                {options.map((option) => (
-                    <SelectItem key={option.slug} value={option.slug}>
-                        {option.label}
-                    </SelectItem>
-                ))}
-            </SelectContent>
-        </Select>
+        <Root selected={optimisticData.status} onSelect={(value) => handleStatusUpdate(value as string)}>
+            <Trigger>
+                <Value>{renderValue}</Value>
+            </Trigger>
+            <Portal>
+                <Positioner>
+                    <Popup>
+                        <List>
+                            {options.map((option) => (
+                                <Item key={option.slug} label={option.slug} itemKey={option.slug} />
+                            ))}
+                        </List>
+                    </Popup>
+                </Positioner>
+            </Portal>
+        </Root>
     );
 }
 

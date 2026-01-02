@@ -1,5 +1,29 @@
 # TODO
 
+## Clean code
+
+- Lien de confirmation adresse email en localhost ?
+
+- Design et Layouts
+- Atoms, Molecules, Organisms
+- Skeletons
+
+- Supprimer les résidus de Shadcn -> ex: "-muted", "-border", etc
+
+- Centraliser les styles
+
+- useOtimistic et mutations
+- useQuery et filtres
+
+- useForm et formulaires
+
+- Organisation des fichiers
+- Tester toutes les pages, faire un plan
+
+## Feature
+
+- Si redirection pour loging -> redirection après login vers la page initiale
+
 ## Redis cache handler
 
 ## Tests automatissé

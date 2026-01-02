@@ -1,23 +1,24 @@
 "use client";
 
 import { Context } from "@app/tasks/_components/context";
-import { Button } from "@comps/SHADCN/ui/button";
-import { Input } from "@comps/SHADCN/ui/input";
-import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import { useToast } from "@atoms/toast";
+import Button from "@comps/atoms/button/button";
+import Input from "@comps/atoms/input/input";
+import Skeleton from "@comps/atoms/skeleton";
 import oRPC from "@lib/orpc";
 import { ArrowUp } from "lucide-react";
-import { startTransition, useContext, useState } from "react";
-import { toast } from "sonner";
+import { ChangeEvent, startTransition, useContext, useState } from "react";
 import { TaskType } from "./types";
 
 export default function InputAddTask() {
     const { setDataBypass, setOptimisticData, optimisticMutations } = useContext(Context);
+    const toast = useToast();
 
     const [title, setTitle] = useState("");
 
     const handleSubmit = async () => {
         if (!title) {
-            toast.error("Le titre ne peut pas être vide");
+            toast.add({ title: "Erreur", description: "Le titre ne peut pas être vide.", type: "error" });
             return;
         }
 
@@ -39,10 +40,10 @@ export default function InputAddTask() {
                     setDataBypass((current) => optimisticMutations(current, { type: "add", newItem: data })),
                 );
 
-                toast.success("Création de la tâche réussie");
-            } catch (error) {
+                toast.add({ title: "Tâche créée", description: "La tâche a été ajoutée à la liste.", type: "success" });
+            } catch {
                 // If failed, the optimistic state is rolled back at the end of the transition
-                toast.error((error as Error).message ?? "Impossible de créer de la tâche");
+                toast.add({ title: "Erreur", description: "Impossible de créer la tâche.", type: "error" });
             }
         });
     };
@@ -50,13 +51,12 @@ export default function InputAddTask() {
     return (
         <form action={handleSubmit} className="flex w-full items-center gap-2">
             <Input
-                aria-label="Ajouter une tâche"
                 placeholder="Ajouter une tâche"
                 autoComplete="off"
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
                 value={title}
             />
-            <Button type="submit" aria-label="Ajouter" variant="outline" className="p-1.5">
+            <Button type="submit" label="Ajouter" colors="outline" className="p-1.5">
                 <ArrowUp className="size-6" />
             </Button>
         </form>

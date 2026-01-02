@@ -19,6 +19,8 @@ const findMany = os
             .object({
                 // Search
                 search: z.string().optional().describe("Search term to filter fruits by name"),
+                // Exclude
+                excludeIds: z.array(z.string()).optional().describe("Array of fruit IDs to exclude"),
                 // Sorting
                 name: z.enum(Prisma.SortOrder).optional().describe("Sort order for name"),
                 updatedAt: z.enum(Prisma.SortOrder).optional().describe("Sort order for updatedAt"),
@@ -45,6 +47,10 @@ const findMany = os
                     ...(input?.search && {
                         name: { contains: input.search, mode: "insensitive" },
                     }),
+                    ...(input?.excludeIds &&
+                        input.excludeIds.length > 0 && {
+                            id: { notIn: input.excludeIds },
+                        }),
                 },
                 // Count how many baskets contain each fruit
                 // For "inBasketCount" field
@@ -87,10 +93,10 @@ const findUnique = os
             cacheTags: z.array(z.string()).optional().describe("Array of cache tags"),
         }),
     )
-    .output(fruitWithUserOutputSchema.nullable())
+    .output(z.intersection(fruitWithUserOutputSchema, z.object({ inBasketCount: z.number() })).nullable())
     .handler(async ({ input }) => {
         // Get fruit by ID with user information
-        const fruit = await fruitFindUniqueCached(
+        const fruitRaw = await fruitFindUniqueCached(
             {
                 where: { id: input.id },
                 include: {
@@ -100,6 +106,13 @@ const findUnique = os
                             name: true,
                             lastname: true,
                             email: true,
+                        },
+                    },
+                    // Count how many baskets contain this fruit
+                    // For "inBasketCount" field
+                    _count: {
+                        select: {
+                            Quantities: true,
                         },
                     },
                 },
@@ -113,6 +126,13 @@ const findUnique = os
                 ...(input.cacheTags ?? []),
             ],
         );
+
+        if (!fruitRaw) return null;
+
+        const fruit = {
+            ...projection(fruitRaw, ["id", "name", "description", "userId", "createdAt", "updatedAt", "User"]),
+            inBasketCount: fruitRaw._count.Quantities,
+        };
 
         return fruit;
     });

@@ -1,15 +1,9 @@
 "use client";
 
+import Button from "@atoms/button";
+import AlertDialog, { Backdrop, Description, Popup, Portal, Title } from "@comps/atoms/alert-dialog";
+import { useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@shadcn/ui/alert-dialog";
 import { useState } from "react";
 
 type EmailConfirmModalProps = {
@@ -17,23 +11,30 @@ type EmailConfirmModalProps = {
 };
 
 export default function EmailConfirmModal(props: EmailConfirmModalProps) {
-    const { session } = props;
+    const { session: serverSession } = props;
+    const { data: clientSession } = useSession();
+
+    // SSR session
+    const session = clientSession ?? serverSession;
 
     const [isOpen, setIsOpen] = useState(!session.user.emailVerified);
 
     return (
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle className="text-center">Confirmation d&apos;email</AlertDialogTitle>
-                    <AlertDialogDescription>
+            <Portal>
+                <Backdrop />
+                <Popup>
+                    <Title>Confirmation d&apos;email</Title>
+                    <Description>
                         Veuillez vérifier votre adresse email pour activer toutes les fonctionnalités de votre compte.
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogAction onClick={() => setIsOpen(false)}>Fermer</AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
+                    </Description>
+                    <div className="flex justify-end gap-4">
+                        <Button label="Close button" colors="outline" onClick={() => setIsOpen(false)}>
+                            Fermer
+                        </Button>
+                    </div>
+                </Popup>
+            </Portal>
         </AlertDialog>
     );
 }

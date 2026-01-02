@@ -20,13 +20,16 @@
             }
         ],
         "paths": {
+            "@atoms/*": ["./components/atoms/*"],
+            "@molecules/*": ["./components/molecules/*"],
+            "@organisms/*": ["./components/organisms/*"],
             "@actions/*": ["./actions/*"],
             "@app/*": ["./app/*"],
             "@api/*": ["./app/api/*"],
             "@cache/*": ["./cache/*"],
             "@class/*": ["./services/class/*"],
             "@comps/*": ["./components/*"],
-            "@core/*": ["./components/CORE/*"],
+            "@core/*": ["./core/*"],
             "@fixtures/*": ["./fixtures/*"],
             "@lib/*": ["./lib/*"],
             "@orpc/*": ["./api/*"],

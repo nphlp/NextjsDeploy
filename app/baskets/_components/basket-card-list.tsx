@@ -1,4 +1,5 @@
-import Link from "@comps/SHADCN/components/link";
+import Card from "@atoms/card";
+import Link from "@comps/atoms/button/link";
 import { getSession } from "@lib/auth-server";
 import oRPC from "@lib/orpc";
 import { timeout } from "@utils/timout";
@@ -27,13 +28,13 @@ export default async function BasketCardList() {
 
     if (baskets.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center gap-4 rounded-lg border p-12 text-center">
-                <ShoppingBasket className="text-muted-foreground size-16" strokeWidth={1} />
-                <p className="text-muted-foreground">Vous n&apos;avez aucun panier pour le moment.</p>
-                <Link href="/fruits" className="text-sm underline underline-offset-4">
+            <Card className="items-center py-12">
+                <ShoppingBasket className="size-16 stroke-[1.2px] text-gray-800" />
+                <p className="text-gray-800">Vous n&apos;avez aucun panier pour le moment.</p>
+                <Link label="Découvrir les fruits" href="/fruits" padding="sm">
                     Découvrir les fruits
                 </Link>
-            </div>
+            </Card>
         );
     }
 
@@ -42,7 +43,6 @@ export default async function BasketCardList() {
             {baskets.map((basket) => (
                 <BasketCard key={basket.id} basket={basket} />
             ))}
-            <BasketCardListSkeleton />
         </div>
     );
 }

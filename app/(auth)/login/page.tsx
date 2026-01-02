@@ -1,12 +1,13 @@
+import Card from "@atoms/card";
+import Main, { MainSuspense } from "@core/Main";
 import { getSession } from "@lib/auth-server";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shadcn/ui/card";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import LoginForm from "./_components/login-form";
 
 export default async function Page() {
     return (
-        <Suspense>
+        <Suspense fallback={<MainSuspense />}>
             <SuspendedPage />
         </Suspense>
     );
@@ -19,16 +20,14 @@ const SuspendedPage = async () => {
     if (session) redirect("/");
 
     return (
-        <div className="w-full max-w-[400px] p-4">
-            <Card className="w-full">
-                <CardHeader>
-                    <CardTitle className="text-center">Connexion</CardTitle>
-                    <CardDescription className="text-center">Saisissez vos identifiants de connexion.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <LoginForm />
-                </CardContent>
+        <Main>
+            <Card className="max-w-80">
+                <div className="space-y-2 text-center">
+                    <h3 className="text-xl font-semibold">Connexion</h3>
+                    <p className="text-sm text-gray-500">Saisissez vos identifiants de connexion.</p>
+                </div>
+                <LoginForm />
             </Card>
-        </div>
+        </Main>
     );
 };

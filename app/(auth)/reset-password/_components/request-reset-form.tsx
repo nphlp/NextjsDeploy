@@ -1,88 +1,86 @@
 "use client";
 
-import Link from "@comps/SHADCN/components/link";
+import Button, { Link } from "@atoms/button";
+import Field from "@atoms/filed";
+import Form from "@atoms/form";
+import Input from "@atoms/input/input";
+import { useToast } from "@atoms/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { requestPasswordReset } from "@lib/auth-client";
-import { Button } from "@shadcn/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@shadcn/ui/form";
-import { Input } from "@shadcn/ui/input";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { RequestResetFormValues, requestResetSchema } from "./request-reset-schema";
+import { z } from "zod";
+
+const requestResetSchema = z.object({
+    email: z.email({ message: "Email invalide" }),
+});
+
+type RequestResetFormValues = z.infer<typeof requestResetSchema>;
 
 export default function RequestResetForm() {
-    const [isLoading, setIsLoading] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
+    const toast = useToast();
 
-    const form = useForm<RequestResetFormValues>({
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<RequestResetFormValues>({
         resolver: zodResolver(requestResetSchema),
         defaultValues: {
             email: "",
         },
     });
 
-    const handleRequestReset = async (values: RequestResetFormValues) => {
-        setIsLoading(true);
-
-        const { email } = values;
-
+    const onSubmit = async (values: RequestResetFormValues) => {
         const { data } = await requestPasswordReset({
-            email,
+            email: values.email,
             redirectTo: "/reset-password",
         });
 
         if (!data) {
-            toast.error("Erreur lors de l'envoi de l'email...");
-            setIsLoading(false);
+            toast.add({
+                title: "Erreur",
+                description: "Impossible d'envoyer l'email de réinitialisation.",
+                type: "error",
+            });
             return;
         }
 
         setEmailSent(true);
-        toast.success("Email de réinitialisation envoyé ! Vérifiez votre boîte de réception.");
-        setIsLoading(false);
+        toast.add({ title: "Email envoyé", description: "Vérifiez votre boîte de réception.", type: "success" });
     };
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleRequestReset)} className="space-y-4">
-                {/* Email */}
-                <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                                <Input
-                                    type="email"
-                                    placeholder="exemple@email.com"
-                                    autoComplete="email"
-                                    autoFocus
-                                    disabled={isLoading || emailSent}
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
+        <Form onSubmit={handleSubmit(onSubmit)}>
+            {/* Email */}
+            <Field label="Email" error={errors.email?.message}>
+                <Input
+                    {...register("email")}
+                    type="email"
+                    placeholder="exemple@email.com"
+                    autoComplete="email"
+                    autoFocus
+                    disabled={isSubmitting || emailSent}
                 />
+            </Field>
 
-                {/* Login link */}
-                <div className="text-muted-foreground flex justify-center gap-2 text-sm">
-                    <p>Mot de passe retrouvé ?</p>
-                    <Link href="/login" className="hover:text-foreground underline underline-offset-4" noStyle>
-                        Se connecter
-                    </Link>
-                </div>
+            {/* Login link */}
+            <div className="space-x-2 text-center text-sm text-gray-500">
+                <span>Mot de passe retrouvé ?</span>
+                <Link href="/login" label="Se connecter" className="inline text-sm hover:underline" noStyle />
+            </div>
 
-                {/* Submit button */}
-                <div className="flex justify-center">
-                    <Button type="submit" disabled={isLoading || emailSent} className="w-full sm:w-auto">
-                        {isLoading ? "Envoi en cours..." : emailSent ? "Email envoyé !" : "Envoyer l'email"}
-                    </Button>
-                </div>
-            </form>
+            {/* Submit button */}
+            <div className="flex justify-center">
+                <Button
+                    type="submit"
+                    label={emailSent ? "Email envoyé !" : "Envoyer l'email"}
+                    loading={isSubmitting}
+                    disabled={emailSent}
+                    className="w-full sm:w-auto"
+                />
+            </div>
         </Form>
     );
 }

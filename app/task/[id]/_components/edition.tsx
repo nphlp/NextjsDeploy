@@ -1,11 +1,11 @@
 "use client";
 
-import { Skeleton } from "@comps/SHADCN/ui/skeleton";
 import ButtonDeleteTask, { ButtonDeleteTaskSkeleton } from "@comps/SHARED/optimistics/button-delete-task";
 import InputUpdateTaskTitle, { InputUpdateTaskTitleSkeleton } from "@comps/SHARED/optimistics/input-update-task-title";
 import SelectUpdateTaskStatus, {
     SelectUpdateTaskStatusSkeleton,
 } from "@comps/SHARED/optimistics/select-update-task-status";
+import Skeleton from "@comps/atoms/skeleton";
 import { Task } from "@prisma/client/client";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";

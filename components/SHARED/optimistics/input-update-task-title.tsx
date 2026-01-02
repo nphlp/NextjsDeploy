@@ -1,11 +1,11 @@
 "use client";
 
-import { Input } from "@comps/SHADCN/ui/input";
-import { Skeleton } from "@comps/SHADCN/ui/skeleton";
+import { useToast } from "@atoms/toast";
+import Input from "@comps/atoms/input/input";
+import Skeleton from "@comps/atoms/skeleton";
+import cn from "@lib/cn";
 import oRPC from "@lib/orpc";
-import { cn } from "@shadcn/lib/utils";
-import { startTransition, useRef, useState } from "react";
-import { toast } from "sonner";
+import { ChangeEvent, startTransition, useRef, useState } from "react";
 import { TaskType } from "./types";
 import useInstant from "./useInstant";
 
@@ -17,6 +17,7 @@ type InputUpdateTaskTitleProps = {
 export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
     const { task, className } = props;
     const { id, status } = task;
+    const toast = useToast();
 
     const { setData, setOptimisticData } = useInstant(task);
 
@@ -44,10 +45,14 @@ export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
                 // Update previous title
                 previousTitle.current = title;
 
-                toast.success("Titre mis à jour avec succès");
-            } catch (error) {
+                toast.add({
+                    title: "Titre modifié",
+                    description: "Les modifications ont été enregistrées.",
+                    type: "success",
+                });
+            } catch {
                 // If failed, the optimistic state is rolled back at the end of the transition
-                toast.error((error as Error).message ?? "Impossible de mettre à jour le titre");
+                toast.add({ title: "Erreur", description: "Impossible de modifier le titre.", type: "error" });
             }
         });
     };
@@ -55,11 +60,10 @@ export default function InputUpdateTaskTitle(props: InputUpdateTaskTitleProps) {
     return (
         <form action={handleTitleUpdate} className="w-full">
             <Input
-                aria-label="Tâche"
-                onBlur={handleTitleUpdate}
-                onChange={(e) => setTitle(e.target.value)}
-                value={title}
                 className={className}
+                onBlur={handleTitleUpdate}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
+                value={title}
                 autoComplete="off"
             />
         </form>

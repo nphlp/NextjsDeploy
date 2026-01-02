@@ -1,12 +1,11 @@
-import Footer from "@comps/CORE/Footer";
-import Header from "@comps/CORE/Header";
-import Html from "@comps/CORE/Html";
-import Main from "@comps/CORE/Main";
-import Theme from "@comps/CORE/Theme";
-import { cn } from "@comps/SHADCN/lib/utils";
-import Breakpoints from "@comps/UI/breakpoints";
+import ToastProvider from "@atoms/toast/toast";
+import Breakpoints from "@comps/breakpoints";
+import Footer from "@core/Footer";
+import Header from "@core/Header";
+import Html from "@core/Html";
+import Theme from "@core/Theme";
+import cn from "@lib/cn";
 import "@lib/orpc-server";
-import { Toaster } from "@shadcn/ui/sonner";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
@@ -35,21 +34,21 @@ type LayoutProps = Readonly<{
 export default async function Layout(props: LayoutProps) {
     const { children } = props;
 
-    // Height relative to font-size 16px
-    const headerHeight = 4; // 64px = 4rem
-
     return (
         <Html ssrTheme={false}>
-            <body className={cn(geistSans.variable, geistMono.variable, "h-full")}>
-                <NuqsAdapter>
-                    <Theme>
-                        <Header headerHeight={headerHeight} />
-                        <Main offsetHeader={headerHeight}>{children}</Main>
-                        <Footer />
-                        <Breakpoints mode="onResize" />
-                        <Toaster />
-                    </Theme>
-                </NuqsAdapter>
+            <body
+                className={cn(geistSans.variable, geistMono.variable, "bg-background text-foreground isolate h-full")}
+            >
+                <ToastProvider>
+                    <NuqsAdapter>
+                        <Theme>
+                            <Header />
+                            {children}
+                            <Footer />
+                            <Breakpoints mode="onResize" />
+                        </Theme>
+                    </NuqsAdapter>
+                </ToastProvider>
             </body>
         </Html>
     );

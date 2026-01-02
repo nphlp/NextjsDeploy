@@ -1,5 +1,6 @@
-import Link from "@comps/SHADCN/components/link";
-import { cn } from "@comps/SHADCN/lib/utils";
+import Card from "@atoms/card";
+import { SkeletonText } from "@atoms/skeleton";
+import Link from "@comps/atoms/button/link";
 import oRPC from "@lib/orpc";
 import { formatMediumDate } from "@utils/date-format";
 import { timeout } from "@utils/timout";
@@ -13,8 +14,8 @@ type GetFruitByIdCachedProps = {
 const getFruitByIdCached = async (props: GetFruitByIdCachedProps) => {
     "use cache";
 
-    // Wait 1 second to simulate a slow network or database
-    await timeout(1000);
+    // Wait 0.5 second to simulate a slow network or database
+    await timeout(500);
 
     return await oRPC.fruit.findUnique(props);
 };
@@ -34,33 +35,30 @@ export default async function FruitDetail(props: FruitDetailProps) {
     return (
         <div className="space-y-4">
             <h1 className="flex items-center gap-2 text-2xl font-bold">
-                <Link href="/fruits" noStyle>
+                <Link label="Back to fruits" href="/fruits" className="text-2xl font-bold" noStyle>
                     Fruits
                 </Link>
                 <ChevronRight className="size-4" />
                 {fruit.name}
             </h1>
 
-            <div className={cn("flex flex-col justify-between gap-2", "rounded-lg border p-5 shadow")}>
+            <Card>
                 {/* Title */}
                 <h2 className="text-xl font-semibold">{fruit.name}</h2>
 
                 {/* Description */}
-                {fruit.description && <p>{fruit.description}</p>}
+                {fruit.description && <p className="text-sm text-gray-600">{fruit.description}</p>}
 
                 {/* Présent dans X paniers */}
-                {/* <p>
+                <div className="text-sm text-gray-600">
                     Présent dans {fruit.inBasketCount} {fruit.inBasketCount > 1 ? "paniers" : "panier"}
-                </p> */}
+                </div>
 
-                {/* Ajouté le xx / xx / xxxx */}
-                <p>Ajouté le {formatMediumDate(fruit.createdAt)}</p>
-
-                {/* Par Xxxxx Xxxxxx */}
-                <p>
-                    Par {fruit.User.name} {fruit.User.lastname}
+                {/* Ajouté le xx / xx / xxxx par Xxxxxx Xxxxxxxxx */}
+                <p className="flex items-center justify-between text-xs text-gray-500">
+                    Ajouté le {formatMediumDate(fruit.createdAt)}
                 </p>
-            </div>
+            </Card>
         </div>
     );
 }
@@ -69,25 +67,30 @@ export const FruitDetailSkeleton = async () => {
     "use cache";
 
     return (
-        <div className="animate-pulse space-y-4">
-            <div className="h-8 w-48 rounded bg-gray-200 dark:bg-gray-700"></div>
-
-            <div className={cn("animate-pulse", "flex flex-col justify-between gap-2", "rounded-lg border p-5 shadow")}>
+        <div className="space-y-4">
+            <h1 className="flex items-center gap-2 text-2xl font-bold">
+                <Link label="Back to fruits" href="/fruits" className="text-2xl font-bold" noStyle>
+                    Fruits
+                </Link>
+                <ChevronRight className="size-4" />
+                <SkeletonText fontSize="2xl" width="80px" />
+            </h1>
+            <Card className="@container h-full">
                 {/* Titre */}
-                <div className="bg-foreground/5 h-7 w-[100px] flex-none rounded"></div>
+                <SkeletonText fontSize="lg" />
 
                 {/* Description */}
-                <div className="bg-foreground/5 h-6 w-[340px] flex-none rounded"></div>
+                <div className="flex-1">
+                    <SkeletonText fontSize="sm" width="90%" />
+                    <SkeletonText fontSize="sm" width="40%" className="@xs:hidden" />
+                </div>
 
                 {/* Présent dans X paniers */}
-                {/* <div className="bg-foreground/5 h-6 w-[150px] flex-none rounded"></div> */}
+                <SkeletonText fontSize="sm" width="150px" />
 
                 {/* Ajouté le xx / xx / xxxx */}
-                <div className="bg-foreground/5 h-6 w-[170px] flex-none rounded"></div>
-
-                {/* Par Xxxxx Xxxxxx */}
-                <div className="bg-foreground/5 h-6 w-[110px] flex-none rounded"></div>
-            </div>
+                <SkeletonText fontSize="xs" width="100px" />
+            </Card>
         </div>
     );
 };
