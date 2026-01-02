@@ -207,7 +207,7 @@ const Arrow = () => {
                 label="Previous"
                 padding="icon"
                 rounded="full"
-                className={cn(style, "-left-2 sm:-left-4 lg:-left-12")}
+                className={cn(style, "-left-2 md:-left-4 lg:-left-12")}
                 onClick={() => emblaApi?.scrollPrev()}
                 disabled={!canScroll.prev}
             >
@@ -217,7 +217,7 @@ const Arrow = () => {
                 label="Next"
                 padding="icon"
                 rounded="full"
-                className={cn(style, "-right-2 sm:-right-4 lg:-right-12")}
+                className={cn(style, "-right-2 md:-right-4 lg:-right-12")}
                 onClick={() => emblaApi?.scrollNext()}
                 disabled={!canScroll.next}
             >

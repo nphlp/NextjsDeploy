@@ -1,5 +1,6 @@
 "use client";
 
+import { Link } from "@atoms/button";
 import { ButtonItem, Popup, Portal, Positioner, Trigger } from "@comps/atoms/menu/atoms";
 import Menu from "@comps/atoms/menu/menu";
 import { useSession } from "@lib/auth-client";
@@ -7,7 +8,6 @@ import { Session } from "@lib/auth-server";
 import cn from "@lib/cn";
 import { Apple, Code, Combine, Copy, Home, ListTodo, LucideIcon, Menu as MenuIcon, Palette } from "lucide-react";
 import { Route } from "next";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 type LinkType = {
@@ -60,12 +60,13 @@ export default function MenuNavigation(props: MenuNavigationProps) {
     return (
         <>
             {/* Desktop: inline links */}
-            <div className="flex gap-8 px-4 max-md:hidden">
+            <div className="flex gap-2 max-md:hidden">
                 {linksToRender.map(({ href, label }) => (
                     <Link
-                        key={label}
-                        aria-label={label}
+                        label={label}
                         href={href}
+                        key={label}
+                        colors="ghost"
                         className={cn("text-lg", path === href && "font-bold")}
                     >
                         {label}
@@ -83,7 +84,7 @@ export default function MenuNavigation(props: MenuNavigationProps) {
                         <Positioner align="start">
                             <Popup className="w-40">
                                 {linksToRender.map(({ href, label, icon: Icon }) => (
-                                    <Link key={href} href={href} aria-label={label}>
+                                    <Link label={label} key={href} href={href} className="w-full" noStyle>
                                         <ButtonItem value={href}>
                                             <Icon className="size-4" />
                                             <span className={cn(path === href && "font-bold")}>{label}</span>
