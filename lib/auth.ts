@@ -13,10 +13,11 @@ if (!NEXT_PUBLIC_BASE_URL) {
 }
 
 export const auth = betterAuth({
+    baseURL: NEXT_PUBLIC_BASE_URL,
+    trustedOrigins: [NEXT_PUBLIC_BASE_URL],
     database: prismaAdapter(PrismaInstance, {
         provider: "postgresql",
     }),
-    trustedOrigins: [NEXT_PUBLIC_BASE_URL],
     emailAndPassword: {
         enabled: true,
         sendResetPassword: async ({ user, url }: { user: { email: string; name: string }; url: string }) => {
@@ -46,11 +47,9 @@ export const auth = betterAuth({
         // Extends session with role and lastname
         customSession(async ({ session, user }) => {
             const userData = await PrismaInstance.user.findUnique({ where: { id: user.id } });
-
             if (!userData) {
                 throw new Error("User not found");
             }
-
             const extendedSession = {
                 user: {
                     ...user,
@@ -59,7 +58,6 @@ export const auth = betterAuth({
                 },
                 session,
             };
-
             return extendedSession;
         }),
         // For functions like signInEmail, signUpEmail, etc.
