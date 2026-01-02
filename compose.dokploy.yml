@@ -7,13 +7,32 @@ services:
             - POSTGRES_DB=${POSTGRES_DB}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
         volumes:
-            - ../files/postgres-${ENV_LABEL}:/var/lib/postgresql/data
+            - ../files/postgres:/var/lib/postgresql/data
         healthcheck:
             test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
             interval: 2s
             timeout: 1s
             retries: 30
             start_period: 10s
+        networks:
+            - app-network
+
+    prisma-studio:
+        container_name: prisma-studio-${ENV_LABEL}
+        build:
+            context: ./
+            dockerfile: docker/Dockerfile.prisma-studio
+            args:
+                - DATABASE_URL=${DATABASE_URL}
+        environment:
+            - DATABASE_URL=${DATABASE_URL}
+        ports:
+            # Requires SSH tunnel on port 5555
+            - "127.0.0.1:5555:5555"
+        restart: unless-stopped
+        depends_on:
+            postgres:
+                condition: service_healthy
         networks:
             - app-network
 

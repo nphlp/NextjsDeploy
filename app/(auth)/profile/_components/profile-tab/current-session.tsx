@@ -1,6 +1,7 @@
 "use client";
 
 import { LocationResponse } from "@app/api/location/route";
+import Card from "@atoms/card";
 import dynamic from "next/dynamic";
 import { getBrowser, getOs, locationString } from "./utils";
 
@@ -15,7 +16,7 @@ export default function CurrentSession(props: CurrentSessionProps) {
     const { userAgent, location } = props;
 
     return (
-        <div className="bg-card space-y-2 rounded-lg border border-gray-200 px-5 py-3">
+        <Card className="py-4">
             <div className="flex flex-row items-center justify-between">
                 <div className="flex flex-row items-center gap-3">
                     <div className="min-h-2 min-w-2 rounded-full bg-green-500" />
@@ -30,6 +31,6 @@ export default function CurrentSession(props: CurrentSessionProps) {
                 </div>
             </div>
             <LocationMap location={location} />
-        </div>
+        </Card>
     );
 }

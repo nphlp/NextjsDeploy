@@ -1,6 +1,7 @@
 "use client";
 
 import { LocationResponse } from "@app/api/location/route";
+import Card from "@atoms/card";
 import AlertDialog, { Backdrop, Close, Description, Popup, Portal, Title } from "@comps/atoms/alert-dialog";
 import Button from "@comps/atoms/button/button";
 import { revokeOtherSessions, revokeSession } from "@lib/auth-client";
@@ -58,6 +59,7 @@ const DisplaySessionList = () => {
                         Revoquer les sessions
                     </Button>
                 ) : null}
+
                 {/* Revoke other sessions dialog */}
                 <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
                     <Portal>
@@ -81,8 +83,9 @@ const DisplaySessionList = () => {
                     </Portal>
                 </AlertDialog>
             </div>
+
             {/* Other sessions list */}
-            <div className="bg-card space-y-2 rounded-lg border border-gray-200 px-5 py-3">
+            <Card className="py-3">
                 {data.length ? (
                     data.map((sessionAndLocation, index) => (
                         <Fragment key={index}>
@@ -95,7 +98,7 @@ const DisplaySessionList = () => {
                         Aucune autre session n&apos;est active.
                     </div>
                 )}
-            </div>
+            </Card>
         </div>
     );
 };
@@ -145,6 +148,7 @@ const SessionItem = (props: SessionItemProps) => {
                     </div>
                 </div>
             </div>
+
             {/* Revoke this session button */}
             <Button
                 label={`Déconnecter la session du ${formattedDate} à ${formattedTime}`}
@@ -154,6 +158,7 @@ const SessionItem = (props: SessionItemProps) => {
             >
                 <X className="size-4" />
             </Button>
+
             {/* Revoke this session dialog */}
             <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
                 <Portal>

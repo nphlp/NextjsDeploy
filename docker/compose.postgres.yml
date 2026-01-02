@@ -1,7 +1,7 @@
 services:
     postgres:
         image: postgres:16-alpine
-        container_name: postgres-dev
+        container_name: postgres-${ENV_LABEL}
         restart: unless-stopped
         environment:
             - POSTGRES_DB=${POSTGRES_DB}
@@ -16,8 +16,34 @@ services:
             timeout: 1s
             retries: 30
             start_period: 10s
+        networks:
+            - app-network
+
+    prisma-studio:
+        container_name: prisma-studio-${ENV_LABEL}
+        build:
+            context: ../
+            dockerfile: docker/Dockerfile.prisma-studio
+            args:
+                - DATABASE_URL=${DATABASE_URL}
+        environment:
+            # Override: localhost dans Docker != hôte
+            - DATABASE_URL=postgres://postgres:${POSTGRES_PASSWORD}@postgres-${ENV_LABEL}:5432/${POSTGRES_DB}
+        ports:
+            - "127.0.0.1:5555:5555"
+        restart: unless-stopped
+        depends_on:
+            postgres:
+                condition: service_healthy
+        networks:
+            - app-network
 
 volumes:
     postgres-volume:
-        name: postgres-volume
+        name: postgres-volume-${ENV_LABEL}
         driver: local
+
+networks:
+    app-network:
+        name: app-network-${ENV_LABEL}
+        driver: bridge

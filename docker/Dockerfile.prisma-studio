@@ -1,0 +1,21 @@
+####################
+#   Prisma Studio  #
+####################
+FROM node:24-alpine
+
+WORKDIR /app
+
+ARG DATABASE_URL
+
+RUN npm install -g pnpm
+
+COPY package.json pnpm-lock.yaml ./
+COPY prisma ./prisma
+COPY prisma.config.mts ./prisma.config.mts
+
+RUN pnpm install --frozen-lockfile
+RUN pnpm prisma:generate
+
+EXPOSE 5555
+
+CMD ["pnpm", "prisma:studio", "--port", "5555", "--browser", "none"]
