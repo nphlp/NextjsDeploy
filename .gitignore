@@ -13,9 +13,11 @@ node_modules/
 .env
 .env.backup
 .env.basic
+.env.experiment
 .env.preview
 .env.production
 .env.override.basic
+.env.override.experiment
 .env.override.preview
 .env.override.production
 

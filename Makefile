@@ -17,15 +17,17 @@ clean:
 BASE = .env
 
 OVERRIDE_BASIC = env/.env.override.basic
+OVERRIDE_EXPERIMENT = env/.env.override.experiment
 OVERRIDE_PREVIEW = env/.env.override.preview
 OVERRIDE_PRODUCTION = env/.env.override.production
 
 OUTPUT_BASIC = .env.basic
+OUTPUT_EXPERIMENT = .env.experiment
 OUTPUT_PREVIEW = .env.preview
 OUTPUT_PRODUCTION = .env.production
 
 # Setup environment files if they don't exist
-.PHONY: setup-env merge-env-basic merge-env-preview merge-env-production
+.PHONY: setup-env merge-env-basic merge-env-experiment merge-env-preview merge-env-production
 
 setup-env:
 	@if [ ! -f .env ]; then \
@@ -43,6 +45,16 @@ merge-env-basic:
 		echo "📝 env/.env.override.basic already exists"; \
 	fi
 	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_BASIC) --output $(OUTPUT_BASIC)
+
+# Used for VPS experiment deployments environment
+merge-env-experiment:
+	@if [ ! -f env/.env.override.experiment ]; then \
+		cp env/.env.override.experiment.example env/.env.override.experiment; \
+		echo "✅ Created env/.env.override.experiment from example"; \
+	else \
+		echo "📝 env/.env.override.experiment already exists"; \
+	fi
+	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_EXPERIMENT) --output $(OUTPUT_EXPERIMENT)
 
 # Used for VPS preview deployments environment
 merge-env-preview:
