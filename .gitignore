@@ -44,3 +44,6 @@ PDF/
 
 # Vitest
 coverage/
+
+# Vps config
+VpsDeploy/

@@ -4,19 +4,20 @@ Time attendance and team management software.
 
 <h2>Summary</h2>
 
-- [Quick links](#quick-links)
-- [Prerequisites](#prerequisites)
-- [Start a **DEVELOPMENT** server (local)](#start-a-development-server-local)
-- [Start a **BUILD** server (local)](#start-a-build-server-local)
-- [Start a **PRODUCTION** like server (local)](#start-a-production-like-server-local)
-- [Fixtures](#fixtures)
+- [Pulse Work](#pulse-work)
+    - [Quick links](#quick-links)
+    - [Prerequisites](#prerequisites)
+    - [Start a **DEVELOPMENT** server (local)](#start-a-development-server-local)
+    - [Start a **BUILD** server (local)](#start-a-build-server-local)
+    - [Start a **PRODUCTION** like server (local)](#start-a-production-like-server-local)
+    - [Fixtures](#fixtures)
 
 ## Quick links
 
 - [Git guide](./docs/git-guide.md)
 - [Dokploy deployment](./docs/dokploy-deployment.md)
 - [Database Breaking Migrations](./docs/database-breaking-migrations.md)
-- [SSH Tunnel (Prisma Studio)](./docs/ssh-tunnel.md)
+- [VPN to access Prisma Studio](./docs/vpn-prisma-studio.md)
 
 ## Prerequisites
 

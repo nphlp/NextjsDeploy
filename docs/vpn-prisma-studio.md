@@ -222,6 +222,10 @@ vpn-dokploy-down
 
 ## Dépannage
 
+### Le navigateur bloque l'accès HTTP
+
+Tapper `thisisunsafe` sur la page de warning pour forcer l'accès.
+
 ### Le VPN ne se connecte pas
 
 ```bash
