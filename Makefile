@@ -171,3 +171,10 @@ basic-stop:
 basic-clear:
 	@make merge-env-basic
 	$(DC) --env-file $(OUTPUT_BASIC) -f $(BASIC) down -v
+
+# Dump database schema for DrawSQL
+.PHONY: dump
+
+dump:
+	@docker exec postgres-dev-pulse-work pg_dump -U postgres -d pulse-work-db --schema-only --clean --if-exists --no-owner --no-privileges > prisma/dump.sql
+	@echo "✅ Schema dumped to prisma/dump.sql"ƒ
