@@ -6,11 +6,11 @@ import Html from "@core/Html";
 import Theme from "@core/Theme";
 import cn from "@lib/cn";
 import "@lib/orpc-server";
+import "@public/globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ReactNode } from "react";
-import "@/public/globals.css";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -37,7 +37,11 @@ export default async function Layout(props: LayoutProps) {
     return (
         <Html ssrTheme={false}>
             <body
-                className={cn(geistSans.variable, geistMono.variable, "bg-background text-foreground isolate h-full")}
+                className={cn(
+                    geistSans.variable,
+                    geistMono.variable,
+                    "bg-background text-foreground isolate h-full antialiased",
+                )}
             >
                 <ToastProvider>
                     <NuqsAdapter>

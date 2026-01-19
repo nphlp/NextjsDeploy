@@ -2,14 +2,16 @@
     "enableAllProjectMcpServers": true,
     "permissions": {
         "allow": [
-            "Bash(pnpm type)",
+            "Bash(pnpm type:*)",
             "Bash(pnpm lint:*)",
             "Bash(pnpm format:*)",
-            "Bash(pnpm checks)",
-            "Bash(pnpm test:*)",
+            "Bash(pnpm checks:*)",
+            "Bash(pnpm test:run:*)",
+            "Bash(pnpm test:coverage:*)",
 
             "Bash(make:*)",
             "Bash(docker:*)",
+            "Bash(tree:*)",
 
             "Bash(sed:*)",
             "Bash(mkdir:*)",
@@ -35,6 +37,20 @@
             "Bash(git add:*)",
             "Bash(git commit:*)",
             "Bash(git push:*)",
+
+            "mcp__linear__list_projects",
+            "mcp__linear__list_teams",
+            "mcp__linear__list_issues",
+            "mcp__linear__list_issue_labels",
+            "mcp__linear__list_issue_statuses",
+
+            "mcp__context7__resolve-library-id",
+            "mcp__context7__query-docs",
+
+            "mcp__next-devtools__nextjs_call",
+            "mcp__next-devtools__nextjs_index",
+
+            "mcp__ide__getDiagnostics",
 
             "Read",
             "LS",

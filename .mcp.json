@@ -9,6 +9,10 @@
             "command": "npx",
             "args": ["-y", "@upstash/context7-mcp"],
             "env": {}
+        },
+        "linear": {
+            "command": "npx",
+            "args": ["-y", "mcp-remote", "https://mcp.linear.app/mcp"]
         }
     }
 }
