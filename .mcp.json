@@ -10,9 +10,13 @@
             "args": ["-y", "@upstash/context7-mcp"],
             "env": {}
         },
-        "linear": {
+        "chrome-devtools": {
             "command": "npx",
-            "args": ["-y", "mcp-remote", "https://mcp.linear.app/mcp"]
+            "args": ["-y", "chrome-devtools-mcp@latest"]
+        },
+        "mcp-chrome": {
+            "command": "node",
+            "args": ["/opt/homebrew/lib/node_modules/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js"]
         }
     }
 }

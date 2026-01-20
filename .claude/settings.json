@@ -38,12 +38,6 @@
             "Bash(git commit:*)",
             "Bash(git push:*)",
 
-            "mcp__linear__list_projects",
-            "mcp__linear__list_teams",
-            "mcp__linear__list_issues",
-            "mcp__linear__list_issue_labels",
-            "mcp__linear__list_issue_statuses",
-
             "mcp__context7__resolve-library-id",
             "mcp__context7__query-docs",
 
