@@ -31,12 +31,12 @@ export function DialogContent(props: DialogContentProps) {
 
     return (
         <DialogBaseUI.Portal>
-            <DialogBaseUI.Backdrop className="fixed inset-0 bg-black/50 transition-opacity data-[ending-style]:opacity-0 data-[starting-style]:opacity-0" />
+            <DialogBaseUI.Backdrop className="fixed inset-0 bg-black/50 transition-opacity data-ending-style:opacity-0 data-starting-style:opacity-0" />
             <DialogBaseUI.Popup
                 className={cn(
                     "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
                     "w-full max-w-md rounded-lg bg-white p-6 shadow-lg",
-                    "transition-all data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0",
+                    "transition-all data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0",
                     className,
                 )}
             >

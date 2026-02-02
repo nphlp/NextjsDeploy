@@ -25,7 +25,7 @@ Guide : [GUIDE.md](./GUIDE.md)
 | Button         | 🔄     | `button/`       |
 | Checkbox       | ❌     |                 |
 | Checkbox Group | ❌     |                 |
-| Collapsible    | ❌     |                 |
+| Collapsible    | ✅     | `collapsible/`  |
 | Combobox       | ❌     |                 |
 | Field          | 🔄     | `filed/`        |
 | Fieldset       | ❌     |                 |
