@@ -62,6 +62,26 @@ services:
         depends_on:
             postgres:
                 condition: service_healthy
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 40s
+        deploy:
+            replicas: 1
+            update_config:
+                parallelism: 1
+                delay: 10s
+                failure_action: rollback
+                order: start-first
+            rollback_config:
+                parallelism: 1
+                delay: 10s
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
         networks:
             - app-network
             - dokploy-network

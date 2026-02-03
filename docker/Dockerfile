@@ -13,7 +13,7 @@ ARG POSTGRES_HOST
 ARG NEXT_PUBLIC_BASE_URL
 
 RUN npm install -g pnpm
-RUN apk add --no-cache postgresql-client
+RUN apk add --no-cache postgresql-client curl
 
 # Recommended by NextJS
 RUN apk add --no-cache libc6-compat
