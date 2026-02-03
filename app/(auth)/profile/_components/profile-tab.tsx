@@ -1,5 +1,4 @@
 import { Session, getSessionList } from "@lib/auth-server";
-import Solid from "@/solid/solid-fetch";
 import CurrentSession from "./profile-tab/current-session";
 import OtherSessions from "./profile-tab/other-sessions";
 import ProfileInfo from "./profile-tab/profile-info";
@@ -14,12 +13,10 @@ export default async function ProfileTab(props: ProfileTabProps) {
     const sessionList = await getSessionList();
 
     const sessionListWithoutCurrentSession = sessionList.filter(
-        (sessionFromList) => sessionFromList.token !== session.session.token,
+        (sessionFromList) => sessionFromList.id !== session.session.id,
     );
 
     const userAgent = session.session.userAgent ?? "";
-    const ipAddress = session.session.ipAddress ?? "";
-    const currentLocation = await Solid({ route: "/location", params: { ipAddress } });
 
     return (
         <div className="space-y-6">
@@ -39,7 +36,7 @@ export default async function ProfileTab(props: ProfileTabProps) {
                     <p className="text-sm text-gray-600">Gérer vos sessions actives.</p>
                 </div>
                 <div className="space-y-5">
-                    <CurrentSession userAgent={userAgent} location={currentLocation} />
+                    <CurrentSession userAgent={userAgent} />
                     <OtherSessions sessionList={sessionListWithoutCurrentSession} />
                 </div>
             </section>

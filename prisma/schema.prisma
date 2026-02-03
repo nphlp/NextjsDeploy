@@ -17,7 +17,6 @@ model User {
     image         String? @db.Text
     role          Role    @default(USER)
 
-    Tasks   Task[]
     Fruits  Fruit[]
     Baskets Basket[]
 
@@ -27,6 +26,7 @@ model User {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    // Indexes
     @@index([email])
 }
 
@@ -43,6 +43,7 @@ model Session {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    // Indexes
     @@index([userId])
     @@index([token])
 }
@@ -68,6 +69,7 @@ model Account {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    // Indexes
     @@index([userId])
     @@index([accountId])
     @@index([providerId])
@@ -82,6 +84,7 @@ model Verification {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    // Indexes
     @@index([identifier])
 }
 
@@ -89,28 +92,6 @@ enum Role {
     USER
     VENDOR
     ADMIN
-}
-
-model Task {
-    id    String @id @default(nanoid())
-    title String
-
-    status Status
-
-    userId String
-    User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@index([title])
-    @@index([userId])
-}
-
-enum Status {
-    TODO
-    IN_PROGRESS
-    DONE
 }
 
 model Fruit {
@@ -127,6 +108,7 @@ model Fruit {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    // Indexes
     @@index([name])
     @@index([userId])
 }
@@ -137,16 +119,15 @@ model Basket {
     userId String
     User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    /// Fruit quantities in the basket
     Quantity Quantity[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    // Indexes
     @@index([userId])
 }
 
-/// Fruit quantity in a basket
 model Quantity {
     id       String @id @default(nanoid())
     quantity Int

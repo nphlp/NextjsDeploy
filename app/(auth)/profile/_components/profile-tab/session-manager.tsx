@@ -1,6 +1,5 @@
 "use client";
 
-import { LocationResponse } from "@app/api/location/route";
 import Card from "@atoms/card";
 import AlertDialog, { Backdrop, Close, Description, Popup, Portal, Title } from "@comps/atoms/alert-dialog";
 import Button from "@comps/atoms/button/button";
@@ -8,39 +7,37 @@ import { revokeOtherSessions, revokeSession } from "@lib/auth-client";
 import { SessionList } from "@lib/auth-server";
 import { X } from "lucide-react";
 import { Dispatch, Fragment, ReactNode, SetStateAction, createContext, useContext, useState } from "react";
-import { getBrowser, getOs, locationString } from "./utils";
-
-export type SessionAndLocation = {
-    session: SessionList[number];
-    location: LocationResponse;
-};
+import { getBrowser, getOs } from "./utils";
 
 type ContextType = {
-    data: SessionAndLocation[];
-    setData: Dispatch<SetStateAction<SessionAndLocation[]>>;
+    data: SessionList;
+    setData: Dispatch<SetStateAction<SessionList>>;
 };
 
 const Context = createContext<ContextType>({} as ContextType);
 
 type ProviderProps = {
-    init: SessionAndLocation[];
+    init: SessionList;
     children: ReactNode;
 };
 
 const Provider = (props: ProviderProps) => {
     const { init, children } = props;
-    const [data, setData] = useState<SessionAndLocation[]>(init);
+
+    const [data, setData] = useState<SessionList>(init);
+
     return <Context.Provider value={{ data, setData }}>{children}</Context.Provider>;
 };
 
 type SessionManagerProps = {
-    sessionAndLocationList: SessionAndLocation[];
+    sessionList: SessionList;
 };
 
 export default function SessionManager(props: SessionManagerProps) {
-    const { sessionAndLocationList: init } = props;
+    const { sessionList } = props;
+
     return (
-        <Provider init={init}>
+        <Provider init={sessionList}>
             <DisplaySessionList />
         </Provider>
     );
@@ -48,11 +45,14 @@ export default function SessionManager(props: SessionManagerProps) {
 
 const DisplaySessionList = () => {
     const { data, setData } = useContext(Context);
+
     const [isAlertOpen, setIsAlertOpen] = useState(false);
+
     return (
         <div className="space-y-2">
             <div className="flex flex-row items-baseline justify-between">
                 <div className="text-lg font-bold">Autres appareils</div>
+
                 {/* Revoke other sessions button */}
                 {data.length ? (
                     <Button label="Revoquer les sessions" colors="link" onClick={() => setIsAlertOpen(true)}>
@@ -87,10 +87,10 @@ const DisplaySessionList = () => {
             {/* Other sessions list */}
             <Card className="py-3">
                 {data.length ? (
-                    data.map((sessionAndLocation, index) => (
+                    data.map((session, index) => (
                         <Fragment key={index}>
                             {index > 0 && <hr className="border-gray-200" />}
-                            <SessionItem sessionAndLocation={sessionAndLocation} />
+                            <SessionItem session={session} />
                         </Fragment>
                     ))
                 ) : (
@@ -104,14 +104,14 @@ const DisplaySessionList = () => {
 };
 
 type SessionItemProps = {
-    sessionAndLocation: SessionAndLocation;
+    session: SessionList[number];
 };
 
 const SessionItem = (props: SessionItemProps) => {
-    const { sessionAndLocation } = props;
-    const { session, location } = sessionAndLocation;
+    const { session } = props;
 
     const { setData } = useContext(Context);
+
     const [isAlertOpen, setIsAlertOpen] = useState(false);
 
     const userAgent = session.userAgent ?? "";
@@ -132,12 +132,7 @@ const SessionItem = (props: SessionItemProps) => {
             <div className="flex w-full flex-row items-center gap-3">
                 <div className="size-2 rounded-full bg-green-500" />
                 <div className="flex w-full flex-row items-center justify-between gap-3">
-                    <div className="text-sm">
-                        <div className="font-semibold">{`${getBrowser(userAgent)} • ${getOs(userAgent)}`}</div>
-                        <div className="text-2xs text-muted-foreground line-clamp-1 w-full">
-                            {locationString(location)}
-                        </div>
-                    </div>
+                    <div className="text-sm font-semibold">{`${getBrowser(userAgent)} • ${getOs(userAgent)}`}</div>
                     <div className="text-muted-foreground text-right">
                         <div className="text-2xs">Dernière activité le </div>
                         <div className="text-xs text-nowrap">
@@ -182,10 +177,8 @@ const SessionItem = (props: SessionItemProps) => {
                                 className="text-destructive"
                                 onClick={() => {
                                     revokeSession({ token: session.token });
-                                    setData((prevData: SessionAndLocation[]) =>
-                                        prevData.filter(
-                                            (item: SessionAndLocation) => item.session.token !== session.token,
-                                        ),
+                                    setData((prevData: SessionList) =>
+                                        prevData.filter((item) => item.token !== session.token),
                                     );
                                 }}
                             >
