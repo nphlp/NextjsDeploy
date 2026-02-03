@@ -13,10 +13,6 @@
         "chrome-devtools": {
             "command": "npx",
             "args": ["-y", "chrome-devtools-mcp@latest"]
-        },
-        "mcp-chrome": {
-            "command": "node",
-            "args": ["/opt/homebrew/lib/node_modules/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js"]
         }
     }
 }

@@ -1,5 +1,64 @@
 # TODO
 
+## Migration
+
+- Repasser Cloudflare DNS à Hostinger DNS
+
+- Sous-sous domaines à nouveau disponibles
+    - dokploy.domain.com
+    - nextjs-deploy.domain.com
+    - preview.nextjs-deploy.domain.com
+    - studio.preview.nextjs-deploy.domain.com
+
+- Tailscale VPN
+    - experiment/preview
+    - prisma studio
+    - Access mobile + desktop
+
+## Inplement
+
+- Gestion variables d'environnements
+    - Infisical
+
+- Analytics & Performance tracking
+    - Umami
+    - Plausible
+
+- Logs & Error tracking
+    - Glitchtip
+    - SigNoz
+
+- Cloudflare R2 (stockage images + backup VPS + backup DATABASES)
+
+- Redis cache
+
+## Authentification béton
+
+- Captcha
+- Vérification faux emails
+- Provider OAuth (Google, Apple, Microsoft, GitHub, etc)
+- Confirmation Email obligatoire
+- Double auth (OTP, WebAuthn, passwordless, etc)
+
+## Security
+
+- OWASP
+- CNIL
+- RGPD
+- ANSSI
+- Cookies banner
+
+- Mentions légales
+- RGPD
+- Conditions générales d'utilisation
+- Politique de confidentialité
+- Politique de cookies
+
+## Documenter
+
+- Architecture VPS
+- Architecture Application
+
 ## Clean code
 
 - Lien de confirmation adresse email en localhost ?
@@ -23,8 +82,6 @@
 ## Feature
 
 - Si redirection pour loging -> redirection après login vers la page initiale
-
-## Redis cache handler
 
 ## Tests automatissé
 

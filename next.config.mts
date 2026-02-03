@@ -7,6 +7,28 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const isStandalone = process.env.NEXTJS_STANDALONE === "true";
 
+// Security headers config
+const securityHeaders = [
+    // Prevent clickjacking attacks
+    { key: "X-Frame-Options", value: "DENY" },
+    // Prevent MIME type sniffing
+    { key: "X-Content-Type-Options", value: "nosniff" },
+    // Prevent information leaks via the referrer URL
+    { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+    // Disable unused browser features
+    { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+    // Specify authorized sources for content
+    {
+        key: "Content-Security-Policy",
+        value: [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            "style-src 'self' 'unsafe-inline'",
+            "font-src 'self'",
+        ].join("; "),
+    },
+];
+
 const nextConfig: NextConfig = {
     // Build output mode
     output: isStandalone ? "standalone" : undefined,
@@ -17,13 +39,16 @@ const nextConfig: NextConfig = {
     // Typed routes for links
     typedRoutes: true,
 
-    // Enable React memoryzing compiler
+    // Enable React memoising compiler
     reactCompiler: true,
 
     // New nextjs rendering method (every page is dynamic by default)
     // Directives: use cache, use cache private, use cache remote
     // Functions: cacheTag, cacheLife, revalidateTag, updateTag
     cacheComponents: true,
+
+    // Security headers
+    headers: async () => [{ source: "/(.*)", headers: securityHeaders }],
 
     experimental: {
         // View transition API
