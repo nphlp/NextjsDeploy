@@ -1,5 +1,6 @@
 import cn from "@lib/cn";
 import { ReactNode, Suspense } from "react";
+import { DEBUG_LAYOUT } from "./config";
 import { getTheme } from "./theme/theme-server";
 
 type HtmlProps = {
@@ -8,16 +9,16 @@ type HtmlProps = {
      * - `true`: prevent theme flashing on initial load, but make HTML component dynamic, that subsequently disable static optimization
      * - `false`: keep static HTML component, but may have a short theme flashing on initial load
      */
-    ssrTheme: boolean;
+    ssrTheme?: boolean;
     children?: ReactNode;
 };
 
 export default async function Html(props: HtmlProps) {
-    const { ssrTheme, children } = props;
+    const { ssrTheme = false, children } = props;
 
     if (!ssrTheme) {
         return (
-            <html lang="fr" className="h-full antialiased">
+            <html lang="fr" className={cn("min-h-dvh", DEBUG_LAYOUT && "bg-amber-100")}>
                 {children}
             </html>
         );
@@ -26,7 +27,7 @@ export default async function Html(props: HtmlProps) {
     return (
         <Suspense
             fallback={
-                <html lang="fr" className="h-full antialiased">
+                <html lang="fr" className={cn("min-h-dvh", DEBUG_LAYOUT && "bg-amber-100")}>
                     {children}
                 </html>
             }
@@ -42,7 +43,7 @@ const SuspendedHtml = async (props: HtmlProps) => {
     const themeCookie = await getTheme();
 
     return (
-        <html lang="fr" className={cn("h-full antialiased", themeCookie?.themeClass)}>
+        <html lang="fr" className={cn("min-h-dvh", DEBUG_LAYOUT && "bg-amber-100", themeCookie?.themeClass)}>
             {children}
         </html>
     );

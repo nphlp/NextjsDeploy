@@ -37,6 +37,8 @@ type MenuNavigationProps = {
 export default function MenuNavigation(props: MenuNavigationProps) {
     const { serverSession } = props;
     const { data: clientSession, isPending } = useSession();
+
+    // SSR session
     const session = isPending ? serverSession : clientSession;
 
     const path = usePathname();

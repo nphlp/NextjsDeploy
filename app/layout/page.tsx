@@ -1,8 +1,7 @@
+import Main from "@core/Main";
+import { isDev } from "@lib/env";
 import { notFound } from "next/navigation";
-import Main from "@/components/main";
-import { isDev } from "@/lib/env";
-import { debugLayout } from "../layout";
-import Content from "./content";
+import Content from "./_components/content";
 
 export default function Page() {
     if (!isDev) notFound();
@@ -10,7 +9,7 @@ export default function Page() {
     return (
         <Main>
             <h1 className="text-3xl font-bold">Welcome to Cubiing</h1>
-            <Content debugLayout={debugLayout} />
+            <Content />
         </Main>
     );
 }

@@ -22,7 +22,7 @@ const SuspendedPage = async () => {
     if (!session) unauthorized();
 
     return (
-        <Main className="justify-start">
+        <Main horizontal="stretch" vertical="start">
             <Tabs defaultValue="profile" className="w-full border-none">
                 <List className="px-0 shadow-none">
                     <Tab className="h-auto cursor-pointer px-4 py-1.5" value="profile">
@@ -35,16 +35,16 @@ const SuspendedPage = async () => {
                 </List>
                 <hr className="mt-2 mb-4 h-px border-gray-200" />
                 <Panel value="profile">
-                    <ProfileTab session={session} />
+                    <ProfileTab serverSession={session} />
                 </Panel>
                 <Panel value="edition">
-                    <EditionTab session={session} />
+                    <EditionTab serverSession={session} />
                 </Panel>
             </Tabs>
 
             {/* Dialog */}
             <Suspense>
-                <EmailConfirmModal session={session} />
+                <EmailConfirmModal serverSession={session} />
             </Suspense>
         </Main>
     );

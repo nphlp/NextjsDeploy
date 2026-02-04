@@ -13,7 +13,7 @@ export default async function Page(props: PageProps) {
     const { id } = await params;
 
     return (
-        <Main className="items-stretch justify-start">
+        <Main horizontal="stretch" vertical="start">
             <Suspense fallback={<FruitDetailSkeleton />}>
                 <FruitDetail id={id} />
             </Suspense>

@@ -2,7 +2,7 @@ import Main from "@core/Main";
 
 export default function Page() {
     return (
-        <Main className="items-stretch">
+        <Main horizontal="stretch">
             <section>
                 <h2 className="mb-2 text-xl font-bold text-gray-900">Primary Colors</h2>
                 <div className="rounded-md border border-gray-200 bg-white p-4">

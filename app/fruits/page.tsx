@@ -15,7 +15,7 @@ export default async function Page(props: PageProps) {
     const { take } = await searchParams;
 
     return (
-        <Main className="items-stretch">
+        <Main horizontal="stretch" vertical="start">
             <div className={cn("flex flex-col gap-2", "xs:flex-row xs:items-center xs:justify-between")}>
                 <h1 className="text-2xl font-bold">Fruits</h1>
                 <div className="flex gap-2">

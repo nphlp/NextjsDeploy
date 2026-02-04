@@ -6,7 +6,7 @@ import SkeletonTextConfig from "./_components/skeleton-text-config";
 
 export default function Page() {
     return (
-        <Main className="items-start">
+        <Main horizontal="stretch">
             <SkeletonTextConfig debugTextSkeleton={false} />
 
             <div className="w-full space-y-1">

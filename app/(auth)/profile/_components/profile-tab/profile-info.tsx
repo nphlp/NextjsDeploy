@@ -9,16 +9,17 @@ import { CircleCheck, CircleX, Mail } from "lucide-react";
 import { useState } from "react";
 
 type ProfileInfoProps = {
-    session: NonNullable<SessionClient>;
+    serverSession: NonNullable<SessionClient>;
 };
 
 export default function ProfileInfo(props: ProfileInfoProps) {
-    const { session: serverSession } = props;
-    const { data: clientSession } = useSession();
-    const toast = useToast();
+    const { serverSession } = props;
+    const { data: clientSession, isPending } = useSession();
 
     // SSR session
-    const session = clientSession ?? serverSession;
+    const session = isPending || !clientSession ? serverSession : clientSession;
+
+    const toast = useToast();
 
     const isEmailVerified = session.user.emailVerified;
 

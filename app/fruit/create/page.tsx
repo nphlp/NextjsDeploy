@@ -6,7 +6,7 @@ import FormCard from "./_components/form-card";
 
 export default async function Page() {
     return (
-        <Main className="items-stretch justify-start">
+        <Main horizontal="stretch" vertical="start">
             <h1 className="flex items-center gap-2 text-2xl font-bold">
                 <Link label="Back to fruits" href="/fruits" className="text-2xl font-bold" noStyle>
                     Fruits

@@ -4,6 +4,7 @@ import Footer from "@core/Footer";
 import Header from "@core/Header";
 import Html from "@core/Html";
 import Theme from "@core/Theme";
+import { DEBUG_LAYOUT } from "@core/config";
 import cn from "@lib/cn";
 import "@lib/orpc-server";
 import "@public/globals.css";
@@ -15,11 +16,13 @@ import { ReactNode } from "react";
 const geistSans = Geist({
     variable: "--font-geist-sans",
     subsets: ["latin"],
+    weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 const geistMono = Geist_Mono({
     variable: "--font-geist-mono",
     subsets: ["latin"],
+    weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -35,12 +38,16 @@ export default async function Layout(props: LayoutProps) {
     const { children } = props;
 
     return (
-        <Html ssrTheme={false}>
+        <Html>
             <body
                 className={cn(
                     geistSans.variable,
                     geistMono.variable,
-                    "bg-background text-foreground isolate h-full antialiased",
+                    "bg-background text-foreground",
+                    "isolate", // Base UI for portaled elements
+                    "antialiased", // Nextjs recommendation for font rendering
+                    "min-h-dvh",
+                    DEBUG_LAYOUT && "bg-red-100",
                 )}
             >
                 <ToastProvider>

@@ -7,17 +7,19 @@ import { Session } from "@lib/auth-server";
 import { useState } from "react";
 
 type EmailConfirmModalProps = {
-    session: NonNullable<Session>;
+    serverSession: NonNullable<Session>;
 };
 
 export default function EmailConfirmModal(props: EmailConfirmModalProps) {
-    const { session: serverSession } = props;
-    const { data: clientSession } = useSession();
+    const { serverSession } = props;
+    const { data: clientSession, isPending } = useSession();
 
     // SSR session
-    const session = clientSession ?? serverSession;
+    const session = isPending || !clientSession ? serverSession : clientSession;
 
-    const [isOpen, setIsOpen] = useState(!session.user.emailVerified);
+    const isEmailVerified = session.user.emailVerified;
+
+    const [isOpen, setIsOpen] = useState(!isEmailVerified);
 
     return (
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>

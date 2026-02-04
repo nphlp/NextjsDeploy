@@ -16,6 +16,8 @@ type MenuProfileProps = {
 export default function MenuProfile(props: MenuProfileProps) {
     const { serverSession } = props;
     const { data: clientSession, isPending } = useSession();
+
+    // SSR session
     const session = isPending ? serverSession : clientSession;
 
     // Logout management

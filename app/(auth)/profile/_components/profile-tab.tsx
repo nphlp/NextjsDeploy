@@ -1,22 +1,16 @@
-import { Session, getSessionList } from "@lib/auth-server";
+import { Session } from "@lib/auth-server";
 import CurrentSession from "./profile-tab/current-session";
 import OtherSessions from "./profile-tab/other-sessions";
 import ProfileInfo from "./profile-tab/profile-info";
 
 type ProfileTabProps = {
-    session: NonNullable<Session>;
+    serverSession: NonNullable<Session>;
 };
 
 export default async function ProfileTab(props: ProfileTabProps) {
-    const { session } = props;
+    const { serverSession } = props;
 
-    const sessionList = await getSessionList();
-
-    const sessionListWithoutCurrentSession = sessionList.filter(
-        (sessionFromList) => sessionFromList.id !== session.session.id,
-    );
-
-    const userAgent = session.session.userAgent ?? "";
+    const userAgent = serverSession.session.userAgent ?? "";
 
     return (
         <div className="space-y-6">
@@ -26,7 +20,7 @@ export default async function ProfileTab(props: ProfileTabProps) {
                     <p className="font-medium">Mon profil</p>
                     <p className="text-sm text-gray-600">Consulter et mettre à jour vos informations personnelles.</p>
                 </div>
-                <ProfileInfo session={session} />
+                <ProfileInfo serverSession={serverSession} />
             </section>
 
             {/* Sessions */}
@@ -37,7 +31,7 @@ export default async function ProfileTab(props: ProfileTabProps) {
                 </div>
                 <div className="space-y-5">
                     <CurrentSession userAgent={userAgent} />
-                    <OtherSessions sessionList={sessionListWithoutCurrentSession} />
+                    <OtherSessions serverSession={serverSession} />
                 </div>
             </section>
         </div>

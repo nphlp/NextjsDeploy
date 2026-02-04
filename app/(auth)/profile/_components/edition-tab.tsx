@@ -8,15 +8,15 @@ import { UpdateLastnameForm } from "./edition-tab/update-lastname-form";
 import { UpdatePasswordForm } from "./edition-tab/update-password-form";
 
 type EditionTabProps = {
-    session: NonNullable<Session>;
+    serverSession: NonNullable<Session>;
 };
 
 export default function EditionTab(props: EditionTabProps) {
-    const { session: serverSession } = props;
-    const { data: clientSession, refetch } = useSession();
+    const { serverSession } = props;
+    const { data: clientSession, isPending, refetch } = useSession();
 
     // SSR session
-    const session = clientSession ?? serverSession;
+    const session = isPending || !clientSession ? serverSession : clientSession;
 
     return (
         <div className="space-y-6">
