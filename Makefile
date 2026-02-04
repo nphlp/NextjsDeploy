@@ -1,84 +1,42 @@
+#################
+#  Import .env  #
+#################
+
 # Import environment variables from .env if it exists
 ifneq (,$(wildcard .env))
     include .env
 endif
 
-####################################
-#    Clean none versionned files   #
-####################################
+################################
+#  Clear non versionned files  #
+################################
 
-clean:
+.PHONY: clear
+
+clear:
 	rm -rf .husky/_ .next node_modules prisma/client next-env.d.ts tsconfig.tsbuildinfo
+	rm -f .env env/.env.basic env/.env.experiment env/.env.preview env/.env.production
 
-########################
-#    Merge Env Files   #
-########################
+##################
+#    Setup Env   #
+##################
 
-BASE = .env
-
-OVERRIDE_BASIC = env/.env.override.basic
-OVERRIDE_EXPERIMENT = env/.env.override.experiment
-OVERRIDE_PREVIEW = env/.env.override.preview
-OVERRIDE_PRODUCTION = env/.env.override.production
-
-OUTPUT_BASIC = .env.basic
-OUTPUT_EXPERIMENT = .env.experiment
-OUTPUT_PREVIEW = .env.preview
-OUTPUT_PRODUCTION = .env.production
-
-# Setup environment files if they don't exist
-.PHONY: setup-env merge-env-basic merge-env-experiment merge-env-preview merge-env-production
+# 1. pnpm install
+# 2. Si env/env.config.ts n'existe pas -> le crée et s'arrête
+# 3. Si env/env.config.ts existe -> génère les fichiers .env
+.PHONY: setup-env
 
 setup-env:
-	@if [ ! -f .env ]; then \
-		cp env/.env.example .env; \
-		echo "✅ Created .env from env/.env.example"; \
+	@pnpm install && \
+	if [ ! -f env/env.config.ts ]; then \
+		pnpm tsx scripts/setup-env.ts; \
 	else \
-		echo "📝 .env already exists"; \
+		pnpm tsx scripts/generate-env.ts; \
 	fi
 
-merge-env-basic:
-	@if [ ! -f env/.env.override.basic ]; then \
-		cp env/.env.override.basic.example env/.env.override.basic; \
-		echo "✅ Created env/.env.override.basic from example"; \
-	else \
-		echo "📝 env/.env.override.basic already exists"; \
-	fi
-	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_BASIC) --output $(OUTPUT_BASIC)
-
-# Used for VPS experiment deployments environment
-merge-env-experiment:
-	@if [ ! -f env/.env.override.experiment ]; then \
-		cp env/.env.override.experiment.example env/.env.override.experiment; \
-		echo "✅ Created env/.env.override.experiment from example"; \
-	else \
-		echo "📝 env/.env.override.experiment already exists"; \
-	fi
-	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_EXPERIMENT) --output $(OUTPUT_EXPERIMENT)
-
-# Used for VPS preview deployments environment
-merge-env-preview:
-	@if [ ! -f env/.env.override.preview ]; then \
-		cp env/.env.override.preview.example env/.env.override.preview; \
-		echo "✅ Created env/.env.override.preview from example"; \
-	else \
-		echo "📝 env/.env.override.preview already exists"; \
-	fi
-	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_PREVIEW) --output $(OUTPUT_PREVIEW)
-
-# Used for VPS production deployments environment
-merge-env-production:
-	@if [ ! -f env/.env.override.production ]; then \
-		cp env/.env.override.production.example env/.env.override.production; \
-		echo "✅ Created env/.env.override.production from example"; \
-	else \
-		echo "📝 env/.env.override.production already exists"; \
-	fi
-	@./scripts/merge-env.sh --base $(BASE) --override $(OVERRIDE_PRODUCTION) --output $(OUTPUT_PRODUCTION)
-
-#####################
-#   Nextjs server   #
-#####################
+##############
+#  Make Dev  #
+##############
 
 DC = BUILDKIT_PROGRESS=plain COMPOSE_BAKE=true docker compose
 
@@ -90,38 +48,83 @@ BASIC = docker/compose.basic.yml
 .PHONY: postgres postgres-stop postgres-clear
 
 postgres:
-	@make setup-env
-	$(DC) --env-file .env -f $(POSTGRES) up -d --build
-	@echo "🚀 Postgres is running on port 5432"
-	@echo "📝 Now start Nextjs with 'pnpm auto'"
-	@echo "🌍 Access the app at: http://localhost:3000 ✅"
-	@echo "🔐 Then start Prisma Studio with 'pnpm prisma:studio'"
-	@echo "🗃️ Visualise data at : http://localhost:5555 🔥"
+	@if [ ! -f env/env.config.ts ]; then \
+		make setup-env; \
+	else \
+		make setup-env && \
+		$(DC) --env-file .env -f $(POSTGRES) up -d --build && \
+		echo "🌍 Postgres is running on port 5433" && \
+		echo "📝 Now start Nextjs with 'pnpm auto'" && \
+		echo "🚀 Nextjs Server : http://localhost:3000 ✅" && \
+		echo "📚 Prisma Studio : http://localhost:5555 🔥"; \
+	fi
 
 postgres-stop:
 	$(DC) --env-file .env -f $(POSTGRES) down
-
+	
 postgres-clear:
 	$(DC) --env-file .env -f $(POSTGRES) down -v
+
+################
+#  Make Start  #
+################
 
 # One command to start Dev, Prod or Ngrok
 # -> Nextjs in terminal + Postgres in docker
 # -> CMD/CTRL+C to stop both
-.PHONY: dev start ngrok
+.PHONY: dev start
 
 # For local development server -> http://localhost:3000
 # -> Best performance for hot-reloading
 dev:
-	@make postgres
-	@pnpm auto && make postgres-stop
+	@if [ ! -f env/env.config.ts ]; then \
+		make setup-env; \
+	else \
+		make postgres; \
+		pnpm auto && make postgres-stop; \
+	fi
 
 # For local build server for testing -> http://localhost:3000
 # -> Check everything works before deploying to VPS
 start:
-	@make postgres
-	@pnpm auto:start && make postgres-stop
+	@if [ ! -f env/env.config.ts ]; then \
+		make setup-env; \
+	else \
+		make postgres; \
+		pnpm auto:start && make postgres-stop; \
+	fi
 
-# For tunneling with Ngrok -> https://your-static-url.ngrok-free.app
+################
+#  Make Basic  #
+################
+
+# Fully containerized environment for local testing
+.PHONY: basic basic-stop basic-clear
+
+basic:
+	@if [ ! -f env/env.config.ts ]; then \
+		make setup-env; \
+	else \
+		make setup-env && \
+		$(DC) --env-file env/.env.basic -f $(BASIC) up -d --build && \
+		echo "🚀 Nextjs Server : http://localhost:3000 ✅" && \
+		echo "📚 Prisma Studio : http://localhost:5555 🔥"; \
+	fi
+
+basic-stop:
+	$(DC) --env-file env/.env.basic -f $(BASIC) down
+
+basic-clear:
+	$(DC) --env-file env/.env.basic -f $(BASIC) down -v
+
+#####################
+#    Ngrok Tunnel   #
+#####################
+
+.PHONY: ngrok
+
+# Ngrok Tunnel to expose local webserver through a static public URL
+# -> Make `localhost:3000` accessible through `https://your-static-url.ngrok-free.app`
 # -> Useful for mobile debugging, functional testing or sharing with others
 ngrok:
 	@if [ -z "$(NGROK_URL)" ]; then \
@@ -154,27 +157,14 @@ ngrok:
 		fi \
 	fi
 
-# Fully containerized Nextjs and Postgres for local testing
-.PHONY: basic basic-stop basic-clear
+#####################
+#   Dump Database   #
+#####################
 
-basic:
-	@make setup-env
-	@make merge-env-basic
-	$(DC) --env-file $(OUTPUT_BASIC) -f $(BASIC) up -d --build
-	@echo "🚀 Access the app at: http://localhost:3000 ✅"
-	@echo "🗃️ Visualise data at : http://localhost:5555 🔥"
-
-basic-stop:
-	@make merge-env-basic
-	$(DC) --env-file $(OUTPUT_BASIC) -f $(BASIC) down
-
-basic-clear:
-	@make merge-env-basic
-	$(DC) --env-file $(OUTPUT_BASIC) -f $(BASIC) down -v
-
-# Dump database schema for DrawSQL
 .PHONY: dump
 
+# Dump the database schema from the running Postgres container
+# -> Exports to prisma/dump.sql
 dump:
 	@docker exec postgres-dev-nextjs-deploy pg_dump -U postgres -d nextjs-deploy-db --schema-only --clean --if-exists --no-owner --no-privileges > prisma/dump.sql
 	@echo "✅ Schema dumped to prisma/dump.sql"

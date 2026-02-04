@@ -360,8 +360,9 @@ done
 if [ -z "$POSTGRES_DB" ] || [ -z "$POSTGRES_PASSWORD" ] || [ -z "$POSTGRES_HOST" ]; then
     ENV_FILE="$PROJECT_DIR/.env"
     if [ -f "$ENV_FILE" ]; then
-        export $(grep -v '^#' "$ENV_FILE" | xargs)
-        # print_info "Loaded environment from .env file"
+        set -a
+        source "$ENV_FILE"
+        set +a
     else
         print_error "Environment file .env not found and required variables not set"
         exit 1

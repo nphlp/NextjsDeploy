@@ -11,6 +11,7 @@
     - studio.preview.nextjs-deploy.domain.com
 
 - Tailscale VPN
+    - retirer UDP du firewall VPS
     - experiment/preview
     - prisma studio
     - Access mobile + desktop

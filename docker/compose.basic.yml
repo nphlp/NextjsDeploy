@@ -38,7 +38,7 @@ services:
     nextjs:
         container_name: nextjs-${ENV_LABEL}
         env_file:
-            - ../.env.basic
+            - ../env/.env.basic
         build:
             context: ../
             args:
