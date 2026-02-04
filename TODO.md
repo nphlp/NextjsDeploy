@@ -2,14 +2,6 @@
 
 ## Migration
 
-- Repasser Cloudflare DNS à Hostinger DNS
-
-- Sous-sous domaines à nouveau disponibles
-    - dokploy.domain.com
-    - nextjs-deploy.domain.com
-    - preview.nextjs-deploy.domain.com
-    - studio.preview.nextjs-deploy.domain.com
-
 - Tailscale VPN
     - retirer UDP du firewall VPS
     - experiment/preview
