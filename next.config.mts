@@ -47,6 +47,9 @@ const nextConfig: NextConfig = {
     // Functions: cacheTag, cacheLife, revalidateTag, updateTag
     cacheComponents: true,
 
+    // Transpile Scalar packages to handle Vue-style CSS
+    transpilePackages: ["@scalar/api-reference-react", "@scalar/api-reference", "@scalar/agent-chat"],
+
     // Security headers
     headers: async () => [{ source: "/(.*)", headers: securityHeaders }],
 

@@ -1,11 +1,11 @@
 "use client";
 
+import { DEBUG_LAYOUT } from "@core/config";
 import { useState } from "react";
 import cn from "@/lib/cn";
+import Toggle from "./toggle";
 
-export default function Content(props: { debugLayout: boolean }) {
-    const { debugLayout } = props;
-
+export default function Content() {
     const [isOpen, setIsOpen] = useState(false);
 
     const lorem =
@@ -14,22 +14,9 @@ export default function Content(props: { debugLayout: boolean }) {
     const content = isOpen ? lorem.repeat(10) : lorem;
 
     return (
-        <div className={cn("space-y-4", debugLayout && "bg-purple-100")}>
+        <div className={cn("space-y-4", DEBUG_LAYOUT && "bg-purple-100")}>
             <Toggle isOpen={isOpen} setIsOpen={setIsOpen} />
             <div className="w-100 rounded border border-gray-300 p-4">{content}</div>
         </div>
     );
 }
-
-const Toggle = (props: { isOpen: boolean; setIsOpen: (open: boolean) => void }) => {
-    const { isOpen, setIsOpen } = props;
-
-    return (
-        <button
-            className="rounded bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600"
-            onClick={() => setIsOpen(!isOpen)}
-        >
-            {isOpen ? "Show Less" : "Show More"}
-        </button>
-    );
-};
