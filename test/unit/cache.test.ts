@@ -3,34 +3,34 @@ import { describe, expect, it } from "vitest";
 
 describe("Cache tag generation", () => {
     it("generates tag with model only", () => {
-        const result = tag("task");
-        expect(result).toBe("task");
+        const result = tag("fruit");
+        expect(result).toBe("fruit");
     });
 
     it("generates tag with model and operation", () => {
-        const result = tag("task", "findMany");
-        expect(result).toBe("task-findMany");
+        const result = tag("fruit", "findMany");
+        expect(result).toBe("fruit-findMany");
     });
 
     it("generates tag with model, operation and string custom", () => {
-        const result = tag("task", "findUnique", "abc123");
-        expect(result).toBe("task-findUnique-abc123");
+        const result = tag("fruit", "findUnique", "abc123");
+        expect(result).toBe("fruit-findUnique-abc123");
     });
 
     it("generates tag with model, operation and number custom", () => {
-        const result = tag("task", "findUnique", 123);
-        expect(result).toBe("task-findUnique-123");
+        const result = tag("fruit", "findUnique", 123);
+        expect(result).toBe("fruit-findUnique-123");
     });
 
     it("generates tag with model, operation and object custom", () => {
-        const result = tag("task", "findMany", { userId: "abc", status: "DONE" });
-        expect(result).toContain("task-findMany-");
+        const result = tag("fruit", "findMany", { userId: "abc", status: "DONE" });
+        expect(result).toContain("fruit-findMany-");
     });
 
     it("truncates tag to 255 characters when exceeding 256", () => {
         // Create a very long custom string that will exceed 256 characters
         const longString = "a".repeat(300);
-        const result = tag("task", "findMany", longString);
+        const result = tag("fruit", "findMany", longString);
 
         expect(result.length).toBe(255);
     });
