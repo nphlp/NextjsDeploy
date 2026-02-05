@@ -58,6 +58,10 @@ const settings = {
             comment: "Prisma Studio authentication",
             variables: ["PRISMA_STUDIO_AUTH"],
         },
+        umami: {
+            comment: "Umami analytics",
+            variables: ["UMAMI_URL", "UMAMI_WEBSITE_ID"],
+        },
         tunnelling: {
             comment: "Ngrok tunnelling (optional)",
             variables: ["NGROK_URL", "NEXT_PUBLIC_BASE_URL"],
@@ -135,7 +139,13 @@ const envConfig: EnvsConfig<Settings> = {
         ide: {
             REACT_EDITOR: "code",
         },
-        EXCLUDE: ["VPS_NEXTJS_DOMAIN", "VPS_PRISMA_STUDIO_DOMAIN", "PRISMA_STUDIO_AUTH"],
+        EXCLUDE: [
+            "VPS_NEXTJS_DOMAIN",
+            "VPS_PRISMA_STUDIO_DOMAIN",
+            "PRISMA_STUDIO_AUTH",
+            "UMAMI_URL",
+            "UMAMI_WEBSITE_ID",
+        ],
     },
     basic: {
         label: {
@@ -159,7 +169,7 @@ const envConfig: EnvsConfig<Settings> = {
         smtp: {
             SMTP_FROM_NAME: template("Nextjs Deploy ({{ENV}})"),
         },
-        EXCLUDE: ["VPS_NEXTJS_DOMAIN", "VPS_PRISMA_STUDIO_DOMAIN"],
+        EXCLUDE: ["VPS_NEXTJS_DOMAIN", "VPS_PRISMA_STUDIO_DOMAIN", "UMAMI_URL", "UMAMI_WEBSITE_ID"],
     },
     experiment: {
         label: {
@@ -189,6 +199,7 @@ const envConfig: EnvsConfig<Settings> = {
         smtp: {
             SMTP_FROM_NAME: template("Nextjs Deploy ({{ENV}})"),
         },
+        EXCLUDE: ["UMAMI_URL", "UMAMI_WEBSITE_ID"],
     },
     preview: {
         label: {
@@ -218,6 +229,7 @@ const envConfig: EnvsConfig<Settings> = {
         smtp: {
             SMTP_FROM_NAME: template("Nextjs Deploy ({{ENV}})"),
         },
+        EXCLUDE: ["UMAMI_URL", "UMAMI_WEBSITE_ID"],
     },
     production: {
         label: {
@@ -246,6 +258,10 @@ const envConfig: EnvsConfig<Settings> = {
         },
         smtp: {
             SMTP_FROM_NAME: "Nextjs Deploy",
+        },
+        umami: {
+            UMAMI_URL: "http://umami:3000",
+            UMAMI_WEBSITE_ID: "your-website-id",
         },
     },
 } as const;

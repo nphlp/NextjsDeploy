@@ -270,3 +270,19 @@ SMTP_FROM_NAME="My App"
 SMTP_FROM_NAME="My App (dev)"
 SMTP_FROM_NAME="My App (preview)"
 ```
+
+22. `UMAMI_URL`
+
+Umami internal Docker URL. Production only. Used by the API proxy route.
+
+```env
+UMAMI_URL=http://umami:3000
+```
+
+23. `UMAMI_WEBSITE_ID`
+
+Umami website ID. Production only.
+
+```env
+UMAMI_WEBSITE_ID=your-website-id
+```

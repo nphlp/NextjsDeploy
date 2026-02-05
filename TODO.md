@@ -1,15 +1,5 @@
 # TODO
 
-## Migration
-
-- Enable Traefik Dashboard
-
-- Tailscale VPN
-    - retirer UDP du firewall VPS
-    - experiment/preview
-    - prisma studio
-    - Access mobile + desktop
-
 ## Inplement
 
 - Gestion variables d'environnements
