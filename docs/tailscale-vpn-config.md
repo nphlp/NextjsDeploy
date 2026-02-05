@@ -110,8 +110,50 @@ Dokploy → Web Server → Traefik → Reload
 > Bien ajouter la règle DNS du VPN avant d'activer le dashboard, sinon il sera exposé publiquement.
 
 1. Créer le DNS `traefik` (voir section 2)
-2. Dokploy → Web Server → Traefik → Enable Dashboard
-3. Configurer le domaine `traefik.nansp.dev`
+
+2. Modifier `traefik.yml` (Dokploy → Traefik File System)
+
+Remplacer `api` :
+
+```yml
+api:
+    insecure: true
+```
+
+Par :
+
+```yml
+api:
+    dashboard: true
+```
+
+3. Créer le routeur dynamique sur le VPS :
+
+```bash
+touch /etc/dokploy/traefik/dynamic/dashboard.yml
+```
+
+4. Ajouter la config suivante depuis l'interface Dokploy (File System → Traefik → dynamic → dashboard.yml) :
+
+```yml
+http:
+    routers:
+        dashboard:
+            rule: Host(`traefik.nansp.dev`)
+            entryPoints:
+                - websecure
+            service: api@internal
+            tls:
+                certResolver: letsencrypt
+```
+
+4. Supprimer le port mapping 8080
+
+Dokploy → Web Server → Traefik → Additional Port Mappings → supprimer
+
+5. Reload Traefik
+
+Dokploy → Web Server → Traefik → Reload
 
 Le dashboard est en lecture seule. Le VPN suffit comme protection.
 
