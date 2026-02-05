@@ -2,6 +2,8 @@
 
 ## Migration
 
+- Enable Traefik Dashboard
+
 - Tailscale VPN
     - retirer UDP du firewall VPS
     - experiment/preview
