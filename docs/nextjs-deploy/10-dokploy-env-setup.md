@@ -1,6 +1,6 @@
 [README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **Dokploy Env Setup**
 
-[← GitHub Env Setup](./9-github-env-setup.md)
+[← GitHub Env Setup](./9-github-env-setup.md) | [Database Breaking Migrations →](./11-database-breaking-migrations.md)
 
 ---
 
@@ -68,6 +68,6 @@ Deploy manually from Dokploy dashboard, or automatically via [GitHub Pipelines](
 
 ---
 
-[← GitHub Env Setup](./9-github-env-setup.md)
+[← GitHub Env Setup](./9-github-env-setup.md) | [Database Breaking Migrations →](./11-database-breaking-migrations.md)
 
 [README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **Dokploy Env Setup**
