@@ -16,8 +16,8 @@
     - nextjs-deploy/
         - 1-setup-local.md ✅
         - 2-environment-variables.md ✅
-        - 3-containerization.md : compose, dockerfile, services, volumes, etc
-        - 4-fixtures.md : description fixtures, comment les utiliser, script, etc
+        - 3-containerization.md ✅
+        - 4-fixtures.md ✅
         - 5-git-usage.md : branches, commits, pull requests, rebase, etc
         - 6-good-practices.md :
             1. composant nextjs, typepage, structure
