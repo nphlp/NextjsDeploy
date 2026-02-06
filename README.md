@@ -1,129 +1,80 @@
-# Pulse Work
+# NextJS Deploy
 
-Time attendance and team management software.
+Full-stack Next.js 16 template with complete local development setup and Dokploy VPS deployment.
 
-<h2>Summary</h2>
+- **Framework**: Next.js 16 (App Router, Cache Components, React Compiler)
+- **API**: oRPC with Zod validation and OpenAPI documentation (Scalar)
+- **Database**: PostgreSQL 16 + Prisma 7
+- **Auth**: Better Auth
+- **UI**: Tailwind CSS 4 + Base-UI
+- **DevOps**: Docker, Dokploy, Traefik, Tailscale VPN
+- **Analytics**: Umami (self-hosted)
 
-- [Pulse Work](#pulse-work)
-    - [Quick links](#quick-links)
-    - [Prerequisites](#prerequisites)
-    - [Start a **DEVELOPMENT** server (local)](#start-a-development-server-local)
-    - [Start a **BUILD** server (local)](#start-a-build-server-local)
-    - [Start a **PRODUCTION** like server (local)](#start-a-production-like-server-local)
-    - [Fixtures](#fixtures)
+## Quick Start
 
-## Quick links
-
-- [Git guide](./docs/git-guide.md)
-- [Dokploy deployment](./docs/dokploy-deployment.md)
-- [Database Breaking Migrations](./docs/database-breaking-migrations.md)
-- [VPN to access Prisma Studio](./docs/vpn-prisma-studio.md)
-
-## Prerequisites
-
-The following software are required to lauch the development environment.
+### Prerequisites
 
 - [Node.js](https://nodejs.org/fr/download)
 - [PNPM](https://pnpm.io/installation)
-- [Postgres](https://www.postgresql.org/download/)
-
-> [!NOTE]
-> Docker works on Windows, MacOS and Linux. \
-> For Windows, ensure that you have [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) installed and configured.
-
 - [Docker](https://docs.docker.com/get-started/get-docker/)
-
-> [!NOTE]
-> Makefile work on Unix systems (Linux, MacOS) by default. \
-> For Windows, you can use [Chocolatey](https://chocolatey.org/install) to install it.
-
 - [Make](https://www.gnu.org/software/make/)
 
-## Start a **DEVELOPMENT** server (local)
+### Development
 
-Run the following command to start the development server environment (nextjs in terminal + postgres in docker):
-
-```
+```bash
 make dev
 ```
 
-It will:
+Next.js in terminal + Postgres in Docker. Installs dependencies, generates env files, sets up the database, loads fixtures and starts the server.
 
-- create an `.env` file from the `env/.env.example` file (if not already existing)
-- start a `postgres` container
-- start a `nextjs` server
+### Build (test production locally)
 
-Then access the app at [http://localhost:3000](http://localhost:3000).
-
-To stop both `nextjs` terminal server and `postgres` container, simply stop `nextjs` process with:
-
-```
-CTRL + C
-```
-
-It should stop `postgres` container in the process. If `postgres` container is still running, you can stop it with `make postgres-stop`.
-
-## Start a **BUILD** server (local)
-
-Run the following command to build and start a local server environment (nextjs in terminal + postgres in docker):
-
-```
+```bash
 make start
 ```
 
-It will:
+### Full containerized environment
 
-- create an `.env` file from the `env/.env.example` file (if not already existing)
-- start a `postgres` container
-- start a `nextjs` server
-
-Then access the app at [http://localhost:3000](http://localhost:3000).
-
-To stop both `nextjs` terminal server and `postgres` container, simply stop `nextjs` process with:
-
-```
-CTRL + C
-```
-
-It should stop `postgres` container in the process. If `postgres` container is still running, you can stop it with `make postgres-stop`.
-
-## Start a **PRODUCTION** like server (local)
-
-Run the following command to build and start a local server environment (nextjs in docker + postgres in docker):
-
-```
+```bash
 make basic
 ```
 
-It will:
+See [Setup local](./docs/nextjs-deploy/1-setup-local.md) for all options and details.
 
-- create an `.env` file from the `env/.env.example` file (if not already existing)
-- create an `env/.env.override.basic` file from the `env/.env.override.basic.example` file (if not already existing)
-- generate an `.env.basic` file from the `.env` and `env/.env.override.basic` file (if not already existing)
-- start a `postgres` and `nextjs` containers
+## Documentation
 
-Then access the app at [http://localhost:3000](http://localhost:3000).
+### Project — `docs/nextjs-deploy/`
 
-To stop both `postgres` and `nextjs` container run:
+- [Setup local](./docs/nextjs-deploy/1-setup-local.md)
+- [Environment variables](./docs/nextjs-deploy/2-environment-variables.md)
+- [Containerization](./docs/nextjs-deploy/3-containerization.md)
+- [Fixtures](./docs/nextjs-deploy/4-fixtures.md)
+- [Git usage](./docs/nextjs-deploy/5-git-usage.md)
+- [Good practices](./docs/nextjs-deploy/6-good-practices.md)
+- [MCP Servers](./docs/nextjs-deploy/7-mcp-servers.md)
+- [Deployment](./docs/nextjs-deploy/8-deployment.md)
 
-```
-# Keep volumes and data
-make basic-stop
+### Infrastructure — `docs/vps-infra/`
 
-# Remove volumes and data
-make basic-clean
-```
-
-<h2>Deploy a <b>TEST</b>, <b>STAGING</b> and <b>PRODUCTION</b> server (vps)</h2>
-
-Follow [Dokploy deployment instructions](./docs/dokploy-deployment.md).
+- [Setup VPS](./docs/vps-infra/1-setup-vps.md)
+- [Firewall config](./docs/vps-infra/2-firewall-config.md)
+- [DNS config](./docs/vps-infra/3-dns-config.md)
+- [Swap file](./docs/vps-infra/4-swap-file.md)
+- [Common packages](./docs/vps-infra/5-common-packages.md)
+- [Docker install](./docs/vps-infra/6-docker-install.md)
+- [Dokploy install](./docs/vps-infra/7-dokploy-install.md)
+- [Traefik DNS challenge](./docs/vps-infra/8-traefik-dns-challenge.md)
+- [Tailscale VPN](./docs/vps-infra/9-tailscale-vpn.md)
+- [Umami analytics](./docs/vps-infra/10-umami.md)
 
 ## Fixtures
 
-Here are some sample credentials to test the application.
+Test credentials:
 
-| Email                | Password      | User type |
-| -------------------- | ------------- | --------- |
-| employee@example.com | Password1234! | Employee  |
-| manager@example.com  | Password1234! | Manager   |
-| admin@example.com    | Password1234! | Admin     |
+| Email                | Password      | Role     |
+| -------------------- | ------------- | -------- |
+| employee@example.com | Password1234! | Employee |
+| manager@example.com  | Password1234! | Manager  |
+| admin@example.com    | Password1234! | Admin    |
+
+See [Fixtures](./docs/nextjs-deploy/4-fixtures.md) for details.

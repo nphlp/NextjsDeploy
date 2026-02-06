@@ -15,6 +15,8 @@
 
             "Bash(sed:*)",
             "Bash(mkdir:*)",
+            "Bash(mv:*)",
+            "Bash(cd:*)",
             "Bash(find:*)",
             "Bash(grep:*)",
             "Bash(xargs:*)",
