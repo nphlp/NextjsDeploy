@@ -17,6 +17,11 @@
 
 - Redis cache
 
+## Environment variables generator
+
+- Refactor
+- Add {generation-date} in header
+
 ## Authentification béton
 
 - Captcha
