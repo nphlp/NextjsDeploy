@@ -25,7 +25,7 @@
             1. Comment fonctionne la génération automatique (très court résumé)
             2. Configurer la génération automatique (make setup-env + env.config.ts + env/)
             3. description variables d'environnement (description, usage, examples de valeurs possibles, liens pour récuéprer la clé si besoin)
-        - good-practices.md
+        - good-practices/
             1. composant nexjts, typepage, structure
             2. page server, provider, composant client
             3. cache/suspense/skeleton
