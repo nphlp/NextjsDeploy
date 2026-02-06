@@ -6,7 +6,7 @@
 4. Redirection vers d'autres parties de documentation lorsque pertinent
 5. Pas de données sensibles, c'est un dépôt public
 
-- readme.md :
+- readme.md : ✅
     1. Présentation projet (court)
     2. Index de la documenation
     3. Commande `make dev` (lien vers setup-local.md)
@@ -14,30 +14,21 @@
 
 - docs/
     - nextjs-deploy/
-        - setup-local.md :
-            1. make dev : en dev avec nextjs non contenerisé pour de meilleurs perfs
-            2. make start : tester le build
-            3. make basic : contenerisation complete
-            4. mode manuel : make postgres + pnpm dev / auto
-            5. autre commandes makefile
-            6. etc
-        - environment-variables.md
-            1. Comment fonctionne la génération automatique (très court résumé)
-            2. Configurer la génération automatique (make setup-env + env.config.ts + env/)
-            3. description variables d'environnement (description, usage, examples de valeurs possibles, liens pour récuéprer la clé si besoin)
-        - good-practices/
-            1. composant nexjts, typepage, structure
+        - 1-setup-local.md ✅
+        - 2-environment-variables.md ✅
+        - 3-containerization.md : compose, dockerfile, services, volumes, etc
+        - 4-fixtures.md : description fixtures, comment les utiliser, script, etc
+        - 5-git-usage.md : branches, commits, pull requests, rebase, etc
+        - 6-good-practices.md :
+            1. composant nextjs, typepage, structure
             2. page server, provider, composant client
             3. cache/suspense/skeleton
             4. nuqs
             5. base-ui
             6. oRPC api routes
             7. etc
-        - git-usage.md : branches, commits, pull requests, rebase, etc
-        - contenerisation.md : compose, dockerfile, services, volumes, etc
-        - fixtures.md : description fixtures, comment les utiliser, script, etc
-        - [etc...]
-        - deployement.md :
+        - 7-mcp-servers.md ✅
+        - 8-deployment.md :
             1. Config ENV sur Github
             2. Config Dokploy Project
             3. Config Pipeline Github Actions
