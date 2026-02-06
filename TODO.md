@@ -39,11 +39,6 @@
 - Politique de confidentialité
 - Politique de cookies
 
-## Documenter
-
-- Architecture VPS
-- Architecture Application
-
 ## Clean code
 
 - Lien de confirmation adresse email en localhost ?
