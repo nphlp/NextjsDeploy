@@ -123,55 +123,6 @@ Debug frontend avancé avec Chrome DevTools Protocol.
 
 ---
 
-## 4. mcp-chrome (hangwin)
-
-Automatisation browser complète avec accès aux sessions utilisateur.
-
-### Config
-
-```json
-"mcp-chrome": {
-    "command": "node",
-    "args": ["/opt/homebrew/lib/node_modules/mcp-chrome-bridge/dist/mcp/mcp-server-stdio.js"]
-}
-```
-
-**Prérequis :** Extension Chrome + `npm install -g mcp-chrome-bridge`
-
-### Tools (27)
-
-| Catégorie       | Outil                              | Description                          |
-| --------------- | ---------------------------------- | ------------------------------------ |
-| **Browser**     | `get_windows_and_tabs`             | Lister fenêtres et onglets           |
-|                 | `chrome_navigate`                  | Naviguer vers une URL                |
-|                 | `chrome_switch_tab`                | Changer d'onglet                     |
-|                 | `chrome_close_tabs`                | Fermer des onglets                   |
-| **Contenu**     | `chrome_read_page`                 | Arbre d'accessibilité de la page     |
-|                 | `chrome_get_web_content`           | Contenu HTML/texte                   |
-|                 | `chrome_console`                   | Messages console                     |
-| **Interaction** | `chrome_computer`                  | Clics, scroll, keyboard, screenshots |
-|                 | `chrome_click_element`             | Cliquer sur un élément               |
-|                 | `chrome_fill_or_select`            | Remplir un champ/select              |
-|                 | `chrome_keyboard`                  | Entrée clavier                       |
-|                 | `chrome_javascript`                | Exécuter du JavaScript               |
-|                 | `chrome_handle_dialog`             | Gérer les dialogues                  |
-|                 | `chrome_upload_file`               | Uploader un fichier                  |
-| **Screenshots** | `chrome_screenshot`                | Capture d'écran                      |
-|                 | `chrome_gif_recorder`              | Enregistrer un GIF                   |
-| **Réseau**      | `chrome_network_request`           | Envoyer une requête                  |
-|                 | `chrome_network_capture`           | Capturer le trafic réseau            |
-|                 | `chrome_handle_download`           | Gérer les téléchargements            |
-| **Données**     | `chrome_history`                   | Rechercher dans l'historique         |
-|                 | `chrome_bookmark_search`           | Rechercher les signets               |
-|                 | `chrome_bookmark_add`              | Ajouter un signet                    |
-|                 | `chrome_bookmark_delete`           | Supprimer un signet                  |
-| **Performance** | `performance_start_trace`          | Démarrer une trace                   |
-|                 | `performance_stop_trace`           | Arrêter une trace                    |
-|                 | `performance_analyze_insight`      | Analyser les performances            |
-| **Sélection**   | `chrome_request_element_selection` | Demander à l'user de sélectionner    |
-
----
-
 ## MCP désactivés (à copier dans .mcp.json si besoin)
 
 ### linear
@@ -196,6 +147,4 @@ Extension Chrome native - activer via `claude --chrome` ou `/chrome`.
 | Dev Next.js (erreurs, routes) | `next-devtools`   |
 | Doc librairies à jour         | `context7`        |
 | Debug performance frontend    | `chrome-devtools` |
-| Automatisation avec sessions  | `mcp-chrome`      |
-| Historique/signets Chrome     | `mcp-chrome`      |
 | Gestion projet/issues         | `linear`          |
