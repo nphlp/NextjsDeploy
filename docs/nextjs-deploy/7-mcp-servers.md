@@ -1,8 +1,12 @@
-# MCP Servers - Outils et Ressources
+[README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **MCP Servers**
 
-Configuration : `.mcp.json`
+[← Good Practices](./6-good-practices.md) | [Deployment →](./8-deployment.md)
 
 ---
+
+# MCP Servers
+
+Configuration : `.mcp.json`
 
 ## 1. next-devtools (Vercel)
 
@@ -148,3 +152,9 @@ Extension Chrome native - activer via `claude --chrome` ou `/chrome`.
 | Doc librairies à jour         | `context7`        |
 | Debug performance frontend    | `chrome-devtools` |
 | Gestion projet/issues         | `linear`          |
+
+---
+
+[← Good Practices](./6-good-practices.md) | [Deployment →](./8-deployment.md)
+
+[README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **MCP Servers**
