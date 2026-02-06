@@ -49,10 +49,12 @@ See [Setup local](./docs/nextjs-deploy/1-setup-local.md) for all options and det
 - [Environment variables](./docs/nextjs-deploy/2-environment-variables.md)
 - [Containerization](./docs/nextjs-deploy/3-containerization.md)
 - [Fixtures](./docs/nextjs-deploy/4-fixtures.md)
-- [Git usage](./docs/nextjs-deploy/5-git-usage.md)
-- [Good practices](./docs/nextjs-deploy/6-good-practices.md)
-- [MCP Servers](./docs/nextjs-deploy/7-mcp-servers.md)
-- [Deployment](./docs/nextjs-deploy/8-deployment.md)
+- [Good practices](./docs/nextjs-deploy/5-good-practices.md)
+- [MCP Servers](./docs/nextjs-deploy/6-mcp-servers.md)
+- [Git usage](./docs/nextjs-deploy/7-git-usage.md)
+- [GitHub Pipelines](./docs/nextjs-deploy/8-github-pipelines.md)
+- [GitHub Env Setup](./docs/nextjs-deploy/9-github-env-setup.md)
+- [Dokploy Env Setup](./docs/nextjs-deploy/10-dokploy-env-setup.md)
 
 ### Infrastructure — `docs/vps-infra/`
 
