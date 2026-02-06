@@ -18,8 +18,7 @@
         - 2-environment-variables.md ✅
         - 3-containerization.md ✅
         - 4-fixtures.md ✅
-        - 5-git-usage.md : branches, commits, pull requests, rebase, etc
-        - 6-good-practices.md :
+        - 5-good-practices.md :
             1. composant nextjs, typepage, structure
             2. page server, provider, composant client
             3. cache/suspense/skeleton
@@ -27,11 +26,11 @@
             5. base-ui
             6. oRPC api routes
             7. etc
-        - 7-mcp-servers.md ✅
-        - 8-deployment.md :
-            1. Config ENV sur Github
-            2. Config Dokploy Project
-            3. Config Pipeline Github Actions
+        - 6-mcp-servers.md ✅
+        - 7-git-usage.md ✅ : branches, commits, pull requests, rebase, etc
+        - 8-github-pipelines.md ✅ : pipelines CI/CD, semantic release (planned)
+        - 9-github-env-setup.md ✅ : environments, secrets, branch protection
+        - 10-dokploy-env-setup.md ✅ : projet, compose, provider, variables
 
     - vps-infra/
         - setup-vps.md : auto install unbuntu via Hostinger, config ssh
