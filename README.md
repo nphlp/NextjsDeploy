@@ -71,10 +71,10 @@ See [Setup local](./docs/nextjs-deploy/1-setup-local.md) for all options and det
 
 Test credentials:
 
-| Email                | Password      | Role     |
-| -------------------- | ------------- | -------- |
-| employee@example.com | Password1234! | Employee |
-| manager@example.com  | Password1234! | Manager  |
-| admin@example.com    | Password1234! | Admin    |
+| Email              | Password      | Role   |
+| ------------------ | ------------- | ------ |
+| admin@example.com  | Password1234! | ADMIN  |
+| vendor@example.com | Password1234! | VENDOR |
+| user@example.com   | Password1234! | USER   |
 
 See [Fixtures](./docs/nextjs-deploy/4-fixtures.md) for details.
