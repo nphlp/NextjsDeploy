@@ -1,6 +1,6 @@
 [README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **MCP Servers**
 
-[← Good Practices](./6-good-practices.md) | [Deployment →](./8-deployment.md)
+[← Good Practices](./5-good-practices.md) | [Git Usage →](./7-git-usage.md)
 
 ---
 
@@ -155,6 +155,6 @@ Extension Chrome native - activer via `claude --chrome` ou `/chrome`.
 
 ---
 
-[← Good Practices](./6-good-practices.md) | [Deployment →](./8-deployment.md)
+[← Good Practices](./5-good-practices.md) | [Git Usage →](./7-git-usage.md)
 
 [README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **MCP Servers**

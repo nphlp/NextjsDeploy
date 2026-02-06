@@ -1,6 +1,6 @@
 [README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **Fixtures**
 
-[← Containerization](./3-containerization.md) | [Git Usage →](./5-git-usage.md)
+[← Containerization](./3-containerization.md) | [Good Practices →](./5-good-practices.md)
 
 ---
 
@@ -98,6 +98,6 @@ await PrismaInstance.quantity.deleteMany({});
 
 ---
 
-[← Containerization](./3-containerization.md) | [Git Usage →](./5-git-usage.md)
+[← Containerization](./3-containerization.md) | [Good Practices →](./5-good-practices.md)
 
 [README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **Fixtures**

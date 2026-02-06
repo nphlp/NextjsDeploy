@@ -22,6 +22,13 @@
 - Refactor
 - Add {generation-date} in header
 
+## Pipeline
+
+- Build Docker image
+- Push image to registry
+- Semantic Release (create version tag + changelog + GitHub Release)
+- Deploy to Dokploy
+
 ## Authentification béton
 
 - Captcha
