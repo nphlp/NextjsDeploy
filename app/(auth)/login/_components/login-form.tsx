@@ -26,6 +26,7 @@ export default function LoginForm() {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors, isSubmitting },
     } = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
@@ -44,6 +45,9 @@ export default function LoginForm() {
         }
 
         toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
+
+        setTimeout(() => reset(), 1000);
+
         router.push("/");
     };
 

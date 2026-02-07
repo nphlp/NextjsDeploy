@@ -101,12 +101,38 @@ pnpm build && pnpm start
 - **chrome-devtools** - Browser automation and debugging
 - **ide** (built-in) - VS Code LSP diagnostics via extension
 
+## Project Files
+
+- `README.md` — Project overview, quick start, documentation index
+- `TODO.md` — Feature backlog and technical debt
+- `PLAN.md` — Security & legal audit plan (OWASP, RGPD, CNIL, ANSSI)
+
 ## Documentation
 
-- `docs/nextjs-deploy/` - Project setup, environment, containerization, deployment
-    - To be defined...
-- `docs/vps-infra/` - VPS setup, DNS, firewall, Dokploy, Tailscale, analytics
-    - To be defined...
+- `docs/security-reference.md` — OWASP, RGPD/CNIL, ANSSI reference for developers
+- `docs/nextjs-deploy/` — Project setup, environment, containerization, deployment
+    - `1-setup-local.md` — Prerequisites, make dev/start/basic/postgres, ngrok
+    - `2-environment-variables.md` — Env generation system, variables reference
+    - `3-containerization.md` — Compose files, Dockerfiles, volumes
+    - `4-fixtures.md` — Commands, test credentials, seed data
+    - `5-good-practices.md` — Components, pages, cache, nuqs, base-ui, oRPC
+    - `6-mcp-servers.md` — MCP servers configuration
+    - `7-git-usage.md` — Branching, commits, conventions
+    - `8-github-pipelines.md` — CI/CD workflows
+    - `9-github-env-setup.md` — GitHub environment variables
+    - `10-dokploy-env-setup.md` — Dokploy environment setup
+    - `11-database-breaking-migrations.md` — Safe migration strategies
+- `docs/vps-infra/` — VPS setup, DNS, firewall, Dokploy, Tailscale, analytics
+    - `1-setup-vps.md` — VPS initial setup
+    - `2-firewall-config.md` — UFW firewall rules
+    - `3-dns-config.md` — DNS configuration
+    - `4-swap-file.md` — Swap file setup
+    - `5-common-packages.md` — Essential packages
+    - `6-docker-install.md` — Docker installation
+    - `7-dokploy-install.md` — Dokploy installation
+    - `8-traefik-dns-challenge.md` — Traefik SSL with DNS challenge
+    - `9-tailscale-vpn.md` — Tailscale VPN setup
+    - `10-umami.md` — Umami analytics
 
 ## Rules
 
