@@ -179,6 +179,39 @@ const envConfig = {
     - safety net if Prisma Studio is accidentally exposed publicly. Should only be accessible via [Tailscale VPN](../vps-infra/9-tailscale-vpn.md)
     - excluded in dev env
 
+### Captcha (Cloudflare Turnstile)
+
+- **`TURNSTILE_SECRET_KEY`** — Server-side secret key for Turnstile verification
+    - Cloudflare test key `1x0000000000000000000000000000000AA` in dev and basic (always passes)
+    - Real key from Cloudflare Dashboard for VPS envs (see setup below)
+- **`NEXT_PUBLIC_TURNSTILE_SITE_KEY`** — Client-side site key for Turnstile widget
+    - Cloudflare test key `1x00000000000000000000AA` in dev and basic (always passes)
+    - Real key from Cloudflare Dashboard for VPS envs (see setup below)
+
+> Test keys reference: [Cloudflare Turnstile Testing](https://developers.cloudflare.com/turnstile/troubleshooting/testing/)
+>
+> To force a specific behavior in dev, swap the site key:
+>
+> | Site Key                   | Behavior                     |
+> | -------------------------- | ---------------------------- |
+> | `1x00000000000000000000AA` | Always passes (default)      |
+> | `2x00000000000000000000AB` | Always blocks                |
+> | `3x00000000000000000000FF` | Forces interactive challenge |
+
+**How to get production keys:**
+
+1. Go to [Cloudflare Dashboard > Turnstile](https://dash.cloudflare.com/?to=/:account/turnstile)
+2. Click **Add Widget**
+3. Name: project name (e.g. `Nextjs Deploy`)
+4. Hostnames: add **all** domains that use the captcha (one widget can handle multiple domains)
+    - `your-domain.com` (production)
+    - `preview.your-domain.com` (preview)
+    - `experiment.your-domain.com` (experiment)
+5. Widget Mode: **Managed** (Cloudflare decides if user interaction is needed)
+6. Pre-authorization: **No**
+7. Click **Create**, then copy **Site Key** and **Secret Key**
+8. Paste them in `env/env.config.ts` for each VPS environment
+
 ### SMTP
 
 - **`SMTP_HOST`** — SMTP server host

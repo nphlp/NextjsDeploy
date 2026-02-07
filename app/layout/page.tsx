@@ -1,10 +1,10 @@
 import Main from "@core/Main";
-import { isDev } from "@lib/env";
+import { IS_DEV } from "@lib/env";
 import { notFound } from "next/navigation";
 import Content from "./_components/content";
 
 export default function Page() {
-    if (!isDev) notFound();
+    if (!IS_DEV) notFound();
 
     return (
         <Main>

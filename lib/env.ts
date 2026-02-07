@@ -1,21 +1,37 @@
-// Import from process.env
-const NODE_ENV = process.env.NODE_ENV;
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-const UMAMI_URL = process.env.UMAMI_URL;
-const UMAMI_WEBSITE_ID = process.env.UMAMI_WEBSITE_ID;
-const BETTER_AUTH_SECRET = process.env.BETTER_AUTH_SECRET;
+import "server-only";
 
-// Throw errors if missing
-if (!NEXT_PUBLIC_BASE_URL) throw new Error("NEXT_PUBLIC_BASE_URL environment variable is not defined");
-if (!BETTER_AUTH_SECRET) throw new Error("BETTER_AUTH_SECRET environment variable is not defined");
+/**
+ * Server-side environment variables
+ * -> Protected by "server-only" guard
+ * -> Client variables are in lib/env-client.ts
+ */
 
-// Export environment variables
-export const baseUrl = NEXT_PUBLIC_BASE_URL;
-export const betterAuthSecret = BETTER_AUTH_SECRET;
-export const isDev = NODE_ENV === "development";
-export const isProd = NODE_ENV === "production";
+const required = (name: string): string => {
+    const value = process.env[name];
+    if (!value) throw new Error(`${name} environment variable is not defined`);
+    return value;
+};
 
-// Umami analytics
-export const isUmamiDefined = !!(UMAMI_URL && UMAMI_WEBSITE_ID);
-export const umamiUrl = UMAMI_URL;
-export const umamiWebsiteId = UMAMI_WEBSITE_ID;
+// Required
+export const NODE_ENV = required("NODE_ENV");
+export const NEXT_PUBLIC_BASE_URL = required("NEXT_PUBLIC_BASE_URL");
+export const DATABASE_URL = required("DATABASE_URL");
+export const BETTER_AUTH_SECRET = required("BETTER_AUTH_SECRET");
+export const TURNSTILE_SECRET_KEY = required("TURNSTILE_SECRET_KEY");
+
+// SMTP
+export const SMTP_HOST = required("SMTP_HOST");
+export const SMTP_PORT = required("SMTP_PORT");
+export const SMTP_USER = required("SMTP_USER");
+export const SMTP_PASSWORD = required("SMTP_PASSWORD");
+export const SMTP_FROM = required("SMTP_FROM");
+export const SMTP_FROM_NAME = required("SMTP_FROM_NAME");
+
+// Derived
+export const IS_DEV = NODE_ENV === "development";
+export const IS_PROD = NODE_ENV === "production";
+
+// Umami analytics (optional)
+export const UMAMI_URL = process.env.UMAMI_URL;
+export const UMAMI_WEBSITE_ID = process.env.UMAMI_WEBSITE_ID;
+export const IS_UMAMI_DEFINED = !!(UMAMI_URL && UMAMI_WEBSITE_ID);

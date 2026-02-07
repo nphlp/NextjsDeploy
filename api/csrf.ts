@@ -1,7 +1,5 @@
+import { NEXT_PUBLIC_BASE_URL } from "@lib/env";
 import { NextRequest, NextResponse } from "next/server";
-
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-if (!NEXT_PUBLIC_BASE_URL) throw new Error("NEXT_PUBLIC_BASE_URL environment variable is not defined");
 
 const csrfProtection = async (request: NextRequest) => {
     const mutationMethods = ["POST", "PUT", "PATCH", "DELETE"];

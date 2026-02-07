@@ -50,6 +50,10 @@ const settings = {
             comment: "Better Auth configuration",
             variables: ["BETTER_AUTH_SECRET"],
         },
+        turnstile: {
+            comment: "Cloudflare Turnstile captcha",
+            variables: ["TURNSTILE_SECRET_KEY", "NEXT_PUBLIC_TURNSTILE_SITE_KEY"],
+        },
         smtp: {
             comment: "SMTP configuration",
             variables: ["SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASSWORD", "SMTP_FROM", "SMTP_FROM_NAME"],
@@ -129,6 +133,14 @@ const envConfig: EnvsConfig<Settings> = {
         betterAuth: {
             BETTER_AUTH_SECRET: "better-auth-session-encryption-key",
         },
+        turnstile: {
+            // Secret key
+            TURNSTILE_SECRET_KEY: "1x0000000000000000000000000000000AA",
+            // Cloudflare site key
+            NEXT_PUBLIC_TURNSTILE_SITE_KEY: "1x00000000000000000000AA", // Always pass
+            // NEXT_PUBLIC_TURNSTILE_SITE_KEY: "2x00000000000000000000AB", // Always blocks
+            // NEXT_PUBLIC_TURNSTILE_SITE_KEY: "3x00000000000000000000FF", // Forces interactive challenge
+        },
         smtp: {
             SMTP_FROM_NAME: template("Nextjs Deploy ({{ENV}})"),
         },
@@ -166,6 +178,14 @@ const envConfig: EnvsConfig<Settings> = {
         betterAuth: {
             BETTER_AUTH_SECRET: "better-auth-session-encryption-key",
         },
+        turnstile: {
+            // Secret key
+            TURNSTILE_SECRET_KEY: "1x0000000000000000000000000000000AA",
+            // Cloudflare site key
+            NEXT_PUBLIC_TURNSTILE_SITE_KEY: "1x00000000000000000000AA", // Always pass
+            // NEXT_PUBLIC_TURNSTILE_SITE_KEY: "2x00000000000000000000AB", // Always blocks
+            // NEXT_PUBLIC_TURNSTILE_SITE_KEY: "3x00000000000000000000FF", // Forces interactive challenge
+        },
         smtp: {
             SMTP_FROM_NAME: template("Nextjs Deploy ({{ENV}})"),
         },
@@ -195,6 +215,11 @@ const envConfig: EnvsConfig<Settings> = {
         betterAuth: {
             // Generate secret with: openssl rand -base64 32
             BETTER_AUTH_SECRET: "",
+        },
+        turnstile: {
+            // Get keys from Cloudflare Dashboard > Turnstile > Add Site
+            NEXT_PUBLIC_TURNSTILE_SITE_KEY: "",
+            TURNSTILE_SECRET_KEY: "",
         },
         smtp: {
             SMTP_FROM_NAME: template("Nextjs Deploy ({{ENV}})"),
@@ -226,6 +251,11 @@ const envConfig: EnvsConfig<Settings> = {
             // Generate secret with: openssl rand -base64 32
             BETTER_AUTH_SECRET: "",
         },
+        turnstile: {
+            // Get keys from Cloudflare Dashboard > Turnstile > Add Site
+            NEXT_PUBLIC_TURNSTILE_SITE_KEY: "",
+            TURNSTILE_SECRET_KEY: "",
+        },
         smtp: {
             SMTP_FROM_NAME: template("Nextjs Deploy ({{ENV}})"),
         },
@@ -255,6 +285,11 @@ const envConfig: EnvsConfig<Settings> = {
         betterAuth: {
             // Generate secret with: openssl rand -base64 32
             BETTER_AUTH_SECRET: "",
+        },
+        turnstile: {
+            // Get keys from Cloudflare Dashboard > Turnstile > Add Site
+            NEXT_PUBLIC_TURNSTILE_SITE_KEY: "",
+            TURNSTILE_SECRET_KEY: "",
         },
         smtp: {
             SMTP_FROM_NAME: "Nextjs Deploy",

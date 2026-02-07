@@ -1,15 +1,9 @@
 "use server";
 
+import { IS_DEV, SMTP_FROM, SMTP_FROM_NAME } from "@lib/env";
 import NodemailerInstance from "@lib/nodemailer";
 import { render } from "@react-email/render";
 import { JSX } from "react";
-
-const SMTP_FROM_NAME = process.env.SMTP_FROM_NAME;
-const SMTP_FROM = process.env.SMTP_FROM;
-
-if (!SMTP_FROM_NAME || !SMTP_FROM) {
-    throw new Error("SMTP_FROM_NAME or SMTP_FROM environment variables are not defined");
-}
 
 type SendEmailActionProps = {
     subject: string;
@@ -25,7 +19,7 @@ export default async function SendEmailAction(props: SendEmailActionProps) {
             pretty: true,
         });
 
-        if (process.env.NODE_ENV === "development") {
+        if (IS_DEV) {
             console.log("📨 Sending email...");
         }
 
@@ -36,7 +30,7 @@ export default async function SendEmailAction(props: SendEmailActionProps) {
             html,
         });
 
-        if (process.env.NODE_ENV === "development") {
+        if (IS_DEV) {
             console.log(`✅ Email sent successfully to ${email}`);
         }
 

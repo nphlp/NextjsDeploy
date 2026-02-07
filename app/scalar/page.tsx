@@ -1,9 +1,9 @@
-import { isDev } from "@lib/env";
+import { IS_DEV } from "@lib/env";
 import { notFound } from "next/navigation";
 import ScalarDocs from "./dynamic-loading";
 
 export default function Page() {
-    if (!isDev) return notFound();
+    if (!IS_DEV) return notFound();
 
     return (
         <div className="bg-background absolute inset-0">

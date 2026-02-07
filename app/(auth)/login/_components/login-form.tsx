@@ -6,6 +6,7 @@ import Form from "@atoms/form";
 import Input from "@atoms/input/input";
 import InputPassword from "@atoms/input/input-password";
 import { useToast } from "@atoms/toast";
+import { useTurnstile } from "@atoms/use-turnstile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "@lib/auth-client";
 import { useRouter } from "next/navigation";
@@ -22,6 +23,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function LoginForm() {
     const router = useRouter();
     const toast = useToast();
+    const { token, captchaHeaders, reset: resetCaptcha, widget: captchaWidget } = useTurnstile();
 
     const {
         register,
@@ -37,15 +39,17 @@ export default function LoginForm() {
     });
 
     const onSubmit = async (values: LoginFormValues) => {
-        const { data } = await signIn.email(values);
+        const { data } = await signIn.email({ ...values, ...captchaHeaders });
 
         if (!data) {
             toast.add({ title: "Échec de la connexion", description: "Identifiants invalides.", type: "error" });
+            resetCaptcha();
             return;
         }
 
         toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
 
+        resetCaptcha();
         setTimeout(() => reset(), 1000);
 
         router.push("/");
@@ -85,6 +89,9 @@ export default function LoginForm() {
                 />
             </div>
 
+            {/* Captcha */}
+            {captchaWidget}
+
             {/* Register link */}
             <div className="space-x-2 text-center text-sm text-gray-500">
                 <span>Pas encore de compte ?</span>
@@ -93,7 +100,7 @@ export default function LoginForm() {
 
             {/* Submit button */}
             <div className="flex justify-center">
-                <Button type="submit" label="Connexion" loading={isSubmitting} className="w-full sm:w-auto" />
+                <Button type="submit" label="Connexion" loading={isSubmitting || !token} className="w-full sm:w-auto" />
             </div>
         </Form>
     );
