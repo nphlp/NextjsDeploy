@@ -24,6 +24,7 @@ export default function RequestResetForm() {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors, isSubmitting },
     } = useForm<RequestResetFormValues>({
         resolver: zodResolver(requestResetSchema),
@@ -48,7 +49,10 @@ export default function RequestResetForm() {
         }
 
         setEmailSent(true);
+
         toast.add({ title: "Email envoyé", description: "Vérifiez votre boîte de réception.", type: "success" });
+
+        setTimeout(() => reset(), 2000);
     };
 
     return (

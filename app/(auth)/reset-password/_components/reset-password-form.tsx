@@ -28,6 +28,7 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors, isSubmitting },
     } = useForm<ResetPasswordFormValues>({
         resolver: zodResolver(resetPasswordSchema),
@@ -52,7 +53,10 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
             description: "Vous allez être redirigé vers la connexion.",
             type: "success",
         });
-        setTimeout(() => router.push("/login"), 1000);
+
+        setTimeout(() => reset(), 1000);
+
+        router.push("/login");
     };
 
     return (

@@ -29,6 +29,7 @@ export default function RegisterForm() {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors, isSubmitting },
     } = useForm<RegisterFormValues>({
         resolver: zodResolver(registerSchema),
@@ -57,6 +58,9 @@ export default function RegisterForm() {
         await oRPC.user.update({ id: data.user.id, lastname });
 
         toast.add({ title: "Inscription réussie", description: "Bienvenue sur l'application !", type: "success" });
+
+        setTimeout(() => reset(), 1000);
+
         router.push("/");
     };
 

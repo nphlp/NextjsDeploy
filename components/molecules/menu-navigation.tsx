@@ -6,7 +6,7 @@ import Menu from "@comps/atoms/menu/menu";
 import { useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
 import cn from "@lib/cn";
-import { Apple, Combine, Copy, Home, LucideIcon, Menu as MenuIcon, Palette } from "lucide-react";
+import { Apple, Code, Code2, Combine, Copy, Home, LucideIcon, Menu as MenuIcon, Palette } from "lucide-react";
 import { Route } from "next";
 import { usePathname } from "next/navigation";
 
@@ -27,7 +27,8 @@ const links: LinkType[] = [
     { label: "UI", href: "/theme/ui", icon: Combine },
     { label: "Skeleton", href: "/theme/skeleton", icon: Copy },
     { label: "Colors", href: "/theme/colors", icon: Palette },
-    // { label: "API", href: "/scalar", icon: Code, developmentOnly: true },
+    { label: "API", href: "/scalar", icon: Code, developmentOnly: true },
+    { label: "Auth API", href: "/api/auth/reference" as Route, icon: Code2, developmentOnly: true },
 ];
 
 type MenuNavigationProps = {
