@@ -6,9 +6,9 @@ import { BetterAuthOptions } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
-import { customSession, openAPI } from "better-auth/plugins";
+import { captcha, customSession, openAPI } from "better-auth/plugins";
 import { authBeforeMiddleware } from "./auth-middleware";
-import { baseUrl, betterAuthSecret, isDev } from "./env";
+import { BETTER_AUTH_SECRET, IS_DEV, NEXT_PUBLIC_BASE_URL, TURNSTILE_SECRET_KEY } from "./env";
 
 type SendResetPasswordProps = NonNullable<NonNullable<BetterAuthOptions["emailAndPassword"]>["sendResetPassword"]>;
 
@@ -75,15 +75,15 @@ export const auth = betterAuth({
      * Base URL
      * Required to generate correct links
      */
-    baseURL: baseUrl,
+    baseURL: NEXT_PUBLIC_BASE_URL,
     /**
      * Trusted origins for CORS and CSRF protection
      */
-    trustedOrigins: [baseUrl],
+    trustedOrigins: [NEXT_PUBLIC_BASE_URL],
     /**
      * Auth secret for signing tokens and encrypting data
      */
-    secret: betterAuthSecret,
+    secret: BETTER_AUTH_SECRET,
     /**
      * Database adapter using Prisma
      */
@@ -190,6 +190,15 @@ export const auth = betterAuth({
      */
     plugins: [
         /**
+         * Captcha plugin using Cloudflare Turnstile
+         * -> Protects sign-up, sign-in and reset-password endpoints
+         * -> Client must send token via x-captcha-response header
+         */
+        captcha({
+            provider: "cloudflare-turnstile",
+            secretKey: TURNSTILE_SECRET_KEY,
+        }),
+        /**
          * OpenAPI plugin to generate Better Auth API docs
          * -> Navigate to: /api/auth/reference
          */
@@ -234,6 +243,6 @@ export const auth = betterAuth({
      * Logging and debugging options
      */
     logger: {
-        level: isDev ? "debug" : "warn",
+        level: IS_DEV ? "debug" : "warn",
     },
 });

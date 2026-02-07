@@ -10,7 +10,7 @@
  * Requires `data-host-url="/api/umami"` on the script tag in layout.tsx
  * so the Umami script sends events through this proxy instead of `/api/send`.
  */
-import { isUmamiDefined, umamiUrl } from "@lib/env";
+import { IS_UMAMI_DEFINED, UMAMI_URL } from "@lib/env";
 import { notFound } from "next/navigation";
 
 type UmamiProps = {
@@ -18,11 +18,11 @@ type UmamiProps = {
 };
 
 async function handler(request: Request, props: UmamiProps) {
-    if (!isUmamiDefined) return notFound();
+    if (!IS_UMAMI_DEFINED) return notFound();
 
     const { segments } = await props.params;
 
-    const url = `${umamiUrl}/${segments.join("/")}`;
+    const url = `${UMAMI_URL}/${segments.join("/")}`;
 
     const method = request.method;
     const headers = request.headers;

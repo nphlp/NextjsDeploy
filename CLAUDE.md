@@ -140,6 +140,30 @@ pnpm build && pnpm start
 
 - Code, documentation, comments, JSDoc: English
 - Claude Code responses: adapt to the language of the prompt
+- Never leak real domains, secrets, or credentials in documentation or versioned files. Use generic placeholders (`your-domain.com`, `your-password`, etc.).
+
+### Environment Variables
+
+**Architecture:**
+
+- `lib/env.ts` — Server-only variables (has `import "server-only"` guard)
+- `lib/env-client.ts` — Client-safe variables (`NEXT_PUBLIC_*` only, importable in `"use client"` components)
+- Exceptions (direct `process.env` allowed):
+    - Config files (`next.config.mts`, `prisma.config.mts`, `vitest.config.mjs`) — run outside app scope, can't import `env.ts`
+    - `lib/prisma.ts` — requires `dotenv` for standalone Prisma CLI usage (migrations, studio), can't depend on `env.ts`
+    - `instrumentation.ts` — Next.js internal `NEXT_RUNTIME`
+    - Client components — `process.env.NODE_ENV` only (bundler needs static access for dead code elimination)
+
+**Workflow to add a new env variable:**
+
+1. Register in `settings.groups` (in both `env/env.config.ts` and `scripts/generate-env/env.config.example.ts`)
+2. Set values in `globalConfig` and/or `envConfig` per environment
+3. In `env.config.example.ts` (versioned): use placeholder values only, never real secrets
+4. In `env/env.config.ts` (non-versioned): set real values
+5. Export from `lib/env.ts` (server) or `lib/env-client.ts` (client `NEXT_PUBLIC_*`)
+6. Import from `@lib/env` or `@lib/env-client` where needed — never use `process.env` directly in app code
+7. Run `make setup-env` to regenerate `.env` files
+8. Update `docs/nextjs-deploy/2-environment-variables.md` (Variables Reference section)
 
 ### Commands
 

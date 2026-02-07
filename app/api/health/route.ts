@@ -1,3 +1,4 @@
+import { NODE_ENV } from "@lib/env";
 import { NextResponse } from "next/server";
 
 export type HealthResponse = {
@@ -13,7 +14,7 @@ export async function GET(): Promise<NextResponse<HealthResponse>> {
             status: "ok" as const,
             timestamp: new Date().toISOString(),
             uptime: process.uptime(),
-            environment: process.env.NODE_ENV,
+            environment: NODE_ENV,
         };
 
         return NextResponse.json(healthCheck, { status: 200 });

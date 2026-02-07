@@ -6,7 +6,7 @@ import Html from "@core/Html";
 import Theme from "@core/Theme";
 import { DEBUG_LAYOUT } from "@core/config";
 import cn from "@lib/cn";
-import { isUmamiDefined, umamiWebsiteId } from "@lib/env";
+import { IS_UMAMI_DEFINED, UMAMI_WEBSITE_ID } from "@lib/env";
 import "@lib/orpc-server";
 import "@public/globals.css";
 import type { Metadata } from "next";
@@ -62,11 +62,11 @@ export default async function Layout(props: LayoutProps) {
                         </Theme>
                     </NuqsAdapter>
                 </ToastProvider>
-                {isUmamiDefined && (
+                {IS_UMAMI_DEFINED && (
                     <Script
                         src="/api/umami/script.js"
                         data-host-url="/api/umami"
-                        data-website-id={umamiWebsiteId}
+                        data-website-id={UMAMI_WEBSITE_ID}
                         defer
                     />
                 )}

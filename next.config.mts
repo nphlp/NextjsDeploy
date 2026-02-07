@@ -12,6 +12,9 @@ const isDev = process.env.NODE_ENV === "development";
 const scalarDomains = isDev ? "https://cdn.jsdelivr.net https://proxy.scalar.com https://fonts.scalar.com" : "";
 const withData = isDev ? "data:" : "";
 
+// Cloudflare Turnstile captcha
+const turnstileDomain = "https://challenges.cloudflare.com";
+
 // Security headers config
 const securityHeaders = [
     // Prevent clickjacking attacks
@@ -27,8 +30,9 @@ const securityHeaders = [
         key: "Content-Security-Policy",
         value: [
             "default-src 'self'",
-            `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${scalarDomains}`,
+            `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${scalarDomains} ${turnstileDomain}`,
             `style-src 'self' 'unsafe-inline' ${scalarDomains}`,
+            `frame-src ${turnstileDomain}`,
             `connect-src 'self' ${scalarDomains}`,
             `font-src 'self' ${scalarDomains} ${withData}`,
             `img-src 'self' ${withData}`,
