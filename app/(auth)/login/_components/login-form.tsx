@@ -49,8 +49,10 @@ export default function LoginForm() {
 
         toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
 
-        resetCaptcha();
-        setTimeout(() => reset(), 1000);
+        setTimeout(() => {
+            resetCaptcha();
+            reset();
+        }, 1000);
 
         router.push("/");
     };

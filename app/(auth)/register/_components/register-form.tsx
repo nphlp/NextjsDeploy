@@ -9,17 +9,22 @@ import { useToast } from "@atoms/toast";
 import { useTurnstile } from "@atoms/use-turnstile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@lib/auth-client";
-import oRPC from "@lib/orpc";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const registerSchema = z.object({
-    firstname: z.string().min(2, { message: "Le prénom doit contenir au moins 2 caractères" }),
-    lastname: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
-    email: z.email({ message: "Email invalide" }),
-    password: z.string().min(8, { message: "Le mot de passe doit contenir au moins 8 caractères" }),
-});
+const registerSchema = z
+    .object({
+        firstname: z.string().min(2, { message: "Le prénom doit contenir au moins 2 caractères" }),
+        lastname: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
+        email: z.email({ message: "Email invalide" }),
+        password: z.string().min(8, { message: "Le mot de passe doit contenir au moins 8 caractères" }),
+        confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "Les mots de passe ne correspondent pas",
+        path: ["confirmPassword"],
+    });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
@@ -40,6 +45,7 @@ export default function RegisterForm() {
             lastname: "",
             email: "",
             password: "",
+            confirmPassword: "",
         },
     });
 
@@ -48,6 +54,7 @@ export default function RegisterForm() {
 
         const { data } = await signUp.email({
             name: firstname,
+            lastname,
             email,
             password,
             ...captchaHeaders,
@@ -59,12 +66,12 @@ export default function RegisterForm() {
             return;
         }
 
-        await oRPC.user.update({ id: data.user.id, lastname });
-
         toast.add({ title: "Inscription réussie", description: "Bienvenue sur l'application !", type: "success" });
 
-        resetCaptcha();
-        setTimeout(() => reset(), 1000);
+        setTimeout(() => {
+            resetCaptcha();
+            reset();
+        }, 1000);
 
         router.push("/");
     };
@@ -108,6 +115,16 @@ export default function RegisterForm() {
                 <InputPassword
                     {...register("password")}
                     placeholder="Minimum 8 caractères"
+                    autoComplete="new-password"
+                    disabled={isSubmitting}
+                />
+            </Field>
+
+            {/* Confirm password */}
+            <Field label="Confirmation" error={errors.confirmPassword?.message}>
+                <InputPassword
+                    {...register("confirmPassword")}
+                    placeholder="Confirmez le mot de passe"
                     autoComplete="new-password"
                     disabled={isSubmitting}
                 />

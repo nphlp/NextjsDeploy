@@ -40,30 +40,30 @@ const fruitData: Prisma.FruitCreateInput[] = [
         description: "Fruit exotique à chair verte acidulée",
         User: { connect: { email: "admin@example.com" } },
     },
-    // Vendor fruits
+    // User fruits
     {
         name: "Mangue",
         description: "Fruit tropical sucré à la chair onctueuse",
-        User: { connect: { email: "vendor@example.com" } },
+        User: { connect: { email: "user@example.com" } },
     },
     {
         name: "Raisin",
         description: "Petites baies juteuses en grappe",
-        User: { connect: { email: "vendor@example.com" } },
+        User: { connect: { email: "user@example.com" } },
     },
     {
         name: "Ananas",
         description: "Fruit tropical à la chair dorée et acidulée",
-        User: { connect: { email: "vendor@example.com" } },
+        User: { connect: { email: "user@example.com" } },
     },
     {
         name: "Poire",
         description: "Fruit doux et fondant de la famille des pommes",
-        User: { connect: { email: "vendor@example.com" } },
+        User: { connect: { email: "user@example.com" } },
     },
     {
         name: "Cerise",
         description: "Petit fruit rouge à noyau, doux et sucré",
-        User: { connect: { email: "vendor@example.com" } },
+        User: { connect: { email: "user@example.com" } },
     },
 ];

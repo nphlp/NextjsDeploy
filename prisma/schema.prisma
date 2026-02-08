@@ -11,7 +11,7 @@ datasource db {
 model User {
     id            String  @id @default(nanoid())
     name          String
-    lastname      String?
+    lastname      String
     email         String  @unique
     emailVerified Boolean
     image         String? @db.Text
@@ -90,7 +90,6 @@ model Verification {
 
 enum Role {
     USER
-    VENDOR
     ADMIN
 }
 

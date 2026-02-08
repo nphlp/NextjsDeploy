@@ -11,9 +11,15 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const resetPasswordSchema = z.object({
-    password: z.string().min(8, { message: "Le mot de passe doit contenir au moins 8 caractères" }),
-});
+const resetPasswordSchema = z
+    .object({
+        password: z.string().min(8, { message: "Le mot de passe doit contenir au moins 8 caractères" }),
+        confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "Les mots de passe ne correspondent pas",
+        path: ["confirmPassword"],
+    });
 
 type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
@@ -34,6 +40,7 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         resolver: zodResolver(resetPasswordSchema),
         defaultValues: {
             password: "",
+            confirmPassword: "",
         },
     });
 
@@ -66,6 +73,16 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 <InputPassword
                     {...register("password")}
                     placeholder="Minimum 8 caractères"
+                    autoComplete="new-password"
+                    disabled={isSubmitting}
+                />
+            </Field>
+
+            {/* Confirm password */}
+            <Field label="Confirmation" error={errors.confirmPassword?.message}>
+                <InputPassword
+                    {...register("confirmPassword")}
+                    placeholder="Confirmez le mot de passe"
                     autoComplete="new-password"
                     disabled={isSubmitting}
                 />

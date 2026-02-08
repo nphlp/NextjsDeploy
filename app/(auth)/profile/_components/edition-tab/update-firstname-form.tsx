@@ -6,9 +6,8 @@ import Form from "@atoms/form";
 import Input from "@atoms/input/input";
 import { useToast } from "@atoms/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SessionRefetch } from "@lib/auth-client";
+import { SessionRefetch, updateUser } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
-import oRPC from "@lib/orpc";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -38,7 +37,7 @@ export const UpdateFirstnameForm = (props: UpdateFirstnameFormProps) => {
 
     const onSubmit = async (values: UpdateFirstnameFormValues) => {
         try {
-            await oRPC.user.update({ id: session.user.id, name: values.name });
+            await updateUser({ name: values.name });
             await refetch();
             toast.add({
                 title: "Prénom modifié",

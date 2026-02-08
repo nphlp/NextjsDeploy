@@ -210,7 +210,7 @@ function isPasswordStrongEnough(password: string): IsPasswordStrongEnoughRespons
         .string()
         .regex(/[^a-zA-Z0-9]/)
         .safeParse(password).success;
-    const isLongEnough = z.string().min(12).safeParse(password).success;
+    const isLongEnough = z.string().min(14).safeParse(password).success;
     const isNotTooLong = z.string().max(128).safeParse(password).success;
 
     const isValid = hasUppercase && hasLowercase && hasNumber && hasSpecialChar && isLongEnough && isNotTooLong;
@@ -249,7 +249,16 @@ export const authBeforeMiddleware: AuthMiddlewareContext = async (ctx) => {
 
     // Validate password strength on sign-up, reset-password and change-password
     if (ctx.path === "/sign-up/email" || ctx.path === "/reset-password" || ctx.path === "/change-password") {
-        const password = ctx.body?.password;
+        const password = (() => {
+            switch (ctx.path) {
+                case "/sign-up/email":
+                    return ctx.body?.password;
+                case "/reset-password":
+                case "/change-password":
+                    return ctx.body?.newPassword;
+            }
+        })();
+
         if (!password) throw new APIError("BAD_REQUEST", { message: "Missing password." });
 
         const passwordStrength = isPasswordStrongEnough(password);
