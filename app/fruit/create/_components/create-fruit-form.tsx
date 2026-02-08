@@ -1,15 +1,14 @@
 "use client";
 
 import Button from "@atoms/button";
-import Field from "@atoms/filed";
-import Form from "@atoms/form";
+import Field, { Control } from "@atoms/filed";
+import Form, { FormProps, fieldValidator } from "@atoms/form";
 import Input from "@atoms/input/input";
 import TextArea from "@atoms/input/text-area";
 import { useToast } from "@atoms/toast";
-import { zodResolver } from "@hookform/resolvers/zod";
 import oRPC from "@lib/orpc";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { z } from "zod";
 
 const createFruitSchema = z.object({
@@ -24,60 +23,50 @@ const createFruitSchema = z.object({
         .max(500, "La description ne doit pas dépasser 500 caractères"),
 });
 
-type FruitCreateFormValues = z.infer<typeof createFruitSchema>;
+const validate = fieldValidator(createFruitSchema);
 
 export default function CreateFruitForm() {
     const router = useRouter();
     const toast = useToast();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = useForm<FruitCreateFormValues>({
-        mode: "onChange",
-        resolver: zodResolver(createFruitSchema),
-        defaultValues: {
-            name: "",
-            description: "",
-        },
-    });
+    const handleSubmit: FormProps["onFormSubmit"] = async (formValues) => {
+        const result = createFruitSchema.safeParse(formValues);
+        if (!result.success) return;
 
-    const onSubmit = async (values: FruitCreateFormValues) => {
+        setIsSubmitting(true);
         try {
-            await oRPC.fruit.create(values);
+            await oRPC.fruit.create(result.data);
             toast.add({ title: "Fruit créé", description: "Le fruit a été ajouté à la liste.", type: "success" });
             router.push("/fruits");
         } catch {
             toast.add({ title: "Erreur", description: "Impossible de créer le fruit.", type: "error" });
+            setIsSubmitting(false);
         }
     };
 
     return (
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form onFormSubmit={handleSubmit}>
             {/* Name */}
-            <Field label="Nom du fruit" description="Entrer le nom du fruit" error={errors.name?.message}>
-                <Input
-                    {...register("name")}
-                    placeholder="Mangue"
-                    disabled={isSubmitting}
-                    autoComplete="off"
-                    autoFocus
-                />
+            <Field
+                label="Nom du fruit"
+                name="name"
+                description="Entrer le nom du fruit"
+                validate={validate("name")}
+                validationMode="onChange"
+            >
+                <Control placeholder="Mangue" disabled={isSubmitting} autoComplete="off" render={<Input autoFocus />} />
             </Field>
 
             {/* Description */}
             <Field
                 label="Description du fruit"
+                name="description"
                 description="Entrer une courte description pour le fruit"
-                error={errors.description?.message}
+                validate={validate("description")}
+                validationMode="onChange"
             >
-                <TextArea
-                    {...register("description")}
-                    placeholder="Un fruit tropical sucré et juteux."
-                    disabled={isSubmitting}
-                    autoComplete="off"
-                />
+                <TextArea placeholder="Un fruit tropical sucré et juteux." disabled={isSubmitting} autoComplete="off" />
             </Field>
 
             {/* Submit button */}

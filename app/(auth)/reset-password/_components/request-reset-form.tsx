@@ -1,43 +1,35 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Field from "@atoms/filed";
-import Form from "@atoms/form";
+import Field, { Control } from "@atoms/filed";
+import Form, { FormProps, fieldValidator } from "@atoms/form";
 import Input from "@atoms/input/input";
 import { useToast } from "@atoms/toast";
 import { useTurnstile } from "@atoms/use-turnstile";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { requestPasswordReset } from "@lib/auth-client";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useRef, useState } from "react";
 import { z } from "zod";
 
 const requestResetSchema = z.object({
     email: z.email({ message: "Email invalide" }),
 });
 
-type RequestResetFormValues = z.infer<typeof requestResetSchema>;
+const validate = fieldValidator(requestResetSchema);
 
 export default function RequestResetForm() {
     const [emailSent, setEmailSent] = useState(false);
     const toast = useToast();
     const { token, captchaHeaders, reset: resetCaptcha, widget: captchaWidget } = useTurnstile();
+    const formRef = useRef<HTMLFormElement>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors, isSubmitting },
-    } = useForm<RequestResetFormValues>({
-        resolver: zodResolver(requestResetSchema),
-        defaultValues: {
-            email: "",
-        },
-    });
+    const handleSubmit: FormProps["onFormSubmit"] = async (formValues) => {
+        const result = requestResetSchema.safeParse(formValues);
+        if (!result.success) return;
 
-    const onSubmit = async (values: RequestResetFormValues) => {
+        setIsSubmitting(true);
         const { data } = await requestPasswordReset({
-            email: values.email,
+            email: result.data.email,
             redirectTo: "/reset-password",
             ...captchaHeaders,
         });
@@ -49,31 +41,32 @@ export default function RequestResetForm() {
                 type: "error",
             });
             resetCaptcha();
+            setIsSubmitting(false);
             return;
         }
 
         setEmailSent(true);
+        setIsSubmitting(false);
 
         toast.add({ title: "Email envoyé", description: "Vérifiez votre boîte de réception.", type: "success" });
 
         setTimeout(() => {
             setEmailSent(false);
             resetCaptcha();
-            reset();
+            formRef.current?.reset();
         }, 5000);
     };
 
     return (
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form ref={formRef} onFormSubmit={handleSubmit}>
             {/* Email */}
-            <Field label="Email" error={errors.email?.message}>
-                <Input
-                    {...register("email")}
+            <Field label="Email" name="email" validate={validate("email")} validationMode="onChange">
+                <Control
                     type="email"
                     placeholder="exemple@email.com"
                     autoComplete="email"
-                    autoFocus
                     disabled={isSubmitting || emailSent}
+                    render={<Input autoFocus />}
                 />
             </Field>
 
