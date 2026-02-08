@@ -1,49 +1,42 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Field from "@atoms/filed";
-import Form from "@atoms/form";
+import Field, { Control } from "@atoms/filed";
+import Form, { FormProps, fieldValidator } from "@atoms/form";
 import Input from "@atoms/input/input";
 import InputPassword from "@atoms/input/input-password";
 import { useToast } from "@atoms/toast";
 import { useTurnstile } from "@atoms/use-turnstile";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "@lib/auth-client";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useRef, useState } from "react";
 import { z } from "zod";
 
 const loginSchema = z.object({
-    email: z.email({ message: "Email invalide" }),
+    email: z.email({ message: "L'email est invalide ou incomplet" }),
     password: z.string().min(1, { message: "Le mot de passe est requis" }),
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+const validate = fieldValidator(loginSchema);
 
 export default function LoginForm() {
     const router = useRouter();
     const toast = useToast();
     const { token, captchaHeaders, reset: resetCaptcha, widget: captchaWidget } = useTurnstile();
+    const formRef = useRef<HTMLFormElement>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors, isSubmitting },
-    } = useForm<LoginFormValues>({
-        resolver: zodResolver(loginSchema),
-        defaultValues: {
-            email: "",
-            password: "",
-        },
-    });
+    const handleSubmit: FormProps["onFormSubmit"] = async (formValues) => {
+        const result = loginSchema.safeParse(formValues);
+        if (!result.success) return;
 
-    const onSubmit = async (values: LoginFormValues) => {
-        const { data } = await signIn.email({ ...values, ...captchaHeaders });
+        setIsSubmitting(true);
+        const { data } = await signIn.email({ ...result.data, ...captchaHeaders });
 
         if (!data) {
             toast.add({ title: "Échec de la connexion", description: "Identifiants invalides.", type: "error" });
             resetCaptcha();
+            setIsSubmitting(false);
             return;
         }
 
@@ -51,33 +44,33 @@ export default function LoginForm() {
 
         setTimeout(() => {
             resetCaptcha();
-            reset();
+            formRef.current?.reset();
+            setIsSubmitting(false);
         }, 1000);
 
         router.push("/");
     };
 
     return (
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form ref={formRef} onFormSubmit={handleSubmit}>
             {/* Email */}
-            <Field label="Email" error={errors.email?.message}>
-                <Input
-                    {...register("email")}
+            <Field label="Email" name="email" validate={validate("email")} validationMode="onChange">
+                <Control
                     type="email"
                     placeholder="exemple@email.com"
                     autoComplete="email"
-                    autoFocus
                     disabled={isSubmitting}
+                    render={<Input autoFocus />}
                 />
             </Field>
 
             {/* Password */}
-            <Field label="Mot de passe" error={errors.password?.message}>
-                <InputPassword
-                    {...register("password")}
+            <Field label="Mot de passe" name="password" validate={validate("password")} validationMode="onChange">
+                <Control
                     placeholder="Votre mot de passe"
                     autoComplete="current-password"
                     disabled={isSubmitting}
+                    render={<InputPassword />}
                 />
             </Field>
 
