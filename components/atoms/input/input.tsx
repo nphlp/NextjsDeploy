@@ -1,6 +1,7 @@
+import { InputLegacyProps } from "@atoms/legacy-props";
 import { Input as InputBaseUi } from "@base-ui/react/input";
 import cn from "@lib/cn";
-import { ChangeEvent, FocusEvent, HTMLInputAutoCompleteAttribute, InputHTMLAttributes, Ref } from "react";
+import { ChangeEvent, ComponentProps, FocusEvent, HTMLInputAutoCompleteAttribute, Ref } from "react";
 
 type InputProps = {
     type?: string;
@@ -9,7 +10,7 @@ type InputProps = {
     value?: string;
     disabled?: boolean;
 
-    // Syles
+    // Styles
     className?: string;
 
     // Form integration
@@ -25,8 +26,8 @@ type InputProps = {
     onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
 
     // Legacy props
-    legacyProps?: Omit<InputHTMLAttributes<HTMLInputElement>, keyof InputProps>;
-};
+    legacyProps?: InputLegacyProps;
+} & Omit<ComponentProps<typeof InputBaseUi>, keyof InputLegacyProps>;
 
 export default function Input(props: InputProps) {
     const { type = "text", className, legacyProps, ...othersProps } = props;
@@ -44,14 +45,15 @@ export default function Input(props: InputProps) {
                 // Text
                 "text-base text-gray-900",
                 // Outline
-                "focus:outline-outline focus:outline-2 focus:-outline-offset-1",
+                "focus:outline-outline focus:outline-2 focus:outline-offset-0",
                 // Base UI state
                 "data-disabled:bg-gray-50",
+                "data-valid:border-green-600",
                 "data-invalid:border-red-800",
                 className,
             )}
-            {...legacyProps}
             {...othersProps}
+            {...legacyProps}
         />
     );
 }

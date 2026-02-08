@@ -7,6 +7,7 @@
 - Salt des passwords ? Fonctionnement ?
 - Mettre à jour .env Dokploy (SMTP, etc)
 - First admin en prod ?
+- Callback de redirection après login
 
 ## Authentification béton
 
