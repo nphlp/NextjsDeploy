@@ -91,12 +91,23 @@ export const auth = betterAuth({
         provider: "postgresql",
     }),
     /**
+     * Extend user schema with custom fields
+     */
+    user: {
+        additionalFields: {
+            lastname: {
+                type: "string",
+                required: true,
+            },
+        },
+    },
+    /**
      * Reset password
      */
     emailAndPassword: {
         enabled: true, // Enable email/password auth
         requireEmailVerification: true, // Require email verification before allowing sign in
-        minPasswordLength: 12, // Minimum password length (default 8)
+        minPasswordLength: 14, // Minimum password length (default 8)
         maxPasswordLength: 128, // Maximum password length (default 128)
         autoSignIn: false, // Disabled because we require email verification
         sendResetPassword, // Email function for sending reset password emails

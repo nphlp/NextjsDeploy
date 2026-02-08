@@ -11,6 +11,7 @@
  * - data.ts: définit les données à charger dans la base
  * - commands.ts: implémente les commandes pour manipuler les données
  */
+import PrismaInstance from "@lib/prisma";
 import { fixtures, reload, reset } from "./fixtures/commands";
 
 /**
@@ -43,4 +44,4 @@ const main = async (): Promise<void> => {
 };
 
 // Exécuter le script
-main();
+main().finally(() => PrismaInstance.$disconnect());

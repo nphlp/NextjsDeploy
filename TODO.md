@@ -1,5 +1,37 @@
 # TODO
 
+## Bugs
+
+- Password : validation client et UI.
+- Mobile : Cloudflare bloque le formulaire ?
+- Salt des passwords ? Fonctionnement ?
+- Mettre à jour .env Dokploy (SMTP, etc)
+- First admin en prod ?
+
+## Authentification béton
+
+- Captcha
+- Vérification faux emails
+- Provider OAuth (Google, Apple, Microsoft, GitHub, etc)
+- Confirmation Email obligatoire
+- Double auth (OTP, WebAuthn, passwordless, etc)
+- Meilleurs emails envoyés au clients
+
+## Security
+
+- OWASP
+- CNIL
+- RGPD
+- ANSSI
+- Cookies banner
+
+- Mentions légales
+- RGPD
+- Conditions générales d'utilisation
+- Politique de confidentialité
+- Politique de cookies
+-
+
 ## Inplement
 
 - Gestion variables d'environnements
@@ -28,28 +60,6 @@
 - Push image to registry
 - Semantic Release (create version tag + changelog + GitHub Release)
 - Deploy to Dokploy
-
-## Authentification béton
-
-- Captcha
-- Vérification faux emails
-- Provider OAuth (Google, Apple, Microsoft, GitHub, etc)
-- Confirmation Email obligatoire
-- Double auth (OTP, WebAuthn, passwordless, etc)
-
-## Security
-
-- OWASP
-- CNIL
-- RGPD
-- ANSSI
-- Cookies banner
-
-- Mentions légales
-- RGPD
-- Conditions générales d'utilisation
-- Politique de confidentialité
-- Politique de cookies
 
 ## Clean code
 

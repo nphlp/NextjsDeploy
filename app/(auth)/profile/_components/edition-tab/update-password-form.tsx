@@ -10,10 +10,16 @@ import { changePassword } from "@lib/auth-client";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const updatePasswordSchema = z.object({
-    currentPassword: z.string().min(1, { message: "Le mot de passe actuel est requis" }),
-    newPassword: z.string().min(8, { message: "Le nouveau mot de passe doit contenir au moins 8 caractères" }),
-});
+const updatePasswordSchema = z
+    .object({
+        currentPassword: z.string().min(1, { message: "Le mot de passe actuel est requis" }),
+        newPassword: z.string().min(8, { message: "Le nouveau mot de passe doit contenir au moins 8 caractères" }),
+        confirmPassword: z.string(),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+        message: "Les mots de passe ne correspondent pas",
+        path: ["confirmPassword"],
+    });
 type UpdatePasswordFormValues = z.infer<typeof updatePasswordSchema>;
 
 export const UpdatePasswordForm = () => {
@@ -26,7 +32,7 @@ export const UpdatePasswordForm = () => {
         formState: { errors, isSubmitting },
     } = useForm<UpdatePasswordFormValues>({
         resolver: zodResolver(updatePasswordSchema),
-        defaultValues: { currentPassword: "", newPassword: "" },
+        defaultValues: { currentPassword: "", newPassword: "", confirmPassword: "" },
     });
 
     const onSubmit = async (values: UpdatePasswordFormValues) => {
@@ -73,6 +79,14 @@ export const UpdatePasswordForm = () => {
                 <InputPassword
                     {...register("newPassword")}
                     placeholder="Nouveau mot de passe"
+                    autoComplete="new-password"
+                    disabled={isSubmitting}
+                />
+            </Field>
+            <Field label="Confirmation" error={errors.confirmPassword?.message}>
+                <InputPassword
+                    {...register("confirmPassword")}
+                    placeholder="Confirmez le nouveau mot de passe"
                     autoComplete="new-password"
                     disabled={isSubmitting}
                 />

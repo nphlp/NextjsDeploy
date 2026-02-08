@@ -56,8 +56,11 @@ export default function RequestResetForm() {
 
         toast.add({ title: "Email envoyé", description: "Vérifiez votre boîte de réception.", type: "success" });
 
-        resetCaptcha();
-        setTimeout(() => reset(), 2000);
+        setTimeout(() => {
+            setEmailSent(false);
+            resetCaptcha();
+            reset();
+        }, 5000);
     };
 
     return (
