@@ -66,6 +66,10 @@ export const Trigger = (props: { className?: string; children: ReactNode }) => {
                 "bg-background hover:bg-gray-100 data-popup-open:bg-gray-100",
                 // Text
                 "text-base text-gray-900 select-none",
+                // Base UI state
+                "data-disabled:bg-gray-50",
+                "data-valid:border-green-600",
+                "data-invalid:border-red-800",
                 className,
             )}
         >

@@ -1,53 +1,81 @@
 "use client";
 
-import { Field as FieldBaseUI, FieldRootProps } from "@base-ui/react/field";
+import { DivLegacyProps, InputLegacyProps, LabelLegacyProps, ParagraphLegacyProps } from "@atoms/legacy-props";
+import { Field as FieldBaseUI } from "@base-ui/react/field";
 import cn from "@lib/cn";
-import { ComponentProps, InputHTMLAttributes, ReactNode } from "react";
+import { ComponentProps, ReactNode } from "react";
 
-export const Root = (props: { className?: string; children: ReactNode } & FieldRootProps) => {
-    const { className, children, ...fieldProps } = props;
+export type RootProps = {
+    className?: string;
+    children?: ReactNode;
+    legacyProps?: DivLegacyProps;
+} & Omit<ComponentProps<typeof FieldBaseUI.Root>, keyof DivLegacyProps>;
+
+export const Root = (props: RootProps) => {
+    const { className, children, legacyProps, ...fieldProps } = props;
 
     return (
-        <FieldBaseUI.Root className={cn("flex w-full flex-col items-start gap-1", className)} {...fieldProps}>
+        <FieldBaseUI.Root
+            className={cn("flex w-full flex-col items-start gap-1", className)}
+            {...fieldProps}
+            {...legacyProps}
+        >
             {children}
         </FieldBaseUI.Root>
     );
 };
 
-export const Label = (props: { children: ReactNode }) => {
-    const { children } = props;
+type LabelProps = {
+    className?: string;
+    children?: ReactNode;
+    legacyProps?: LabelLegacyProps;
+} & Omit<ComponentProps<typeof FieldBaseUI.Label>, keyof LabelLegacyProps>;
 
-    return <FieldBaseUI.Label className="text-sm font-medium text-gray-900">{children}</FieldBaseUI.Label>;
-};
+export const Label = (props: LabelProps) => {
+    const { className, children, legacyProps, ...fieldProps } = props;
 
-/**
- * Prefer using <Input />
- */
-export const Control = (props: InputHTMLAttributes<HTMLInputElement>) => {
     return (
-        <FieldBaseUI.Control
-            className="focus:outline-outline h-10 w-full rounded-md border border-gray-200 pl-3.5 text-base text-gray-900 focus:outline-2 focus:-outline-offset-1"
-            {...props}
-        />
+        <FieldBaseUI.Label
+            className={cn("text-sm font-medium text-gray-900", className)}
+            {...fieldProps}
+            {...legacyProps}
+        >
+            {children}
+        </FieldBaseUI.Label>
     );
 };
 
-export const Description = (props: { children: ReactNode }) => {
-    const { children } = props;
+type ControlProps = {
+    legacyProps?: InputLegacyProps;
+} & Omit<ComponentProps<typeof FieldBaseUI.Control>, keyof InputLegacyProps>;
 
-    return <FieldBaseUI.Description className="text-xs text-gray-600">{children}</FieldBaseUI.Description>;
+export const Control = (props: ControlProps) => {
+    return <FieldBaseUI.Control {...props} />;
+};
+
+type DescriptionProps = {
+    className?: string;
+    children?: ReactNode;
+    legacyProps?: ParagraphLegacyProps;
+} & Omit<ComponentProps<typeof FieldBaseUI.Description>, keyof ParagraphLegacyProps>;
+
+export const Description = (props: DescriptionProps) => {
+    const { className, children, legacyProps, ...fieldProps } = props;
+
+    return (
+        <FieldBaseUI.Description className={cn("text-xs text-gray-600", className)} {...fieldProps} {...legacyProps}>
+            {children}
+        </FieldBaseUI.Description>
+    );
 };
 
 type ErrorProps = {
-    children?: ReactNode;
-} & ComponentProps<typeof FieldBaseUI.Error>;
+    className?: string;
+    legacyProps?: ParagraphLegacyProps;
+} & Omit<ComponentProps<typeof FieldBaseUI.Error>, keyof ParagraphLegacyProps>;
 
 export const Error = (props: ErrorProps) => {
-    const { children, ...otherProps } = props;
+    const { className, legacyProps, ...fieldProps } = props;
 
-    return (
-        <FieldBaseUI.Error className="text-sm text-red-800" {...otherProps}>
-            {children}
-        </FieldBaseUI.Error>
-    );
+    return <FieldBaseUI.Error className={cn("text-xs text-red-800", className)} {...fieldProps} {...legacyProps} />;
 };
