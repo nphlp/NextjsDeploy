@@ -5,9 +5,17 @@ import cn from "@lib/cn";
 import { CheckIcon, ChevronDown, ChevronUp, ChevronsUpDown } from "lucide-react";
 import { ReactNode } from "react";
 
+export type ItemType = {
+    [key: string]: string;
+};
+
+export type SelectedItemType = string | string[] | null;
+
+export type SetSelectedItemType = (value: SelectedItemType, eventDetails: SelectRootChangeEventDetails) => void;
+
 export const Root = (props: {
-    selected?: string | string[] | null;
-    onSelect?: (value: string | string[] | null, eventDetails: SelectRootChangeEventDetails) => void;
+    selected?: SelectedItemType;
+    onSelect?: SetSelectedItemType;
     multiple?: boolean;
     children: ReactNode;
 }) => {
@@ -66,10 +74,9 @@ export const Trigger = (props: { className?: string; children: ReactNode }) => {
                 "bg-background hover:bg-gray-100 data-popup-open:bg-gray-100",
                 // Text
                 "text-base text-gray-900 select-none",
-                // Base UI state
-                "data-disabled:bg-gray-50",
-                "data-valid:border-green-600",
-                "data-invalid:border-red-800",
+                // Form Field state
+                "group-data-disabled/field:bg-gray-50",
+                "group-data-invalid/field:border-red-800",
                 className,
             )}
         >
@@ -81,7 +88,7 @@ export const Trigger = (props: { className?: string; children: ReactNode }) => {
     );
 };
 
-export const Value = (props: { children?: ReactNode | ((value: string | string[] | null) => ReactNode) }) => {
+export const Value = (props: { children?: ReactNode | ((value: SelectedItemType) => ReactNode) }) => {
     const { children } = props;
 
     return <SelectBaseUi.Value className="text-start">{children}</SelectBaseUi.Value>;

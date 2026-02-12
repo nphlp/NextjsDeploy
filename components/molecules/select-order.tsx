@@ -1,11 +1,12 @@
 "use client";
 
 import { Item, List, Placeholder, Popup, Portal, Positioner, Trigger, Value } from "@comps/atoms/select/atoms";
-import Select, { ItemType } from "@comps/atoms/select/select";
+import { ItemType } from "@comps/atoms/select/atoms";
+import Select from "@comps/atoms/select/select";
 import { useState } from "react";
 
 export default function SelectOrder() {
-    const [selected, setSelected] = useState<string | string[] | null>(null);
+    const [selected, setSelected] = useState<string | null>(null);
 
     const placeholder = "Select order";
 

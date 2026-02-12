@@ -1,35 +1,39 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Field, { Control } from "@atoms/filed";
-import Form, { FormProps, fieldValidator } from "@atoms/form";
+import { Field } from "@atoms/form/field";
+import Form, { OnSubmit } from "@atoms/form/form";
+import { emailSchema, emailSchemaProgressive } from "@atoms/form/schemas";
+import { useForm } from "@atoms/form/use-form";
 import Input from "@atoms/input/input";
 import { useToast } from "@atoms/toast";
 import { useTurnstile } from "@atoms/use-turnstile";
 import { requestPasswordReset } from "@lib/auth-client";
-import { useRef, useState } from "react";
-import { z } from "zod";
-
-const requestResetSchema = z.object({
-    email: z.email({ message: "Email invalide" }),
-});
-
-const validate = fieldValidator(requestResetSchema);
+import { useState } from "react";
 
 export default function RequestResetForm() {
     const [emailSent, setEmailSent] = useState(false);
     const toast = useToast();
     const { token, captchaHeaders, reset: resetCaptcha, widget: captchaWidget } = useTurnstile();
-    const formRef = useRef<HTMLFormElement>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit: FormProps["onFormSubmit"] = async (formValues) => {
-        const result = requestResetSchema.safeParse(formValues);
-        if (!result.success) return;
+    const { register, submit, reset } = useForm({
+        email: {
+            schema: emailSchema,
+            onChangeSchema: emailSchemaProgressive,
+            setter: (value: string) => value,
+            defaultValue: "",
+        },
+    });
+
+    const handleSubmit: OnSubmit = async (event) => {
+        event.preventDefault();
+        const values = submit();
+        if (!values) return;
 
         setIsSubmitting(true);
         const { data } = await requestPasswordReset({
-            email: result.data.email,
+            email: values.email,
             redirectTo: "/reset-password",
             ...captchaHeaders,
         });
@@ -53,20 +57,27 @@ export default function RequestResetForm() {
         setTimeout(() => {
             setEmailSent(false);
             resetCaptcha();
-            formRef.current?.reset();
+            reset();
         }, 5000);
     };
 
     return (
-        <Form ref={formRef} onFormSubmit={handleSubmit}>
+        <Form register={register} onSubmit={handleSubmit}>
             {/* Email */}
-            <Field label="Email" name="email" validate={validate("email")} validationMode="onChange">
-                <Control
+            <Field
+                name="email"
+                label="Email"
+                description="Entrez votre adresse email"
+                disabled={isSubmitting || emailSent}
+                required
+            >
+                <Input
+                    name="email"
                     type="email"
                     placeholder="exemple@email.com"
                     autoComplete="email"
-                    disabled={isSubmitting || emailSent}
-                    render={<Input autoFocus />}
+                    autoFocus
+                    useForm
                 />
             </Field>
 
@@ -79,13 +90,15 @@ export default function RequestResetForm() {
                 <Link href="/login" label="Se connecter" className="inline text-sm hover:underline" noStyle />
             </div>
 
+            {/* TODO: ajouter la <RequiredNote /> */}
+
             {/* Submit button */}
             <div className="flex justify-center">
                 <Button
                     type="submit"
                     label={emailSent ? "Email envoyé !" : "Envoyer l'email"}
-                    loading={isSubmitting || !token}
-                    disabled={emailSent}
+                    loading={isSubmitting}
+                    disabled={!token || emailSent}
                     className="w-full sm:w-auto"
                 />
             </div>

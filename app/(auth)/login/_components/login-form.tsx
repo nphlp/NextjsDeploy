@@ -1,41 +1,49 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Field, { Control } from "@atoms/filed";
-import Form, { FormProps, fieldValidator } from "@atoms/form";
+import { Field } from "@atoms/form/field";
+import Form, { OnSubmit } from "@atoms/form/form";
+import { emailSchema, emailSchemaProgressive } from "@atoms/form/schemas";
+import { useForm } from "@atoms/form/use-form";
 import Input from "@atoms/input/input";
 import InputPassword from "@atoms/input/input-password";
 import { useToast } from "@atoms/toast";
-import { useTurnstile } from "@atoms/use-turnstile";
 import { signIn } from "@lib/auth-client";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
-
-const loginSchema = z.object({
-    email: z.email({ message: "L'email est invalide ou incomplet" }),
-    password: z.string().min(1, { message: "Le mot de passe est requis" }),
-});
-
-const validate = fieldValidator(loginSchema);
 
 export default function LoginForm() {
     const router = useRouter();
     const toast = useToast();
-    const { token, captchaHeaders, reset: resetCaptcha, widget: captchaWidget } = useTurnstile();
-    const formRef = useRef<HTMLFormElement>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit: FormProps["onFormSubmit"] = async (formValues) => {
-        const result = loginSchema.safeParse(formValues);
-        if (!result.success) return;
+    const { register, submit, reset } = useForm({
+        email: {
+            schema: emailSchema,
+            onChangeSchema: emailSchemaProgressive,
+            setter: (value: string) => value,
+            defaultValue: "",
+        },
+        password: {
+            schema: z.string().min(1, "Le mot de passe est requis"),
+            setter: (value: string) => value,
+            defaultValue: "",
+        },
+    });
+
+    const handleSubmit: OnSubmit = async (event) => {
+        event.preventDefault();
+
+        const values = submit();
+        if (!values) return;
 
         setIsSubmitting(true);
-        const { data } = await signIn.email({ ...result.data, ...captchaHeaders });
+
+        const { data } = await signIn.email(values);
 
         if (!data) {
             toast.add({ title: "Échec de la connexion", description: "Identifiants invalides.", type: "error" });
-            resetCaptcha();
             setIsSubmitting(false);
             return;
         }
@@ -43,8 +51,7 @@ export default function LoginForm() {
         toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
 
         setTimeout(() => {
-            resetCaptcha();
-            formRef.current?.reset();
+            reset();
             setIsSubmitting(false);
         }, 1000);
 
@@ -52,25 +59,32 @@ export default function LoginForm() {
     };
 
     return (
-        <Form ref={formRef} onFormSubmit={handleSubmit}>
+        <Form register={register} onSubmit={handleSubmit}>
             {/* Email */}
-            <Field label="Email" name="email" validate={validate("email")} validationMode="onChange">
-                <Control
+            <Field name="email" label="Email" description="Entrez votre adresse email" disabled={isSubmitting} required>
+                <Input
+                    name="email"
                     type="email"
                     placeholder="exemple@email.com"
                     autoComplete="email"
-                    disabled={isSubmitting}
-                    render={<Input autoFocus />}
+                    autoFocus
+                    useForm
                 />
             </Field>
 
             {/* Password */}
-            <Field label="Mot de passe" name="password" validate={validate("password")} validationMode="onChange">
-                <Control
+            <Field
+                name="password"
+                label="Mot de passe"
+                description="Entrez votre mot de passe"
+                disabled={isSubmitting}
+                required
+            >
+                <InputPassword
+                    name="password"
                     placeholder="Votre mot de passe"
                     autoComplete="current-password"
-                    disabled={isSubmitting}
-                    render={<InputPassword />}
+                    useForm
                 />
             </Field>
 
@@ -84,18 +98,17 @@ export default function LoginForm() {
                 />
             </div>
 
-            {/* Captcha */}
-            {captchaWidget}
-
             {/* Register link */}
             <div className="space-x-2 text-center text-sm text-gray-500">
                 <span>Pas encore de compte ?</span>
                 <Link href="/register" label="S'inscrire" className="inline text-sm hover:underline" noStyle />
             </div>
 
+            {/* TODO: ajouter la <RequiredNote /> */}
+
             {/* Submit button */}
             <div className="flex justify-center">
-                <Button type="submit" label="Connexion" loading={isSubmitting || !token} className="w-full sm:w-auto" />
+                <Button type="submit" label="Connexion" loading={isSubmitting} className="w-full sm:w-auto" />
             </div>
         </Form>
     );

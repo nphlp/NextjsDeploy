@@ -33,8 +33,9 @@ import { useRef, useState } from "react";
  */
 export function useTurnstile() {
     const ref = useRef<TurnstileInstance>(null);
+
     const [token, setToken] = useState<string | null>(null);
-    const [isVisible, setIsVisible] = useState(false);
+    // const [isVisible, setIsVisible] = useState(false);
 
     const reset = () => {
         setToken(null);
@@ -44,10 +45,10 @@ export function useTurnstile() {
     const widget = (
         <motion.div
             initial={false}
-            animate={{
-                height: isVisible ? "auto" : 0,
-                marginTop: isVisible ? 0 : -12,
-            }}
+            // animate={{
+            //     height: isVisible ? "auto" : 0,
+            //     marginTop: isVisible ? 0 : -12,
+            // }}
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="w-full overflow-hidden"
             style={{ containerType: "inline-size" }}
@@ -59,7 +60,7 @@ export function useTurnstile() {
                     onSuccess={(token) => setToken(token)}
                     onExpire={() => setToken(null)}
                     onError={() => setToken(null)}
-                    onBeforeInteractive={() => setIsVisible(true)}
+                    // onBeforeInteractive={() => setIsVisible(true)}
                     options={{ theme: "auto", size: "normal" }}
                 />
             </div>

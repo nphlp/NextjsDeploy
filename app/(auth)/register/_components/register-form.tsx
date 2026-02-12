@@ -1,54 +1,79 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Field, { Control } from "@atoms/filed";
-import Form, { FormProps, fieldValidator } from "@atoms/form";
+import { Field } from "@atoms/form/field";
+import Form, { OnSubmit } from "@atoms/form/form";
+import { emailSchema, emailSchemaProgressive } from "@atoms/form/schemas";
+import { useForm } from "@atoms/form/use-form";
 import Input from "@atoms/input/input";
 import InputPassword from "@atoms/input/input-password";
-import PasswordStrength from "@atoms/password-strength";
+import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";
 import { useTurnstile } from "@atoms/use-turnstile";
 import { signUp } from "@lib/auth-client";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
-
-const registerBaseSchema = z.object({
-    firstname: z.string().min(2, { message: "Le prénom doit contenir au moins 2 caractères" }),
-    lastname: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
-    email: z.email({ message: "Email invalide" }),
-    password: z.string().min(8, { message: "Le mot de passe doit contenir au moins 8 caractères" }),
-    confirmPassword: z.string().min(1, { message: "La confirmation est requise" }),
-});
-
-const registerSchema = registerBaseSchema.refine((data) => data.password === data.confirmPassword, {
-    message: "Les mots de passe ne correspondent pas",
-    path: ["confirmPassword"],
-});
-
-const validate = fieldValidator(registerBaseSchema);
 
 export default function RegisterForm() {
     const router = useRouter();
     const toast = useToast();
     const { token, captchaHeaders, reset: resetCaptcha, widget: captchaWidget } = useTurnstile();
-    const formRef = useRef<HTMLFormElement>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [passwordValue, setPasswordValue] = useState("");
 
-    const validateConfirmPassword = (value: unknown) => {
-        const str = String(value ?? "");
-        if (str.length < 1) return "La confirmation est requise";
-        if (str !== passwordValue) return "Les mots de passe ne correspondent pas";
-        return null;
-    };
+    const { register, submit, reset } = useForm({
+        firstname: {
+            // TODO: lettre uniquement
+            schema: z.string().min(1, "Le champ est requis"),
+            setter: (value: string) => value,
+            defaultValue: "",
+        },
+        lastname: {
+            // TODO: lettre uniquement
+            schema: z.string().min(1, "Le champ est requis"),
+            setter: (value: string) => value,
+            defaultValue: "",
+        },
+        email: {
+            schema: emailSchema,
+            onChangeSchema: emailSchemaProgressive,
+            setter: (value: string) => value,
+            defaultValue: "",
+        },
+        password: {
+            // TODO: faire la même validation que dans le middleware
+            schema: z
+                .string()
+                .min(14, "Le mot de passe doit contenir au moins 14 caractères")
+                .max(128, "Le mot de passe doit contenir au maximum 128 caractères"),
+            setter: (value: string) => {
+                // TODO: faire ça avec un ref pour éviter des doubles re-render à chaque frappe
+                setPasswordValue(value);
+                return value;
+            },
+            defaultValue: "",
+        },
+        confirmPassword: {
+            schema: z
+                .string()
+                .min(1, "La confirmation est requise")
+                .refine((val) => val === passwordValue, "Les mots de passe ne correspondent pas"),
+            setter: (value: string) => value,
+            defaultValue: "",
+        },
+    });
 
-    const handleSubmit: FormProps["onFormSubmit"] = async (formValues) => {
-        const result = registerSchema.safeParse(formValues);
-        if (!result.success) return;
+    const handleSubmit: OnSubmit = async (event) => {
+        event.preventDefault();
+
+        const values = submit();
+        if (!values) return;
 
         setIsSubmitting(true);
-        const { firstname, lastname, email, password } = result.data;
+
+        const { firstname, lastname, email, password } = values;
 
         const { data } = await signUp.email({
             name: firstname,
@@ -69,7 +94,7 @@ export default function RegisterForm() {
 
         setTimeout(() => {
             resetCaptcha();
-            formRef.current?.reset();
+            reset();
             setPasswordValue("");
             setIsSubmitting(false);
         }, 1000);
@@ -78,41 +103,31 @@ export default function RegisterForm() {
     };
 
     return (
-        <Form ref={formRef} onFormSubmit={handleSubmit}>
+        <Form register={register} onSubmit={handleSubmit}>
             {/* Firstname */}
-            <Field label="Prénom" name="firstname" validate={validate("firstname")} validationMode="onChange">
-                <Control
-                    placeholder="Jean"
-                    autoComplete="given-name"
-                    disabled={isSubmitting}
-                    render={<Input autoFocus />}
-                />
+            <Field name="firstname" label="Prénom" description="Entrez votre prénom" disabled={isSubmitting} required>
+                <Input name="firstname" placeholder="Jean" autoComplete="given-name" autoFocus useForm />
             </Field>
 
             {/* Lastname */}
-            <Field label="Nom" name="lastname" validate={validate("lastname")} validationMode="onChange">
-                <Control placeholder="Dupont" autoComplete="family-name" disabled={isSubmitting} render={<Input />} />
+            <Field name="lastname" label="Nom" description="Entrez votre nom" disabled={isSubmitting} required>
+                <Input name="lastname" placeholder="Dupont" autoComplete="family-name" useForm />
             </Field>
 
             {/* Email */}
-            <Field label="Email" name="email" validate={validate("email")} validationMode="onChange">
-                <Control
-                    type="email"
-                    placeholder="exemple@email.com"
-                    autoComplete="email"
-                    disabled={isSubmitting}
-                    render={<Input />}
-                />
+            <Field name="email" label="Email" description="Entrez votre adresse email" disabled={isSubmitting} required>
+                <Input name="email" type="email" placeholder="exemple@email.com" autoComplete="email" useForm />
             </Field>
 
             {/* Password */}
-            <Field label="Mot de passe" name="password" validate={validate("password")} validationMode="onChange">
-                <Control
-                    placeholder="Minimum 14 caractères"
-                    autoComplete="new-password"
-                    disabled={isSubmitting}
-                    render={<InputPassword onChange={(e) => setPasswordValue(e.target.value)} />}
-                />
+            <Field
+                name="password"
+                label="Mot de passe"
+                description="Minimum 14 caractères"
+                disabled={isSubmitting}
+                required
+            >
+                <InputPassword name="password" placeholder="Minimum 8 caractères" autoComplete="new-password" useForm />
             </Field>
 
             {/* Password strength */}
@@ -120,16 +135,17 @@ export default function RegisterForm() {
 
             {/* Confirm password */}
             <Field
-                label="Confirmation"
                 name="confirmPassword"
-                validate={validateConfirmPassword}
-                validationMode="onChange"
+                label="Confirmation"
+                description="Confirmez le mot de passe"
+                disabled={isSubmitting}
+                required
             >
-                <Control
+                <InputPassword
+                    name="confirmPassword"
                     placeholder="Confirmez le mot de passe"
                     autoComplete="new-password"
-                    disabled={isSubmitting}
-                    render={<InputPassword />}
+                    useForm
                 />
             </Field>
 
@@ -142,12 +158,15 @@ export default function RegisterForm() {
                 <Link href="/login" label="Se connecter" className="inline text-sm hover:underline" noStyle />
             </div>
 
+            {/* TODO: ajouter la <RequiredNote /> */}
+
             {/* Submit button */}
             <div className="flex justify-center">
                 <Button
                     type="submit"
                     label="S'inscrire"
-                    loading={isSubmitting || !token}
+                    loading={isSubmitting}
+                    disabled={!token}
                     className="w-full sm:w-auto"
                 />
             </div>

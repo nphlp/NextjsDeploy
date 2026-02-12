@@ -35,6 +35,8 @@
 
 ## Inplement
 
+- Mailpit local
+
 - Gestion variables d'environnements
     - Infisical
 

@@ -8,7 +8,6 @@ import {
     Item,
     ItemType,
     List,
-    Placeholder,
     Popup,
     Portal,
     Positioner,
@@ -19,15 +18,15 @@ import {
 } from "./atoms";
 import { renderValue } from "./utils";
 
-type SelectProps = {
+type SelectMultipleProps = {
     children?: ReactNode;
-    selected?: string | null;
-    setSelected?: Dispatch<SetStateAction<string | null>>;
+    selected?: string[];
+    setSelected?: Dispatch<SetStateAction<string[]>>;
     name?: string;
     useForm?: boolean;
 };
 
-export default function Select(props: SelectProps) {
+export default function SelectMultiple(props: SelectMultipleProps) {
     const { selected, setSelected, name, useForm = false, children } = props;
 
     // Form and Field context
@@ -38,17 +37,17 @@ export default function Select(props: SelectProps) {
 
     const handleSelect: SetSelectedItemType = (value) => {
         field?.onChange(value);
-        setSelected?.(value as string | null);
+        setSelected?.(value as string[]);
     };
 
     if (children)
         return (
-            <Root selected={resolvedSelected} onSelect={handleSelect}>
+            <Root selected={resolvedSelected} onSelect={handleSelect} multiple>
                 {children}
             </Root>
         );
 
-    const placeholder = "Select an option";
+    const placeholder = "Select multiple options";
 
     const items: ItemType = {
         arial: "Arial",
@@ -63,17 +62,15 @@ export default function Select(props: SelectProps) {
     };
 
     return (
-        <Root selected={resolvedSelected} onSelect={handleSelect}>
+        <Root selected={resolvedSelected} onSelect={handleSelect} multiple>
             <Trigger>
                 <Value>{(value) => renderValue({ placeholder, value, items })}</Value>
             </Trigger>
 
             <Portal>
-                <Positioner alignItemWithTrigger>
+                <Positioner>
                     <Popup withScrollArrows>
                         <List>
-                            <Placeholder label={placeholder} />
-
                             <Group label="Sans-serif">
                                 <Item label="Arial" itemKey="arial" />
                                 <Item label="Helvetica" itemKey="helvetica" />

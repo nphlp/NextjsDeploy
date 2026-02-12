@@ -1,6 +1,16 @@
 import Button from "@atoms/button";
-import Field from "@atoms/filed";
 import { Bell } from "lucide-react";
+import { ReactNode } from "react";
+
+const Field = (props: { label: string; children: ReactNode }) => {
+    const { label, children } = props;
+    return (
+        <div className="text-sm font-medium">
+            <div>{label}</div>
+            {children}
+        </div>
+    );
+};
 
 export default function ButtonConfig() {
     return (

@@ -6,7 +6,7 @@ import Menu from "@comps/atoms/menu/menu";
 import { useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
 import cn from "@lib/cn";
-import { Apple, Code, Code2, Combine, Copy, Home, LucideIcon, Menu as MenuIcon, Palette } from "lucide-react";
+import { Apple, Code, Code2, Combine, Copy, Form, Home, LucideIcon, Menu as MenuIcon, Palette } from "lucide-react";
 import { Route } from "next";
 import { usePathname } from "next/navigation";
 
@@ -24,6 +24,7 @@ type LinkType = {
 const links: LinkType[] = [
     { label: "Home", href: "/", icon: Home },
     { label: "Fruits", href: "/fruits", icon: Apple },
+    { label: "Form", href: "/form", icon: Form },
     { label: "UI", href: "/theme/ui", icon: Combine },
     { label: "Skeleton", href: "/theme/skeleton", icon: Copy },
     { label: "Colors", href: "/theme/colors", icon: Palette },
@@ -62,7 +63,7 @@ export default function MenuNavigation(props: MenuNavigationProps) {
     return (
         <>
             {/* Desktop: inline links */}
-            <div className="flex gap-2 max-md:hidden">
+            <div className="flex gap-2 max-[880px]:hidden">
                 {linksToRender.map(({ href, label }) => (
                     <Link
                         label={label}
@@ -77,7 +78,7 @@ export default function MenuNavigation(props: MenuNavigationProps) {
             </div>
 
             {/* Mobile: dropdown menu */}
-            <div className="w-full md:hidden">
+            <div className="w-full min-[880px]:hidden">
                 <Menu>
                     <Trigger className="border-none bg-transparent px-2 hover:bg-gray-100">
                         <MenuIcon className="size-6" />

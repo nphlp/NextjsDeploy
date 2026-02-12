@@ -202,12 +202,14 @@ export const auth = betterAuth({
     plugins: [
         /**
          * Captcha plugin using Cloudflare Turnstile
-         * -> Protects sign-up, sign-in and reset-password endpoints
+         * -> Protects sign-up and reset-password endpoints
+         * -> Sign-in relies on rate limiting only
          * -> Client must send token via x-captcha-response header
          */
         captcha({
             provider: "cloudflare-turnstile",
             secretKey: TURNSTILE_SECRET_KEY,
+            endpoints: ["/sign-up/email", "/reset-password"],
         }),
         /**
          * OpenAPI plugin to generate Better Auth API docs

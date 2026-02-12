@@ -46,8 +46,6 @@ export default function ProfileInfo(props: ProfileInfoProps) {
         switch (role) {
             case "USER":
                 return "utilisateur";
-            case "VENDOR":
-                return "vendeur";
             case "ADMIN":
                 return "administrateur";
         }

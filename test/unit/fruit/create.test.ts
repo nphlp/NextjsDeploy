@@ -66,19 +66,6 @@ describe("POST /fruits (permissions)", () => {
         expect(fruit.userId).toBe("userId");
     });
 
-    it("Role vendor", async () => {
-        // Set vendor session
-        setMockSession("VENDOR");
-
-        // Execute function
-        const fruit = await oRpcFruitCreate({ name: "Mango", description: "A tropical fruit from Asia" });
-
-        // Expect fruit object
-        expect(fruit).toBeDefined();
-        expect(fruit.name).toBe("Mango");
-        expect(fruit.userId).toBe("vendorId");
-    });
-
     it("Role admin", async () => {
         // Set admin session
         setMockSession("ADMIN");

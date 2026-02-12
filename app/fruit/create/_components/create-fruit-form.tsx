@@ -1,8 +1,9 @@
 "use client";
 
 import Button from "@atoms/button";
-import Field, { Control } from "@atoms/filed";
-import Form, { FormProps, fieldValidator } from "@atoms/form";
+import { Field } from "@atoms/form/field";
+import Form, { OnSubmit } from "@atoms/form/form";
+import { useForm } from "@atoms/form/use-form";
 import Input from "@atoms/input/input";
 import TextArea from "@atoms/input/text-area";
 import { useToast } from "@atoms/toast";
@@ -11,63 +12,79 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
 
-const createFruitSchema = z.object({
-    name: z
-        .string()
-        .min(2, "Le nom doit contenir au moins 2 caractères")
-        .max(50, "Le nom ne doit pas dépasser 50 caractères")
-        .regex(/^[\p{L}\s'-]+$/u, "Lettres, espaces, apostrophes et tirets uniquement"),
-    description: z
-        .string()
-        .min(10, "La description doit contenir au moins 10 caractères")
-        .max(500, "La description ne doit pas dépasser 500 caractères"),
-});
-
-const validate = fieldValidator(createFruitSchema);
-
 export default function CreateFruitForm() {
     const router = useRouter();
     const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit: FormProps["onFormSubmit"] = async (formValues) => {
-        const result = createFruitSchema.safeParse(formValues);
-        if (!result.success) return;
+    const { register, submit } = useForm({
+        name: {
+            schema: z
+                .string()
+                .min(1, "Le champ est requis")
+                .max(50, "Le nom ne doit pas dépasser 50 caractères")
+                .regex(/^[\p{L}\s'-]+$/u, "Lettres, espaces, apostrophes et tirets uniquement"),
+            setter: (value: string) => value,
+            defaultValue: "",
+        },
+        description: {
+            schema: z
+                .string()
+                .min(1, "Le champ est requis")
+                .min(10, "La description doit contenir au moins 10 caractères")
+                .max(500, "La description ne doit pas dépasser 500 caractères"),
+            onChangeSchema: z.string().max(500, "La description ne doit pas dépasser 500 caractères"),
+            setter: (value: string) => value,
+            defaultValue: "",
+        },
+    });
+
+    const handleSubmit: OnSubmit = async (event) => {
+        event.preventDefault();
+
+        const values = submit();
+        if (!values) return;
 
         setIsSubmitting(true);
+
         try {
-            await oRPC.fruit.create(result.data);
+            await oRPC.fruit.create(values);
+
             toast.add({ title: "Fruit créé", description: "Le fruit a été ajouté à la liste.", type: "success" });
+
             router.push("/fruits");
         } catch {
             toast.add({ title: "Erreur", description: "Impossible de créer le fruit.", type: "error" });
-            setIsSubmitting(false);
         }
+
+        setIsSubmitting(false);
     };
 
     return (
-        <Form onFormSubmit={handleSubmit}>
+        <Form register={register} onSubmit={handleSubmit}>
             {/* Name */}
             <Field
-                label="Nom du fruit"
                 name="name"
-                description="Entrer le nom du fruit"
-                validate={validate("name")}
-                validationMode="onChange"
+                label="Nom du fruit"
+                description="Lettres, espaces, apostrophes et tirets uniquement"
+                disabled={isSubmitting}
+                required
             >
-                <Control placeholder="Mangue" disabled={isSubmitting} autoComplete="off" render={<Input autoFocus />} />
+                <Input name="name" placeholder="Mangue" autoComplete="off" autoFocus useForm />
             </Field>
 
             {/* Description */}
             <Field
-                label="Description du fruit"
                 name="description"
-                description="Entrer une courte description pour le fruit"
-                validate={validate("description")}
-                validationMode="onChange"
+                label="Description du fruit"
+                description="Entre 10 et 500 caractères"
+                disabled={isSubmitting}
+                required
             >
-                <TextArea placeholder="Un fruit tropical sucré et juteux." disabled={isSubmitting} autoComplete="off" />
+                <TextArea name="description" placeholder="Un fruit tropical sucré et juteux." useForm />
             </Field>
+
+            {/* TODO: ajouter la <RequiredNote /> */}
 
             {/* Submit button */}
             <div className="flex justify-center">

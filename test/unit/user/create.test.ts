@@ -23,17 +23,6 @@ vi.mock("@lib/prisma", () => {
             updatedAt: new Date(),
         },
         {
-            id: "vendorId",
-            name: "Vendor",
-            lastname: "Debug",
-            email: "vendor@test.com",
-            emailVerified: true,
-            image: null,
-            role: "VENDOR",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        },
-        {
             id: "userId",
             name: "User",
             lastname: "Debug",
@@ -55,12 +44,12 @@ vi.mock("@lib/prisma", () => {
     const create = async ({
         data: input,
     }: {
-        data: { name: string; lastname?: string; email: string; emailVerified: boolean; image?: string; role?: string };
+        data: { name: string; lastname: string; email: string; emailVerified: boolean; image?: string; role?: string };
     }) => {
         const newUser: User = {
             id: "newUserId",
             name: input.name,
-            lastname: input.lastname ?? null,
+            lastname: input.lastname,
             email: input.email,
             emailVerified: input.emailVerified,
             image: input.image ?? null,
@@ -99,7 +88,7 @@ describe("POST /users (permissions)", () => {
         setMockSession(null);
 
         // Expect unauthorized error (not logged in)
-        await expect(oRpcUserCreate({ name: "New", email: "new@test.com" })).rejects.toThrow();
+        await expect(oRpcUserCreate({ name: "New", lastname: "Test", email: "new@test.com" })).rejects.toThrow();
     });
 
     it("Role user", async () => {
@@ -107,15 +96,7 @@ describe("POST /users (permissions)", () => {
         setMockSession("USER");
 
         // Expect unauthorized error (not admin)
-        await expect(oRpcUserCreate({ name: "New", email: "new@test.com" })).rejects.toThrow();
-    });
-
-    it("Role vendor", async () => {
-        // Set vendor session
-        setMockSession("VENDOR");
-
-        // Expect unauthorized error (not admin)
-        await expect(oRpcUserCreate({ name: "New", email: "new@test.com" })).rejects.toThrow();
+        await expect(oRpcUserCreate({ name: "New", lastname: "Test", email: "new@test.com" })).rejects.toThrow();
     });
 
     it("Role admin", async () => {
@@ -123,7 +104,7 @@ describe("POST /users (permissions)", () => {
         setMockSession("ADMIN");
 
         // Execute function
-        const user = await oRpcUserCreate({ name: "New", email: "new@test.com" });
+        const user = await oRpcUserCreate({ name: "New", lastname: "Test", email: "new@test.com" });
 
         // Expect user object
         expect(user).toBeDefined();
@@ -138,7 +119,9 @@ describe("POST /users (params)", () => {
         setMockSession("ADMIN");
 
         // Expect error (email already exists)
-        await expect(oRpcUserCreate({ name: "Duplicate", email: "admin@test.com" })).rejects.toThrow();
+        await expect(
+            oRpcUserCreate({ name: "Duplicate", lastname: "Test", email: "admin@test.com" }),
+        ).rejects.toThrow();
     });
 
     it("Create with minimal data", async () => {
@@ -146,13 +129,13 @@ describe("POST /users (params)", () => {
         setMockSession("ADMIN");
 
         // Execute function
-        const user = await oRpcUserCreate({ name: "Minimal", email: "minimal@test.com" });
+        const user = await oRpcUserCreate({ name: "Minimal", lastname: "Test", email: "minimal@test.com" });
 
         // Expect user object with defaults
         expect(user).toBeDefined();
         expect(user.name).toBe("Minimal");
+        expect(user.lastname).toBe("Test");
         expect(user.email).toBe("minimal@test.com");
-        expect(user.lastname).toBeNull();
         expect(user.image).toBeNull();
         expect(user.role).toBe("USER");
         expect(user.emailVerified).toBe(false);
@@ -168,7 +151,7 @@ describe("POST /users (params)", () => {
             lastname: "Data",
             email: "full@test.com",
             image: "https://example.com/image.jpg",
-            role: "VENDOR",
+            role: "ADMIN",
         });
 
         // Expect user object with all fields
@@ -177,7 +160,7 @@ describe("POST /users (params)", () => {
         expect(user.lastname).toBe("Data");
         expect(user.email).toBe("full@test.com");
         expect(user.image).toBe("https://example.com/image.jpg");
-        expect(user.role).toBe("VENDOR");
+        expect(user.role).toBe("ADMIN");
         expect(user.emailVerified).toBe(false);
     });
 
@@ -188,6 +171,7 @@ describe("POST /users (params)", () => {
         // Execute function
         const user = await oRpcUserCreate({
             name: "NewAdmin",
+            lastname: "Test",
             email: "newadmin@test.com",
             role: "ADMIN",
         });
