@@ -1,14 +1,12 @@
 import { ReactNode } from "react";
-import { ItemType } from "./select";
-
-export type ValueType = string | string[] | null;
+import { ItemType, SelectedItemType } from "./atoms";
 
 // Condition helpers
-const isNullOrEmpty = (value: ValueType): boolean => !value?.length;
+const isNullOrEmpty = (value: SelectedItemType): boolean => !value?.length;
 
-const isString = (value: ValueType) => typeof value === "string";
+const isString = (value: SelectedItemType) => typeof value === "string";
 
-const isArray = (value: ValueType) => Array.isArray(value);
+const isArray = (value: SelectedItemType) => Array.isArray(value);
 
 // Formatting helpers
 const displayLabel = (value: string, items: ItemType) => items[value];
@@ -30,7 +28,7 @@ const displayLabelArray = {
 export type FormattingFnType = keyof typeof displayLabelArray;
 
 export const renderValue = (props: {
-    value: ValueType;
+    value: SelectedItemType;
     items: ItemType;
     placeholder: string;
     formattingFn?: FormattingFnType;

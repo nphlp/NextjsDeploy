@@ -1,21 +1,29 @@
-import { Form as FormBaseUi } from "@base-ui/react/form";
 import cn from "@lib/cn";
-import { ComponentProps, FormHTMLAttributes, ReactNode } from "react";
+import { FormHTMLAttributes, ReactNode, SubmitEventHandler } from "react";
+import { FormProvider } from "./_context/provider";
+import { UseFormProps, UseFormReturn } from "./use-form";
 
-type LegacyProps = FormHTMLAttributes<HTMLFormElement>;
+export type OnSubmit = SubmitEventHandler<HTMLFormElement> | undefined;
 
-export type FormProps = {
+export type FormProps<T extends UseFormProps> = {
+    onSubmit: OnSubmit;
+    register: UseFormReturn<T>["register"];
     className?: string;
     children?: ReactNode;
-    legacyProps?: LegacyProps;
-} & Omit<ComponentProps<typeof FormBaseUi>, keyof LegacyProps>;
+    legacyProps?: FormHTMLAttributes<HTMLFormElement>;
+};
 
-export default function Form(props: FormProps) {
-    const { className, children, legacyProps, ...othersProps } = props;
+export default function Form<T extends UseFormProps>(props: FormProps<T>) {
+    const { onSubmit, register, className, children, legacyProps, ...othersProps } = props;
 
     return (
-        <FormBaseUi className={cn("flex w-full flex-col gap-3", className)} {...othersProps} {...legacyProps}>
-            {children}
-        </FormBaseUi>
+        <form
+            onSubmit={onSubmit}
+            className={cn("flex w-full flex-col gap-3", className)}
+            {...othersProps}
+            {...legacyProps}
+        >
+            <FormProvider register={register}>{children}</FormProvider>
+        </form>
     );
 }

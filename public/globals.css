@@ -15,7 +15,7 @@
     --color-destructive-hover: hsl(0, 80%, 40%);
     --color-destructive-active: hsl(0, 80%, 30%);
 
-    --color-outline: hsla(180, 40%, 60%);
+    --color-outline: hsla(180, 40%, 60%, 0.4);
     /* --color-outline: hsl(176, 80%, 40%); */
 
     /* Gray colors from background 100% to foreground 5% */
@@ -45,7 +45,7 @@
     --color-destructive-hover: hsl(0, 80%, 40%);
     --color-destructive-active: hsl(0, 80%, 30%);
 
-    --color-outline: hsla(180, 40%, 60%);
+    --color-outline: hsla(180, 40%, 60%, 0.6);
     /* --color-outline: hsl(176, 80%, 40%); */
 
     /* Gray colors from background 5% to foreground 95% */

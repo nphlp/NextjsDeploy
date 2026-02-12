@@ -1,27 +1,16 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Field, { Control } from "@atoms/filed";
-import Form, { FormProps, fieldValidator } from "@atoms/form";
+import { Field } from "@atoms/form/field";
+import Form, { OnSubmit } from "@atoms/form/form";
+import { useForm } from "@atoms/form/use-form";
 import InputPassword from "@atoms/input/input-password";
-import PasswordStrength from "@atoms/password-strength";
+import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";
 import { resetPassword } from "@lib/auth-client";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
-
-const resetPasswordBaseSchema = z.object({
-    password: z.string().min(8, { message: "Le mot de passe doit contenir au moins 8 caractères" }),
-    confirmPassword: z.string().min(1, { message: "La confirmation est requise" }),
-});
-
-const resetPasswordSchema = resetPasswordBaseSchema.refine((data) => data.password === data.confirmPassword, {
-    message: "Les mots de passe ne correspondent pas",
-    path: ["confirmPassword"],
-});
-
-const validate = fieldValidator(resetPasswordBaseSchema);
 
 type ResetPasswordFormProps = {
     token: string;
@@ -30,24 +19,45 @@ type ResetPasswordFormProps = {
 export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const router = useRouter();
     const toast = useToast();
-    const formRef = useRef<HTMLFormElement>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [passwordValue, setPasswordValue] = useState("");
 
-    const validateConfirmPassword = (value: unknown) => {
-        const str = String(value ?? "");
-        if (str.length < 1) return "La confirmation est requise";
-        if (str !== passwordValue) return "Les mots de passe ne correspondent pas";
-        return null;
-    };
+    const { register, submit, reset } = useForm({
+        password: {
+            // TODO: faire la même validation que dans le middleware
+            schema: z
+                .string()
+                .min(14, "Le mot de passe doit contenir au moins 14 caractères")
+                .max(128, "Le mot de passe doit contenir au maximum 128 caractères"),
+            setter: (value: string) => {
+                // TODO: faire ça avec un ref pour éviter des doubles re-render à chaque frappe
+                setPasswordValue(value);
+                return value;
+            },
+            defaultValue: "",
+        },
+        confirmPassword: {
+            schema: z
+                .string()
+                .min(1, "La confirmation est requise")
+                .refine((val) => val === passwordValue, "Les mots de passe ne correspondent pas"),
+            setter: (value: string) => value,
+            defaultValue: "",
+        },
+    });
 
-    const handleSubmit: FormProps["onFormSubmit"] = async (formValues) => {
-        const result = resetPasswordSchema.safeParse(formValues);
-        if (!result.success) return;
+    const handleSubmit: OnSubmit = async (event) => {
+        event.preventDefault();
+
+        const values = submit();
+
+        if (!values) return;
 
         setIsSubmitting(true);
+
         const { data } = await resetPassword({
-            newPassword: result.data.password,
+            newPassword: values.password,
             token,
         });
 
@@ -64,7 +74,7 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         });
 
         setTimeout(() => {
-            formRef.current?.reset();
+            reset();
             setPasswordValue("");
             setIsSubmitting(false);
         }, 1000);
@@ -73,19 +83,20 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     };
 
     return (
-        <Form ref={formRef} onFormSubmit={handleSubmit}>
+        <Form register={register} onSubmit={handleSubmit}>
             {/* Password */}
             <Field
-                label="Nouveau mot de passe"
                 name="password"
-                validate={validate("password")}
-                validationMode="onChange"
+                label="Nouveau mot de passe"
+                description="Minimum 14 caractères"
+                disabled={isSubmitting}
+                required
             >
-                <Control
+                <InputPassword
+                    name="password"
                     placeholder="Minimum 14 caractères"
                     autoComplete="new-password"
-                    disabled={isSubmitting}
-                    render={<InputPassword onChange={(e) => setPasswordValue(e.target.value)} />}
+                    useForm
                 />
             </Field>
 
@@ -94,16 +105,17 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
             {/* Confirm password */}
             <Field
-                label="Confirmation"
                 name="confirmPassword"
-                validate={validateConfirmPassword}
-                validationMode="onChange"
+                label="Confirmation"
+                description="Confirmez le mot de passe"
+                disabled={isSubmitting}
+                required
             >
-                <Control
+                <InputPassword
+                    name="confirmPassword"
                     placeholder="Confirmez le mot de passe"
                     autoComplete="new-password"
-                    disabled={isSubmitting}
-                    render={<InputPassword />}
+                    useForm
                 />
             </Field>
 
@@ -112,6 +124,8 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 <span>Mot de passe retrouvé ?</span>
                 <Link href="/login" label="Se connecter" className="inline text-sm hover:underline" noStyle />
             </div>
+
+            {/* TODO: ajouter la <RequiredNote /> */}
 
             {/* Submit button */}
             <div className="flex justify-center">

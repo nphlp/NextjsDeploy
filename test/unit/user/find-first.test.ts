@@ -23,17 +23,6 @@ vi.mock("@lib/prisma", () => {
             updatedAt: new Date(),
         },
         {
-            id: "vendorId",
-            name: "Vendor",
-            lastname: "Debug",
-            email: "vendor@test.com",
-            emailVerified: true,
-            image: null,
-            role: "VENDOR",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        },
-        {
             id: "userId",
             name: "User",
             lastname: "Debug",
@@ -109,27 +98,6 @@ describe("GET /users/first (permissions)", () => {
         await expect(oRpcUserFindFirst({ name: "Admin", lastname: "Debug" })).rejects.toThrow();
     });
 
-    it("Role vendor -> own profile", async () => {
-        // Set vendor session
-        setMockSession("VENDOR");
-
-        // Execute function (vendor searching for own profile)
-        const user = await oRpcUserFindFirst({ name: "Vendor", lastname: "Debug" });
-
-        // Expect user object
-        expect(user).toBeDefined();
-        expect(user?.id).toBe("vendorId");
-        expect(user?.role).toBe("VENDOR");
-    });
-
-    it("Role vendor -> other profile", async () => {
-        // Set vendor session
-        setMockSession("VENDOR");
-
-        // Expect unauthorized error (not owner or admin)
-        await expect(oRpcUserFindFirst({ name: "User", lastname: "Debug" })).rejects.toThrow();
-    });
-
     it("Role admin -> own profile", async () => {
         // Set admin session
         setMockSession("ADMIN");
@@ -171,12 +139,12 @@ describe("GET /users/first (params)", () => {
         setMockSession("ADMIN");
 
         // Execute function
-        const user = await oRpcUserFindFirst({ name: "Vendor", lastname: "Debug" });
+        const user = await oRpcUserFindFirst({ name: "User", lastname: "Debug" });
 
-        // Expect vendor user object
+        // Expect user object
         expect(user).toBeDefined();
-        expect(user?.id).toBe("vendorId");
-        expect(user?.name).toBe("Vendor");
+        expect(user?.id).toBe("userId");
+        expect(user?.name).toBe("User");
         expect(user?.lastname).toBe("Debug");
     });
 

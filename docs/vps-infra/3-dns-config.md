@@ -74,11 +74,15 @@ sudo tailscale ip -4
 
 **Admin tools → Tailscale IP (VPN protected):**
 
-| Type | Name    | Content          | TTL   |
-| ---- | ------- | ---------------- | ----- |
-| A    | dokploy | `<tailscale-ip>` | 14400 |
-| A    | traefik | `<tailscale-ip>` | 14400 |
-| A    | umami   | `<tailscale-ip>` | 14400 |
+| Type | Name      | Content          | TTL   |
+| ---- | --------- | ---------------- | ----- |
+| A    | dokploy   | `<tailscale-ip>` | 14400 |
+| A    | traefik   | `<tailscale-ip>` | 14400 |
+| A    | infisical | `<tailscale-ip>` | 14400 |
+| A    | umami     | `<tailscale-ip>` | 14400 |
+| A    | plausible | `<tailscale-ip>` | 14400 |
+| A    | signoz    | `<tailscale-ip>` | 14400 |
+| A    | glitchtip | `<tailscale-ip>` | 14400 |
 
 Specific records have priority over wildcards. Wildcards cover: `preview.*`, `experiment.*`, `prisma-studio.*`, etc.
 

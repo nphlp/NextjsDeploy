@@ -1,6 +1,6 @@
 import Card from "@atoms/card";
 import Main from "@core/Main";
-import FormExample from "./form-example";
+import FormExample from "./_components/form-example";
 
 export default function Page() {
     return (

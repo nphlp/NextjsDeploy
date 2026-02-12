@@ -1,62 +1,27 @@
 "use client";
 
 import Button from "@atoms/button";
-import { Input as InputBaseUi } from "@base-ui/react/input";
 import cn from "@lib/cn";
 import { Eye, EyeClosed } from "lucide-react";
-import { ChangeEvent, FocusEvent, HTMLInputAutoCompleteAttribute, InputHTMLAttributes, Ref, useState } from "react";
+import { useState } from "react";
+import { Root, type RootProps } from "./atoms";
 
-type InputProps = {
-    name?: string;
-    placeholder?: string;
-    value?: string;
-    disabled?: boolean;
+type InputPasswordProps = Omit<RootProps, "type" | "render">;
 
-    // Form integration
-    required?: boolean;
-    autoComplete?: HTMLInputAutoCompleteAttribute;
-    autoFocus?: boolean;
-
-    // For react-hook-form compatibility
-    ref?: Ref<HTMLInputElement>;
-
-    // Event
-    onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-    onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
-
-    // Legacy props
-    legacyProps?: Omit<InputHTMLAttributes<HTMLInputElement>, keyof InputProps>;
-};
-
-export default function InputPassword(props: InputProps) {
-    const { legacyProps, ...othersProps } = props;
+export default function InputPassword(props: InputPasswordProps) {
+    const { className, ...othersProps } = props;
 
     const [showPassword, setShowPassword] = useState(false);
 
     return (
         <div className="relative w-full">
-            <InputBaseUi
+            <Root
                 type={showPassword ? "text" : "password"}
-                className={cn(
-                    // Layout
-                    "h-10 w-full",
-                    // Border
-                    "rounded-md border border-gray-200",
-                    // Padding
-                    "px-3.5 py-2",
-                    // Text
-                    "text-base text-gray-900",
-                    // Outline
-                    "focus:outline-outline focus:outline-2 focus:-outline-offset-1",
-                    // Base UI state
-                    "data-disabled:bg-gray-50",
-                    "data-invalid:border-red-800",
-                )}
-                {...legacyProps}
+                className={cn("h-10 focus:-outline-offset-1", className)}
                 {...othersProps}
             />
             <Button
-                label="Toggle password visiblity"
+                label="Toggle password visibility"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute top-0 right-0 px-3 py-3 text-gray-600"
                 noStyle

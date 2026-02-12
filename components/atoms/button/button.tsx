@@ -93,6 +93,7 @@ export default function Button(props: ButtonProps) {
         <ButtonBaseUi
             type={type}
             aria-label={label}
+            title={label}
             className={cn(
                 buttonVariants(noStyle ? noStyleMode : styledMode),
                 "relative",

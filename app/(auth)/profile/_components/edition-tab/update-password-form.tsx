@@ -1,49 +1,61 @@
 "use client";
 
 import Button from "@atoms/button";
-import Field, { Control } from "@atoms/filed";
-import Form, { FormProps, fieldValidator } from "@atoms/form";
+import { Field } from "@atoms/form/field";
+import Form, { OnSubmit } from "@atoms/form/form";
+import { useForm } from "@atoms/form/use-form";
 import InputPassword from "@atoms/input/input-password";
-import PasswordStrength from "@atoms/password-strength";
+import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";
 import { changePassword } from "@lib/auth-client";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
-
-const updatePasswordBaseSchema = z.object({
-    currentPassword: z.string().min(1, { message: "Le mot de passe actuel est requis" }),
-    newPassword: z.string().min(8, { message: "Le nouveau mot de passe doit contenir au moins 8 caractères" }),
-    confirmPassword: z.string().min(1, { message: "La confirmation est requise" }),
-});
-
-const updatePasswordSchema = updatePasswordBaseSchema.refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Les mots de passe ne correspondent pas",
-    path: ["confirmPassword"],
-});
-
-const validate = fieldValidator(updatePasswordBaseSchema);
 
 export const UpdatePasswordForm = () => {
     const toast = useToast();
-    const formRef = useRef<HTMLFormElement>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [passwordValue, setPasswordValue] = useState("");
 
-    const validateConfirmPassword = (value: unknown) => {
-        const str = String(value ?? "");
-        if (str.length < 1) return "La confirmation est requise";
-        if (str !== passwordValue) return "Les mots de passe ne correspondent pas";
-        return null;
-    };
+    const { register, submit, reset } = useForm({
+        currentPassword: {
+            schema: z.string().min(1, "Le mot de passe actuel est requis"),
+            setter: (value: string) => value,
+            defaultValue: "",
+        },
+        newPassword: {
+            // TODO: faire la même validation que dans le middleware
+            schema: z
+                .string()
+                .min(14, "Le mot de passe doit contenir au moins 14 caractères")
+                .max(128, "Le mot de passe doit contenir au maximum 128 caractères"),
+            setter: (value: string) => {
+                // TODO: faire ça avec un ref pour éviter des doubles re-render à chaque frappe
+                setPasswordValue(value);
+                return value;
+            },
+            defaultValue: "",
+        },
+        confirmPassword: {
+            schema: z
+                .string()
+                .min(1, "La confirmation est requise")
+                .refine((val) => val === passwordValue, "Les mots de passe ne correspondent pas"),
+            setter: (value: string) => value,
+            defaultValue: "",
+        },
+    });
 
-    const handleSubmit: FormProps["onFormSubmit"] = async (formValues) => {
-        const result = updatePasswordSchema.safeParse(formValues);
-        if (!result.success) return;
+    const handleSubmit: OnSubmit = async (event) => {
+        event.preventDefault();
+
+        const values = submit();
+        if (!values) return;
 
         setIsSubmitting(true);
+
         const { data } = await changePassword({
-            currentPassword: result.data.currentPassword,
-            newPassword: result.data.newPassword,
+            currentPassword: values.currentPassword,
+            newPassword: values.newPassword,
             revokeOtherSessions: true,
         });
 
@@ -53,6 +65,7 @@ export const UpdatePasswordForm = () => {
                 description: "Le mot de passe actuel est peut-être incorrect.",
                 type: "error",
             });
+
             setIsSubmitting(false);
             return;
         }
@@ -63,13 +76,14 @@ export const UpdatePasswordForm = () => {
             type: "success",
         });
 
-        formRef.current?.reset();
+        reset();
         setPasswordValue("");
+
         setIsSubmitting(false);
     };
 
     return (
-        <Form ref={formRef} onFormSubmit={handleSubmit}>
+        <Form register={register} onSubmit={handleSubmit}>
             <div>
                 <p className="font-medium">Mettre à jour votre mot de passe</p>
                 <p className="text-sm text-gray-600">
@@ -77,50 +91,58 @@ export const UpdatePasswordForm = () => {
                 </p>
             </div>
 
+            {/* Current password */}
             <Field
-                label="Mot de passe actuel"
                 name="currentPassword"
-                validate={validate("currentPassword")}
-                validationMode="onChange"
+                label="Mot de passe actuel"
+                description="Entrez votre mot de passe actuel"
+                disabled={isSubmitting}
+                required
             >
-                <Control
+                <InputPassword
+                    name="currentPassword"
                     placeholder="Mot de passe actuel"
                     autoComplete="current-password"
-                    disabled={isSubmitting}
-                    render={<InputPassword />}
+                    useForm
                 />
             </Field>
 
+            {/* New password */}
             <Field
-                label="Nouveau mot de passe"
                 name="newPassword"
-                validate={validate("newPassword")}
-                validationMode="onChange"
+                label="Nouveau mot de passe"
+                description="Minimum 14 caractères"
+                disabled={isSubmitting}
+                required
             >
-                <Control
+                <InputPassword
+                    name="newPassword"
                     placeholder="Nouveau mot de passe"
                     autoComplete="new-password"
-                    disabled={isSubmitting}
-                    render={<InputPassword onChange={(e) => setPasswordValue(e.target.value)} />}
+                    useForm
                 />
             </Field>
 
             {/* Password strength */}
             <PasswordStrength password={passwordValue} />
 
+            {/* Confirm password */}
             <Field
-                label="Confirmation"
                 name="confirmPassword"
-                validate={validateConfirmPassword}
-                validationMode="onChange"
+                label="Confirmation"
+                description="Confirmez le nouveau mot de passe"
+                disabled={isSubmitting}
+                required
             >
-                <Control
+                <InputPassword
+                    name="confirmPassword"
                     placeholder="Confirmez le nouveau mot de passe"
                     autoComplete="new-password"
-                    disabled={isSubmitting}
-                    render={<InputPassword />}
+                    useForm
                 />
             </Field>
+
+            {/* TODO: ajouter la <RequiredNote /> */}
 
             <div className="flex justify-center">
                 <Button type="submit" label="Valider" loading={isSubmitting} className="w-full md:w-fit" />
