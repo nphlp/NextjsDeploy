@@ -3,6 +3,7 @@
 import Button, { Link } from "@atoms/button";
 import { Field } from "@atoms/form/field";
 import Form, { OnSubmit } from "@atoms/form/form";
+import { passwordSchema, passwordSchemaOnBlur, passwordSchemaOnChange } from "@atoms/form/schemas";
 import { useForm } from "@atoms/form/use-form";
 import InputPassword from "@atoms/input/input-password";
 import PasswordStrength from "@atoms/input/password-strength";
@@ -21,18 +22,15 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const [passwordValue, setPasswordValue] = useState("");
+    const [password, setPassword] = useState("");
 
-    const { register, submit, reset } = useForm({
+    const { register, states, submit, reset } = useForm({
         password: {
-            // TODO: faire la même validation que dans le middleware
-            schema: z
-                .string()
-                .min(14, "Le mot de passe doit contenir au moins 14 caractères")
-                .max(128, "Le mot de passe doit contenir au maximum 128 caractères"),
+            schema: passwordSchema,
+            onChangeSchema: passwordSchemaOnChange,
+            onBlurSchema: passwordSchemaOnBlur,
             setter: (value: string) => {
-                // TODO: faire ça avec un ref pour éviter des doubles re-render à chaque frappe
-                setPasswordValue(value);
+                setPassword(value);
                 return value;
             },
             defaultValue: "",
@@ -41,7 +39,7 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
             schema: z
                 .string()
                 .min(1, "La confirmation est requise")
-                .refine((val) => val === passwordValue, "Les mots de passe ne correspondent pas"),
+                .refine((confirmPassword) => password === confirmPassword, "Les mots de passe ne correspondent pas"),
             setter: (value: string) => value,
             defaultValue: "",
         },
@@ -50,14 +48,13 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const handleSubmit: OnSubmit = async (event) => {
         event.preventDefault();
 
-        const values = submit();
-
-        if (!values) return;
+        const validated = submit();
+        if (!validated) return;
 
         setIsSubmitting(true);
 
         const { data } = await resetPassword({
-            newPassword: values.password,
+            newPassword: validated.password,
             token,
         });
 
@@ -75,7 +72,6 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
         setTimeout(() => {
             reset();
-            setPasswordValue("");
             setIsSubmitting(false);
         }, 1000);
 
@@ -88,20 +84,15 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
             <Field
                 name="password"
                 label="Nouveau mot de passe"
-                description="Minimum 14 caractères"
+                description="Veillez remplir tous les critères de sécurité"
                 disabled={isSubmitting}
                 required
             >
-                <InputPassword
-                    name="password"
-                    placeholder="Minimum 14 caractères"
-                    autoComplete="new-password"
-                    useForm
-                />
+                <InputPassword name="password" placeholder="Nouveau mot de passe" autoComplete="new-password" useForm />
             </Field>
 
             {/* Password strength */}
-            <PasswordStrength password={passwordValue} />
+            <PasswordStrength password={states.password} />
 
             {/* Confirm password */}
             <Field
@@ -124,8 +115,6 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 <span>Mot de passe retrouvé ?</span>
                 <Link href="/login" label="Se connecter" className="inline text-sm hover:underline" noStyle />
             </div>
-
-            {/* TODO: ajouter la <RequiredNote /> */}
 
             {/* Submit button */}
             <div className="flex justify-center">

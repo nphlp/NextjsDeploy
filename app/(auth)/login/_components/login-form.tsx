@@ -104,8 +104,6 @@ export default function LoginForm() {
                 <Link href="/register" label="S'inscrire" className="inline text-sm hover:underline" noStyle />
             </div>
 
-            {/* TODO: ajouter la <RequiredNote /> */}
-
             {/* Submit button */}
             <div className="flex justify-center">
                 <Button type="submit" label="Connexion" loading={isSubmitting} className="w-full sm:w-auto" />
