@@ -26,5 +26,6 @@ export default defineConfig({
             reportsDirectory: "./test/coverage",
         },
     },
+    resolve: { alias: { "server-only": new URL("./test/mocks/modules/server-only.ts", import.meta.url).pathname } },
     plugins: [tsconfigPaths(), react()],
 });
