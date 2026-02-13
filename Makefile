@@ -14,28 +14,15 @@ endif
 .PHONY: clear
 
 clear:
-	rm -rf .husky/_ .next node_modules prisma/client next-env.d.ts tsconfig.tsbuildinfo
-	rm -f .env env/.env.basic env/.env.experiment env/.env.preview env/.env.production
-
-##################
-#    Setup Env   #
-##################
-
-# 1. pnpm install
-# 2. Si env/env.config.ts n'existe pas -> le crée et s'arrête
-# 3. Si env/env.config.ts existe -> génère les fichiers .env
-.PHONY: setup-env
-
-setup-env:
-	@pnpm install && \
-	if [ ! -f env/env.config.ts ]; then \
-		pnpm tsx scripts/setup-env.ts; \
-	else \
-		pnpm tsx scripts/generate-env.ts; \
-	fi
+	rm -rf .husky/_
+	rm -rf .next
+	rm -rf node_modules
+	rm -rf prisma/client
+	rm -f next-env.d.ts tsconfig.tsbuildinfo
+	rm -rf .env env/.env.basic env/.env.experiment env/.env.preview env/.env.production
 
 ##############
-#  Make Dev  #
+#  Variables #
 ##############
 
 DC = BUILDKIT_PROGRESS=plain COMPOSE_BAKE=true docker compose
@@ -43,56 +30,67 @@ DC = BUILDKIT_PROGRESS=plain COMPOSE_BAKE=true docker compose
 POSTGRES = docker/compose.postgres.yml
 BASIC = docker/compose.basic.yml
 
-# Start a Postgres standalone
-# -> Used in the following commands: dev, prod, ngrok
+#################
+#   Setup Env   #
+#################
+
+# Generate .env files from env/env.config.mjs (plain Node.js, no deps)
+# Auto-skip: .env exists AND newer than env/env.config.mjs
+.PHONY: setup-env
+
+setup-env:
+	@if [ ! -f env/env.config.mjs ] || [ ! -f .env ] || [ env/env.config.mjs -nt .env ]; then \
+		node scripts/setup-env.mjs; \
+	fi
+
+################
+#   Postgres   #
+################
+
+# Start Postgres + Prisma Studio containers
 .PHONY: postgres postgres-stop postgres-clear
 
-postgres:
-	@if [ ! -f env/env.config.ts ]; then \
-		make setup-env; \
-	else \
-		make setup-env && \
-		$(DC) --env-file .env -f $(POSTGRES) up -d --build && \
-		echo "🌍 Postgres is running on port 5433" && \
-		echo "📝 Now start Nextjs with 'pnpm auto'" && \
-		echo "🚀 Nextjs Server : http://localhost:3000 ✅" && \
-		echo "📚 Prisma Studio : http://localhost:5555 🔥"; \
-	fi
+postgres: setup-env
+	@$(DC) --env-file .env -f $(POSTGRES) up -d --build --wait
 
 postgres-stop:
-	$(DC) --env-file .env -f $(POSTGRES) down
-	
+	@$(DC) --env-file .env -f $(POSTGRES) down
+
 postgres-clear:
-	$(DC) --env-file .env -f $(POSTGRES) down -v
+	@$(DC) --env-file .env -f $(POSTGRES) down -v
 
 ################
-#  Make Start  #
+#  App Setup   #
 ################
 
-# One command to start Dev, Prod or Ngrok
-# -> Nextjs in terminal + Postgres in docker
-# -> CMD/CTRL+C to stop both
+# Install deps + setup database + Prisma client + migrations + fixtures
+# Each step auto-skips if already done
+.PHONY: app-setup
+
+app-setup:
+	@if [ ! -f node_modules/.modules.yaml ] || [ pnpm-lock.yaml -nt node_modules/.modules.yaml ]; then \
+		pnpm install; \
+	fi
+	@pnpm db:setup
+	@if [ ! -d prisma/client ] || [ prisma/schema.prisma -nt prisma/client ]; then \
+		pnpm prisma:generate; \
+	fi
+	@pnpm prisma:deploy
+	@pnpm fixtures:setup
+
+################
+#  Dev / Start #
+################
+
+# Local development server -> http://localhost:3000
 .PHONY: dev start
 
-# For local development server -> http://localhost:3000
-# -> Best performance for hot-reloading
-dev:
-	@if [ ! -f env/env.config.ts ]; then \
-		make setup-env; \
-	else \
-		make postgres; \
-		pnpm auto && make postgres-stop; \
-	fi
+dev: postgres app-setup
+	@pnpm dev; make postgres-stop
 
-# For local build server for testing -> http://localhost:3000
-# -> Check everything works before deploying to VPS
-start:
-	@if [ ! -f env/env.config.ts ]; then \
-		make setup-env; \
-	else \
-		make postgres; \
-		pnpm auto:start && make postgres-stop; \
-	fi
+# Local build server for testing -> http://localhost:3000
+start: postgres app-setup
+	@pnpm build && pnpm start; make postgres-stop
 
 ################
 #  Make Basic  #
@@ -101,21 +99,16 @@ start:
 # Fully containerized environment for local testing
 .PHONY: basic basic-stop basic-clear
 
-basic:
-	@if [ ! -f env/env.config.ts ]; then \
-		make setup-env; \
-	else \
-		make setup-env && \
-		$(DC) --env-file env/.env.basic -f $(BASIC) up -d --build && \
-		echo "🚀 Nextjs Server : http://localhost:3000 ✅" && \
-		echo "📚 Prisma Studio : http://localhost:5555 🔥"; \
-	fi
+basic: setup-env
+	@$(DC) --env-file env/.env.basic -f $(BASIC) up -d --build && \
+	echo "🚀 Nextjs Server: http://localhost:3000 ✅" && \
+	echo "📚 Prisma Studio: http://localhost:5555 🔥"
 
 basic-stop:
-	$(DC) --env-file env/.env.basic -f $(BASIC) down
+	@$(DC) --env-file env/.env.basic -f $(BASIC) down
 
 basic-clear:
-	$(DC) --env-file env/.env.basic -f $(BASIC) down -v
+	@$(DC) --env-file env/.env.basic -f $(BASIC) down -v
 
 #####################
 #    Ngrok Tunnel   #

@@ -21,7 +21,7 @@ Best option for daily work. Next.js runs locally (fast hot-reload), Postgres in 
 make dev
 ```
 
-**First run:** if `env/env.config.ts` doesn't exist, the command creates it and **stops**. Configure your variables in the generated file, then re-run `make dev`. See [Environment Variables](./2-environment-variables.md) for details.
+**First run:** if `env/env.config.mjs` doesn't exist, the command creates it and **stops**. Configure your variables in the generated file, then re-run `make dev`. See [Environment Variables](./2-environment-variables.md) for details.
 
 **Further runs:** installs deps, generates `.env` files, starts Postgres, sets up DB, loads fixtures and starts Next.js.
 
@@ -84,7 +84,7 @@ Expose `localhost:3000` through a public URL. Useful for mobile testing or shari
 1. Create an account at [ngrok.com](https://ngrok.com/)
 2. Setup your authtoken from the [dashboard](https://dashboard.ngrok.com/get-started/setup)
 3. Get a free static domain at [Domains](https://dashboard.ngrok.com/domains)
-4. Set your static domain in `env/env.config.ts` in the `tunnelling` section. See [Environment Variables](./2-environment-variables.md) for details.
+4. Set your static domain in `env/env.config.mjs` in the `tunnelling` section. See [Environment Variables](./2-environment-variables.md) for details.
     ```ts
     tunnelling: {
         NGROK_URL: commented("your-static-domain.ngrok-free.app"), // Change here

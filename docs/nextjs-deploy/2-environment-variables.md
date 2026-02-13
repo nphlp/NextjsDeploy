@@ -6,44 +6,44 @@
 
 # Environment Variables
 
-This project runs across multiple environments: `dev` (local), `build` (local), `basic` (containerized), `experiment` (vps), `preview` (vps) and `production` (vps). **Each environment has its own set of environment variables.**
+This project runs across multiple environments: `dev` (local), `basic` (containerized), `experiment` (vps), `preview` (vps) and `production` (vps). **Each environment has its own set of environment variables.**
 
-To simplify management and avoid errors, an **`.env files` variant generation system** has been created.
+To simplify management and avoid errors, an **`.env` generation system** has been created.
 
-- All variables are **centralized** in `env/env.config.ts`.
+- All variables are **centralized** in `env/env.config.mjs` (plain JS, zero dependencies).
 - One command `make setup-env` generates all `.env` variants.
-- VPS environements files are ready to be copy-pasted to Dokploy secrets
+- VPS environment files are ready to be copy-pasted to Dokploy secrets.
 
-Generated `.env` files are located:
+Generated `.env` files:
 
-- `.env` : at root, used for local development and build testing (`make dev`, `make start`, `pnpm dev`, etc)
-- `env/.env.basic` : used for local containerized environment (`make basic`)
-- `env/.env.experiment` : used for VPS experiment environment (Dokploy)
-- `env/.env.preview` : used for VPS preview environment (Dokploy)
-- `env/.env.production` : used for VPS production environment (Dokploy)
+- `.env` — at root, used for local development and build testing (`make dev`, `make start`)
+- `env/.env.basic` — used for local containerized environment (`make basic`)
+- `env/.env.experiment` — used for VPS experiment environment (Dokploy)
+- `env/.env.preview` — used for VPS preview environment (Dokploy)
+- `env/.env.production` — used for VPS production environment (Dokploy)
 
-> All these genrated files are **not versioned** (gitignored).
+> All generated files are **not versioned** (gitignored).
 
 ## Usage
 
 > [!WARNING]
-> This guide explains how to manage environments variables
+> This guide explains how to manage environment variables
 >
-> - MAKE SURE to set your secrets in `env/env.config.ts` (non versionned)
+> - MAKE SURE to set your secrets in `env/env.config.mjs` (gitignored)
 > - DO NOT edit generated `.env` files, they will be overwritten
-> - DO NOT set your secrets in `scripts/generate-env/env.config.example.ts` (versionned) or you will leak them in git history
+> - DO NOT set your secrets in `env/env.config.example.mjs` (versioned) or you will leak them in git history
 
 ### First install
 
-First time cloning the project: `env/env.config.ts` doesn't exist yet. You need to generate it from the example, then fill in your values.
+First time cloning the project: `env/env.config.mjs` doesn't exist yet. You need to generate it from the example, then fill in your values.
 
-1. Generate the default `env/env.config.ts`:
+1. Generate the default `env/env.config.mjs`:
 
 ```bash
 make setup-env
 ```
 
-2. Replace example values with your own (API keys, passwords, etc).
+2. Search for `TO UPDATE` comments and replace placeholder values with your own (API keys, passwords, etc).
 3. Run `make setup-env` again to generate all `.env` files from your configuration.
 4. You're ready to develop!
 
@@ -52,64 +52,64 @@ make setup-env
 
 ### Update an existing variable
 
-1. Edit the value in `env/env.config.ts`
+1. Edit the value in `env/env.config.mjs`
 2. Run `make setup-env` to regenerate all `.env` files
 
 ### Add a new variable
 
-`env/env.config.ts` has three sections: `settings`, `globalConfig` and `envConfig`.
+`env/env.config.mjs` exports a default object with three sections: `settings`, `globalEnvConfig` and `envConfig`.
 
 **1. Register in `settings.groups`**
 
 Add the variable to a group (or create a new one). Groups define the order and comments in generated files.
 
-```ts
-const settings = {
-    ...,
+```js
+settings: {
     groups: {
-        myGroup: { // Existing or new group
+        myGroup: {
             comment: "My group description",
-            variables: ["MY_VAR"], // Add your variable name here
+            variables: ["MY_VAR"],
         },
     },
-};
+}
 ```
 
-**2. Set a default in `globalConfig`** (optional)
+**2. Set a default in `globalEnvConfig`** (optional)
 
 Values here apply to all environments.
 
-```ts
-const globalConfig = {
+```js
+globalEnvConfig: {
     myGroup: {
-        MY_VAR: "default-value", // The real value
+        MY_VAR: "default-value",
     },
-};
+}
 ```
 
 **3. Override per environment in `envConfig`**
 
-Each env can override `globalConfig` values. Available helpers:
+Each env can override `globalEnvConfig` values. Available conventions:
 
 - **Direct value** — plain override: `MY_VAR: "value"`
-- **`template("...")`** — reference other variables: `DATABASE_URL: template("postgres://{{POSTGRES_HOST}}:{{POSTGRES_PORT}}")`
-- **`commented("...")`** — generates a commented-out line in `.env`: `NGROK_URL: commented("my-domain.ngrok-free.app")`
-- **`EXCLUDE: [...]`** — omit variables not needed in this env: `EXCLUDE: ["UMAMI_URL", "UMAMI_WEBSITE_ID"]`
+- **`{{VAR}}` template** — reference other variables: `DATABASE_URL: "postgres://{{POSTGRES_HOST}}:{{POSTGRES_PORT}}"`
+- **`"#KEY"` commented** — generates a commented-out line: `"#NGROK_URL": "my-domain.ngrok-free.app"`
+- **`"#KEY"` array** — multiple commented alternatives: `"#MY_KEY": ["value-a", "value-b"]`
+- **`EXCLUDE: [...]`** — omit variables not needed in this env: `EXCLUDE: ["UMAMI_URL"]`
 
-```ts
-const envConfig = {
+```js
+envConfig: {
     dev: {
         myGroup: {
-            MY_VAR: "dev-override", // overrides globalConfig
+            MY_VAR: "dev-override",
         },
-        EXCLUDE: ["PROD_ONLY_VAR"], // not needed in dev
+        EXCLUDE: ["PROD_ONLY_VAR"],
     },
     production: {
         myGroup: {
-            MY_VAR: template("https://{{VPS_NEXTJS_DOMAIN}}/api"), // derived from another variable in production
+            MY_VAR: "https://{{VPS_NEXTJS_DOMAIN}}/api",
         },
     },
-};
+}
 ```
 
 ## Variables Reference
@@ -210,7 +210,7 @@ const envConfig = {
 5. Widget Mode: **Managed** (Cloudflare decides if user interaction is needed)
 6. Pre-authorization: **No**
 7. Click **Create**, then copy **Site Key** and **Secret Key**
-8. Paste them in `env/env.config.ts` for each VPS environment
+8. Paste them in `env/env.config.mjs` for each VPS environment
 
 ### SMTP
 

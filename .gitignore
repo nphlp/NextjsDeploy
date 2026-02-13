@@ -13,8 +13,8 @@ node_modules/
 .env
 .env.backup
 env/.env.*
-env/env.config.ts
-env/backup/
+env/env.config.mjs
+env.backup/
 
 # typescript
 *.tsbuildinfo

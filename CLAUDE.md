@@ -27,7 +27,7 @@ components/       # Atomic Design (atoms/, molecules/, organisms/)
 core/             # App shell (Header, Footer, Theme) and config
 docker/           # Dockerfiles and compose files
 docs/             # Project documentation
-env/              # Environment config and generation (env.config.ts)
+env/              # Environment config and generation (env.config.mjs)
 fixtures/         # Seed data (users, fruits, baskets)
 lib/              # Core libraries (auth, prisma, orpc, env, email)
 prisma/           # Schema, migrations, generated client
@@ -41,12 +41,10 @@ utils/            # Utility functions and hooks
 
 ```bash
 # Setup/check environment variables
-# -> Generate .env files declinaisons in `env/`
-# -> Like `env.config.ts` or `.env.prod`
+# -> Generate .env files from env/env.config.mjs
 make setup-env
 
 # Start Postgres server only
-# -> Used by developper in combination with `pnpm dev` or `pnpm auto`
 make postgres
 
 # Automated environments
@@ -160,10 +158,10 @@ pnpm build && pnpm start
 
 **Workflow to add a new env variable:**
 
-1. Register in `settings.groups` (in both `env/env.config.ts` and `scripts/generate-env/env.config.example.ts`)
-2. Set values in `globalConfig` and/or `envConfig` per environment
-3. In `env.config.example.ts` (versioned): use placeholder values only, never real secrets
-4. In `env/env.config.ts` (non-versioned): set real values
+1. Register in `settings.groups` (in both `env/env.config.mjs` and `env/env.config.example.mjs`)
+2. Set values in `globalEnvConfig` and/or `envConfig` per environment
+3. In `env.config.example.mjs` (versioned): use placeholder values only, never real secrets
+4. In `env/env.config.mjs` (gitignored): set real values
 5. Export from `lib/env.ts` (server) or `lib/env-client.ts` (client `NEXT_PUBLIC_*`)
 6. Import from `@lib/env` or `@lib/env-client` where needed — never use `process.env` directly in app code
 7. Run `make setup-env` to regenerate `.env` files
