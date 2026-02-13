@@ -3,7 +3,14 @@
 import Button, { Link } from "@atoms/button";
 import { Field } from "@atoms/form/field";
 import Form, { OnSubmit } from "@atoms/form/form";
-import { emailSchema, emailSchemaProgressive } from "@atoms/form/schemas";
+import {
+    emailSchema,
+    emailSchemaProgressive,
+    nameSchema,
+    passwordSchema,
+    passwordSchemaOnBlur,
+    passwordSchemaOnChange,
+} from "@atoms/form/schemas";
 import { useForm } from "@atoms/form/use-form";
 import Input from "@atoms/input/input";
 import InputPassword from "@atoms/input/input-password";
@@ -21,18 +28,16 @@ export default function RegisterForm() {
     const { token, captchaHeaders, reset: resetCaptcha, widget: captchaWidget } = useTurnstile();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const [passwordValue, setPasswordValue] = useState("");
+    const [password, setPassword] = useState("");
 
-    const { register, submit, reset } = useForm({
+    const { register, states, submit, reset } = useForm({
         firstname: {
-            // TODO: lettre uniquement
-            schema: z.string().min(1, "Le champ est requis"),
+            schema: nameSchema,
             setter: (value: string) => value,
             defaultValue: "",
         },
         lastname: {
-            // TODO: lettre uniquement
-            schema: z.string().min(1, "Le champ est requis"),
+            schema: nameSchema,
             setter: (value: string) => value,
             defaultValue: "",
         },
@@ -43,14 +48,11 @@ export default function RegisterForm() {
             defaultValue: "",
         },
         password: {
-            // TODO: faire la même validation que dans le middleware
-            schema: z
-                .string()
-                .min(14, "Le mot de passe doit contenir au moins 14 caractères")
-                .max(128, "Le mot de passe doit contenir au maximum 128 caractères"),
+            schema: passwordSchema,
+            onChangeSchema: passwordSchemaOnChange,
+            onBlurSchema: passwordSchemaOnBlur,
             setter: (value: string) => {
-                // TODO: faire ça avec un ref pour éviter des doubles re-render à chaque frappe
-                setPasswordValue(value);
+                setPassword(value);
                 return value;
             },
             defaultValue: "",
@@ -59,7 +61,7 @@ export default function RegisterForm() {
             schema: z
                 .string()
                 .min(1, "La confirmation est requise")
-                .refine((val) => val === passwordValue, "Les mots de passe ne correspondent pas"),
+                .refine((confirmPassword) => password === confirmPassword, "Les mots de passe ne correspondent pas"),
             setter: (value: string) => value,
             defaultValue: "",
         },
@@ -68,12 +70,12 @@ export default function RegisterForm() {
     const handleSubmit: OnSubmit = async (event) => {
         event.preventDefault();
 
-        const values = submit();
-        if (!values) return;
+        const validated = submit();
+        if (!validated) return;
 
         setIsSubmitting(true);
 
-        const { firstname, lastname, email, password } = values;
+        const { firstname, lastname, email, password } = validated;
 
         const { data } = await signUp.email({
             name: firstname,
@@ -95,7 +97,6 @@ export default function RegisterForm() {
         setTimeout(() => {
             resetCaptcha();
             reset();
-            setPasswordValue("");
             setIsSubmitting(false);
         }, 1000);
 
@@ -123,15 +124,15 @@ export default function RegisterForm() {
             <Field
                 name="password"
                 label="Mot de passe"
-                description="Minimum 14 caractères"
+                description="Veillez remplir tous les critères de sécurité"
                 disabled={isSubmitting}
                 required
             >
-                <InputPassword name="password" placeholder="Minimum 8 caractères" autoComplete="new-password" useForm />
+                <InputPassword name="password" placeholder="Mot de passe" autoComplete="new-password" useForm />
             </Field>
 
             {/* Password strength */}
-            <PasswordStrength password={passwordValue} />
+            <PasswordStrength password={states.password} />
 
             {/* Confirm password */}
             <Field
@@ -157,8 +158,6 @@ export default function RegisterForm() {
                 <span>Déjà un compte ?</span>
                 <Link href="/login" label="Se connecter" className="inline text-sm hover:underline" noStyle />
             </div>
-
-            {/* TODO: ajouter la <RequiredNote /> */}
 
             {/* Submit button */}
             <div className="flex justify-center">

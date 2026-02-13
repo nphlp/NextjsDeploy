@@ -3,6 +3,7 @@
 import Button from "@atoms/button";
 import { Field } from "@atoms/form/field";
 import Form, { OnSubmit } from "@atoms/form/form";
+import { passwordSchema, passwordSchemaOnChange } from "@atoms/form/schemas";
 import { useForm } from "@atoms/form/use-form";
 import InputPassword from "@atoms/input/input-password";
 import PasswordStrength from "@atoms/input/password-strength";
@@ -14,23 +15,22 @@ import { z } from "zod";
 export const UpdatePasswordForm = () => {
     const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [passwordValue, setPasswordValue] = useState("");
 
-    const { register, submit, reset } = useForm({
+    const [password, setPassword] = useState("");
+
+    const { register, states, submit, reset } = useForm({
         currentPassword: {
             schema: z.string().min(1, "Le mot de passe actuel est requis"),
+            onBlurSchema: z.string(), // Eviter l'erreur si le champ à juste été cliqué
             setter: (value: string) => value,
             defaultValue: "",
         },
         newPassword: {
-            // TODO: faire la même validation que dans le middleware
-            schema: z
-                .string()
-                .min(14, "Le mot de passe doit contenir au moins 14 caractères")
-                .max(128, "Le mot de passe doit contenir au maximum 128 caractères"),
+            schema: passwordSchema,
+            onChangeSchema: passwordSchemaOnChange,
+            onBlurSchema: z.string(), // Eviter l'erreur si le champ à juste été cliqué
             setter: (value: string) => {
-                // TODO: faire ça avec un ref pour éviter des doubles re-render à chaque frappe
-                setPasswordValue(value);
+                setPassword(value);
                 return value;
             },
             defaultValue: "",
@@ -39,7 +39,8 @@ export const UpdatePasswordForm = () => {
             schema: z
                 .string()
                 .min(1, "La confirmation est requise")
-                .refine((val) => val === passwordValue, "Les mots de passe ne correspondent pas"),
+                .refine((confirmPassword) => password === confirmPassword, "Les mots de passe ne correspondent pas"),
+            onBlurSchema: z.string(), // Eviter l'erreur si le champ à juste été cliqué
             setter: (value: string) => value,
             defaultValue: "",
         },
@@ -48,14 +49,14 @@ export const UpdatePasswordForm = () => {
     const handleSubmit: OnSubmit = async (event) => {
         event.preventDefault();
 
-        const values = submit();
-        if (!values) return;
+        const validated = submit();
+        if (!validated) return;
 
         setIsSubmitting(true);
 
         const { data } = await changePassword({
-            currentPassword: values.currentPassword,
-            newPassword: values.newPassword,
+            currentPassword: validated.currentPassword,
+            newPassword: validated.newPassword,
             revokeOtherSessions: true,
         });
 
@@ -77,8 +78,6 @@ export const UpdatePasswordForm = () => {
         });
 
         reset();
-        setPasswordValue("");
-
         setIsSubmitting(false);
     };
 
@@ -111,7 +110,7 @@ export const UpdatePasswordForm = () => {
             <Field
                 name="newPassword"
                 label="Nouveau mot de passe"
-                description="Minimum 14 caractères"
+                description="Veillez remplir tous les critères de sécurité"
                 disabled={isSubmitting}
                 required
             >
@@ -124,7 +123,7 @@ export const UpdatePasswordForm = () => {
             </Field>
 
             {/* Password strength */}
-            <PasswordStrength password={passwordValue} />
+            <PasswordStrength password={states.newPassword} />
 
             {/* Confirm password */}
             <Field
@@ -141,8 +140,6 @@ export const UpdatePasswordForm = () => {
                     useForm
                 />
             </Field>
-
-            {/* TODO: ajouter la <RequiredNote /> */}
 
             <div className="flex justify-center">
                 <Button type="submit" label="Valider" loading={isSubmitting} className="w-full md:w-fit" />

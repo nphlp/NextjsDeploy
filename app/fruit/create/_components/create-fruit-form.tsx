@@ -84,8 +84,6 @@ export default function CreateFruitForm() {
                 <TextArea name="description" placeholder="Un fruit tropical sucré et juteux." useForm />
             </Field>
 
-            {/* TODO: ajouter la <RequiredNote /> */}
-
             {/* Submit button */}
             <div className="flex justify-center">
                 <Button type="submit" label="Créer le fruit" loading={isSubmitting} className="w-full sm:w-auto" />

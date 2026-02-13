@@ -142,6 +142,10 @@ pnpm build && pnpm start
 - Claude Code responses: adapt to the language of the prompt
 - Never leak real domains, secrets, or credentials in documentation or versioned files. Use generic placeholders (`your-domain.com`, `your-password`, etc.).
 
+### Naming
+
+- For boolean variables: use `every` prefix instead of `all` (e.g. `everyValid`, `everyPassed`, not `allValid`, `allPassed`).
+
 ### Environment Variables
 
 **Architecture:**

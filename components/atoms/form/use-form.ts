@@ -1,278 +1,274 @@
 "use client";
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { ZodType } from "zod";
 
-/**
- * Per-field configuration.
- *
- * @template V — The field value type, inferred from `setter` return type.
- *
- * @property schema — Default Zod schema. Used on submit, onBlur and onChange (unless overridden).
- * @property onChangeSchema — Optional override for onChange validation (e.g. lenient progressive regex).
- * @property onBlurSchema — Optional override for onBlur validation.
- * @property setter — Value transformer. Its return type drives `FieldValue` inference (e.g. `string | null`).
- * @property defaultValue — Initial value for the field.
- */
-type FieldConfig<V> = {
-    /** Default Zod schema. Used on submit, onBlur and onChange (unless overridden). */
-    schema: ZodType;
-    /** Optional override for onChange validation (e.g. lenient progressive regex). */
+type FieldConfig<V, S extends V = V> = {
+    /**
+     * Zod Schema
+     * - for submit validation
+     * - infer type for validated value
+     * - also for onChange validation (if no override schema provided)
+     * - also for onBlur validation (if no override schema provided)
+     */
+    schema: ZodType<S>;
+    /**
+     * Override schema
+     * - for onChange validation
+     * - useful to prevent showing errors until the user has finished typing (e.g. email field in `/register` page)
+     */
     onChangeSchema?: ZodType;
-    /** Optional override for onBlur validation. */
+    /**
+     * Override schema
+     * - for blur validation
+     * - useful to prevent showing errors if the user juste click in and out the field without filling it (e.g. firstname field in `/profile` page)
+     */
     onBlurSchema?: ZodType;
-    /** Value transformer. Its return type drives `FieldValue` inference (e.g. `string | null`). */
+    /**
+     * Setter function to store the field state
+     * - infer type for field controller state
+     * -> e.g. `setter: (value: number) => value.toString()`
+     * -> e.g. `setter: (value: string | null) => value`
+     */
     setter: (value: V) => V;
-    /** Initial value for the field. */
+    /**
+     * Initial value for the field
+     * -> `defaultValue: ""` for a text input
+     * -> `defaultValue: null` for a select
+     * -> `defaultValue: []` for a multi-select, etc.
+     */
     defaultValue: V;
 };
 
-/**
- * Form config shape: a record of field names to their `FieldConfig`.
- * Uses `any` because each field carries its own generic — the real types
- * are recovered per-field via `FieldValue` and `SchemaValue` conditional types.
- */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type UseFormProps = Record<string, FieldConfig<any>>;
+export type UseFormProps = Record<string, FieldConfig<any, any>>;
 
-/** Extracts field names from config as string literal union. */
 type FieldName<T extends UseFormProps> = keyof T & string;
-
-/** Extracts the field value type from `setter` return type. Used by `register` (value, onChange). */
 type FieldValue<F> = F extends FieldConfig<infer V> ? V : never;
 
-/** Extracts the validated output type from `schema`. Used by `submit` return. */
-type SchemaValue<F> = F extends { schema: ZodType<infer S> } ? S : never;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SchemaValue<F> = F extends FieldConfig<any, infer S> ? S : never;
 
-/** Maps each field name to a uniform type U (e.g. `string[]` for errors, `FieldStatus` for status). */
-type FieldObject<T extends UseFormProps, U> = {
+type FieldMap<T extends UseFormProps, U> = {
     [K in FieldName<T>]: U;
 };
 
-/**
- * Parallel boolean flags describing a field's current state.
- *
- * @property isValid — Last validation passed (onChange, onBlur or submit).
- * @property isEmpty — Value is empty string, null, undefined or empty array.
- * @property isFocus — Field is currently focused.
- * @property isTouched — Field has been interacted with (focus, change or blur).
- */
 export type FieldStatus = {
-    /** Last validation passed (onChange, onBlur or submit). */
+    /** Field passes its schema validation */
     isValid: boolean;
-    /** Value is empty string, null, undefined or empty array. */
+    /** Field value is empty ("", null, undefined, [], {}) */
     isEmpty: boolean;
-    /** Field is currently focused. */
+    /** Field is currently focused */
     isFocus: boolean;
-    /** Field has been interacted with (focus, change or blur). */
+    /** Field has been interacted with at least once */
     isTouched: boolean;
 };
 
-/** Internal state shape: maps each field to its `FieldValue` (from setter). */
-type Values<T extends UseFormProps> = { [K in FieldName<T>]: FieldValue<T[K]> };
+export type States<T extends UseFormProps> = { [K in FieldName<T>]: FieldValue<T[K]> };
 
-/** Submit return shape: maps each field to its `SchemaValue` (from Zod schema output). */
+type SetStates<T extends UseFormProps> = {
+    [K in FieldName<T>]: (value: FieldValue<T[K]>) => void;
+};
+
 type ValidatedValues<T extends UseFormProps> = { [K in FieldName<T>]: SchemaValue<T[K]> };
 
-/**
- * Return type of `useForm`.
- *
- * @property register — Returns field props (name, value, onChange, onBlur, onFocus, errors, status) for a given field key.
- * @property submit — Validates all fields with the strict `schema`. Returns `ValidatedValues<T>` on success, `undefined` on failure.
- * @property reset — Resets all values, errors and status to their default state.
- */
 export type UseFormReturn<T extends UseFormProps> = {
-    /** Returns field props (name, value, onChange, onBlur, onFocus, errors, status) for a given field key. */
+    /**
+     * Bind a field by name
+     * -> returns value, status, errors
+     * -> onFocus, onChange and onBlur handlers
+     */
     register: <K extends FieldName<T>>(
         fieldName: K,
     ) => {
-        /** Field key as string literal. */
         name: K;
-        /** Current field value, typed via `FieldValue` (from setter). */
         value: FieldValue<T[K]>;
-        /** Parallel boolean flags: isValid, isEmpty, isFocus, isTouched. */
         status: FieldStatus;
-        /** Validation error messages from the last onChange, onBlur or submit. */
         errors: string[];
-        /** Marks field as focused and touched. */
         onFocus: () => void;
-        /** Validates with `onBlurSchema` (or `schema` fallback) and removes focus. */
         onBlur: () => void;
-        /** Updates value through setter, then validates with `onChangeSchema` (or `schema` fallback). */
-        onChange: Dispatch<SetStateAction<FieldValue<T[K]>>>;
+        onChange: (value: FieldValue<T[K]>) => void;
     };
-    /** Validates all fields with the strict `schema`. Returns `ValidatedValues<T>` on success, `undefined` on failure. */
+    /** Current values for all fields */
+    states: States<T>;
+    /** Set a field value programmatically */
+    setStates: SetStates<T>;
+    /** Validate all fields, returns validated data or undefined on failure */
     submit: () => ValidatedValues<T> | undefined;
-    /** Resets all values, errors and status to their default state. */
+    /** Reset all fields to their default values */
     reset: () => void;
 };
 
 /**
- * Lightweight form hook with full type inference from config.
- *
- * Features:
- * - Field keys, values and validated output are inferred from config
- * - Per-field Zod validation with optional schema overrides for onChange and onBlur
- * - Setter function for value transformation and type inference (e.g. `string | null`)
- * - Field status tracking: `isValid`, `isEmpty`, `isFocus`, `isTouched`
- * - Progressive validation: onChange uses `onChangeSchema` (lenient), onBlur/submit uses `schema` (strict)
- *
- * Type inference:
- * - `FieldValue<T[K]>` — inferred from `setter`, used by `register` (value, onChange)
- * - `SchemaValue<T[K]>` — inferred from `schema`, used by `submit` (validated output)
- *
- * @example
- * ```tsx
- * const { register, submit, reset } = useForm({
- *     name: {
- *         schema: z.string().min(1, "Required"),
- *         setter: (value: string) => value,
- *         defaultValue: "",
- *     },
- *     group: {
- *         schema: z.string("Select a group"),
- *         setter: (value: string | null) => value, // setter widens type for UI state
- *         defaultValue: null,
- *     },
- * });
- *
- * register("name").value   // string
- * register("group").value  // string | null
- * submit()?.name           // string
- * submit()?.group          // string (validated, not null)
- * ```
+ * Make a key-array form object keys
+ * Input -> { name: "John", lastname: "Doe", age: 30 }
+ * Output -> ["name", "lastname", "age"]
+ */
+const extractKeysFromObject = <T extends UseFormProps>(obj: T) => Object.keys(obj) as FieldName<T>[];
+
+/**
+ * Make a key-value-array from object
+ * Input -> { name: "John", lastname: "Doe", age: 30 }
+ * Output -> [["name", "John"], ["lastname", "Doe"], ["age", 30]]
+ */
+const extractEntriesFromObject = <T extends UseFormProps>(obj: T) =>
+    Object.entries(obj) as [FieldName<T>, T[FieldName<T>]][];
+
+/**
+ * Make an object from key-value-array
+ * Input -> [["name", "John"], ["lastname", "Doe"], ["age", 30]]
+ * Output -> { name: "John", lastname: "Doe", age: 30 }
+ */
+const buildObjectFromEntries = <T extends UseFormProps, R>(entries: [FieldName<T>, R][]) =>
+    Object.fromEntries(entries) as FieldMap<T, R>;
+
+/**
+ * Map on key-value-array from keys to transform values
+ * Input -> [["name", "John"], ["lastname", "Doe"], ["age", 30]]
+ * Map -> ([key, value]) => [key, value.toString().toUpperCase()]
+ * Output -> [["name", "JOHN"], ["lastname", "DOE"], ["age", "30"]]
+ */
+const mapEntries = <T extends UseFormProps, V, R>(
+    entries: [FieldName<T>, V][],
+    fn: (entry: [FieldName<T>, V]) => [FieldName<T>, R],
+) => entries.map(fn);
+
+/**
+ * Map on object through a key-value-array
+ * Input -> { name: "John", lastname: "Doe", age: 30 }
+ * Map -> ([key, value]) => [key, value.toString().toUpperCase()]
+ * Output -> { name: "JOHN", lastname: "DOE", age: "30" }
+ */
+const mapObjectEntries = <T extends UseFormProps, R>(
+    obj: T,
+    fn: (entry: [FieldName<T>, T[FieldName<T>]]) => [FieldName<T>, R],
+) => buildObjectFromEntries<T, R>(mapEntries(extractEntriesFromObject(obj), fn));
+
+/**
+ * Default status for each field
+ * -> not valid, empty, not focused, not touched
+ */
+const initialStatus: FieldStatus = { isValid: false, isEmpty: true, isFocus: false, isTouched: false };
+
+/**
+ * Validate a value with a schema
+ */
+const validate = <S>(schema: ZodType<S>, value: unknown) => {
+    const result = schema.safeParse(value);
+    const fieldErrors = result.success ? [] : result.error.issues.map((i) => i.message);
+    const isValid = fieldErrors.length === 0;
+    return { fieldErrors, isValid, data: result.data };
+};
+
+/**
+ * State updater — replace a field value
+ * Usage -> setState(setField(key, value))
+ */
+const setField =
+    <K extends string, V>(key: K, value: V) =>
+    <S extends Record<K, V>>(prev: S) => ({ ...prev, [key]: value });
+
+/**
+ * State updater — merge into a field value
+ * Usage -> setState(mergeField(key, { isValid: true }))
+ */
+const mergeField =
+    <K extends string, V extends object>(key: K, partial: Partial<V>) =>
+    <S extends Record<K, V>>(prev: S) => ({ ...prev, [key]: { ...prev[key], ...partial } });
+
+/**
+ * Check if value has empty state
+ */
+const isValueEmpty = (value: unknown) =>
+    value === "" ||
+    value === undefined ||
+    value === null ||
+    (Array.isArray(value) && value.length === 0) ||
+    (typeof value === "object" && Object.keys(value).length === 0);
+
+/**
+ * Form hook for client-side validation and indications
+ * See more details and example in `app/form/_components/form-example.tsx`
  */
 export const useForm = <T extends UseFormProps>(config: T): UseFormReturn<T> => {
-    const fieldsNames = Object.keys(config) as FieldName<T>[];
+    const fields = extractKeysFromObject(config);
 
-    // Default states
-    const defaultValues = Object.fromEntries(
-        fieldsNames.map((fieldName) => [fieldName, config[fieldName].defaultValue]),
-    ) as Values<T>;
+    const defaultValues = mapObjectEntries(config, ([f]) => [f, config[f].defaultValue]);
+    const defaultErrors = mapObjectEntries(config, ([f]) => [f, []]);
+    const defaultStatus = mapObjectEntries(config, ([f]) => [f, initialStatus]);
 
-    const defaultErrors = Object.fromEntries(fieldsNames.map((fieldName) => [fieldName, []])) as unknown as FieldObject<
-        T,
-        string[]
-    >;
+    const [values, setValues] = useState<States<T>>(defaultValues);
+    const [errors, setErrors] = useState<FieldMap<T, string[]>>(defaultErrors);
+    const [status, setStatus] = useState<FieldMap<T, FieldStatus>>(defaultStatus);
 
-    const defaultStatus = Object.fromEntries(
-        fieldsNames.map((fieldName) => [
-            fieldName,
-            { isValid: false, isEmpty: true, isFocus: false, isTouched: false },
-        ]),
-    ) as FieldObject<T, FieldStatus>;
-
-    // Centralized state
-    const [values, setValues] = useState<Values<T>>(defaultValues);
-    const [errors, setErrors] = useState<FieldObject<T, string[]>>(defaultErrors);
-    const [status, setStatus] = useState<FieldObject<T, FieldStatus>>(defaultStatus);
-
-    /**
-     * Returns field props for a given field name.
-     * Provides: name, value, onChange, onBlur, onFocus, errors, status.
-     */
-    const register = ((fieldName: FieldName<T>) => {
-        const name = fieldName;
-        const value = values[fieldName];
-
-        // Mark field as focused and touched
+    const register = <K extends FieldName<T>>(fieldName: K) => {
         const onFocus = () => {
-            setStatus((prev) => ({ ...prev, [fieldName]: { ...prev[fieldName], isFocus: true, isTouched: true } }));
+            setStatus(mergeField(fieldName, { isFocus: true, isTouched: true }));
         };
 
-        // Update value through setter, then validate with onChangeSchema (or schema fallback)
-        const onChange = (newValue: FieldValue<T[typeof fieldName]>) => {
+        const onChange = (newValue: FieldValue<T[K]>) => {
+            // Transform & store
             const transformed = config[fieldName].setter(newValue);
-            setValues((prev) => ({ ...prev, [fieldName]: transformed }));
+            setValues(setField(fieldName, transformed));
 
-            const isEmpty =
-                transformed === "" ||
-                transformed === undefined ||
-                transformed === null ||
-                (Array.isArray(transformed) && transformed.length === 0);
+            // Validate (progressive schema if available)
+            const isEmpty = isValueEmpty(transformed);
+            const schema = config[fieldName].onChangeSchema || config[fieldName].schema;
+            const { fieldErrors, isValid } = validate(schema, transformed);
 
-            const onChangeSchema = config[fieldName].onChangeSchema || config[fieldName].schema;
-            const result = onChangeSchema.safeParse(transformed);
-
-            setErrors((prev) => ({
-                ...prev,
-                [fieldName]: result.success ? [] : result.error.issues.map((i) => i.message),
-            }));
-            setStatus((prev) => ({
-                ...prev,
-                [fieldName]: { ...prev[fieldName], isValid: result.success, isEmpty, isTouched: true },
-            }));
+            // Update errors & status
+            setErrors(setField(fieldName, fieldErrors));
+            setStatus(mergeField(fieldName, { isValid, isEmpty, isTouched: true }));
         };
 
-        // Validate with onBlurSchema (or schema fallback) and remove focus
         const onBlur = () => {
-            const onBlurSchema = config[fieldName].onBlurSchema || config[fieldName].schema;
-            const result = onBlurSchema.safeParse(value);
+            // Validate (strict schema if available)
+            const schema = config[fieldName].onBlurSchema || config[fieldName].schema;
+            const { fieldErrors, isValid } = validate(schema, values[fieldName]);
 
-            setErrors((prev) => ({
-                ...prev,
-                [fieldName]: result.success ? [] : result.error.issues.map((i) => i.message),
-            }));
-            setStatus((prev) => ({
-                ...prev,
-                [fieldName]: { ...prev[fieldName], isValid: result.success, isFocus: false, isTouched: true },
-            }));
+            // Update errors & status
+            setErrors(setField(fieldName, fieldErrors));
+            setStatus(mergeField(fieldName, { isValid, isFocus: false, isTouched: true }));
         };
 
-        const fieldErrors = errors[fieldName];
-        const fieldStatus = status[fieldName];
-
-        return { name, value, onChange, onBlur, onFocus, errors: fieldErrors, status: fieldStatus };
-    }) as UseFormReturn<T>["register"];
-
-    /**
-     * Validates all fields with the strict schema.
-     * Returns validated values if all fields pass, undefined otherwise.
-     * Marks all fields as touched to display errors on submit.
-     */
-    const submit = () => {
-        const parsedValues = fieldsNames.map((fieldName) => config[fieldName].schema.safeParse(values[fieldName]));
-
-        const everyFieldsValid = parsedValues.every((result) => result.success);
-
-        if (!everyFieldsValid) {
-            const errorsArrayValues = parsedValues.map((result, index) => {
-                if (!result.success) {
-                    return [fieldsNames[index], result.error.issues.map((i) => i.message)];
-                }
-                return [fieldsNames[index], []];
-            });
-
-            const fieldErrors = Object.fromEntries(errorsArrayValues) as FieldObject<T, string[]>;
-            setErrors(fieldErrors);
-
-            // Mark all fields as touched and sync isValid per field
-            setStatus((prev) => {
-                const newStatus = { ...prev };
-                fieldsNames.forEach((fieldName, index) => {
-                    newStatus[fieldName] = {
-                        ...newStatus[fieldName],
-                        isTouched: true,
-                        isValid: parsedValues[index].success,
-                    };
-                });
-                return newStatus;
-            });
-
-            return undefined;
-        }
-
-        const fieldArrayValues = parsedValues.map((result, index) => [fieldsNames[index], result.data]);
-
-        return Object.fromEntries(fieldArrayValues) as ValidatedValues<T>;
+        return {
+            name: fieldName,
+            value: values[fieldName],
+            errors: errors[fieldName],
+            status: status[fieldName],
+            onChange,
+            onBlur,
+            onFocus,
+        };
     };
 
-    /** Resets all values, errors and status to their default state. */
+    const submit = () => {
+        // Validate all fields with primary schema
+        const resultMap = mapObjectEntries(config, ([f]) => [f, validate(config[f].schema, values[f])]);
+        const everyValid = fields.every((f) => resultMap[f].isValid);
+
+        // Success — return validated data
+        if (everyValid) {
+            return mapObjectEntries(config, ([f]) => [f, resultMap[f].data]);
+        }
+
+        // Failure — surface errors & mark fields as touched
+        setErrors(mapObjectEntries(config, ([f]) => [f, resultMap[f].fieldErrors]));
+        setStatus((prev) =>
+            mapObjectEntries(config, ([f]) => [f, { ...prev[f], isTouched: true, isValid: resultMap[f].isValid }]),
+        );
+    };
+
+    const setStates = mapObjectEntries(config, ([f]) => [
+        f,
+        (newValue: FieldValue<T[typeof f]>) => register(f).onChange(newValue),
+    ]);
+
     const reset = () => {
         setValues(defaultValues);
         setErrors(defaultErrors);
         setStatus(defaultStatus);
     };
 
-    return { register, submit, reset };
+    return { register, states: values, setStates, submit, reset };
 };

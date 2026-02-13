@@ -3,8 +3,10 @@
 ## Bugs
 
 - Password : validation client et UI.
-- Mobile : Cloudflare bloque le formulaire ?
 - Salt des passwords ? Fonctionnement ?
+
+- Insertion Proton Pass qui ne déclenche pas les useEffect -> insertion invisible avant un onFocus ou autre
+
 - Mettre à jour .env Dokploy (SMTP, etc)
 - First admin en prod ?
 - Callback de redirection après login

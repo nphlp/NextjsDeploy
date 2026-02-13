@@ -90,8 +90,6 @@ export default function RequestResetForm() {
                 <Link href="/login" label="Se connecter" className="inline text-sm hover:underline" noStyle />
             </div>
 
-            {/* TODO: ajouter la <RequiredNote /> */}
-
             {/* Submit button */}
             <div className="flex justify-center">
                 <Button

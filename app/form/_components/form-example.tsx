@@ -1,17 +1,28 @@
 "use client";
 
 import Button from "@atoms/button";
+import { Field, RequiredNote } from "@atoms/form/field";
+import Form, { OnSubmit } from "@atoms/form/form";
+import { useForm } from "@atoms/form/use-form";
 import Input from "@atoms/input/input";
 import TextArea from "@atoms/input/text-area";
-import Select, { Item, ItemType, List, Popup, Portal, Positioner, Trigger, Value, renderValue } from "@atoms/select";
+import Select, {
+    Item,
+    ItemType,
+    List,
+    Placeholder,
+    Popup,
+    Portal,
+    Positioner,
+    Trigger,
+    Value,
+    renderValue,
+} from "@atoms/select";
 import SelectMultiple from "@atoms/select/select-multiple";
 import { useToast } from "@atoms/toast";
 import { timeout } from "@utils/timout";
 import { useState } from "react";
 import { z } from "zod";
-import { Field, RequiredNote } from "../../../components/atoms/form/field";
-import Form, { OnSubmit } from "../../../components/atoms/form/form";
-import { useForm } from "../../../components/atoms/form/use-form";
 import { emailSchema, emailSchemaProgressive, phoneSchema, phoneSchemaProgressive } from "./schemas";
 
 type CreateContactProps = {
@@ -171,6 +182,7 @@ export default function FormExample() {
                         <Positioner>
                             <Popup withScrollArrows>
                                 <List>
+                                    <Placeholder label={groupPlaceholder} />
                                     <Item label="Famille" itemKey="family" />
                                     <Item label="Amis" itemKey="friends" />
                                     <Item label="Travail" itemKey="work" />

@@ -3,6 +3,7 @@
 import Button from "@atoms/button";
 import { Field } from "@atoms/form/field";
 import Form, { OnSubmit } from "@atoms/form/form";
+import { nameSchema } from "@atoms/form/schemas";
 import { useForm } from "@atoms/form/use-form";
 import Input from "@atoms/input/input";
 import { useToast } from "@atoms/toast";
@@ -23,8 +24,7 @@ export const UpdateFirstnameForm = (props: UpdateFirstnameFormProps) => {
 
     const { register, submit, reset } = useForm({
         name: {
-            // TODO: lettre uniquement
-            schema: z.string().min(1, "Le champ est requis"),
+            schema: nameSchema,
             onBlurSchema: z.string(), // Eviter l'erreur si le champ à juste été cliqué
             setter: (value: string) => value,
             defaultValue: "",
@@ -68,8 +68,6 @@ export const UpdateFirstnameForm = (props: UpdateFirstnameFormProps) => {
             <Field name="name" label="Prénom" description="Le champ est requis" disabled={isSubmitting} required>
                 <Input name="name" placeholder={session.user.name} autoComplete="given-name" useForm />
             </Field>
-
-            {/* TODO: ajouter la <RequiredNote /> */}
 
             <div className="flex justify-center">
                 <Button type="submit" label="Valider" loading={isSubmitting} className="w-full md:w-fit" />
