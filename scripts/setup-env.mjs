@@ -6,8 +6,8 @@
  *
  * Usage: node scripts/setup-env.mjs
  */
-import { existsSync, copyFileSync } from "node:fs";
-import { resolve, dirname } from "node:path";
+import { copyFileSync, existsSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { generate } from "./generate-env.mjs";
 

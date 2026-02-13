@@ -112,7 +112,8 @@ export default {
                 POSTGRES_PASSWORD: "nextjs-deploy-password",
             },
             prisma: {
-                DATABASE_URL: "postgres://postgres:{{POSTGRES_PASSWORD}}@{{POSTGRES_HOST}}:{{POSTGRES_PORT}}/{{POSTGRES_DB}}",
+                DATABASE_URL:
+                    "postgres://postgres:{{POSTGRES_PASSWORD}}@{{POSTGRES_HOST}}:{{POSTGRES_PORT}}/{{POSTGRES_DB}}",
             },
             betterAuth: {
                 BETTER_AUTH_SECRET: "better-auth-session-encryption-key",
@@ -150,7 +151,8 @@ export default {
                 POSTGRES_PASSWORD: "nextjs-deploy-password",
             },
             prisma: {
-                DATABASE_URL: "postgres://postgres:{{POSTGRES_PASSWORD}}@{{POSTGRES_HOST}}:{{POSTGRES_PORT}}/{{POSTGRES_DB}}",
+                DATABASE_URL:
+                    "postgres://postgres:{{POSTGRES_PASSWORD}}@{{POSTGRES_HOST}}:{{POSTGRES_PORT}}/{{POSTGRES_DB}}",
             },
             betterAuth: {
                 BETTER_AUTH_SECRET: "better-auth-session-encryption-key",
@@ -168,12 +170,7 @@ export default {
             smtp: {
                 SMTP_FROM_NAME: "Nextjs Deploy ({{ENV}})",
             },
-            EXCLUDE: [
-                "VPS_NEXTJS_DOMAIN",
-                "VPS_PRISMA_STUDIO_DOMAIN",
-                "UMAMI_URL",
-                "UMAMI_WEBSITE_ID",
-            ],
+            EXCLUDE: ["VPS_NEXTJS_DOMAIN", "VPS_PRISMA_STUDIO_DOMAIN", "UMAMI_URL", "UMAMI_WEBSITE_ID"],
         },
 
         experiment: {
@@ -192,7 +189,8 @@ export default {
                 POSTGRES_PASSWORD: "",
             },
             prisma: {
-                DATABASE_URL: "postgres://postgres:{{POSTGRES_PASSWORD}}@{{POSTGRES_HOST}}:{{POSTGRES_PORT}}/{{POSTGRES_DB}}",
+                DATABASE_URL:
+                    "postgres://postgres:{{POSTGRES_PASSWORD}}@{{POSTGRES_HOST}}:{{POSTGRES_PORT}}/{{POSTGRES_DB}}",
             },
             betterAuth: {
                 // TO UPDATE: Generate secret with: openssl rand -base64 32
@@ -226,7 +224,8 @@ export default {
                 POSTGRES_PASSWORD: "",
             },
             prisma: {
-                DATABASE_URL: "postgres://postgres:{{POSTGRES_PASSWORD}}@{{POSTGRES_HOST}}:{{POSTGRES_PORT}}/{{POSTGRES_DB}}",
+                DATABASE_URL:
+                    "postgres://postgres:{{POSTGRES_PASSWORD}}@{{POSTGRES_HOST}}:{{POSTGRES_PORT}}/{{POSTGRES_DB}}",
             },
             betterAuth: {
                 // TO UPDATE: Generate secret with: openssl rand -base64 32
@@ -260,7 +259,8 @@ export default {
                 POSTGRES_PASSWORD: "",
             },
             prisma: {
-                DATABASE_URL: "postgres://postgres:{{POSTGRES_PASSWORD}}@{{POSTGRES_HOST}}:{{POSTGRES_PORT}}/{{POSTGRES_DB}}",
+                DATABASE_URL:
+                    "postgres://postgres:{{POSTGRES_PASSWORD}}@{{POSTGRES_HOST}}:{{POSTGRES_PORT}}/{{POSTGRES_DB}}",
             },
             betterAuth: {
                 // TO UPDATE: Generate secret with: openssl rand -base64 32

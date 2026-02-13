@@ -1,7 +1,5 @@
 /**
  * Mock for "server-only" module
- * ```ts
- * vi.mock("server-only", async () => import("../mocks/modules/server-only"))
- * ```
+ * Aliased globally in vitest.config.mjs (resolve.alias)
  */
 export {};

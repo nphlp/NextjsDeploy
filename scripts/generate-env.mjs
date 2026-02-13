@@ -5,8 +5,8 @@
  *
  * Usage: node scripts/generate-env.mjs
  */
-import { writeFileSync, existsSync } from "node:fs";
-import { resolve, join, relative, dirname } from "node:path";
+import { existsSync, writeFileSync } from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
