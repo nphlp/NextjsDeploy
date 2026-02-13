@@ -85,7 +85,7 @@ Dokploy > Service Umami > Domains > set domain to `umami.your-domain.com`.
 
 ## 8. Environment Variables
 
-Server-side variables (not `NEXT_PUBLIC`) in `env/env.config.ts` — see [Environment Variables](../nextjs-deploy/2-environment-variables.md):
+Server-side variables (not `NEXT_PUBLIC`) in `env/env.config.mjs` — see [Environment Variables](../nextjs-deploy/2-environment-variables.md):
 
 - **`UMAMI_URL`** — Umami internal Docker URL (`http://umami:3000`)
 - **`UMAMI_WEBSITE_ID`** — Website tracking ID

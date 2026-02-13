@@ -37,6 +37,7 @@
 
 ## Inplement
 
+- Just pour remplacer Makefile
 - Mailpit local
 
 - Gestion variables d'environnements
