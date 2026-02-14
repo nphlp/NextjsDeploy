@@ -185,48 +185,20 @@ async function isEmailDomainValid(email: string): Promise<boolean> {
     return true;
 }
 
-type PasswordFailures = "uppercase" | "lowercase" | "number" | "specialChar" | "notLongEnough" | "tooLong";
-
-type IsPasswordStrongEnoughResponse =
-    | {
-          isValid: true;
-          failures?: undefined;
-      }
-    | {
-          isValid: false;
-          failures: PasswordFailures[];
-      };
-
 /**
  * Server-side password strength validation
- * -> at least 1 uppercase, 1 lowercase, 1 number and 1 special character
- * -> minimum 12 characters, maximum 128 characters (enforced by better-auth config)
+ * Same rules as client-side schema (components/atoms/form/schemas.ts)
  */
-function isPasswordStrongEnough(password: string): IsPasswordStrongEnoughResponse {
-    const hasUppercase = z.string().regex(/[A-Z]/).safeParse(password).success;
-    const hasLowercase = z.string().regex(/[a-z]/).safeParse(password).success;
-    const hasNumber = z.string().regex(/[0-9]/).safeParse(password).success;
-    const hasSpecialChar = z
+function isPasswordStrongEnough(password: string): boolean {
+    return z
         .string()
+        .regex(/[a-z]/)
+        .regex(/[A-Z]/)
+        .regex(/[0-9]/)
         .regex(/[^a-zA-Z0-9]/)
+        .min(14)
+        .max(128)
         .safeParse(password).success;
-    const isLongEnough = z.string().min(14).safeParse(password).success;
-    const isNotTooLong = z.string().max(128).safeParse(password).success;
-
-    const isValid = hasUppercase && hasLowercase && hasNumber && hasSpecialChar && isLongEnough && isNotTooLong;
-
-    if (!isValid) {
-        const failures: PasswordFailures[] = [];
-        if (!hasUppercase) failures.push("uppercase");
-        if (!hasLowercase) failures.push("lowercase");
-        if (!hasNumber) failures.push("number");
-        if (!hasSpecialChar) failures.push("specialChar");
-        if (!isLongEnough) failures.push("notLongEnough");
-        if (!isNotTooLong) failures.push("tooLong");
-        return { isValid, failures };
-    }
-
-    return { isValid };
 }
 
 type AuthMiddlewareContext = Parameters<typeof createAuthMiddleware>[0];
@@ -235,6 +207,8 @@ type AuthMiddlewareContext = Parameters<typeof createAuthMiddleware>[0];
  * Auth before middleware
  * -> Validate email domain on sign-up and change-email (disposable + MX)
  * -> Validate password strength on sign-up, reset-password and change-password
+ *
+ * Error codes are translated client-side (see lib/auth-errors.ts)
  */
 export const authBeforeMiddleware: AuthMiddlewareContext = async (ctx) => {
     // Validate email domain on sign-up and change-email
@@ -243,7 +217,7 @@ export const authBeforeMiddleware: AuthMiddlewareContext = async (ctx) => {
 
         if (email) {
             const isValid = await isEmailDomainValid(email);
-            if (!isValid) throw new APIError("BAD_REQUEST", { message: "This email domain is not allowed." });
+            if (!isValid) throw new APIError("BAD_REQUEST", { message: "EMAIL_INVALID" });
         }
     }
 
@@ -259,13 +233,7 @@ export const authBeforeMiddleware: AuthMiddlewareContext = async (ctx) => {
             }
         })();
 
-        if (!password) throw new APIError("BAD_REQUEST", { message: "Missing password." });
-
-        const passwordStrength = isPasswordStrongEnough(password);
-
-        if (!passwordStrength.isValid) {
-            const message = `Password failed the following strength requirements: ${passwordStrength.failures.join(", ")}.`;
-            throw new APIError("BAD_REQUEST", { message });
-        }
+        if (!password) throw new APIError("BAD_REQUEST", { message: "PASSWORD_MISSING" });
+        if (!isPasswordStrongEnough(password)) throw new APIError("BAD_REQUEST", { message: "PASSWORD_INVALID" });
     }
 };

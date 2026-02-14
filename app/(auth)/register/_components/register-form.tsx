@@ -18,6 +18,7 @@ import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";
 import { useTurnstile } from "@atoms/use-turnstile";
 import { signUp } from "@lib/auth-client";
+import { isValidationError, translateAuthError } from "@lib/auth-errors";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
@@ -77,7 +78,7 @@ export default function RegisterForm() {
 
         const { firstname, lastname, email, password } = validated;
 
-        const { data } = await signUp.email({
+        const { data, error } = await signUp.email({
             name: firstname,
             lastname,
             email,
@@ -86,13 +87,25 @@ export default function RegisterForm() {
         });
 
         if (!data) {
-            toast.add({ title: "Échec de l'inscription", description: "Veuillez réessayer.", type: "error" });
-            resetCaptcha();
-            setIsSubmitting(false);
-            return;
+            const isDisplayableError = isValidationError(error?.message);
+
+            if (isDisplayableError) {
+                toast.add({
+                    title: "Échec de l'inscription",
+                    description: translateAuthError(error?.message),
+                    type: "error",
+                });
+                resetCaptcha();
+                setIsSubmitting(false);
+                return;
+            }
         }
 
-        toast.add({ title: "Inscription réussie", description: "Bienvenue sur l'application !", type: "success" });
+        toast.add({
+            title: "Inscription réussie",
+            description: "Un email de vérification a été envoyé. Vérifiez votre boîte de réception.",
+            type: "success",
+        });
 
         setTimeout(() => {
             resetCaptcha();

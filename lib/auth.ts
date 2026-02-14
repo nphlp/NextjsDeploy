@@ -6,7 +6,8 @@ import { BetterAuthOptions } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
-import { captcha, customSession, openAPI } from "better-auth/plugins";
+import { captcha, customSession, haveIBeenPwned, openAPI } from "better-auth/plugins";
+import { nanoid } from "nanoid";
 import { authBeforeMiddleware } from "./auth-middleware";
 import { BETTER_AUTH_SECRET, IS_DEV, NEXT_PUBLIC_BASE_URL, TURNSTILE_SECRET_KEY } from "./env";
 
@@ -212,6 +213,14 @@ export const auth = betterAuth({
             endpoints: ["/sign-up/email", "/reset-password"],
         }),
         /**
+         * Have I Been Pwned — check passwords against known data breaches
+         * -> Uses k-anonymity (only sends 5-char SHA-1 prefix, never the full password)
+         * -> Blocks sign-up, reset-password and change-password if password is compromised
+         */
+        haveIBeenPwned({
+            customPasswordCompromisedMessage: "PASSWORD_COMPROMISED",
+        }),
+        /**
          * OpenAPI plugin to generate Better Auth API docs
          * -> Navigate to: /api/auth/reference
          */
@@ -243,6 +252,15 @@ export const auth = betterAuth({
      * Advanced configuration options (optional)
      */
     advanced: {
+        /**
+         * Database configuration
+         */
+        database: {
+            /**
+             * Generate nanoid for all models, matching Prisma @default(nanoid())
+             */
+            generateId: () => nanoid(),
+        },
         /**
          * IP address tracking configuration for rate limiting and session tracking
          */

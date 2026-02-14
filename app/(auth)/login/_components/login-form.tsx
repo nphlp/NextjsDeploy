@@ -43,7 +43,11 @@ export default function LoginForm() {
         const { data } = await signIn.email(values);
 
         if (!data) {
-            toast.add({ title: "Échec de la connexion", description: "Identifiants invalides.", type: "error" });
+            toast.add({
+                title: "Échec de la connexion",
+                description: "Identifiants invalides, compte inexistant, ou email non vérifié.",
+                type: "error",
+            });
             setIsSubmitting(false);
             return;
         }
