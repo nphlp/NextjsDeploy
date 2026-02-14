@@ -10,8 +10,31 @@
 
 - [Node.js](https://nodejs.org/fr/download)
 - [PNPM](https://pnpm.io/installation)
-- [Docker](https://docs.docker.com/get-started/get-docker/)
+- [OrbStack](https://orbstack.dev/) (macOS) or [Docker](https://docs.docker.com/get-started/get-docker/) (Linux)
 - [Make](https://www.gnu.org/software/make/)
+- [PostgreSQL](https://www.postgresql.org/download/) — provides `psql` and `pg_dump` for `scripts/db.sh` and `make dump`
+
+On macOS:
+
+```bash
+brew install node pnpm postgresql@17
+brew install --cask orbstack # Docker Desktop alternative for macOS
+```
+
+On Linux (Ubuntu/Debian):
+
+```bash
+# Node.js via NodeSource
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt install -y nodejs make postgresql-client
+
+# PNPM
+corepack enable && corepack prepare pnpm@latest --activate
+
+# Docker
+sudo apt install -y docker.io docker-compose-plugin
+sudo usermod -aG docker $USER
+```
 
 ## `make dev` — Development
 
