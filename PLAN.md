@@ -11,11 +11,12 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 
 > Comprendre les exigences avant d'implémenter.
 
-- [ ] Lire les recommandations OWASP pour l'authentification (ASVS)
-- [ ] Lire les exigences CNIL / RGPD pour un site web français
-- [ ] Lire les recommandations ANSSI pour la sécurité des applications web
-- [ ] Vérifier ce que Better Auth supporte nativement (plugins disponibles)
-- [ ] Définir les solutions techniques pour chaque point
+- [x] Lire les recommandations OWASP pour l'authentification (ASVS)
+- [x] Lire les exigences CNIL / RGPD pour un site web français
+- [x] Lire les recommandations ANSSI pour la sécurité des applications web
+- [x] Vérifier ce que Better Auth supporte nativement (plugins disponibles)
+- [x] Définir les solutions techniques pour chaque point
+- [x] Rédiger `docs/security-reference.md` — synthèse OWASP, RGPD/CNIL, ANSSI
 
 ---
 
@@ -23,21 +24,28 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 
 ### 2.1 Inscription
 
-- [ ] **Règles de mot de passe** — minuscule, majuscule, chiffre, spécial, 12+ chars
-    - Validation Zod côté client ET serveur
-    - Indicateur de force visuel
-- [ ] **Confirmation de mot de passe** — second champ password
-- [ ] **CAPTCHA** — Cloudflare Turnstile (gratuit, RGPD-friendly)
+- [x] **Règles de mot de passe** — minuscule, majuscule, chiffre, spécial, 14+ chars
+    - Validation Zod côté client (progressive : onChange/onBlur/submit)
+    - Validation serveur (auth-middleware)
+    - Indicateur de force visuel (PasswordStrength)
+- [x] **Confirmation de mot de passe** — second champ password
+- [x] **CAPTCHA** — Cloudflare Turnstile (gratuit, RGPD-friendly)
     - Sur inscription et reset password
-- [ ] **Protection emails jetables** — liste noire ou API de vérification
-- [ ] **Vérification email améliorée** — bloquer l'accès tant que non vérifié
+    - Hook `useTurnstile` avec animation Motion
+- [x] **Protection emails jetables** — liste locale + Disify API + MailCheck.ai + DNS MX
+- [x] **Vérification email améliorée** — bloquer l'accès tant que non vérifié
+- [x] **Hashing sécurisé** — scrypt (natif Better Auth) + salt 16 bytes par mot de passe
+- [x] **Have I Been Pwned** — blocage des mots de passe compromis (plugin Better Auth, k-anonymity)
+- [x] **Anti-énumération email** — proxy route masque USER_ALREADY_EXISTS en fake 200 (OWASP)
+- [x] **Codes d'erreur standardisés** — auth-middleware → auth-errors.ts (traduction FR côté client)
+- [x] **IDs nanoid** — Better Auth utilise nanoid (cohérent avec Prisma @default(nanoid()))
 
 ### 2.2 Connexion
 
-- [ ] **Rate limiting** — plugin Better Auth ou custom middleware
-    - Limiter par IP et par email
-    - Lockout temporaire après X tentatives
-- [ ] **CAPTCHA** — après N tentatives échouées
+- [x] **Rate limiting** — natif Better Auth
+    - 20 req/10s global, 3 req/10s sur login/signup/reset
+    - Par IP (cf-connecting-ip, x-forwarded-for, x-client-ip)
+    - IPv6 subnet /64 (empêche rotation IPv6)
 - [ ] **2FA / MFA** — TOTP (authenticator app)
     - Plugin Better Auth `twoFactor`
     - QR code setup + codes de récupération
@@ -107,20 +115,25 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 
 ### Auth — État actuel
 
-| Fonctionnalité             | Statut                        |
-| -------------------------- | ----------------------------- |
-| Email/Password             | ✅ OK                         |
-| Vérification email         | ✅ OK (envoi à l'inscription) |
-| Reset password             | ✅ OK (email + token)         |
-| Sessions multi-devices     | ✅ OK (visible sur /profile)  |
-| Règles mot de passe        | ❌ 8 chars min seulement      |
-| Confirmation mot de passe  | ❌ Absent                     |
-| CAPTCHA                    | ❌ Absent                     |
-| Rate limiting              | ❌ Absent                     |
-| 2FA / MFA                  | ❌ Absent                     |
-| OAuth providers            | ❌ Absent                     |
-| Protection emails jetables | ❌ Absent                     |
-| Middleware de routes       | ❌ Absent                     |
+| Fonctionnalité             | Statut                                                      |
+| -------------------------- | ----------------------------------------------------------- |
+| Email/Password             | ✅ OK                                                       |
+| Vérification email         | ✅ OK (envoi à l'inscription + blocage si non vérifié)      |
+| Reset password             | ✅ OK (email + token)                                       |
+| Sessions multi-devices     | ✅ OK (visible sur /profile)                                |
+| Règles mot de passe        | ✅ 14+ chars, maj/min/chiffre/spécial (client Zod + server) |
+| Confirmation mot de passe  | ✅ OK                                                       |
+| CAPTCHA                    | ✅ Turnstile (inscription + reset password)                 |
+| Rate limiting              | ✅ 20/10s global, 3/10s endpoints sensibles                 |
+| Hashing                    | ✅ scrypt + salt 16 bytes (natif Better Auth)               |
+| Protection emails jetables | ✅ Liste locale + Disify + MailCheck + DNS MX               |
+| Have I Been Pwned          | ✅ Plugin Better Auth (k-anonymity)                         |
+| Anti-énumération email     | ✅ Proxy route fake 200 (OWASP)                             |
+| Codes d'erreur             | ✅ Standardisés + traduction FR côté client                 |
+| IDs nanoid                 | ✅ Better Auth + Prisma cohérents                           |
+| 2FA / MFA                  | ❌ À faire                                                  |
+| OAuth providers            | ❌ À faire                                                  |
+| Middleware de routes       | ❌ À faire                                                  |
 
 ### Légal — État actuel
 
@@ -144,5 +157,5 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 | Referrer-Policy        | ✅ strict-origin-when-cross-origin    |
 | Permissions-Policy     | ✅ camera/micro/geo désactivés        |
 | CSRF                   | ✅ Via Better Auth (sameSite cookies) |
-| Rate limiting          | ❌ Absent                             |
-| Logging sécurité       | ❌ Absent                             |
+| Rate limiting          | ✅ Natif Better Auth                  |
+| Logging sécurité       | ❌ À faire                            |

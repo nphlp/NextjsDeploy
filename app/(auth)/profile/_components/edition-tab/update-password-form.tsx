@@ -9,6 +9,7 @@ import InputPassword from "@atoms/input/input-password";
 import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";
 import { changePassword } from "@lib/auth-client";
+import { translateAuthError } from "@lib/auth-errors";
 import { useState } from "react";
 import { z } from "zod";
 
@@ -54,7 +55,7 @@ export const UpdatePasswordForm = () => {
 
         setIsSubmitting(true);
 
-        const { data } = await changePassword({
+        const { data, error } = await changePassword({
             currentPassword: validated.currentPassword,
             newPassword: validated.newPassword,
             revokeOtherSessions: true,
@@ -63,7 +64,7 @@ export const UpdatePasswordForm = () => {
         if (!data) {
             toast.add({
                 title: "Échec",
-                description: "Le mot de passe actuel est peut-être incorrect.",
+                description: translateAuthError(error?.message),
                 type: "error",
             });
 

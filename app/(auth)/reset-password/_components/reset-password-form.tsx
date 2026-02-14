@@ -9,6 +9,7 @@ import InputPassword from "@atoms/input/input-password";
 import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";
 import { resetPassword } from "@lib/auth-client";
+import { translateAuthError } from "@lib/auth-errors";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
@@ -53,13 +54,13 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
         setIsSubmitting(true);
 
-        const { data } = await resetPassword({
+        const { data, error } = await resetPassword({
             newPassword: validated.password,
             token,
         });
 
         if (!data) {
-            toast.add({ title: "Erreur", description: "Impossible de réinitialiser le mot de passe.", type: "error" });
+            toast.add({ title: "Erreur", description: translateAuthError(error?.message), type: "error" });
             setIsSubmitting(false);
             return;
         }

@@ -15,7 +15,6 @@ export default function RequestResetForm() {
     const [emailSent, setEmailSent] = useState(false);
     const toast = useToast();
     const { token, captchaHeaders, reset: resetCaptcha, widget: captchaWidget } = useTurnstile();
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { register, submit, reset } = useForm({
         email: {
@@ -31,46 +30,31 @@ export default function RequestResetForm() {
         const values = submit();
         if (!values) return;
 
-        setIsSubmitting(true);
-        const { data } = await requestPasswordReset({
-            email: values.email,
-            redirectTo: "/reset-password",
-            ...captchaHeaders,
-        });
-
-        if (!data) {
-            toast.add({
-                title: "Erreur",
-                description: "Impossible d'envoyer l'email de réinitialisation.",
-                type: "error",
-            });
-            resetCaptcha();
-            setIsSubmitting(false);
-            return;
-        }
-
         setEmailSent(true);
-        setIsSubmitting(false);
 
-        toast.add({ title: "Email envoyé", description: "Vérifiez votre boîte de réception.", type: "success" });
+        toast.add({
+            title: "Email envoyé",
+            description: "Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.",
+            type: "success",
+        });
 
         setTimeout(() => {
             setEmailSent(false);
             resetCaptcha();
             reset();
         }, 5000);
+
+        requestPasswordReset({
+            email: values.email,
+            redirectTo: "/reset-password",
+            ...captchaHeaders,
+        });
     };
 
     return (
         <Form register={register} onSubmit={handleSubmit}>
             {/* Email */}
-            <Field
-                name="email"
-                label="Email"
-                description="Entrez votre adresse email"
-                disabled={isSubmitting || emailSent}
-                required
-            >
+            <Field name="email" label="Email" description="Entrez votre adresse email" disabled={emailSent} required>
                 <Input
                     name="email"
                     type="email"
@@ -95,7 +79,6 @@ export default function RequestResetForm() {
                 <Button
                     type="submit"
                     label={emailSent ? "Email envoyé !" : "Envoyer l'email"}
-                    loading={isSubmitting}
                     disabled={!token || emailSent}
                     className="w-full sm:w-auto"
                 />

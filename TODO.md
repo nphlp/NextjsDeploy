@@ -55,6 +55,12 @@
 
 - Redis cache
 
+## Améliorations
+
+- Documenter useForm
+- Améliorer les emails, meilleurs UI
+- Passer à BUN
+
 ## Environment variables generator
 
 - Refactor
@@ -86,6 +92,8 @@
 
 - Organisation des fichiers
 - Tester toutes les pages, faire un plan
+
+- Mettre en place un système de logging (Sentry, Glitchtip, etc)
 
 ## Feature
 
