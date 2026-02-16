@@ -1,19 +1,19 @@
 import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/types";
-import { Dialog as DialogBaseUi } from "@base-ui/react/dialog";
+import { DrawerPreview as DrawerBaseUi } from "@base-ui/react/drawer";
 import cn from "@lib/cn";
 import { ComponentProps, MouseEventHandler, ReactNode } from "react";
 
-export type DialogProps = {
+export type DrawerProps = {
     children?: ReactNode;
-} & ComponentProps<typeof DialogBaseUi.Root>;
+} & ComponentProps<typeof DrawerBaseUi.Root>;
 
-export const Root = (props: DialogProps) => {
+export const Root = (props: DrawerProps) => {
     const { children, ...otherProps } = props;
 
-    return <DialogBaseUi.Root {...otherProps}>{children}</DialogBaseUi.Root>;
+    return <DrawerBaseUi.Root {...otherProps}>{children}</DrawerBaseUi.Root>;
 };
 
-type DialogTriggerProps = {
+type DrawerTriggerProps = {
     className?: string;
     children?: ReactNode;
 
@@ -22,13 +22,13 @@ type DialogTriggerProps = {
 
     // Legacy props
     legacyProps?: LegacyProps<ButtonAttributes, "onClick">;
-} & BaseUiProps<typeof DialogBaseUi.Trigger, ButtonAttributes>;
+} & BaseUiProps<typeof DrawerBaseUi.Trigger, ButtonAttributes>;
 
-export const Trigger = (props: DialogTriggerProps) => {
+export const Trigger = (props: DrawerTriggerProps) => {
     const { className, children, legacyProps, ...otherProps } = props;
 
     return (
-        <DialogBaseUi.Trigger
+        <DrawerBaseUi.Trigger
             className={cn(
                 // Layout
                 "flex h-10 items-center justify-center px-3.5",
@@ -47,29 +47,33 @@ export const Trigger = (props: DialogTriggerProps) => {
             {...otherProps}
         >
             {children}
-        </DialogBaseUi.Trigger>
+        </DrawerBaseUi.Trigger>
     );
 };
 
-type DialogBackdropProps = {
+type DrawerBackdropProps = {
     className?: string;
 
     // Legacy props
     legacyProps?: LegacyProps<StandardAttributes>;
-} & BaseUiProps<typeof DialogBaseUi.Backdrop, StandardAttributes>;
+} & BaseUiProps<typeof DrawerBaseUi.Backdrop, StandardAttributes>;
 
-export const Backdrop = (props: DialogBackdropProps) => {
+export const Backdrop = (props: DrawerBackdropProps) => {
     const { className, legacyProps, ...otherProps } = props;
 
     return (
-        <DialogBaseUi.Backdrop
+        <DrawerBaseUi.Backdrop
             className={cn(
                 // Layout
                 "fixed inset-0 z-10 min-h-dvh supports-[-webkit-touch-callout:none]:absolute",
                 // Background
-                "bg-black opacity-20 dark:opacity-70",
+                "bg-black opacity-[calc(0.2*(1-var(--drawer-swipe-progress)))]",
                 // Animation
-                "transition-all duration-150 data-ending-style:opacity-0 data-starting-style:opacity-0",
+                "transition-opacity duration-450 ease-[cubic-bezier(0.32,0.72,0,1)]",
+                "data-ending-style:opacity-0 data-starting-style:opacity-0",
+                "data-swiping:duration-0",
+                // Dark
+                "dark:opacity-[calc(0.7*(1-var(--drawer-swipe-progress)))]",
                 // Overrides
                 className,
             )}
@@ -79,40 +83,71 @@ export const Backdrop = (props: DialogBackdropProps) => {
     );
 };
 
-type DialogPortalProps = {
+type DrawerPortalProps = {
     children?: ReactNode;
-} & ComponentProps<typeof DialogBaseUi.Portal>;
+} & ComponentProps<typeof DrawerBaseUi.Portal>;
 
-export const Portal = (props: DialogPortalProps) => {
+export const Portal = (props: DrawerPortalProps) => {
     const { children, ...otherProps } = props;
 
-    return <DialogBaseUi.Portal {...otherProps}>{children}</DialogBaseUi.Portal>;
+    return <DrawerBaseUi.Portal {...otherProps}>{children}</DrawerBaseUi.Portal>;
 };
 
-type DialogPopupProps = {
+type DrawerViewportProps = {
     className?: string;
     children?: ReactNode;
 
     // Legacy props
     legacyProps?: LegacyProps<StandardAttributes>;
-} & BaseUiProps<typeof DialogBaseUi.Popup, StandardAttributes>;
+} & BaseUiProps<typeof DrawerBaseUi.Viewport, StandardAttributes>;
 
-export const Popup = (props: DialogPopupProps) => {
+export const Viewport = (props: DrawerViewportProps) => {
     const { className, children, legacyProps, ...otherProps } = props;
 
     return (
-        <DialogBaseUi.Popup
+        <DrawerBaseUi.Viewport
             className={cn(
                 // Layout
-                "fixed top-1/2 left-1/2 z-10 -mt-8 w-96 max-w-[calc(100vw-3rem)] -translate-x-1/2 -translate-y-1/2 p-6",
+                "fixed inset-0 z-10 flex justify-end",
+                "supports-[-webkit-touch-callout:none]:p-2.5",
+                // Overrides
+                className,
+            )}
+            {...legacyProps}
+            {...otherProps}
+        >
+            {children}
+        </DrawerBaseUi.Viewport>
+    );
+};
+
+type DrawerPopupProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof DrawerBaseUi.Popup, StandardAttributes>;
+
+export const Popup = (props: DrawerPopupProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
+
+    return (
+        <DrawerBaseUi.Popup
+            className={cn(
+                // Layout
+                "box-border h-full w-80 max-w-[calc(100vw-3rem)] overflow-y-auto overscroll-contain p-6",
                 // Border
-                "rounded-lg outline-1 outline-gray-200 dark:outline-gray-300",
+                "outline-1 outline-gray-200 dark:outline-gray-300",
                 // Background
                 "bg-background",
                 // Text
                 "text-foreground",
                 // Animation
-                "transition-all duration-150 data-ending-style:scale-90 data-ending-style:opacity-0 data-starting-style:scale-90 data-starting-style:opacity-0",
+                "transition-transform duration-450 ease-[cubic-bezier(0.32,0.72,0,1)]",
+                "transform-[translateX(var(--drawer-swipe-movement-x))]",
+                "data-ending-style:translate-x-full data-starting-style:translate-x-full",
+                "data-swiping:select-none",
                 // Overrides
                 className,
             )}
@@ -120,28 +155,28 @@ export const Popup = (props: DialogPopupProps) => {
             {...otherProps}
         >
             {children}
-        </DialogBaseUi.Popup>
+        </DrawerBaseUi.Popup>
     );
 };
 
-type DialogTitleProps = {
+type DrawerTitleProps = {
     className?: string;
     children?: ReactNode;
 
     // Legacy props
     legacyProps?: LegacyProps<StandardAttributes>;
-} & BaseUiProps<typeof DialogBaseUi.Title, StandardAttributes>;
+} & BaseUiProps<typeof DrawerBaseUi.Title, StandardAttributes>;
 
-export const Title = (props: DialogTitleProps) => {
+export const Title = (props: DrawerTitleProps) => {
     const { className, children, legacyProps, ...otherProps } = props;
 
     return (
-        <DialogBaseUi.Title
+        <DrawerBaseUi.Title
             className={cn(
                 // Layout
                 "-mt-1.5 mb-1",
                 // Text
-                "text-lg font-medium",
+                "text-lg font-medium -tracking-[0.0025em]",
                 // Overrides
                 className,
             )}
@@ -149,23 +184,23 @@ export const Title = (props: DialogTitleProps) => {
             {...otherProps}
         >
             {children}
-        </DialogBaseUi.Title>
+        </DrawerBaseUi.Title>
     );
 };
 
-type DialogDescriptionProps = {
+type DrawerDescriptionProps = {
     className?: string;
     children?: ReactNode;
 
     // Legacy props
     legacyProps?: LegacyProps<StandardAttributes>;
-} & BaseUiProps<typeof DialogBaseUi.Description, StandardAttributes>;
+} & BaseUiProps<typeof DrawerBaseUi.Description, StandardAttributes>;
 
-export const Description = (props: DialogDescriptionProps) => {
+export const Description = (props: DrawerDescriptionProps) => {
     const { className, children, legacyProps, ...otherProps } = props;
 
     return (
-        <DialogBaseUi.Description
+        <DrawerBaseUi.Description
             className={cn(
                 // Layout
                 "mb-6",
@@ -178,11 +213,11 @@ export const Description = (props: DialogDescriptionProps) => {
             {...otherProps}
         >
             {children}
-        </DialogBaseUi.Description>
+        </DrawerBaseUi.Description>
     );
 };
 
-type DialogCloseProps = {
+type DrawerCloseProps = {
     className?: string;
     children?: ReactNode;
 
@@ -191,13 +226,13 @@ type DialogCloseProps = {
 
     // Legacy props
     legacyProps?: LegacyProps<ButtonAttributes, "onClick">;
-} & BaseUiProps<typeof DialogBaseUi.Close, ButtonAttributes>;
+} & BaseUiProps<typeof DrawerBaseUi.Close, ButtonAttributes>;
 
-export const Close = (props: DialogCloseProps) => {
+export const Close = (props: DrawerCloseProps) => {
     const { className, children, legacyProps, ...otherProps } = props;
 
     return (
-        <DialogBaseUi.Close
+        <DrawerBaseUi.Close
             className={cn(
                 // Layout
                 "flex h-10 items-center justify-center px-3.5",
@@ -216,6 +251,6 @@ export const Close = (props: DialogCloseProps) => {
             {...otherProps}
         >
             {children}
-        </DialogBaseUi.Close>
+        </DrawerBaseUi.Close>
     );
 };

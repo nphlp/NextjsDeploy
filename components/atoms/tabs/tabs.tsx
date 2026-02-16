@@ -19,13 +19,13 @@ export default function Tabs(props: TabsProps) {
                 <Indicator />
             </List>
             <Panel value="overview" className="flex h-32 items-center justify-center">
-                <LayoutDashboard className="size-10 text-gray-300" />
+                <LayoutDashboard className="size-10 stroke-[1.5px] text-gray-300" />
             </Panel>
             <Panel value="projects" className="flex h-32 items-center justify-center">
-                <FolderKanban className="size-10 text-gray-300" />
+                <FolderKanban className="size-10 stroke-[1.5px] text-gray-300" />
             </Panel>
             <Panel value="account" className="flex h-32 items-center justify-center">
-                <User className="size-10 text-gray-300" />
+                <User className="size-10 stroke-[1.5px] text-gray-300" />
             </Panel>
         </Root>
     );
