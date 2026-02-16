@@ -3,7 +3,6 @@
 import { Separator } from "@base-ui/react/separator";
 import { useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
-import BackupCodesSection from "./security-tab/backup-codes-section";
 import PasskeysSection from "./security-tab/passkeys-section";
 import TotpSection from "./security-tab/totp-section";
 
@@ -21,12 +20,6 @@ export default function SecurityTab(props: SecurityTabProps) {
     return (
         <div className="space-y-6">
             <TotpSection twoFactorEnabled={twoFactorEnabled} onStatusChange={refetch} />
-            {twoFactorEnabled && (
-                <>
-                    <Separator className="h-px bg-gray-200" />
-                    <BackupCodesSection />
-                </>
-            )}
             <Separator className="h-px bg-gray-200" />
             <PasskeysSection />
         </div>
