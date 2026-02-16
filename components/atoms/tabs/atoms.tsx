@@ -1,13 +1,20 @@
 "use client";
 
+import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/types";
 import { Tabs as TabsBaseUI } from "@base-ui/react/tabs";
 import cn from "@lib/cn";
-import { ComponentProps, ReactNode } from "react";
+import { MouseEventHandler, ReactNode } from "react";
 
-export type TabsProps = { children?: ReactNode } & ComponentProps<typeof TabsBaseUI.Root>;
+export type TabsProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof TabsBaseUI.Root, StandardAttributes, "defaultValue">;
 
 export const Root = (props: TabsProps) => {
-    const { className, children, ...otherProps } = props;
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <TabsBaseUI.Root
@@ -17,6 +24,7 @@ export const Root = (props: TabsProps) => {
                 // Overrides
                 className,
             )}
+            {...legacyProps}
             {...otherProps}
         >
             {children}
@@ -24,8 +32,16 @@ export const Root = (props: TabsProps) => {
     );
 };
 
-export const List = (props: { className?: string; children: ReactNode }) => {
-    const { className, children } = props;
+type TabsListProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof TabsBaseUI.List, StandardAttributes>;
+
+export const List = (props: TabsListProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <TabsBaseUI.List
@@ -37,19 +53,30 @@ export const List = (props: { className?: string; children: ReactNode }) => {
                 // Overrides
                 className,
             )}
+            {...legacyProps}
+            {...otherProps}
         >
             {children}
         </TabsBaseUI.List>
     );
 };
 
-export const Tab = (props: { value: string; disabled?: boolean; className?: string; children: ReactNode }) => {
-    const { value, disabled, className, children } = props;
+type TabsTabProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Event props
+    onClick?: MouseEventHandler<HTMLButtonElement>;
+
+    // Legacy props
+    legacyProps?: LegacyProps<ButtonAttributes, "onClick">;
+} & BaseUiProps<typeof TabsBaseUI.Tab, ButtonAttributes, "value">;
+
+export const Tab = (props: TabsTabProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <TabsBaseUI.Tab
-            value={value}
-            disabled={disabled}
             className={cn(
                 // Layout
                 "flex h-8 items-center justify-center px-2",
@@ -65,14 +92,23 @@ export const Tab = (props: { value: string; disabled?: boolean; className?: stri
                 // Overrides
                 className,
             )}
+            {...legacyProps}
+            {...otherProps}
         >
             {children}
         </TabsBaseUI.Tab>
     );
 };
 
-export const Indicator = (props: { className?: string }) => {
-    const { className } = props;
+type TabsIndicatorProps = {
+    className?: string;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof TabsBaseUI.Indicator, StandardAttributes>;
+
+export const Indicator = (props: TabsIndicatorProps) => {
+    const { className, legacyProps, ...otherProps } = props;
 
     return (
         <TabsBaseUI.Indicator
@@ -90,16 +126,25 @@ export const Indicator = (props: { className?: string }) => {
                 // Overrides
                 className,
             )}
+            {...legacyProps}
+            {...otherProps}
         />
     );
 };
 
-export const Panel = (props: { value: string; className?: string; children: ReactNode }) => {
-    const { value, className, children } = props;
+type TabsPanelProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof TabsBaseUI.Panel, StandardAttributes>;
+
+export const Panel = (props: TabsPanelProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <TabsBaseUI.Panel
-            value={value}
             className={cn(
                 // Layout
                 "relative",
@@ -109,6 +154,8 @@ export const Panel = (props: { value: string; className?: string; children: Reac
                 // Overrides
                 className,
             )}
+            {...legacyProps}
+            {...otherProps}
         >
             {children}
         </TabsBaseUI.Panel>
