@@ -82,10 +82,10 @@ export const Tab = (props: TabsTabProps) => {
                 "flex h-8 items-center justify-center px-2",
                 // Border
                 "border-0 outline-none",
-                "before:outline-outline before:inset-x-0 before:inset-y-1 before:rounded-sm before:-outline-offset-1",
+                "before:outline-outline before:inset-x-0 before:inset-y-1 before:rounded-sm before:outline-offset-0",
                 "focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2",
                 // Text
-                "text-sm font-medium break-keep whitespace-nowrap select-none",
+                "cursor-pointer text-sm font-medium break-keep whitespace-nowrap select-none",
                 "text-gray-600",
                 "hover:text-gray-900",
                 "data-active:text-gray-900",
@@ -120,7 +120,7 @@ export const Indicator = (props: TabsIndicatorProps) => {
                 // Border
                 "rounded-sm",
                 // Background
-                "bg-gray-100",
+                "bg-gray-100/60",
                 // Animation
                 "transition-all duration-200 ease-in-out",
                 // Overrides
@@ -149,7 +149,7 @@ export const Panel = (props: TabsPanelProps) => {
                 // Layout
                 "relative",
                 // Border
-                "outline-outline -outline-offset-1",
+                "outline-outline -outline-offset-2",
                 "focus-visible:rounded-md focus-visible:outline-2",
                 // Overrides
                 className,

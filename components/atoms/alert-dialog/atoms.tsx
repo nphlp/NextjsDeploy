@@ -37,9 +37,9 @@ export const Trigger = (props: AlertDialogTriggerProps) => {
                 // Background
                 "bg-background",
                 // Text
-                "text-destructive text-base font-medium select-none",
+                "text-destructive cursor-pointer text-base font-medium select-none",
                 // State
-                "focus-visible:outline-outline hover:bg-gray-100 focus-visible:outline-2 focus-visible:-outline-offset-1 active:bg-gray-100",
+                "focus-visible:outline-outline hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-0 active:bg-gray-100",
                 // Overrides
                 className,
             )}
@@ -206,9 +206,9 @@ export const Close = (props: AlertDialogCloseProps) => {
                 // Background
                 "bg-background",
                 // Text
-                "text-foreground text-base font-medium select-none",
+                "text-foreground cursor-pointer text-base font-medium select-none",
                 // State
-                "focus-visible:outline-outline hover:bg-gray-100 focus-visible:outline-2 focus-visible:-outline-offset-1 active:bg-gray-100",
+                "focus-visible:outline-outline hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-0 active:bg-gray-100",
                 // Overrides
                 className,
             )}

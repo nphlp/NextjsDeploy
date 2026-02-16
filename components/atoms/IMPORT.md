@@ -195,7 +195,25 @@ Replace Base-UI doc classes with theme tokens:
 
 Use `ide getDiagnostics` after writing classes to detect deprecated Tailwind classes and convert them to modern equivalents.
 
-### 6. Tailwind v4 migration
+### 6. Focus outline offset
+
+Focus outlines must sit **outside** the border (like `input/atoms.tsx`). Use `outline-offset-0`, never `-outline-offset-1`:
+
+```tsx
+// Correct — outline outside the border
+"focus-visible:outline-outline focus-visible:outline-2 focus-visible:outline-offset-0";
+"focus:outline-outline focus:outline-2 focus:outline-offset-0";
+"focus-within:outline-outline focus-within:outline-2 focus-within:outline-offset-0";
+
+// Wrong — outline inside the border
+"focus-visible:outline-2 focus-visible:-outline-offset-1";
+```
+
+This applies to all focus variants (`focus:`, `focus-visible:`, `focus-within:`, `has-[:focus-visible]:`, `before:` pseudo-elements).
+
+> Note: `dark:-outline-offset-1` on Popup containers is a static border style, not a focus ring — this is fine.
+
+### 7. Tailwind v4 migration
 
 Convert v3 syntax from Base-UI docs to v4:
 
@@ -206,7 +224,7 @@ Convert v3 syntax from Base-UI docs to v4:
 | `outline outline-1`                             | `outline-1`                    |
 | `focus-visible:outline focus-visible:outline-2` | `focus-visible:outline-2`      |
 
-### 7. Replace SVG icons
+### 8. Replace SVG icons
 
 Base-UI examples define inline SVG components (e.g. `CheckIcon`, `ChevronDownIcon`). Replace them with Lucide React imports:
 
@@ -218,7 +236,7 @@ function CheckIcon(props: React.ComponentProps<'svg'>) { ... }
 import { Check, ChevronDown } from "lucide-react";
 ```
 
-### 8. Create `[component].tsx`
+### 9. Create `[component].tsx`
 
 Pattern: `"use client"` + conditional children.
 
@@ -255,14 +273,14 @@ export default function AlertDialog(props: AlertDialogProps) {
 }
 ```
 
-### 9. Create `index.ts`
+### 10. Create `index.ts`
 
 ```tsx
 export { default } from "./alert-dialog";
 export * from "./atoms";
 ```
 
-### 10. Verify
+### 11. Verify
 
 ```bash
 pnpm checks
