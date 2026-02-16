@@ -1,8 +1,11 @@
+import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/types";
 import { Dialog as DialogBaseUi } from "@base-ui/react/dialog";
 import cn from "@lib/cn";
-import { ComponentProps, ReactNode } from "react";
+import { ComponentProps, MouseEventHandler, ReactNode } from "react";
 
-export type DialogProps = { children?: ReactNode } & ComponentProps<typeof DialogBaseUi.Root>;
+export type DialogProps = {
+    children?: ReactNode;
+} & ComponentProps<typeof DialogBaseUi.Root>;
 
 export const Root = (props: DialogProps) => {
     const { children, ...otherProps } = props;
@@ -10,10 +13,19 @@ export const Root = (props: DialogProps) => {
     return <DialogBaseUi.Root {...otherProps}>{children}</DialogBaseUi.Root>;
 };
 
-export const Trigger = (
-    props: { className?: string; children?: ReactNode } & ComponentProps<typeof DialogBaseUi.Trigger>,
-) => {
-    const { className, children, ...otherProps } = props;
+type DialogTriggerProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Event props
+    onClick?: MouseEventHandler<HTMLButtonElement>;
+
+    // Legacy props
+    legacyProps?: LegacyProps<ButtonAttributes, "onClick">;
+} & BaseUiProps<typeof DialogBaseUi.Trigger, ButtonAttributes>;
+
+export const Trigger = (props: DialogTriggerProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <DialogBaseUi.Trigger
@@ -31,6 +43,7 @@ export const Trigger = (
                 // Overrides
                 className,
             )}
+            {...legacyProps}
             {...otherProps}
         >
             {children}
@@ -38,8 +51,15 @@ export const Trigger = (
     );
 };
 
-export const Backdrop = (props: { className?: string } & ComponentProps<typeof DialogBaseUi.Backdrop>) => {
-    const { className, ...otherProps } = props;
+type DialogBackdropProps = {
+    className?: string;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof DialogBaseUi.Backdrop, StandardAttributes>;
+
+export const Backdrop = (props: DialogBackdropProps) => {
+    const { className, legacyProps, ...otherProps } = props;
 
     return (
         <DialogBaseUi.Backdrop
@@ -53,21 +73,32 @@ export const Backdrop = (props: { className?: string } & ComponentProps<typeof D
                 // Overrides
                 className,
             )}
+            {...legacyProps}
             {...otherProps}
         />
     );
 };
 
-export const Portal = (props: { children?: ReactNode } & ComponentProps<typeof DialogBaseUi.Portal>) => {
+type DialogPortalProps = {
+    children?: ReactNode;
+} & ComponentProps<typeof DialogBaseUi.Portal>;
+
+export const Portal = (props: DialogPortalProps) => {
     const { children, ...otherProps } = props;
 
     return <DialogBaseUi.Portal {...otherProps}>{children}</DialogBaseUi.Portal>;
 };
 
-export const Popup = (
-    props: { className?: string; children?: ReactNode } & ComponentProps<typeof DialogBaseUi.Popup>,
-) => {
-    const { className, children, ...otherProps } = props;
+type DialogPopupProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof DialogBaseUi.Popup, StandardAttributes>;
+
+export const Popup = (props: DialogPopupProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <DialogBaseUi.Popup
@@ -85,6 +116,7 @@ export const Popup = (
                 // Overrides
                 className,
             )}
+            {...legacyProps}
             {...otherProps}
         >
             {children}
@@ -92,10 +124,16 @@ export const Popup = (
     );
 };
 
-export const Title = (
-    props: { className?: string; children?: ReactNode } & ComponentProps<typeof DialogBaseUi.Title>,
-) => {
-    const { className, children, ...otherProps } = props;
+type DialogTitleProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof DialogBaseUi.Title, StandardAttributes>;
+
+export const Title = (props: DialogTitleProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <DialogBaseUi.Title
@@ -107,6 +145,7 @@ export const Title = (
                 // Overrides
                 className,
             )}
+            {...legacyProps}
             {...otherProps}
         >
             {children}
@@ -114,10 +153,16 @@ export const Title = (
     );
 };
 
-export const Description = (
-    props: { className?: string; children?: ReactNode } & ComponentProps<typeof DialogBaseUi.Description>,
-) => {
-    const { className, children, ...otherProps } = props;
+type DialogDescriptionProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof DialogBaseUi.Description, StandardAttributes>;
+
+export const Description = (props: DialogDescriptionProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <DialogBaseUi.Description
@@ -129,6 +174,7 @@ export const Description = (
                 // Overrides
                 className,
             )}
+            {...legacyProps}
             {...otherProps}
         >
             {children}
@@ -136,10 +182,19 @@ export const Description = (
     );
 };
 
-export const Close = (
-    props: { className?: string; children?: ReactNode } & ComponentProps<typeof DialogBaseUi.Close>,
-) => {
-    const { className, children, ...otherProps } = props;
+type DialogCloseProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Event props
+    onClick?: MouseEventHandler<HTMLButtonElement>;
+
+    // Legacy props
+    legacyProps?: LegacyProps<ButtonAttributes, "onClick">;
+} & BaseUiProps<typeof DialogBaseUi.Close, ButtonAttributes>;
+
+export const Close = (props: DialogCloseProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <DialogBaseUi.Close
@@ -157,6 +212,7 @@ export const Close = (
                 // Overrides
                 className,
             )}
+            {...legacyProps}
             {...otherProps}
         >
             {children}

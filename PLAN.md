@@ -37,6 +37,10 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 - [x] **Hashing sécurisé** — scrypt (natif Better Auth) + salt 16 bytes par mot de passe
 - [x] **Have I Been Pwned** — blocage des mots de passe compromis (plugin Better Auth, k-anonymity)
 - [x] **Anti-énumération email** — proxy route masque USER_ALREADY_EXISTS en fake 200 (OWASP)
+- [ ] **Email contextuel à l'inscription** — envoyer un email "vous avez déjà un compte" si l'email existe déjà
+    - Actuellement le proxy retourne un fake 200 mais aucun email n'est envoyé à l'utilisateur existant
+    - Idéalement corrigé upstream par Better Auth ([#7972](https://github.com/better-auth/better-auth/issues/7972))
+    - Sinon, envoyer l'email côté app dans le proxy route
 - [x] **Codes d'erreur standardisés** — auth-middleware → auth-errors.ts (traduction FR côté client)
 - [x] **IDs nanoid** — Better Auth utilise nanoid (cohérent avec Prisma @default(nanoid()))
 
@@ -46,9 +50,18 @@ Références : OWASP, CNIL, RGPD, ANSSI.
     - 20 req/10s global, 3 req/10s sur login/signup/reset
     - Par IP (cf-connecting-ip, x-forwarded-for, x-client-ip)
     - IPv6 subnet /64 (empêche rotation IPv6)
-- [ ] **2FA / MFA** — TOTP (authenticator app)
-    - Plugin Better Auth `twoFactor`
-    - QR code setup + codes de récupération
+- [x] **2FA / MFA** — TOTP, codes de récupération
+    - Plugin Better Auth `twoFactor` (TOTP + backup codes)
+    - QR code setup + secret copiable + vérification + backup codes
+    - Page `/verify-2fa` avec formulaires TOTP, backup code
+    - Onglet Sécurité dans le profil (activer/désactiver, gérer backup codes)
+    - ⚠️ **Bug** : boutons activer/désactiver TOTP dans le profil ne fonctionnent pas
+- [x] **Passkeys (WebAuthn)** — inscription, connexion, gestion
+    - Plugin Better Auth `passkey`
+    - Ajout/suppression dans le profil + bouton passkey sur le login
+- [x] **Magic Link** — connexion sans mot de passe
+    - Plugin Better Auth `magicLink`
+    - Page `/magic-link` + formulaire email
 - [ ] **OAuth providers** — Google, GitHub (minimum)
     - Plugin Better Auth `socialProviders`
 
@@ -115,25 +128,27 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 
 ### Auth — État actuel
 
-| Fonctionnalité             | Statut                                                      |
-| -------------------------- | ----------------------------------------------------------- |
-| Email/Password             | ✅ OK                                                       |
-| Vérification email         | ✅ OK (envoi à l'inscription + blocage si non vérifié)      |
-| Reset password             | ✅ OK (email + token)                                       |
-| Sessions multi-devices     | ✅ OK (visible sur /profile)                                |
-| Règles mot de passe        | ✅ 14+ chars, maj/min/chiffre/spécial (client Zod + server) |
-| Confirmation mot de passe  | ✅ OK                                                       |
-| CAPTCHA                    | ✅ Turnstile (inscription + reset password)                 |
-| Rate limiting              | ✅ 20/10s global, 3/10s endpoints sensibles                 |
-| Hashing                    | ✅ scrypt + salt 16 bytes (natif Better Auth)               |
-| Protection emails jetables | ✅ Liste locale + Disify + MailCheck + DNS MX               |
-| Have I Been Pwned          | ✅ Plugin Better Auth (k-anonymity)                         |
-| Anti-énumération email     | ✅ Proxy route fake 200 (OWASP)                             |
-| Codes d'erreur             | ✅ Standardisés + traduction FR côté client                 |
-| IDs nanoid                 | ✅ Better Auth + Prisma cohérents                           |
-| 2FA / MFA                  | ❌ À faire                                                  |
-| OAuth providers            | ❌ À faire                                                  |
-| Middleware de routes       | ❌ À faire                                                  |
+| Fonctionnalité             | Statut                                                          |
+| -------------------------- | --------------------------------------------------------------- |
+| Email/Password             | ✅ OK                                                           |
+| Vérification email         | ✅ OK (envoi à l'inscription + blocage si non vérifié)          |
+| Reset password             | ✅ OK (email + token)                                           |
+| Sessions multi-devices     | ✅ OK (visible sur /profile)                                    |
+| Règles mot de passe        | ✅ 14+ chars, maj/min/chiffre/spécial (client Zod + server)     |
+| Confirmation mot de passe  | ✅ OK                                                           |
+| CAPTCHA                    | ✅ Turnstile (inscription + reset password)                     |
+| Rate limiting              | ✅ 20/10s global, 3/10s endpoints sensibles                     |
+| Hashing                    | ✅ scrypt + salt 16 bytes (natif Better Auth)                   |
+| Protection emails jetables | ✅ Liste locale + Disify + MailCheck + DNS MX                   |
+| Have I Been Pwned          | ✅ Plugin Better Auth (k-anonymity)                             |
+| Anti-énumération email     | ⚠️ Proxy fake 200 OK, mais pas d'email à l'utilisateur existant |
+| Codes d'erreur             | ✅ Standardisés + traduction FR côté client                     |
+| IDs nanoid                 | ✅ Better Auth + Prisma cohérents                               |
+| 2FA / MFA                  | ✅ TOTP + backup codes (profil + verify-2fa)                    |
+| Passkeys (WebAuthn)        | ✅ Ajout/suppression/connexion                                  |
+| Magic Link                 | ✅ Connexion sans mot de passe                                  |
+| OAuth providers            | ❌ À faire                                                      |
+| Middleware de routes       | ❌ À faire                                                      |
 
 ### Légal — État actuel
 

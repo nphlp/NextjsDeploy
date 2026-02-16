@@ -1,8 +1,11 @@
+import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/types";
 import { AlertDialog as AlertDialogBaseUi } from "@base-ui/react/alert-dialog";
 import cn from "@lib/cn";
-import { ComponentProps, ReactNode } from "react";
+import { ComponentProps, MouseEventHandler, ReactNode } from "react";
 
-export type AlertDialogProps = { children?: ReactNode } & ComponentProps<typeof AlertDialogBaseUi.Root>;
+export type AlertDialogProps = {
+    children?: ReactNode;
+} & ComponentProps<typeof AlertDialogBaseUi.Root>;
 
 export const Root = (props: AlertDialogProps) => {
     const { children, ...otherProps } = props;
@@ -10,10 +13,19 @@ export const Root = (props: AlertDialogProps) => {
     return <AlertDialogBaseUi.Root {...otherProps}>{children}</AlertDialogBaseUi.Root>;
 };
 
-export const Trigger = (
-    props: { className?: string; children?: ReactNode } & ComponentProps<typeof AlertDialogBaseUi.Trigger>,
-) => {
-    const { className, children, ...otherProps } = props;
+type AlertDialogTriggerProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Event props
+    onClick?: MouseEventHandler<HTMLButtonElement>;
+
+    // Legacy props
+    legacyProps?: LegacyProps<ButtonAttributes, "onClick">;
+} & BaseUiProps<typeof AlertDialogBaseUi.Trigger, ButtonAttributes>;
+
+export const Trigger = (props: AlertDialogTriggerProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <AlertDialogBaseUi.Trigger
@@ -31,6 +43,7 @@ export const Trigger = (
                 // Overrides
                 className,
             )}
+            {...legacyProps}
             {...otherProps}
         >
             {children}
@@ -38,8 +51,15 @@ export const Trigger = (
     );
 };
 
-export const Backdrop = (props: { className?: string } & ComponentProps<typeof AlertDialogBaseUi.Backdrop>) => {
-    const { className, ...otherProps } = props;
+type AlertDialogBackdropProps = {
+    className?: string;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof AlertDialogBaseUi.Backdrop, StandardAttributes>;
+
+export const Backdrop = (props: AlertDialogBackdropProps) => {
+    const { className, legacyProps, ...otherProps } = props;
 
     return (
         <AlertDialogBaseUi.Backdrop
@@ -53,21 +73,32 @@ export const Backdrop = (props: { className?: string } & ComponentProps<typeof A
                 // Overrides
                 className,
             )}
+            {...legacyProps}
             {...otherProps}
         />
     );
 };
 
-export const Portal = (props: { children?: ReactNode } & ComponentProps<typeof AlertDialogBaseUi.Portal>) => {
+type AlertDialogPortalProps = {
+    children?: ReactNode;
+} & ComponentProps<typeof AlertDialogBaseUi.Portal>;
+
+export const Portal = (props: AlertDialogPortalProps) => {
     const { children, ...otherProps } = props;
 
     return <AlertDialogBaseUi.Portal {...otherProps}>{children}</AlertDialogBaseUi.Portal>;
 };
 
-export const Popup = (
-    props: { className?: string; children?: ReactNode } & ComponentProps<typeof AlertDialogBaseUi.Popup>,
-) => {
-    const { className, children, ...otherProps } = props;
+type AlertDialogPopupProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof AlertDialogBaseUi.Popup, StandardAttributes>;
+
+export const Popup = (props: AlertDialogPopupProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <AlertDialogBaseUi.Popup
@@ -85,6 +116,7 @@ export const Popup = (
                 // Overrides
                 className,
             )}
+            {...legacyProps}
             {...otherProps}
         >
             {children}
@@ -92,10 +124,16 @@ export const Popup = (
     );
 };
 
-export const Title = (
-    props: { className?: string; children?: ReactNode } & ComponentProps<typeof AlertDialogBaseUi.Title>,
-) => {
-    const { className, children, ...otherProps } = props;
+type AlertDialogTitleProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof AlertDialogBaseUi.Title, StandardAttributes>;
+
+export const Title = (props: AlertDialogTitleProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <AlertDialogBaseUi.Title
@@ -107,6 +145,7 @@ export const Title = (
                 // Overrides
                 className,
             )}
+            {...legacyProps}
             {...otherProps}
         >
             {children}
@@ -114,10 +153,16 @@ export const Title = (
     );
 };
 
-export const Description = (
-    props: { className?: string; children?: ReactNode } & ComponentProps<typeof AlertDialogBaseUi.Description>,
-) => {
-    const { className, children, ...otherProps } = props;
+type AlertDialogDescriptionProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof AlertDialogBaseUi.Description, StandardAttributes>;
+
+export const Description = (props: AlertDialogDescriptionProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <AlertDialogBaseUi.Description
@@ -129,6 +174,7 @@ export const Description = (
                 // Overrides
                 className,
             )}
+            {...legacyProps}
             {...otherProps}
         >
             {children}
@@ -136,10 +182,19 @@ export const Description = (
     );
 };
 
-export const Close = (
-    props: { className?: string; children?: ReactNode } & ComponentProps<typeof AlertDialogBaseUi.Close>,
-) => {
-    const { className, children, ...otherProps } = props;
+type AlertDialogCloseProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Event props
+    onClick?: MouseEventHandler<HTMLButtonElement>;
+
+    // Legacy props
+    legacyProps?: LegacyProps<ButtonAttributes, "onClick">;
+} & BaseUiProps<typeof AlertDialogBaseUi.Close, ButtonAttributes>;
+
+export const Close = (props: AlertDialogCloseProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <AlertDialogBaseUi.Close
@@ -157,6 +212,7 @@ export const Close = (
                 // Overrides
                 className,
             )}
+            {...legacyProps}
             {...otherProps}
         >
             {children}
