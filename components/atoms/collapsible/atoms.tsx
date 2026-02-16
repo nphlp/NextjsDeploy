@@ -21,14 +21,23 @@ export const Trigger = (
         <CollapsibleBaseUi.Trigger
             className={cn(
                 // Layout
-                "group flex items-center gap-2 rounded-sm px-2 py-1",
+                "group flex items-center gap-2 rounded-md px-2 py-1",
+                // Border
+                "border border-gray-200",
+                "hover:border-gray-300",
+                "active:border-gray-400",
                 // Background
-                "bg-gray-100",
+                "bg-gray-50",
+                "hover:bg-gray-100",
+                "active:bg-gray-200",
                 // Text
-                "text-sm font-medium",
-                // State
-                "hover:bg-gray-200 active:bg-gray-200",
-                "focus-visible:outline-outline focus-visible:outline-2",
+                "text-sm font-medium text-gray-900",
+                // Cursor
+                "cursor-pointer",
+                // Transition
+                "transition-all duration-100 ease-in-out",
+                // Focus
+                "focus-visible:outline-outline focus-visible:outline-2 focus-visible:-outline-offset-1",
                 // Overrides
                 className,
             )}

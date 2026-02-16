@@ -3,7 +3,7 @@
 import Button, { Link } from "@atoms/button";
 import { Field } from "@atoms/form/field";
 import Form, { OnSubmit } from "@atoms/form/form";
-import { passwordSchema, passwordSchemaOnBlur, passwordSchemaOnChange } from "@atoms/form/schemas";
+import { passwordSchema, passwordSchemaOnChange } from "@atoms/form/schemas";
 import { useForm } from "@atoms/form/use-form";
 import InputPassword from "@atoms/input/input-password";
 import PasswordStrength from "@atoms/input/password-strength";
@@ -29,7 +29,7 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         password: {
             schema: passwordSchema,
             onChangeSchema: passwordSchemaOnChange,
-            onBlurSchema: passwordSchemaOnBlur,
+            onBlurSchema: z.string(), // Eviter l'erreur si le champ à juste été cliqué
             setter: (value: string) => {
                 setPassword(value);
                 return value;
@@ -89,7 +89,13 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 disabled={isSubmitting}
                 required
             >
-                <InputPassword name="password" placeholder="Nouveau mot de passe" autoComplete="new-password" useForm />
+                <InputPassword
+                    name="password"
+                    placeholder="Nouveau mot de passe"
+                    autoComplete="new-password"
+                    autoFocus
+                    useForm
+                />
             </Field>
 
             {/* Password strength */}

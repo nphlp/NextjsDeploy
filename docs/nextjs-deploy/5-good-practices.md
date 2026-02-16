@@ -64,6 +64,73 @@ app/
     - `use-{context-name}.ts` — contains the custom hook to consume the context
     - This separation preserves React fast refresh
 
+## Query Parameters (nuqs)
+
+1. Query parameters are managed with [nuqs](https://nuqs.47ng.com/) using two files in `_lib/`:
+    - `query-params.ts` — server-side parsers, cache, serializer
+    - `use-query-params.ts` — client-side hook
+
+2. `query-params.ts` — defines parsers with Zod validation, the cached parser, and the URL serializer:
+
+```ts
+import { createParser, createSearchParamsCache, createSerializer } from "nuqs/server";
+import { z } from "zod";
+
+const tabValues = ["profile", "edition", "security"] as const;
+
+const tabParser = createParser({
+    parse: (value: string) => z.enum(tabValues).parse(value),
+    serialize: (value: string) => value,
+});
+
+export const queryParams = {
+    tab: tabParser.withDefault("profile"),
+};
+
+export const queryParamsCached = createSearchParamsCache(queryParams);
+export type QueryParamsCachedType = Awaited<ReturnType<typeof queryParamsCached.parse>>;
+export const queryUrlSerializer = createSerializer(queryParams);
+```
+
+3. `use-query-params.ts` — client hook that wraps `useQueryState` for each parameter:
+
+```ts
+"use client";
+
+import { useQueryState } from "nuqs";
+import { queryParams } from "./query-params";
+
+export function useQueryParams() {
+    const [tab, setTab] = useQueryState("tab", queryParams.tab);
+    return { tab, setTab };
+}
+```
+
+4. Server-side usage in `page.tsx`:
+
+```tsx
+type PageProps = {
+    searchParams: Promise<QueryParamsCachedType>;
+};
+
+export default async function Page(props: PageProps) {
+    const { searchParams } = props;
+    const { tab } = await queryParamsCached.parse(searchParams);
+    // ...
+}
+```
+
+5. Client-side usage in components:
+
+```tsx
+export default function MyComponent() {
+    const { tab, setTab } = useQueryParams();
+    // ...
+}
+```
+
+6. URL generation with serializer: `queryUrlSerializer({ tab: "security" })`
+
 ## TypeScript
 
 1. Avoid `as` castings. Prefer finding the correct type or restructuring the code to satisfy TypeScript.

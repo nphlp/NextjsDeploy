@@ -3,7 +3,7 @@ import { Body, Button, Container, Html, Section, Tailwind } from "@react-email/c
 
 type EmailTemplateProps = {
     buttonUrl: string;
-    emailType: "verification" | "change" | "reset";
+    emailType: "verification" | "change" | "reset" | "magic-link";
 };
 
 export default function EmailTemplate(props: EmailTemplateProps) {
@@ -27,6 +27,12 @@ export default function EmailTemplate(props: EmailTemplateProps) {
             description: "Click the button below to reset your password. This link will expire in 1 hour.",
             buttonText: "Reset my password",
             buttonColor: "bg-blue-600",
+        },
+        "magic-link": {
+            title: "Magic Link",
+            description: "Click the button below to sign in. This link will expire in 5 minutes.",
+            buttonText: "Sign in",
+            buttonColor: "bg-violet-600",
         },
     };
 

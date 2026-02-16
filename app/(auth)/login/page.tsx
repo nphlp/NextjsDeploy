@@ -1,33 +1,21 @@
 import Card from "@atoms/card";
-import Main, { MainSuspense } from "@core/Main";
-import { getSession } from "@lib/auth-server";
+import Main from "@core/Main";
+import { getSession, isPendingTwoFactor } from "@lib/auth-server";
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
-import LoginForm from "./_components/login-form";
+import LoginContent from "./_components/login-content";
 
 export default async function Page() {
-    return (
-        <Suspense fallback={<MainSuspense />}>
-            <SuspendedPage />
-        </Suspense>
-    );
-}
-
-const SuspendedPage = async () => {
-    "use cache: private";
-
     const session = await getSession();
     if (session) redirect("/");
+
+    const pendingTwoFactor = await isPendingTwoFactor();
+    if (pendingTwoFactor) redirect("/verify-2fa");
 
     return (
         <Main>
             <Card className="max-w-80">
-                <div className="space-y-2 text-center">
-                    <h3 className="text-xl font-semibold">Connexion</h3>
-                    <p className="text-sm text-gray-500">Saisissez vos identifiants de connexion.</p>
-                </div>
-                <LoginForm />
+                <LoginContent />
             </Card>
         </Main>
     );
-};
+}
