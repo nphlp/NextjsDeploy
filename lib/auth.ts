@@ -1,4 +1,5 @@
 import SendEmailAction from "@actions/SendEmailAction";
+import { passkey } from "@better-auth/passkey";
 import EmailTemplate from "@comps/email";
 import PrismaInstance from "@lib/prisma";
 import { betterAuth } from "better-auth";
@@ -6,7 +7,7 @@ import { BetterAuthOptions } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
-import { captcha, customSession, haveIBeenPwned, openAPI } from "better-auth/plugins";
+import { captcha, customSession, haveIBeenPwned, magicLink, openAPI, twoFactor } from "better-auth/plugins";
 import { nanoid } from "nanoid";
 import { authBeforeMiddleware } from "./auth-middleware";
 import { BETTER_AUTH_SECRET, IS_DEV, NEXT_PUBLIC_BASE_URL, TURNSTILE_SECRET_KEY } from "./env";
@@ -42,6 +43,41 @@ export const sendVerificationEmail: SendVerificationEmailProps = async (data) =>
         body: EmailTemplate({ buttonUrl: url, emailType: "verification" }),
     });
 };
+
+/**
+ * Send magic link to user email
+ */
+const sendMagicLink = async ({ email, url }: { email: string; url: string }) => {
+    await SendEmailAction({
+        subject: "Your magic link",
+        email,
+        body: EmailTemplate({ buttonUrl: url, emailType: "magic-link" }),
+    });
+};
+
+/**
+ * Prisma instance with P2025 error suppression on Verification.delete.
+ * Better Auth tries to delete the Verification record after it's already gone
+ * (race condition between cleanup and explicit delete in passkey/OTP flows).
+ * @see https://github.com/better-auth/better-auth/issues/7129
+ * @see https://github.com/better-auth/better-auth/issues/6267
+ */
+const prismaInstanceWithP2025Fix = PrismaInstance.$extends({
+    query: {
+        verification: {
+            async delete({ args, query }) {
+                try {
+                    return await query(args);
+                } catch (error) {
+                    if (error instanceof Error && "code" in error && error.code === "P2025") {
+                        return null as never;
+                    }
+                    throw error;
+                }
+            },
+        },
+    },
+});
 
 type ExtendedSession = Parameters<typeof customSession>[0];
 
@@ -88,9 +124,7 @@ export const auth = betterAuth({
     /**
      * Database adapter using Prisma
      */
-    database: prismaAdapter(PrismaInstance, {
-        provider: "postgresql",
-    }),
+    database: prismaAdapter(prismaInstanceWithP2025Fix, { provider: "postgresql" }),
     /**
      * Extend user schema with custom fields
      */
@@ -195,6 +229,9 @@ export const auth = betterAuth({
             "/sign-in/email": { window: 10, max: 3 },
             "/sign-up/email": { window: 10, max: 3 },
             "/reset-password": { window: 10, max: 3 },
+            "/two-factor/*": { window: 10, max: 3 },
+            "/sign-in/magic-link": { window: 10, max: 3 },
+            "/sign-in/passkey": { window: 10, max: 5 },
         },
     },
     /**
@@ -225,6 +262,25 @@ export const auth = betterAuth({
          * -> Navigate to: /api/auth/reference
          */
         openAPI(),
+        /**
+         * Two-Factor Authentication (TOTP + backup codes)
+         * -> TOTP via authenticator app (Google Authenticator, Proton Pass, etc.)
+         * -> Backup codes for recovery
+         */
+        twoFactor({
+            issuer: "Nextjs Deploy",
+        }),
+        /**
+         * Passkey authentication (WebAuthn)
+         * -> Touch ID, Windows Hello, FIDO keys
+         * -> Passwordless login + 2FA
+         */
+        passkey(),
+        /**
+         * Magic Link authentication
+         * -> Passwordless login via email link
+         */
+        magicLink({ sendMagicLink }),
         /**
          * Extend session data
          * -> add lastname, role, etc

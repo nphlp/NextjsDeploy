@@ -10,6 +10,7 @@ import { useToast } from "@atoms/toast";
 import { useTurnstile } from "@atoms/use-turnstile";
 import { requestPasswordReset } from "@lib/auth-client";
 import { useState } from "react";
+import z from "zod";
 
 export default function RequestResetForm() {
     const [emailSent, setEmailSent] = useState(false);
@@ -20,6 +21,7 @@ export default function RequestResetForm() {
         email: {
             schema: emailSchema,
             onChangeSchema: emailSchemaProgressive,
+            onBlurSchema: z.string(), // Eviter l'erreur si le champ à juste été cliqué
             setter: (value: string) => value,
             defaultValue: "",
         },

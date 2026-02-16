@@ -6,28 +6,8 @@ import Button from "@comps/atoms/button/button";
 import { revokeOtherSessions, revokeSession } from "@lib/auth-client";
 import { SessionList } from "@lib/auth-server";
 import { X } from "lucide-react";
-import { Dispatch, Fragment, ReactNode, SetStateAction, createContext, useContext, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { getBrowser, getOs } from "./utils";
-
-type ContextType = {
-    data: SessionList;
-    setData: Dispatch<SetStateAction<SessionList>>;
-};
-
-const Context = createContext<ContextType>({} as ContextType);
-
-type ProviderProps = {
-    init: SessionList;
-    children: ReactNode;
-};
-
-const Provider = (props: ProviderProps) => {
-    const { init, children } = props;
-
-    const [data, setData] = useState<SessionList>(init);
-
-    return <Context.Provider value={{ data, setData }}>{children}</Context.Provider>;
-};
 
 type SessionManagerProps = {
     sessionList: SessionList;
@@ -36,16 +16,7 @@ type SessionManagerProps = {
 export default function SessionManager(props: SessionManagerProps) {
     const { sessionList } = props;
 
-    return (
-        <Provider init={sessionList}>
-            <DisplaySessionList />
-        </Provider>
-    );
-}
-
-const DisplaySessionList = () => {
-    const { data, setData } = useContext(Context);
-
+    const [data, setData] = useState<SessionList>(sessionList);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
 
     return (
@@ -54,11 +25,11 @@ const DisplaySessionList = () => {
                 <div className="text-lg font-bold">Autres appareils</div>
 
                 {/* Revoke other sessions button */}
-                {data.length ? (
-                    <Button label="Revoquer les sessions" colors="link" onClick={() => setIsAlertOpen(true)}>
-                        Revoquer les sessions
+                {data.length > 0 && (
+                    <Button label="Révoquer les sessions" colors="link" onClick={() => setIsAlertOpen(true)}>
+                        Révoquer les sessions
                     </Button>
-                ) : null}
+                )}
 
                 {/* Revoke other sessions dialog */}
                 <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
@@ -86,31 +57,28 @@ const DisplaySessionList = () => {
 
             {/* Other sessions list */}
             <Card className="py-3">
-                {data.length ? (
+                {data.length > 0 ? (
                     data.map((session, index) => (
-                        <Fragment key={index}>
+                        <div key={session.id}>
                             {index > 0 && <hr className="border-gray-200" />}
-                            <SessionItem session={session} />
-                        </Fragment>
+                            <SessionItem session={session} setData={setData} />
+                        </div>
                     ))
                 ) : (
-                    <div className="text-muted-foreground text-center text-sm">
-                        Aucune autre session n&apos;est active.
-                    </div>
+                    <div className="text-center text-sm text-gray-500">Aucune autre session n&apos;est active.</div>
                 )}
             </Card>
         </div>
     );
-};
+}
 
 type SessionItemProps = {
     session: SessionList[number];
+    setData: Dispatch<SetStateAction<SessionList>>;
 };
 
 const SessionItem = (props: SessionItemProps) => {
-    const { session } = props;
-
-    const { setData } = useContext(Context);
+    const { session, setData } = props;
 
     const [isAlertOpen, setIsAlertOpen] = useState(false);
 
@@ -128,12 +96,11 @@ const SessionItem = (props: SessionItemProps) => {
 
     return (
         <div className="flex flex-row items-center justify-between gap-4">
-            {/* Session item */}
             <div className="flex w-full flex-row items-center gap-3">
                 <div className="size-2 rounded-full bg-green-500" />
                 <div className="flex w-full flex-row items-center justify-between gap-3">
                     <div className="text-sm font-semibold">{`${getBrowser(userAgent)} • ${getOs(userAgent)}`}</div>
-                    <div className="text-muted-foreground text-right">
+                    <div className="text-right text-gray-500">
                         <div className="text-2xs">Dernière activité le </div>
                         <div className="text-xs text-nowrap">
                             <span className="font-semibold">{formattedDate}</span>
@@ -177,9 +144,7 @@ const SessionItem = (props: SessionItemProps) => {
                                 className="text-destructive"
                                 onClick={() => {
                                     revokeSession({ token: session.token });
-                                    setData((prevData: SessionList) =>
-                                        prevData.filter((item) => item.token !== session.token),
-                                    );
+                                    setData((prev) => prev.filter((item) => item.token !== session.token));
                                 }}
                             >
                                 Déconnecter

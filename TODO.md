@@ -37,6 +37,10 @@
 
 ## Inplement
 
+- useForm : auto reset when usePathname changes
+
+- Page /register/success pour rediriger après inscription + indiquer de vérifier sa boîte mail + vous pouvez fermer cette page + le lien de confirmation vous connectera automatiquement
+
 - Just pour remplacer Makefile
 - Mailpit local
 

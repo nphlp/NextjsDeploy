@@ -1,4 +1,4 @@
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import "server-only";
 import { auth } from "./auth";
 
@@ -19,3 +19,8 @@ export const getSessionList = async () => {
 };
 
 export type SessionList = Awaited<ReturnType<typeof getSessionList>>;
+
+export const isPendingTwoFactor = async () => {
+    const cookieStore = await cookies();
+    return cookieStore.has("better-auth.two_factor");
+};

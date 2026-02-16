@@ -34,6 +34,7 @@ export default function RegisterForm() {
     const { register, states, submit, reset } = useForm({
         firstname: {
             schema: nameSchema,
+            onBlurSchema: z.string(), // Eviter l'erreur si le champ à juste été cliqué
             setter: (value: string) => value,
             defaultValue: "",
         },

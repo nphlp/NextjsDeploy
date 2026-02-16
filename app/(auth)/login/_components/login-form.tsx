@@ -22,11 +22,13 @@ export default function LoginForm() {
         email: {
             schema: emailSchema,
             onChangeSchema: emailSchemaProgressive,
+            onBlurSchema: z.string(),
             setter: (value: string) => value,
             defaultValue: "",
         },
         password: {
             schema: z.string().min(1, "Le mot de passe est requis"),
+            onBlurSchema: z.string(),
             setter: (value: string) => value,
             defaultValue: "",
         },
@@ -52,31 +54,34 @@ export default function LoginForm() {
             return;
         }
 
-        toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
-
         setTimeout(() => {
             reset();
             setIsSubmitting(false);
         }, 1000);
+
+        if ("twoFactorRedirect" in data) {
+            router.push("/verify-2fa");
+            return;
+        }
+
+        toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
 
         router.push("/");
     };
 
     return (
         <Form register={register} onSubmit={handleSubmit}>
-            {/* Email */}
             <Field name="email" label="Email" description="Entrez votre adresse email" disabled={isSubmitting} required>
                 <Input
                     name="email"
                     type="email"
                     placeholder="exemple@email.com"
-                    autoComplete="email"
+                    autoComplete="email webauthn"
                     autoFocus
                     useForm
                 />
             </Field>
 
-            {/* Password */}
             <Field
                 name="password"
                 label="Mot de passe"
@@ -87,12 +92,11 @@ export default function LoginForm() {
                 <InputPassword
                     name="password"
                     placeholder="Votre mot de passe"
-                    autoComplete="current-password"
+                    autoComplete="current-password webauthn"
                     useForm
                 />
             </Field>
 
-            {/* Forgot password link */}
             <div className="flex w-full justify-end">
                 <Link
                     href="/reset-password"
@@ -102,13 +106,11 @@ export default function LoginForm() {
                 />
             </div>
 
-            {/* Register link */}
             <div className="space-x-2 text-center text-sm text-gray-500">
                 <span>Pas encore de compte ?</span>
                 <Link href="/register" label="S'inscrire" className="inline text-sm hover:underline" noStyle />
             </div>
 
-            {/* Submit button */}
             <div className="flex justify-center">
                 <Button type="submit" label="Connexion" loading={isSubmitting} className="w-full sm:w-auto" />
             </div>

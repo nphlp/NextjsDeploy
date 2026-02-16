@@ -39,6 +39,7 @@ const userOutputSchema: ZodType<User> = z.object({
     emailVerified: z.boolean().describe("Email verification status (boolean)"),
     image: z.string().nullable().describe("Profile image URL"),
     role: z.enum($Enums.Role).describe("User role: ADMIN, USER (default)"),
+    twoFactorEnabled: z.boolean().describe("Two-factor authentication status"),
     createdAt: z.date().describe("Creation date"),
     updatedAt: z.date().describe("Last update date"),
 });
