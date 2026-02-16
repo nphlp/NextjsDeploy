@@ -170,7 +170,7 @@ export const Description = (props: AlertDialogDescriptionProps) => {
                 // Layout
                 "mb-6",
                 // Text
-                "text-base text-gray-600",
+                "text-sm text-gray-600",
                 // Overrides
                 className,
             )}
