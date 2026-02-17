@@ -1,75 +1,9 @@
 import { Link } from "@atoms/button";
 import Card from "@atoms/card";
 import Main from "@core/Main";
-import { Code, Code2, Combine, Copy, FormInput, Layers, LayoutDashboard, Palette, Puzzle } from "lucide-react";
-import { LucideIcon } from "lucide-react";
-import { Route } from "next";
+import { devLinks } from "./_config/links";
 
-type DevLink = {
-    label: string;
-    description: string;
-    href: Route | string;
-    icon: LucideIcon;
-};
-
-const devLinks: DevLink[] = [
-    {
-        label: "Form",
-        description: "Form components and validation examples",
-        href: "/dev/form",
-        icon: FormInput,
-    },
-    {
-        label: "Button UI",
-        description: "Button variants, sizes, and states",
-        href: "/dev/ui",
-        icon: Combine,
-    },
-    {
-        label: "Colors",
-        description: "Theme color palette reference",
-        href: "/dev/colors",
-        icon: Palette,
-    },
-    {
-        label: "Skeleton",
-        description: "Loading skeleton components",
-        href: "/dev/skeleton",
-        icon: Copy,
-    },
-    {
-        label: "Layout",
-        description: "Layout structure and grid showcase",
-        href: "/dev/layout-demo",
-        icon: LayoutDashboard,
-    },
-    {
-        label: "Components",
-        description: "Base-UI component showcase",
-        href: "/dev/components",
-        icon: Puzzle,
-    },
-    {
-        label: "Dialogs",
-        description: "Dialog, drawer, and overlay variants",
-        href: "/dev/dialogs",
-        icon: Layers,
-    },
-    {
-        label: "API Docs",
-        description: "Scalar OpenAPI documentation",
-        href: "/dev/scalar",
-        icon: Code,
-    },
-    {
-        label: "Auth API",
-        description: "Better Auth API reference",
-        href: "/api/auth/reference" as Route,
-        icon: Code2,
-    },
-];
-
-export default function DevPage() {
+export default function Page() {
     return (
         <Main vertical="start" horizontal="stretch">
             <h1 className="text-3xl font-bold">Developer Hub</h1>
