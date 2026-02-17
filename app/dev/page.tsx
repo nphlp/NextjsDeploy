@@ -1,7 +1,7 @@
 import { Link } from "@atoms/button";
 import Card from "@atoms/card";
 import Main from "@core/Main";
-import { Code, Code2, Combine, Copy, FormInput, LayoutDashboard, Palette, Puzzle } from "lucide-react";
+import { Code, Code2, Combine, Copy, FormInput, Layers, LayoutDashboard, Palette, Puzzle } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 import { Route } from "next";
 
@@ -48,6 +48,12 @@ const devLinks: DevLink[] = [
         description: "Base-UI component showcase",
         href: "/dev/components",
         icon: Puzzle,
+    },
+    {
+        label: "Dialogs",
+        description: "Dialog, drawer, and overlay variants",
+        href: "/dev/dialogs",
+        icon: Layers,
     },
     {
         label: "API Docs",

@@ -62,6 +62,13 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 - [x] **Magic Link** — connexion sans mot de passe
     - Plugin Better Auth `magicLink`
     - Page `/magic-link` + formulaire email
+    - ⚠️ **Bug** : magic link crée un compte auto si l'email n'existe pas → crash Prisma (`lastname` requis)
+        - Scénario : nouvel utilisateur sans compte → va sur "Se connecter" → magic link → reçoit un email → clique → Better Auth tente `user.create()` sans `lastname` → erreur 500
+        - Cause : `lastname` est `String` (non nullable) dans le schéma Prisma, mais Better Auth ne le connaît pas
+        - Solutions possibles :
+            1. Rendre `lastname` optionnel (`String?`) dans Prisma — le plus simple
+            2. Désactiver la création auto de compte via magic link (si supporté par Better Auth)
+            3. Intercepter côté app : vérifier que l'email existe avant d'envoyer le magic link, sinon rediriger vers l'inscription
 - [ ] **OAuth providers** — Google, GitHub (minimum)
     - Plugin Better Auth `socialProviders`
 

@@ -72,6 +72,7 @@ export const Backdrop = (props: DrawerBackdropProps) => {
                 "transition-opacity duration-450 ease-[cubic-bezier(0.32,0.72,0,1)]",
                 "data-ending-style:opacity-0 data-starting-style:opacity-0",
                 "data-swiping:duration-0",
+                "data-ending-style:duration-[calc(var(--drawer-swipe-strength)*400ms)]",
                 // Dark
                 "dark:opacity-[calc(0.7*(1-var(--drawer-swipe-progress)))]",
                 // Overrides
@@ -108,8 +109,8 @@ export const Viewport = (props: DrawerViewportProps) => {
         <DrawerBaseUi.Viewport
             className={cn(
                 // Layout
-                "fixed inset-0 z-10 flex justify-end",
-                "supports-[-webkit-touch-callout:none]:p-2.5",
+                "[--viewport-padding:0px] supports-[-webkit-touch-callout:none]:[--viewport-padding:0.625rem]",
+                "fixed inset-0 z-10 flex items-stretch justify-end p-(--viewport-padding)",
                 // Overrides
                 className,
             )}
@@ -136,7 +137,16 @@ export const Popup = (props: DrawerPopupProps) => {
         <DrawerBaseUi.Popup
             className={cn(
                 // Layout
-                "box-border h-full w-80 max-w-[calc(100vw-3rem)] overflow-y-auto overscroll-contain p-6",
+                "[--bleed:3rem] supports-[-webkit-touch-callout:none]:[--bleed:0px]",
+                "h-full w-92 max-w-[calc(100vw-3rem+3rem)]",
+                "-mr-12 p-6 pr-18",
+                "touch-auto overflow-y-auto overscroll-contain",
+                // iOS
+                "supports-[-webkit-touch-callout:none]:mr-0",
+                "supports-[-webkit-touch-callout:none]:w-[20rem]",
+                "supports-[-webkit-touch-callout:none]:max-w-[calc(100vw-20px)]",
+                "supports-[-webkit-touch-callout:none]:rounded-[10px]",
+                "supports-[-webkit-touch-callout:none]:pr-6",
                 // Border
                 "outline-1 outline-gray-200 dark:outline-gray-300",
                 // Background
@@ -144,9 +154,11 @@ export const Popup = (props: DrawerPopupProps) => {
                 // Text
                 "text-foreground",
                 // Animation
-                "transition-transform duration-450 ease-[cubic-bezier(0.32,0.72,0,1)]",
                 "transform-[translateX(var(--drawer-swipe-movement-x))]",
-                "data-ending-style:translate-x-full data-starting-style:translate-x-full",
+                "transition-transform duration-450 ease-[cubic-bezier(0.32,0.72,0,1)]",
+                "data-starting-style:transform-[translateX(calc(100%-var(--bleed)+var(--viewport-padding)))]",
+                "data-ending-style:transform-[translateX(calc(100%-var(--bleed)+var(--viewport-padding)))]",
+                "data-ending-style:duration-[calc(var(--drawer-swipe-strength)*400ms)]",
                 "data-swiping:select-none",
                 // Overrides
                 className,
@@ -217,6 +229,33 @@ export const Description = (props: DrawerDescriptionProps) => {
     );
 };
 
+type DrawerContentProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof DrawerBaseUi.Content, StandardAttributes>;
+
+export const Content = (props: DrawerContentProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
+
+    return (
+        <DrawerBaseUi.Content
+            className={cn(
+                // Layout
+                "mx-auto w-full max-w-lg",
+                // Overrides
+                className,
+            )}
+            {...legacyProps}
+            {...otherProps}
+        >
+            {children}
+        </DrawerBaseUi.Content>
+    );
+};
+
 type DrawerCloseProps = {
     className?: string;
     children?: ReactNode;
@@ -252,5 +291,191 @@ export const Close = (props: DrawerCloseProps) => {
         >
             {children}
         </DrawerBaseUi.Close>
+    );
+};
+
+// ─── Non-modal variants ──────────────────────────────────────────
+
+export const NonModalViewport = (props: DrawerViewportProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
+
+    return (
+        <DrawerBaseUi.Viewport
+            className={cn(
+                // Layout
+                "[--viewport-padding:0px] supports-[-webkit-touch-callout:none]:[--viewport-padding:0.625rem]",
+                "fixed inset-0 z-10 flex items-stretch justify-end p-(--viewport-padding)",
+                // Non-modal
+                "pointer-events-none",
+                // Overrides
+                className,
+            )}
+            {...legacyProps}
+            {...otherProps}
+        >
+            {children}
+        </DrawerBaseUi.Viewport>
+    );
+};
+
+export const NonModalPopup = (props: DrawerPopupProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
+
+    return (
+        <DrawerBaseUi.Popup
+            className={cn(
+                // Layout
+                "[--bleed:3rem] supports-[-webkit-touch-callout:none]:[--bleed:0px]",
+                "h-full w-92 max-w-[calc(100vw-3rem+3rem)]",
+                "-mr-12 p-6 pr-18",
+                "touch-auto overflow-y-auto overscroll-contain",
+                // Non-modal
+                "pointer-events-auto",
+                // iOS
+                "supports-[-webkit-touch-callout:none]:mr-0",
+                "supports-[-webkit-touch-callout:none]:w-[20rem]",
+                "supports-[-webkit-touch-callout:none]:max-w-[calc(100vw-20px)]",
+                "supports-[-webkit-touch-callout:none]:rounded-[10px]",
+                "supports-[-webkit-touch-callout:none]:pr-6",
+                // Border
+                "outline-1 outline-gray-200 dark:outline-gray-300",
+                // Background
+                "bg-background",
+                // Text
+                "text-foreground",
+                // Shadow
+                "shadow-[0_-16px_48px_rgb(0_0_0/0.12),0_6px_18px_rgb(0_0_0/0.06)]",
+                // Animation
+                "transform-[translateX(var(--drawer-swipe-movement-x))]",
+                "transition-[transform,box-shadow] duration-450 ease-[cubic-bezier(0.32,0.72,0,1)]",
+                "data-starting-style:transform-[translateX(calc(100%-var(--bleed)+var(--viewport-padding)))]",
+                "data-ending-style:transform-[translateX(calc(100%-var(--bleed)+var(--viewport-padding)))]",
+                "data-ending-style:duration-[calc(var(--drawer-swipe-strength)*400ms)]",
+                "data-starting-style:shadow-[0_-16px_48px_rgb(0_0_0/0),0_6px_18px_rgb(0_0_0/0)]",
+                "data-ending-style:shadow-[0_-16px_48px_rgb(0_0_0/0),0_6px_18px_rgb(0_0_0/0)]",
+                "data-swiping:select-none",
+                // Overrides
+                className,
+            )}
+            {...legacyProps}
+            {...otherProps}
+        >
+            {children}
+        </DrawerBaseUi.Popup>
+    );
+};
+
+// ─── Snap-point variants ─────────────────────────────────────────
+
+export const SnapViewport = (props: DrawerViewportProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
+
+    return (
+        <DrawerBaseUi.Viewport
+            className={cn(
+                // Layout
+                "fixed inset-0 z-10 flex touch-none items-end justify-center",
+                // Overrides
+                className,
+            )}
+            {...legacyProps}
+            {...otherProps}
+        >
+            {children}
+        </DrawerBaseUi.Viewport>
+    );
+};
+
+export const SnapPopup = (props: DrawerPopupProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
+
+    return (
+        <DrawerBaseUi.Popup
+            className={cn(
+                // Layout
+                "[--bleed:3rem]",
+                "relative flex min-h-0 w-full flex-col",
+                "max-h-[calc(100dvh-var(--top-margin))]",
+                "touch-none overflow-visible rounded-t-2xl",
+                // Snap-point offsets
+                "pb-[max(0px,calc(var(--drawer-snap-point-offset)+var(--drawer-swipe-movement-y)))]",
+                "transform-[translateY(calc(var(--drawer-snap-point-offset)+var(--drawer-swipe-movement-y)))]",
+                // Border
+                "outline-1 outline-gray-200 dark:outline-gray-300",
+                // Background
+                "bg-background",
+                // Text
+                "text-foreground",
+                // Shadow
+                "shadow-[0_-16px_48px_rgb(0_0_0/0.12),0_6px_18px_rgb(0_0_0/0.06)]",
+                // Animation
+                "transition-[transform,box-shadow] duration-450 ease-[cubic-bezier(0.32,0.72,0,1)]",
+                // After pseudo (bleed)
+                "after:bg-background after:pointer-events-none after:absolute after:inset-x-0 after:top-full after:h-(--bleed) after:content-['']",
+                // Starting/ending styles
+                "data-ending-style:transform-[translateY(100%)] data-starting-style:transform-[translateY(100%)]",
+                "data-ending-style:pb-0 data-starting-style:pb-0",
+                "data-starting-style:shadow-[0_-16px_48px_rgb(0_0_0/0),0_6px_18px_rgb(0_0_0/0)]",
+                "data-ending-style:shadow-[0_-16px_48px_rgb(0_0_0/0),0_6px_18px_rgb(0_0_0/0)]",
+                "data-ending-style:duration-[calc(var(--drawer-swipe-strength)*400ms)]",
+                "data-swiping:select-none",
+                // Overrides
+                className,
+            )}
+            {...legacyProps}
+            {...otherProps}
+        >
+            {children}
+        </DrawerBaseUi.Popup>
+    );
+};
+
+type DragHandleProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+};
+
+export const DragHandle = (props: DragHandleProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
+
+    return (
+        <div
+            className={cn(
+                // Layout
+                "shrink-0 touch-none px-6 pt-3.5 pb-3",
+                // Border
+                "border-b border-gray-200 dark:border-gray-300",
+                // Overrides
+                className,
+            )}
+            {...legacyProps}
+            {...otherProps}
+        >
+            <div className="mx-auto h-1 w-12 rounded-full bg-gray-300" />
+            {children}
+        </div>
+    );
+};
+
+export const SnapContent = (props: DrawerContentProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
+
+    return (
+        <DrawerBaseUi.Content
+            className={cn(
+                // Layout
+                "min-h-0 flex-1 touch-auto overflow-y-auto overscroll-contain",
+                "px-6 pt-4 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))]",
+                // Overrides
+                className,
+            )}
+            {...legacyProps}
+            {...otherProps}
+        >
+            {children}
+        </DrawerBaseUi.Content>
     );
 };
