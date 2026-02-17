@@ -6,7 +6,7 @@ import Menu from "@comps/atoms/menu/menu";
 import { useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
 import cn from "@lib/cn";
-import { Apple, Code, Code2, Combine, Copy, Form, Home, LucideIcon, Menu as MenuIcon, Palette } from "lucide-react";
+import { Apple, Home, LucideIcon, Menu as MenuIcon, Wrench } from "lucide-react";
 import { Route } from "next";
 import { usePathname } from "next/navigation";
 
@@ -16,20 +16,16 @@ type LinkType = {
     icon: LucideIcon;
 
     // Displaying conditions
-    developmentOnly?: boolean;
     sessionRequired?: boolean;
+    developmentOnly?: boolean;
     adminOnly?: boolean;
+    devOrAdmin?: boolean;
 };
 
 const links: LinkType[] = [
     { label: "Home", href: "/", icon: Home },
     { label: "Fruits", href: "/fruits", icon: Apple },
-    { label: "Form", href: "/form", icon: Form },
-    { label: "UI", href: "/theme/ui", icon: Combine },
-    { label: "Skeleton", href: "/theme/skeleton", icon: Copy },
-    { label: "Colors", href: "/theme/colors", icon: Palette },
-    { label: "API", href: "/scalar", icon: Code, developmentOnly: true },
-    { label: "Auth API", href: "/api/auth/reference" as Route, icon: Code2, developmentOnly: true },
+    { label: "Dev", href: "/dev", icon: Wrench, devOrAdmin: true },
 ];
 
 type MenuNavigationProps = {
@@ -45,16 +41,14 @@ export default function MenuNavigation(props: MenuNavigationProps) {
 
     const path = usePathname();
 
-    const linksToRender = links.filter(({ sessionRequired, developmentOnly, adminOnly }) => {
-        // If no session is required, but session does not exist, skip
+    const isDev = process.env.NODE_ENV === "development";
+    const isAdmin = session?.user.role === "ADMIN";
+
+    const linksToRender = links.filter(({ sessionRequired, developmentOnly, adminOnly, devOrAdmin }) => {
         if (sessionRequired && !session) return false;
-
-        // If dev only, and not in dev env, skip
-        if (developmentOnly && process.env.NODE_ENV !== "development") return false;
-
-        // If admin only, and session user is not admin, skip
-        if (adminOnly && session?.user.role !== "ADMIN") return false;
-
+        if (developmentOnly && !isDev) return false;
+        if (adminOnly && !isAdmin) return false;
+        if (devOrAdmin && !isDev && !isAdmin) return false;
         return true;
     });
 
@@ -63,7 +57,7 @@ export default function MenuNavigation(props: MenuNavigationProps) {
     return (
         <>
             {/* Desktop: inline links */}
-            <div className="flex gap-2 max-[880px]:hidden">
+            <div className="max-xs:hidden flex gap-2">
                 {linksToRender.map(({ href, label }) => (
                     <Link
                         label={label}
@@ -78,7 +72,7 @@ export default function MenuNavigation(props: MenuNavigationProps) {
             </div>
 
             {/* Mobile: dropdown menu */}
-            <div className="w-full min-[880px]:hidden">
+            <div className="xs:hidden w-full">
                 <Menu>
                     <Trigger className="border-none bg-transparent px-2 hover:bg-gray-100">
                         <MenuIcon className="size-6" />

@@ -191,7 +191,7 @@ const buttonVariants = cva(structure, {
             false: "",
         },
         outline: {
-            true: "focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-outline",
+            true: "focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-outline",
             false: "",
         },
     },
