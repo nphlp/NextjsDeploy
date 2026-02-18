@@ -5,8 +5,9 @@ import AlertDialog, { Backdrop, Close, Description, Popup, Portal, Title } from 
 import Button from "@comps/atoms/button/button";
 import { revokeOtherSessions, revokeSession } from "@lib/auth-client";
 import { SessionList } from "@lib/auth-server";
+import { formatMediumDate, formatTime } from "@utils/date-format";
 import { X } from "lucide-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import { getBrowser, getOs } from "./utils";
 
 type SessionManagerProps = {
@@ -59,10 +60,10 @@ export default function SessionManager(props: SessionManagerProps) {
             <Card className="py-3">
                 {data.length > 0 ? (
                     data.map((session, index) => (
-                        <div key={session.id}>
-                            {index > 0 && <hr className="border-gray-200" />}
+                        <Fragment key={index}>
+                            {index !== 0 && <hr className="border-gray-200" />}
                             <SessionItem session={session} setData={setData} />
-                        </div>
+                        </Fragment>
                     ))
                 ) : (
                     <div className="text-center text-sm text-gray-500">Aucune autre session n&apos;est active.</div>
@@ -83,16 +84,8 @@ const SessionItem = (props: SessionItemProps) => {
     const [isAlertOpen, setIsAlertOpen] = useState(false);
 
     const userAgent = session.userAgent ?? "";
-    const formattedDate = new Date(session.updatedAt).toLocaleString("fr-FR", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-    });
-
-    const formattedTime = new Date(session.updatedAt).toLocaleTimeString("fr-FR", {
-        hour: "2-digit",
-        minute: "2-digit",
-    });
+    const formattedDate = formatMediumDate(session.updatedAt);
+    const formattedTime = formatTime(session.updatedAt);
 
     return (
         <div className="flex flex-row items-center justify-between gap-4">
@@ -116,6 +109,7 @@ const SessionItem = (props: SessionItemProps) => {
                 label={`Déconnecter la session du ${formattedDate} à ${formattedTime}`}
                 colors="outline"
                 padding="icon"
+                className="size-8"
                 onClick={() => setIsAlertOpen(true)}
             >
                 <X className="size-4" />
