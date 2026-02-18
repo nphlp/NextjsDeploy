@@ -20,7 +20,7 @@ export const Root = (props: SwitchProps) => {
         <SwitchBaseUi.Root
             className={cn(
                 // Layout
-                "relative flex h-6 w-10 cursor-pointer rounded-full",
+                "relative flex h-6 w-10 flex-none cursor-pointer rounded-full",
                 // Border
                 "border-2 outline-0",
                 // Background

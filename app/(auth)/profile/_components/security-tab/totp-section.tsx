@@ -143,7 +143,7 @@ export default function TotpSection(props: TotpSectionProps) {
                 </div>
                 <div className="flex items-center gap-3">
                     <span
-                        className={`text-sm font-medium ${
+                        className={`text-sm font-medium text-nowrap ${
                             step !== "idle" ? "text-amber-700" : switchChecked ? "text-green-800" : "text-red-700"
                         }`}
                     >
