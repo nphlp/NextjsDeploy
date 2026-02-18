@@ -22,5 +22,5 @@ export type SessionList = Awaited<ReturnType<typeof getSessionList>>;
 
 export const isPendingTwoFactor = async () => {
     const cookieStore = await cookies();
-    return cookieStore.has("better-auth.two_factor");
+    return cookieStore.has("better-auth.two_factor") || cookieStore.has("__Secure-better-auth.two_factor");
 };

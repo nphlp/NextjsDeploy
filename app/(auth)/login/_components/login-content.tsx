@@ -36,8 +36,9 @@ export default function LoginContent() {
         const { error } = await signIn.passkey();
 
         if (error) {
-            toast.add({ title: "Échec de la connexion", description: "Passkey non reconnu.", type: "error" });
             setIsPasskeyLoading(false);
+            if ((error as { code: string }).code === "AUTH_CANCELLED") return;
+            toast.add({ title: "Échec de la connexion", description: "Passkey non reconnu.", type: "error" });
             return;
         }
 

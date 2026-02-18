@@ -2,6 +2,10 @@
 
 ## Bugs
 
+- Création de compte : proposer directement un lien vers la messagerie selon le nom de domaine
+- Création Passkey mobile : la clé crée un username dans Proton Pass ?
+- Création 2FA mobile : pouvoir coller le TOTP + pouvoir copier les codes de récupération en un clic.
+
 - Password : validation client et UI.
 - Salt des passwords ? Fonctionnement ?
 
