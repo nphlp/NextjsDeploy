@@ -4,7 +4,7 @@ import cn from "@lib/cn";
 import { Loader } from "lucide-react";
 import { Route } from "next";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
-import { LinkHTMLAttributes, ReactNode, RefObject } from "react";
+import { AnchorHTMLAttributes, ReactNode, RefObject } from "react";
 import buttonVariants, { ButtonColorsType, ButtonPaddingType, ButtonRoundedType } from "./button-variants";
 
 type OnNavigateEvent = { preventDefault: () => void };
@@ -35,7 +35,7 @@ export type LinkProps = {
     onNavigate?: (e: OnNavigateEvent) => void;
 
     // Legacy Props
-    legacyProps?: Omit<LinkHTMLAttributes<HTMLAnchorElement>, keyof LinkProps>;
+    legacyProps?: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps>;
 
     // Others
     ref?: RefObject<HTMLAnchorElement>;

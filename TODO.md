@@ -6,8 +6,7 @@
 - Création Passkey mobile : la clé crée un username dans Proton Pass ?
 - Création 2FA mobile : pouvoir coller le TOTP + pouvoir copier les codes de récupération en un clic.
 
-- Password : validation client et UI.
-- Salt des passwords ? Fonctionnement ?
+- Il se passe quoi si je me connecte sans avoir confirmé email ? Erreur ? Redirection pas de succes ?
 
 - Insertion Proton Pass qui ne déclenche pas les useEffect -> insertion invisible avant un onFocus ou autre
 

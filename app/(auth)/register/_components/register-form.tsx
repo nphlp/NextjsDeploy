@@ -22,6 +22,7 @@ import { isValidationError, translateAuthError } from "@lib/auth-errors";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
+import { queryUrlSerializer } from "../success/_lib/query-params";
 
 export default function RegisterForm() {
     const router = useRouter();
@@ -102,19 +103,13 @@ export default function RegisterForm() {
             }
         }
 
-        toast.add({
-            title: "Inscription réussie",
-            description: "Un email de vérification a été envoyé. Vérifiez votre boîte de réception.",
-            type: "success",
-        });
-
         setTimeout(() => {
             resetCaptcha();
             reset();
             setIsSubmitting(false);
         }, 1000);
 
-        router.push("/");
+        router.push(queryUrlSerializer("/register/success", { email }));
     };
 
     return (
