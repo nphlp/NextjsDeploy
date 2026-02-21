@@ -1,9 +1,29 @@
 # TODO
 
+## Retour d'Alexis
+
+- Gestionnaire mot de passe
+
+Lors d'un changement de mdp (depuis Chrome), le gestionnaire de mpd Google enregistre uniquement le mdp sans proposer de nom d'utilisateur, ce qui implique qu'on doit réécrime manuellement notre email. Peut-être faire en sorte que l'email soit aussi inscrit ? Ca se fait peut-être avec un champ email caché ?
+
+- Lien magique
+
+Lorsqu'on s'envoie un lien magique, ça serait bien de rajouter le système qui t'ouvre ta boite mail comme pour l'inscription (Gmail pour moi). C'est bête, et ultra pratique ! J'ai adoré
+
+- Session active - nom
+
+Celle de mon iPhone s'appelle "Safari - Mac", mais devrait être "Google Chrome - iPhone/iOS" ou iPhone 15 Pro, ou les deux. Ca serait sympa d'avoir le nom complet de d'appareil en premier pour mieux l'identifier, comme : MacBook Air 13 M2, iPhone 15 Pro... Avec en bonus le nom du système d'exploitation (MacOS, iOS, Windows...)
+
+- Session active - timestamp
+
+L'heure indiquant la dernière activité ne semble pas d'actualiser malgré mes activités (ajout de fruit, changement de nom, de mdp...)
+
+- Traduction
+
+Je pense que ça serait top d'avoir un système de traduction hyper moderne, facile d'utilisation et maintenable
+
 ## Bugs
 
-- Création de compte : proposer directement un lien vers la messagerie selon le nom de domaine
-- Création Passkey mobile : la clé crée un username dans Proton Pass ?
 - Création 2FA mobile : pouvoir coller le TOTP + pouvoir copier les codes de récupération en un clic.
 
 - Il se passe quoi si je me connecte sans avoir confirmé email ? Erreur ? Redirection pas de succes ?
@@ -41,8 +61,6 @@
 ## Inplement
 
 - useForm : auto reset when usePathname changes
-
-- Page /register/success pour rediriger après inscription + indiquer de vérifier sa boîte mail + vous pouvez fermer cette page + le lien de confirmation vous connectera automatiquement
 
 - Just pour remplacer Makefile
 - Mailpit local

@@ -1,7 +1,9 @@
-import { Session } from "@lib/auth-server";
+import { Session, getSessionList } from "@lib/auth-server";
+import { Provider } from "./profile-tab/_context/provider";
 import CurrentSession from "./profile-tab/current-session";
-import OtherSessions from "./profile-tab/other-sessions";
 import ProfileInfo from "./profile-tab/profile-info";
+import RevokeSessions from "./profile-tab/revoke-sessions";
+import SessionList from "./profile-tab/session-list";
 
 type ProfileTabProps = {
     serverSession: NonNullable<Session>;
@@ -11,10 +13,11 @@ export default async function ProfileTab(props: ProfileTabProps) {
     const { serverSession } = props;
 
     const userAgent = serverSession.session.userAgent ?? "";
+    const sessionList = await getSessionList();
 
     return (
         <div className="space-y-6">
-            {/* Informations du profil */}
+            {/* Mon profil */}
             <section className="space-y-4">
                 <div>
                     <p className="font-medium">Mon profil</p>
@@ -23,17 +26,28 @@ export default async function ProfileTab(props: ProfileTabProps) {
                 <ProfileInfo serverSession={serverSession} />
             </section>
 
-            {/* Sessions */}
+            {/* Session actuelle */}
             <section className="space-y-4">
                 <div>
-                    <p className="font-medium">Sessions</p>
+                    <p className="font-medium">Session active</p>
                     <p className="text-sm text-gray-600">Gérer vos sessions actives.</p>
                 </div>
-                <div className="space-y-5">
-                    <CurrentSession userAgent={userAgent} />
-                    <OtherSessions serverSession={serverSession} />
-                </div>
+                <CurrentSession userAgent={userAgent} />
             </section>
+
+            {/* Autres appareils */}
+            <Provider serverSession={serverSession} sessionList={sessionList}>
+                <section className="space-y-4">
+                    <div className="flex flex-row items-end justify-between">
+                        <div>
+                            <p className="font-medium">Autres appareils</p>
+                            <p className="text-sm text-gray-600">Sessions actives sur vos autres navigateurs.</p>
+                        </div>
+                        <RevokeSessions />
+                    </div>
+                    <SessionList />
+                </section>
+            </Provider>
         </div>
     );
 }
