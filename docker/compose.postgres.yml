@@ -19,6 +19,16 @@ services:
         networks:
             - app-network
 
+    mailpit:
+        image: axllent/mailpit:latest
+        container_name: mailpit-${ENV_LABEL}
+        restart: unless-stopped
+        ports:
+            - "8025:8025"
+            - "1025:1025"
+        networks:
+            - app-network
+
     prisma-studio:
         container_name: prisma-studio-${ENV_LABEL}
         build:

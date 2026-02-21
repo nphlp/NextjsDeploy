@@ -215,17 +215,26 @@ envConfig: {
 ### SMTP
 
 - **`SMTP_HOST`** — SMTP server host
-    - `smtp.hostinger.com` in all envs
+    - `localhost` in dev (Mailpit)
+    - `smtp.hostinger.com` in all others envs
 - **`SMTP_PORT`** — SMTP server port
-    - `465` in all envs
+    - `1025` in dev (Mailpit)
+    - `465` in all others envs
 - **`SMTP_USER`** — SMTP username
-    - `hello@domain.com` in all envs
+    - `mailpit` in dev (any value accepted)
+    - real credentials in all others envs
 - **`SMTP_PASSWORD`** — SMTP password
+    - `mailpit` in dev (any value accepted)
+    - real credentials in all others envs
 - **`SMTP_FROM`** — Sender email address
     - `hello@domain.com` in all envs
 - **`SMTP_FROM_NAME`** — Sender display name
     - `Nextjs Deploy` in production
     - template `Nextjs Deploy ({{ENV}})` in all others envs
+
+> In dev, emails are caught by [Mailpit](https://mailpit.axllent.org/) instead of being sent to real inboxes.
+> Web UI: `http://localhost:8025` — SMTP: `localhost:1025`.
+> To switch to real email sending (Hostinger), swap the commented overrides in `env/env.config.mjs` dev section.
 
 ### Ngrok (optional)
 

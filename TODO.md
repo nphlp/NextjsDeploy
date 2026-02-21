@@ -10,18 +10,6 @@ Lors d'un changement de mdp (depuis Chrome), le gestionnaire de mpd Google enreg
 
 Lorsqu'on s'envoie un lien magique, ça serait bien de rajouter le système qui t'ouvre ta boite mail comme pour l'inscription (Gmail pour moi). C'est bête, et ultra pratique ! J'ai adoré
 
-- Session active - nom
-
-Celle de mon iPhone s'appelle "Safari - Mac", mais devrait être "Google Chrome - iPhone/iOS" ou iPhone 15 Pro, ou les deux. Ca serait sympa d'avoir le nom complet de d'appareil en premier pour mieux l'identifier, comme : MacBook Air 13 M2, iPhone 15 Pro... Avec en bonus le nom du système d'exploitation (MacOS, iOS, Windows...)
-
-- Session active - timestamp
-
-L'heure indiquant la dernière activité ne semble pas d'actualiser malgré mes activités (ajout de fruit, changement de nom, de mdp...)
-
-- Traduction
-
-Je pense que ça serait top d'avoir un système de traduction hyper moderne, facile d'utilisation et maintenable
-
 ## Bugs
 
 - Création 2FA mobile : pouvoir coller le TOTP + pouvoir copier les codes de récupération en un clic.

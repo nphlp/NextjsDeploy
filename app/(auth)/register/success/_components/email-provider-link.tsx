@@ -1,10 +1,10 @@
 "use client";
 
 import { Link } from "@atoms/button";
+import { getEmailProvider } from "@utils/email-providers";
 import { ExternalLink } from "lucide-react";
 import { Route } from "next";
 import { useQueryParams } from "../_lib/use-query-params";
-import { getEmailProvider } from "../_utils/email-providers";
 
 export default function EmailProviderLink() {
     const { email } = useQueryParams();
