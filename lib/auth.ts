@@ -21,7 +21,7 @@ export const sendResetPassword: SendResetPasswordProps = async (data) => {
     const { user, url } = data;
 
     await SendEmailAction({
-        subject: `Reset your password`,
+        subject: "Réinitialisez votre mot de passe",
         email: user.email,
         body: EmailTemplate({ buttonUrl: url, emailType: "reset" }),
     });
@@ -38,7 +38,7 @@ export const sendVerificationEmail: SendVerificationEmailProps = async (data) =>
     const { user, url } = data;
 
     await SendEmailAction({
-        subject: `Welcome ${user.name}! Let's verify your email.`,
+        subject: "Vérifiez votre adresse email",
         email: user.email,
         body: EmailTemplate({ buttonUrl: url, emailType: "verification" }),
     });
@@ -46,13 +46,27 @@ export const sendVerificationEmail: SendVerificationEmailProps = async (data) =>
 
 /**
  * Send magic link to user email
+ * -> If user exists: send real magic link
+ * -> If user doesn't exist: send "please register" email with link to register page
  */
-const sendMagicLink = async ({ email, url }: { email: string; url: string }) => {
-    await SendEmailAction({
-        subject: "Your magic link",
-        email,
-        body: EmailTemplate({ buttonUrl: url, emailType: "magic-link" }),
-    });
+const sendMagicLink = async (data: { email: string; url: string; token: string }) => {
+    const { email, url } = data;
+
+    const user = await PrismaInstance.user.findUnique({ where: { email } });
+
+    if (user) {
+        await SendEmailAction({
+            subject: "Votre lien de connexion",
+            email,
+            body: EmailTemplate({ buttonUrl: url, emailType: "magic-link" }),
+        });
+    } else {
+        await SendEmailAction({
+            subject: "Créez votre compte",
+            email,
+            body: EmailTemplate({ buttonUrl: `${NEXT_PUBLIC_BASE_URL}/register`, emailType: "magic-link-no-account" }),
+        });
+    }
 };
 
 /**

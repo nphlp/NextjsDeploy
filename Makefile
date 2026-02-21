@@ -86,6 +86,10 @@ app-setup:
 .PHONY: dev start
 
 dev: postgres app-setup
+	@echo ""
+	@echo "🚀 Nextjs Server: http://localhost:3000 ✅"
+	@echo "📚 Prisma Studio: http://localhost:5555 🔥"
+	@echo "📬 Mailpit: http://localhost:8025 📤"
 	@pnpm dev; make postgres-stop
 
 # Local build server for testing -> http://localhost:3000

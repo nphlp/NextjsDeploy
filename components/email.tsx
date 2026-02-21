@@ -1,64 +1,134 @@
-import cn from "@lib/cn";
-import { Body, Button, Container, Html, Section, Tailwind } from "@react-email/components";
+import {
+    Body,
+    Button,
+    Container,
+    Head,
+    Heading,
+    Hr,
+    Html,
+    Link,
+    Preview,
+    Section,
+    Tailwind,
+    Text,
+} from "@react-email/components";
+
+type EmailType = "verification" | "change" | "reset" | "magic-link" | "magic-link-no-account";
 
 type EmailTemplateProps = {
     buttonUrl: string;
-    emailType: "verification" | "change" | "reset" | "magic-link";
+    emailType: EmailType;
+};
+
+const APP_NAME = "Nextjs Deploy";
+
+const content: Record<
+    EmailType,
+    {
+        preview: string;
+        title: string;
+        description: string;
+        buttonText: string;
+        buttonColor: string;
+    }
+> = {
+    verification: {
+        preview: "Vérifiez votre adresse email",
+        title: "Bienvenue !",
+        description: "Veuillez vérifier votre adresse email en cliquant sur le bouton ci-dessous.",
+        buttonText: "Vérifier mon email",
+        buttonColor: "#000000",
+    },
+    change: {
+        preview: "Confirmez votre nouvelle adresse email",
+        title: "Changement d\u2019email",
+        description: "Veuillez confirmer votre nouvelle adresse email.",
+        buttonText: "Confirmer mon email",
+        buttonColor: "#dc2626",
+    },
+    reset: {
+        preview: "Réinitialisez votre mot de passe",
+        title: "Réinitialisation du mot de passe",
+        description:
+            "Cliquez sur le bouton ci-dessous pour réinitialiser votre mot de passe. Ce lien expire dans 1 heure.",
+        buttonText: "Réinitialiser mon mot de passe",
+        buttonColor: "#2563eb",
+    },
+    "magic-link": {
+        preview: "Votre lien de connexion",
+        title: "Connexion rapide",
+        description: "Cliquez sur le bouton ci-dessous pour vous connecter. Ce lien expire dans 5 minutes.",
+        buttonText: "Se connecter",
+        buttonColor: "#7c3aed",
+    },
+    "magic-link-no-account": {
+        preview: "Créez votre compte",
+        title: "Créer un compte",
+        description:
+            "Une demande de connexion a été faite avec cette adresse email, mais aucun compte n\u2019y est associé. Inscrivez-vous pour commencer !",
+        buttonText: "S\u2019inscrire",
+        buttonColor: "#1f2937",
+    },
 };
 
 export default function EmailTemplate(props: EmailTemplateProps) {
     const { buttonUrl, emailType } = props;
-
-    const content = {
-        verification: {
-            title: "Hey, welcome!",
-            description: "Please, verify your email by clicking the following button.",
-            buttonText: "Sure, let's verify my email!",
-            buttonColor: "bg-black",
-        },
-        change: {
-            title: "Email Change Request",
-            description: "Please, verify your new email by clicking the following button.",
-            buttonText: "Verify my new email!",
-            buttonColor: "bg-red-600",
-        },
-        reset: {
-            title: "Password Reset Request",
-            description: "Click the button below to reset your password. This link will expire in 1 hour.",
-            buttonText: "Reset my password",
-            buttonColor: "bg-blue-600",
-        },
-        "magic-link": {
-            title: "Magic Link",
-            description: "Click the button below to sign in. This link will expire in 5 minutes.",
-            buttonText: "Sign in",
-            buttonColor: "bg-violet-600",
-        },
-    };
-
-    const currentContent = content[emailType];
+    const { preview, title, description, buttonText, buttonColor } = content[emailType];
 
     return (
         <Html>
+            <Head />
+            <Preview>{preview}</Preview>
             <Tailwind>
-                <Body className="bg-white font-sans">
-                    <Container className="mx-auto mt-12.5 w-min min-w-[320px] rounded-2xl border border-solid border-gray-300 p-5 shadow-md">
-                        <Section className="mb-4 text-center text-2xl font-bold text-black">
-                            {currentContent.title}
+                <Body className="bg-gray-100 font-sans">
+                    <Container className="mx-auto my-10 max-w-120 rounded-lg bg-white shadow-sm">
+                        {/* Header */}
+                        <Section className="rounded-t-lg bg-gray-900 px-8 py-6 text-center">
+                            <Text className="m-0 text-lg font-bold text-white">{APP_NAME}</Text>
                         </Section>
-                        <Section className="mb-5 text-center text-sm text-gray-500">
-                            {currentContent.description}
+
+                        {/* Content */}
+                        <Section className="px-8 py-10">
+                            <Heading className="m-0 mb-4 text-center text-xl font-bold text-gray-900">{title}</Heading>
+                            <Text className="mb-8 text-center text-sm leading-6 text-gray-600">{description}</Text>
+                            <Section className="text-center">
+                                <Button
+                                    className="inline-block rounded-md px-6 py-3 text-center text-sm font-semibold text-white"
+                                    href={buttonUrl}
+                                    style={{ backgroundColor: buttonColor }}
+                                >
+                                    {buttonText}
+                                </Button>
+                            </Section>
+                            <Text className="mt-6 text-center text-xs leading-5 break-all text-gray-400">
+                                <span className="block">
+                                    Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :
+                                </span>
+                                <Link href={buttonUrl} className="text-gray-400 underline">
+                                    {buttonUrl}
+                                </Link>
+                            </Text>
                         </Section>
-                        <Section className="mb-4">
-                            <Button
-                                className={cn(
-                                    "mx-auto flex w-fit rounded-md px-4 py-2 text-center text-gray-100",
-                                    currentContent.buttonColor,
-                                )}
-                                href={buttonUrl}
-                            >
-                                {currentContent.buttonText}
-                            </Button>
+
+                        {/* Footer */}
+                        <Section className="px-8 pb-8">
+                            <Hr className="mb-6 border-gray-200" />
+                            <Text className="m-0 mb-2 text-center text-xs text-gray-400">
+                                <Link href="#" className="text-gray-400 underline">
+                                    Site web
+                                </Link>
+                                {" · "}
+                                <Link href="#" className="text-gray-400 underline">
+                                    Mentions légales
+                                </Link>
+                                {" · "}
+                                <Link href="#" className="text-gray-400 underline">
+                                    Politique de confidentialité
+                                </Link>
+                            </Text>
+                            <Text className="m-0 text-center text-xs text-gray-400">
+                                © {new Date().getFullYear()} {APP_NAME}. Tous droits réservés.
+                            </Text>
                         </Section>
                     </Container>
                 </Body>
