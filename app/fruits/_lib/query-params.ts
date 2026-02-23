@@ -2,6 +2,11 @@ import { createParser, createSearchParamsCache, parseAsInteger, parseAsString } 
 import { z } from "zod";
 
 /**
+ * Items per page for pagination
+ */
+export const ITEMS_PER_PAGE = 30;
+
+/**
  * Order values for fruit sorting
  */
 const orderValues = ["asc", "desc"] as const;
@@ -20,9 +25,9 @@ const orderParser = createParser({
  * Query parameters for fruits page
  */
 export const queryParams = {
-    order: orderParser.withDefault("asc"),
-    take: parseAsInteger,
     search: parseAsString.withDefault(""),
+    order: orderParser.withDefault("asc"),
+    page: parseAsInteger.withDefault(1),
 };
 
 /**

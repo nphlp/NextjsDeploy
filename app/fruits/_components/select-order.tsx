@@ -17,8 +17,8 @@ export default function SelectOrder() {
     const placeholder = "Select order";
 
     const items: ItemType = {
-        asc: "Asc (A-Z)",
-        desc: "Desc (Z-A)",
+        asc: "Ascending (A-Z)",
+        desc: "Descending (Z-A)",
     };
 
     return (

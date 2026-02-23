@@ -4,7 +4,7 @@ import projection from "@utils/projection";
 import "server-only";
 import { z } from "zod";
 import { tag } from "@/api/cache";
-import { fruitFindManyCached, fruitFindUniqueCached } from "./fruit-cached";
+import { fruitCountCached, fruitFindManyCached, fruitFindUniqueCached } from "./fruit-cached";
 import { fruitOutputSchema, fruitWithUserOutputSchema } from "./fruit-schema";
 
 const findMany = os
@@ -137,9 +137,45 @@ const findUnique = os
         return fruit;
     });
 
+const count = os
+    .route({
+        method: "GET",
+        path: "/fruits/count",
+        summary: "FRUIT Count",
+        description: "Permission: public",
+    })
+    .input(
+        z
+            .object({
+                // Search
+                searchByName: z.string().optional().describe("Search term to filter fruits by name"),
+                // Exclude
+                excludeIds: z.array(z.string()).optional().describe("Array of fruit IDs to exclude"),
+                // Cache tags
+                cacheTags: z.array(z.string()).optional().describe("Array of cache tags"),
+            })
+            .optional(),
+    )
+    .output(z.number())
+    .handler(async ({ input }) => {
+        return await fruitCountCached(
+            {
+                ...(input?.searchByName && {
+                    name: { contains: input.searchByName, mode: "insensitive" as const },
+                }),
+                ...(input?.excludeIds &&
+                    input.excludeIds.length > 0 && {
+                        id: { notIn: input.excludeIds },
+                    }),
+            },
+            [tag("fruit"), tag("fruit", "count"), tag("fruit", "count", input), ...(input?.cacheTags ?? [])],
+        );
+    });
+
 export const fruitQueries = {
     findMany,
     findUnique,
+    count,
 };
 
 export default fruitQueries;

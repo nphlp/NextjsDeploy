@@ -16,7 +16,7 @@ type PageProps = {
 export default async function Page(props: PageProps) {
     const { searchParams } = props;
 
-    const { search, order, take } = await queryParamsCached.parse(searchParams);
+    const { search, order, page } = await queryParamsCached.parse(searchParams);
 
     return (
         <Main horizontal="stretch" vertical="start">
@@ -40,7 +40,7 @@ export default async function Page(props: PageProps) {
             </section>
 
             <Suspense fallback={<FruitsGridSkeleton />}>
-                <FruitsGridLoader order={order} take={take} search={search} />
+                <FruitsGridLoader order={order} page={page} search={search} />
             </Suspense>
         </Main>
     );

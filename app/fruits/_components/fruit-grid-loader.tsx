@@ -1,12 +1,13 @@
 import oRPC from "@lib/orpc";
 import { timeout } from "@utils/timout";
-import { OrderValue, QueryParamsCachedType } from "@/app/fruits/_lib/query-params";
+import { ITEMS_PER_PAGE, OrderValue, QueryParamsCachedType } from "@/app/fruits/_lib/query-params";
 import FruitsGrid from "./fruit-grid";
 
 type GetFruitsCachedProps = {
     searchByName?: string;
     orderByName?: OrderValue;
     take?: number;
+    skip?: number;
 };
 
 const getFruitsCached = async (props: GetFruitsCachedProps) => {
@@ -18,18 +19,33 @@ const getFruitsCached = async (props: GetFruitsCachedProps) => {
     return await oRPC.fruit.findMany(props);
 };
 
+type GetCountCachedProps = {
+    searchByName?: string;
+};
+
+const getCountCached = async (props: GetCountCachedProps) => {
+    "use cache";
+    return await oRPC.fruit.count(props);
+};
+
 type FruitsGridLoaderProps = QueryParamsCachedType;
 
 export default async function FruitsGridLoader(props: FruitsGridLoaderProps) {
     "use cache";
 
-    const { order, take, search } = props;
+    const { order, page, search } = props;
 
-    const fruits = await getFruitsCached({
-        searchByName: search || undefined,
-        orderByName: order,
-        take: take ?? undefined,
-    });
+    const [fruits, totalCount] = await Promise.all([
+        getFruitsCached({
+            searchByName: search || undefined,
+            orderByName: order,
+            take: ITEMS_PER_PAGE,
+            skip: (page - 1) * ITEMS_PER_PAGE,
+        }),
+        getCountCached({
+            searchByName: search || undefined,
+        }),
+    ]);
 
-    return <FruitsGrid initialData={fruits} />;
+    return <FruitsGrid initialData={fruits} initialTotalCount={totalCount} />;
 }
