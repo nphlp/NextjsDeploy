@@ -6,15 +6,12 @@
 
 Lors d'un changement de mdp (depuis Chrome), le gestionnaire de mpd Google enregistre uniquement le mdp sans proposer de nom d'utilisateur, ce qui implique qu'on doit réécrime manuellement notre email. Peut-être faire en sorte que l'email soit aussi inscrit ? Ca se fait peut-être avec un champ email caché ?
 
-- Lien magique
-
-Lorsqu'on s'envoie un lien magique, ça serait bien de rajouter le système qui t'ouvre ta boite mail comme pour l'inscription (Gmail pour moi). C'est bête, et ultra pratique ! J'ai adoré
-
 ## Bugs
 
 - Création 2FA mobile : pouvoir coller le TOTP + pouvoir copier les codes de récupération en un clic.
 
-- Il se passe quoi si je me connecte sans avoir confirmé email ? Erreur ? Redirection pas de succes ?
+- Il se passe quoi si je me connecte sans avoir confirmé email ?
+  Erreur ? Redirection pas de succes ?
 
 - Insertion Proton Pass qui ne déclenche pas les useEffect -> insertion invisible avant un onFocus ou autre
 

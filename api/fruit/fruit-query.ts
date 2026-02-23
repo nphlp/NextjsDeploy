@@ -18,12 +18,12 @@ const findMany = os
         z
             .object({
                 // Search
-                search: z.string().optional().describe("Search term to filter fruits by name"),
+                searchByName: z.string().optional().describe("Search term to filter fruits by name"),
                 // Exclude
                 excludeIds: z.array(z.string()).optional().describe("Array of fruit IDs to exclude"),
                 // Sorting
-                name: z.enum(Prisma.SortOrder).optional().describe("Sort order for name"),
-                updatedAt: z.enum(Prisma.SortOrder).optional().describe("Sort order for updatedAt"),
+                orderByName: z.enum(Prisma.SortOrder).optional().describe("Sort order for name"),
+                orderByUpdatedAt: z.enum(Prisma.SortOrder).optional().describe("Sort order for updatedAt"),
                 // Pagination
                 take: z.number().min(1).max(1000).optional().describe("Number of fruits to take"),
                 skip: z.number().min(0).optional().describe("Number of fruits to skip"),
@@ -40,12 +40,12 @@ const findMany = os
                 take: input?.take,
                 skip: input?.skip,
                 orderBy: {
-                    ...(input?.name && { name: input.name }),
-                    ...(input?.updatedAt && { updatedAt: input.updatedAt }),
+                    ...(input?.orderByName && { name: input.orderByName }),
+                    ...(input?.orderByUpdatedAt && { updatedAt: input.orderByUpdatedAt }),
                 },
                 where: {
-                    ...(input?.search && {
-                        name: { contains: input.search, mode: "insensitive" },
+                    ...(input?.searchByName && {
+                        name: { contains: input.searchByName, mode: "insensitive" },
                     }),
                     ...(input?.excludeIds &&
                         input.excludeIds.length > 0 && {
