@@ -4,7 +4,9 @@
         "allow": [
             "Bash(pnpm type:*)",
             "Bash(pnpm lint:*)",
+            "Bash(pnpm lint:fix:*)",
             "Bash(pnpm format:*)",
+            "Bash(pnpm format:fix:*)",
             "Bash(pnpm checks:*)",
             "Bash(pnpm test:run:*)",
             "Bash(pnpm test:coverage:*)",
@@ -12,7 +14,8 @@
             "Bash(make:*)",
             "Bash(docker:*)",
             "Bash(tree:*)",
-
+            "Bash(node:*)",
+            "Bash(echo:*)",
             "Bash(sed:*)",
             "Bash(mkdir:*)",
             "Bash(mv:*)",
@@ -33,12 +36,22 @@
             "Bash(curl:*)",
             "Bash(wait:*)",
 
+            "Bash(git mv:*)",
             "Bash(git status:*)",
             "Bash(git diff:*)",
             "Bash(git fetch:*)",
             "Bash(git add:*)",
             "Bash(git commit:*)",
             "Bash(git push:*)",
+
+            "Bash(gh search issues:*)",
+            "Bash(gh issue view:*)",
+            "Bash(gh search code:*)",
+            "Bash(gh api:*)",
+
+            "Bash(ide getDiagnostics:*)",
+
+            "mcp__ide__getDiagnostics",
 
             "mcp__context7__resolve-library-id",
             "mcp__context7__query-docs",
@@ -80,8 +93,6 @@
             "mcp__linear__list_issues",
             "mcp__linear__list_issue_labels",
             "mcp__linear__list_issue_statuses",
-
-            "mcp__ide__getDiagnostics",
 
             "Read",
             "LS",
