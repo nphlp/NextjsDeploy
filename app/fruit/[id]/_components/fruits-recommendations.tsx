@@ -18,9 +18,7 @@ const slidePerView: Record<Breakpoint, number> = {
     "3xl": 3,
 };
 
-type GetFruitsRecommendationsCachedProps = {
-    excludeIds: string[];
-};
+type GetFruitsRecommendationsCachedProps = Parameters<typeof oRPC.fruit.findMany>[0];
 
 const getFruitsRecommendationsCached = async (props: GetFruitsRecommendationsCachedProps) => {
     "use cache";
@@ -40,7 +38,7 @@ export default async function FruitsRecommendations(props: FruitsRecommendations
 
     const { fruitIdToExclude } = props;
 
-    const fruits = await getFruitsRecommendationsCached({ excludeIds: [fruitIdToExclude] });
+    const fruits = await getFruitsRecommendationsCached({ excludeIds: [fruitIdToExclude], take: 5 });
 
     if (!fruits) notFound();
 

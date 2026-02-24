@@ -1,14 +1,9 @@
 import oRPC from "@lib/orpc";
 import { timeout } from "@utils/timout";
-import { ITEMS_PER_PAGE, OrderValue, QueryParamsCachedType } from "@/app/fruits/_lib/query-params";
+import { ITEMS_PER_PAGE, QueryParamsCachedType } from "@/app/fruits/_lib/query-params";
 import FruitsGrid from "./fruit-grid";
 
-type GetFruitsCachedProps = {
-    searchByName?: string;
-    orderByName?: OrderValue;
-    take?: number;
-    skip?: number;
-};
+type GetFruitsCachedProps = Parameters<typeof oRPC.fruit.findMany>[0];
 
 const getFruitsCached = async (props: GetFruitsCachedProps) => {
     "use cache";
@@ -19,9 +14,7 @@ const getFruitsCached = async (props: GetFruitsCachedProps) => {
     return await oRPC.fruit.findMany(props);
 };
 
-type GetCountCachedProps = {
-    searchByName?: string;
-};
+type GetCountCachedProps = Parameters<typeof oRPC.fruit.count>[0];
 
 const getCountCached = async (props: GetCountCachedProps) => {
     "use cache";
