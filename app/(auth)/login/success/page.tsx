@@ -25,17 +25,15 @@ export default async function Page(props: PageProps) {
 
                     {/* Title */}
                     <div className="space-y-2 text-center">
-                        <h3 className="text-xl font-semibold">Inscription r&eacute;ussie</h3>
-                        <p className="text-sm text-gray-500">
-                            Vous allez recevoir un email avec un lien pour finaliser la cr&eacute;ation de votre compte.
-                        </p>
+                        <h3 className="text-xl font-semibold">Lien magique envoy&eacute; !</h3>
+                        <p className="text-sm text-gray-500">Vous allez recevoir un lien de connexion par email.</p>
                     </div>
 
                     {/* Info */}
                     <div className="w-full space-y-3 rounded-lg bg-gray-50 p-4 text-sm text-gray-600">
                         <div className="flex items-start gap-2.5">
                             <Mail className="mt-0.5 size-4 shrink-0 text-gray-400" />
-                            <p>Le lien de confirmation vous connectera automatiquement &agrave; l&apos;application.</p>
+                            <p>Cliquez sur le lien dans l&apos;email pour vous connecter automatiquement.</p>
                         </div>
                         <div className="flex items-start gap-2.5">
                             <ExternalLink className="mt-0.5 size-4 shrink-0 text-gray-400" />

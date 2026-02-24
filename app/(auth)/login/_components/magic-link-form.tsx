@@ -1,6 +1,7 @@
 "use client";
 
-import Button, { Link } from "@atoms/button";
+import { queryUrlSerializer } from "@app/(auth)/register/success/_lib/query-params";
+import Button from "@atoms/button";
 import { Field } from "@atoms/form/field";
 import Form, { OnSubmit } from "@atoms/form/form";
 import { emailSchema, emailSchemaProgressive } from "@atoms/form/schemas";
@@ -8,18 +9,16 @@ import { useForm } from "@atoms/form/use-form";
 import Input from "@atoms/input/input";
 import { useToast } from "@atoms/toast";
 import { authClient } from "@lib/auth-client";
-import { getEmailProvider } from "@utils/email-providers";
-import { ExternalLink } from "lucide-react";
-import { Route } from "next";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import z from "zod";
 
 export default function MagicLinkForm() {
+    const router = useRouter();
     const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [sentEmail, setSentEmail] = useState<string | null>(null);
 
-    const { register, submit } = useForm({
+    const { register, submit, reset } = useForm({
         email: {
             schema: emailSchema,
             onChangeSchema: emailSchemaProgressive,
@@ -37,10 +36,9 @@ export default function MagicLinkForm() {
 
         setIsSubmitting(true);
 
-        const { error } = await authClient.signIn.magicLink({
-            email: values.email,
-            callbackURL: "/",
-        });
+        const { email } = values;
+
+        const { error } = await authClient.signIn.magicLink({ email });
 
         if (error) {
             toast.add({ title: "Erreur", description: "Impossible d'envoyer le lien magique.", type: "error" });
@@ -48,37 +46,13 @@ export default function MagicLinkForm() {
             return;
         }
 
-        setSentEmail(values.email);
-        setIsSubmitting(false);
+        setTimeout(() => {
+            reset();
+            setIsSubmitting(false);
+        }, 1000);
+
+        router.push(queryUrlSerializer("/login/success", { email }));
     };
-
-    if (sentEmail) {
-        const provider = getEmailProvider(sentEmail);
-
-        return (
-            <div className="flex flex-col items-center gap-4">
-                <p className="text-center text-sm text-gray-600">
-                    Un lien de connexion a &eacute;t&eacute; envoy&eacute; &agrave; votre adresse email.
-                </p>
-                {provider ? (
-                    <Link
-                        href={provider.url as Route}
-                        label={`Ouvrir ${provider.name}`}
-                        colors="outline"
-                        className="w-full text-gray-700"
-                        legacyProps={{ target: "_blank" }}
-                    >
-                        Ouvrir {provider.name}
-                        <ExternalLink className="size-4" />
-                    </Link>
-                ) : (
-                    <p className="text-center text-sm text-gray-400">
-                        V&eacute;rifiez votre bo&icirc;te de r&eacute;ception.
-                    </p>
-                )}
-            </div>
-        );
-    }
 
     return (
         <Form register={register} onSubmit={handleSubmit}>

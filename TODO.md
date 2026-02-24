@@ -10,6 +10,8 @@ Lors d'un changement de mdp (depuis Chrome), le gestionnaire de mpd Google enreg
 
 - Création 2FA mobile : pouvoir coller le TOTP + pouvoir copier les codes de récupération en un clic.
 
+- Si 2FA commencée, pouvoir "annuler" -> supprimer le cookie
+
 - Il se passe quoi si je me connecte sans avoir confirmé email ?
   Erreur ? Redirection pas de succes ?
 

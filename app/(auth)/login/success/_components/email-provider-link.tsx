@@ -17,7 +17,7 @@ export default function EmailProviderLink(props: EmailProviderLinkProps) {
     if (!provider) {
         return (
             <p className="text-center text-sm text-gray-400">
-                Consultez votre bo&icirc;te de r&eacute;ception pour finaliser l&apos;inscription.
+                Consultez votre bo&icirc;te de r&eacute;ception pour vous connecter.
             </p>
         );
     }
