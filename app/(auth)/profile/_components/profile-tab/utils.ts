@@ -1,10 +1,12 @@
 export const getOs = (userAgent: string) => {
+    if (/iPad/i.test(userAgent)) return "iPad";
+    if (/iPhone/i.test(userAgent)) return "iPhone";
+    if (/iPod/i.test(userAgent)) return "iPod";
     if (/Macintosh|Mac OS X/i.test(userAgent)) return "Mac";
-    else if (/Windows/i.test(userAgent)) return "Windows";
-    else if (/Linux/i.test(userAgent)) return "Linux";
-    else if (/Android/i.test(userAgent)) return "Android";
-    else if (/iPhone|iPad|iPod/i.test(userAgent)) return "iOS";
-    else return "Inconnu";
+    if (/Windows/i.test(userAgent)) return "Windows";
+    if (/Android/i.test(userAgent)) return "Android";
+    if (/Linux/i.test(userAgent)) return "Linux";
+    return "Inconnu";
 };
 
 export const getBrowser = (userAgent: string) => {

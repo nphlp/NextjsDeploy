@@ -1,10 +1,13 @@
 "use client";
 
+import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/types";
 import { Collapsible as CollapsibleBaseUi } from "@base-ui/react/collapsible";
 import cn from "@lib/cn";
-import { ComponentProps, ReactNode } from "react";
+import { ComponentProps, MouseEventHandler, ReactNode } from "react";
 
-export type CollapsibleProps = { children?: ReactNode } & ComponentProps<typeof CollapsibleBaseUi.Root>;
+export type CollapsibleProps = {
+    children?: ReactNode;
+} & ComponentProps<typeof CollapsibleBaseUi.Root>;
 
 export const Root = (props: CollapsibleProps) => {
     const { children, ...otherProps } = props;
@@ -12,26 +15,45 @@ export const Root = (props: CollapsibleProps) => {
     return <CollapsibleBaseUi.Root {...otherProps}>{children}</CollapsibleBaseUi.Root>;
 };
 
-export const Trigger = (
-    props: { className?: string; children?: ReactNode } & ComponentProps<typeof CollapsibleBaseUi.Trigger>,
-) => {
-    const { className, children, ...otherProps } = props;
+type CollapsibleTriggerProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Event props
+    onClick?: MouseEventHandler<HTMLButtonElement>;
+
+    // Legacy props
+    legacyProps?: LegacyProps<ButtonAttributes, "onClick">;
+} & BaseUiProps<typeof CollapsibleBaseUi.Trigger, ButtonAttributes>;
+
+export const Trigger = (props: CollapsibleTriggerProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <CollapsibleBaseUi.Trigger
             className={cn(
                 // Layout
-                "group flex items-center gap-2 rounded-sm px-2 py-1",
+                "group flex items-center gap-2 rounded-md px-2 py-1",
+                // Border
+                "border border-gray-200",
+                "hover:border-gray-300",
+                "active:border-gray-400",
                 // Background
-                "bg-gray-100",
+                "bg-gray-50",
+                "hover:bg-gray-100",
+                "active:bg-gray-200",
                 // Text
-                "text-sm font-medium",
+                "text-sm font-medium text-gray-900",
+                // Cursor
+                "cursor-pointer",
+                // Animation
+                "transition-all duration-100 ease-in-out",
                 // State
-                "hover:bg-gray-200 active:bg-gray-200",
-                "focus-visible:outline-outline focus-visible:outline-2",
+                "focus-visible:outline-outline focus-visible:outline-2 focus-visible:outline-offset-0",
                 // Overrides
                 className,
             )}
+            {...legacyProps}
             {...otherProps}
         >
             {children}
@@ -39,10 +61,16 @@ export const Trigger = (
     );
 };
 
-export const Panel = (
-    props: { className?: string; children?: ReactNode } & ComponentProps<typeof CollapsibleBaseUi.Panel>,
-) => {
-    const { className, children, ...otherProps } = props;
+type CollapsiblePanelProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof CollapsibleBaseUi.Panel, StandardAttributes>;
+
+export const Panel = (props: CollapsiblePanelProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <CollapsibleBaseUi.Panel
@@ -59,6 +87,7 @@ export const Panel = (
                 // Overrides
                 className,
             )}
+            {...legacyProps}
             {...otherProps}
         >
             {children}

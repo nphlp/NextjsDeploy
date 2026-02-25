@@ -1,77 +1,102 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Field from "@atoms/filed";
-import Form from "@atoms/form";
+import { Field } from "@atoms/form/field";
+import Form, { OnSubmit } from "@atoms/form/form";
+import { emailSchema, emailSchemaProgressive } from "@atoms/form/schemas";
+import { useForm } from "@atoms/form/use-form";
 import Input from "@atoms/input/input";
 import InputPassword from "@atoms/input/input-password";
 import { useToast } from "@atoms/toast";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "@lib/auth-client";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { z } from "zod";
-
-const loginSchema = z.object({
-    email: z.email({ message: "Email invalide" }),
-    password: z.string().min(1, { message: "Le mot de passe est requis" }),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
     const router = useRouter();
     const toast = useToast();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = useForm<LoginFormValues>({
-        resolver: zodResolver(loginSchema),
-        defaultValues: {
-            email: "",
-            password: "",
+    const { register, submit, reset } = useForm({
+        email: {
+            schema: emailSchema,
+            onChangeSchema: emailSchemaProgressive,
+            onBlurSchema: z.string(),
+            setter: (value: string) => value,
+            defaultValue: "",
+        },
+        password: {
+            schema: z.string().min(1, "Le mot de passe est requis"),
+            onBlurSchema: z.string(),
+            setter: (value: string) => value,
+            defaultValue: "",
         },
     });
 
-    const onSubmit = async (values: LoginFormValues) => {
+    const handleSubmit: OnSubmit = async (event) => {
+        event.preventDefault();
+
+        const values = submit();
+        if (!values) return;
+
+        setIsSubmitting(true);
+
         const { data } = await signIn.email(values);
 
         if (!data) {
-            toast.add({ title: "Échec de la connexion", description: "Identifiants invalides.", type: "error" });
+            toast.add({
+                title: "Échec de la connexion",
+                description: "Identifiants invalides, compte inexistant, ou email non vérifié.",
+                type: "error",
+            });
+            setIsSubmitting(false);
+            return;
+        }
+
+        setTimeout(() => {
+            reset();
+            setIsSubmitting(false);
+        }, 1000);
+
+        if ("twoFactorRedirect" in data) {
+            router.push("/verify-2fa");
             return;
         }
 
         toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
+
         router.push("/");
     };
 
     return (
-        <Form onSubmit={handleSubmit(onSubmit)}>
-            {/* Email */}
-            <Field label="Email" error={errors.email?.message}>
+        <Form register={register} onSubmit={handleSubmit}>
+            <Field name="email" label="Email" description="Entrez votre adresse email" disabled={isSubmitting} required>
                 <Input
-                    {...register("email")}
+                    name="email"
                     type="email"
                     placeholder="exemple@email.com"
-                    autoComplete="email"
+                    autoComplete="email webauthn"
                     autoFocus
-                    disabled={isSubmitting}
+                    useForm
                 />
             </Field>
 
-            {/* Password */}
-            <Field label="Mot de passe" error={errors.password?.message}>
+            <Field
+                name="password"
+                label="Mot de passe"
+                description="Entrez votre mot de passe"
+                disabled={isSubmitting}
+                required
+            >
                 <InputPassword
-                    {...register("password")}
+                    name="password"
                     placeholder="Votre mot de passe"
-                    autoComplete="current-password"
-                    disabled={isSubmitting}
+                    autoComplete="current-password webauthn"
+                    useForm
                 />
             </Field>
 
-            {/* Forgot password link */}
             <div className="flex w-full justify-end">
                 <Link
                     href="/reset-password"
@@ -81,13 +106,11 @@ export default function LoginForm() {
                 />
             </div>
 
-            {/* Register link */}
             <div className="space-x-2 text-center text-sm text-gray-500">
                 <span>Pas encore de compte ?</span>
                 <Link href="/register" label="S'inscrire" className="inline text-sm hover:underline" noStyle />
             </div>
 
-            {/* Submit button */}
             <div className="flex justify-center">
                 <Button type="submit" label="Connexion" loading={isSubmitting} className="w-full sm:w-auto" />
             </div>

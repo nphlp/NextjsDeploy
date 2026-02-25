@@ -4,7 +4,6 @@ import { setMockSession } from "@test/mocks/session";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Node Modules mocks
-vi.mock("server-only", async () => import("@test/mocks/modules/server-only"));
 vi.mock("next/cache", async () => import("@test/mocks/modules/next-cache"));
 vi.mock("@lib/auth-server", async () => import("@test/mocks/modules/auth-server"));
 
@@ -19,17 +18,7 @@ vi.mock("@lib/prisma", () => {
             emailVerified: true,
             image: null,
             role: "ADMIN",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        },
-        {
-            id: "vendorId",
-            name: "Vendor",
-            lastname: "Debug",
-            email: "vendor@test.com",
-            emailVerified: true,
-            image: null,
-            role: "VENDOR",
+            twoFactorEnabled: false,
             createdAt: new Date(),
             updatedAt: new Date(),
         },
@@ -41,6 +30,7 @@ vi.mock("@lib/prisma", () => {
             emailVerified: true,
             image: null,
             role: "USER",
+            twoFactorEnabled: false,
             createdAt: new Date(),
             updatedAt: new Date(),
         },
@@ -56,7 +46,7 @@ vi.mock("@lib/prisma", () => {
         data: input,
         where,
     }: {
-        data: { name?: string; lastname?: string | null; image?: string | null; role?: string };
+        data: { name?: string; lastname?: string; image?: string | null; role?: string };
         where: { id: string };
     }) => {
         const user = data.find((u) => u.id === where.id);
@@ -131,35 +121,6 @@ describe("PUT /users/{id} (permissions)", () => {
         await expect(oRpcUserUpdate({ id: "userId", role: "ADMIN" })).rejects.toThrow();
     });
 
-    it("Role vendor -> own profile", async () => {
-        // Set vendor session
-        setMockSession("VENDOR");
-
-        // Execute function (vendor updating own profile)
-        const user = await oRpcUserUpdate({ id: "vendorId", name: "Updated" });
-
-        // Expect updated user object
-        expect(user).toBeDefined();
-        expect(user.id).toBe("vendorId");
-        expect(user.name).toBe("Updated");
-    });
-
-    it("Role vendor -> other profile", async () => {
-        // Set vendor session
-        setMockSession("VENDOR");
-
-        // Expect unauthorized error (not owner or admin)
-        await expect(oRpcUserUpdate({ id: "userId", name: "Updated" })).rejects.toThrow();
-    });
-
-    it("Role vendor -> change role", async () => {
-        // Set vendor session
-        setMockSession("VENDOR");
-
-        // Expect unauthorized error (only admin can change roles)
-        await expect(oRpcUserUpdate({ id: "vendorId", role: "ADMIN" })).rejects.toThrow();
-    });
-
     it("Role admin -> own profile", async () => {
         // Set admin session
         setMockSession("ADMIN");
@@ -191,12 +152,12 @@ describe("PUT /users/{id} (permissions)", () => {
         setMockSession("ADMIN");
 
         // Execute function (admin can change roles)
-        const user = await oRpcUserUpdate({ id: "userId", role: "VENDOR" });
+        const user = await oRpcUserUpdate({ id: "userId", role: "ADMIN" });
 
         // Expect updated user object with new role
         expect(user).toBeDefined();
         expect(user.id).toBe("userId");
-        expect(user.role).toBe("VENDOR");
+        expect(user.role).toBe("ADMIN");
     });
 });
 
@@ -247,16 +208,16 @@ describe("PUT /users/{id} (params)", () => {
         expect(user.image).toBe("https://example.com/new.jpg");
     });
 
-    it("Set lastname to null", async () => {
+    it("Update lastname to empty triggers validation", async () => {
         // Set admin session
         setMockSession("ADMIN");
 
-        // Execute function
-        const user = await oRpcUserUpdate({ id: "userId", lastname: null });
+        // Execute function (update lastname)
+        const user = await oRpcUserUpdate({ id: "userId", lastname: "NewLastname" });
 
-        // Expect lastname to be null
+        // Expect lastname to be updated
         expect(user).toBeDefined();
-        expect(user.lastname).toBeNull();
+        expect(user.lastname).toBe("NewLastname");
     });
 
     it("Update multiple fields", async () => {

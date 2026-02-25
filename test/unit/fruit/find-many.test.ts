@@ -3,7 +3,6 @@ import { oRPC_bypass_http as oRPC } from "@test/mocks/orpc";
 import { describe, expect, it, vi } from "vitest";
 
 // Node Modules mocks
-vi.mock("server-only", async () => import("@test/mocks/modules/server-only"));
 vi.mock("next/cache", async () => import("@test/mocks/modules/next-cache"));
 vi.mock("@lib/auth-server", async () => import("@test/mocks/modules/auth-server"));
 
@@ -123,7 +122,7 @@ describe("GET /fruits (public)", () => {
 describe("GET /fruits (params)", () => {
     it("Search by name", async () => {
         // Execute function
-        const fruits = await oRpcFruitFindMany({ search: "apple" });
+        const fruits = await oRpcFruitFindMany({ searchByName: "apple" });
 
         // Expect filtered results
         expect(fruits).toBeDefined();
@@ -133,7 +132,7 @@ describe("GET /fruits (params)", () => {
 
     it("Search by partial name", async () => {
         // Execute function
-        const fruits = await oRpcFruitFindMany({ search: "an" });
+        const fruits = await oRpcFruitFindMany({ searchByName: "an" });
 
         // Expect filtered results (Banana contains "an")
         expect(fruits).toBeDefined();
@@ -143,7 +142,7 @@ describe("GET /fruits (params)", () => {
 
     it("Search no results", async () => {
         // Execute function
-        const fruits = await oRpcFruitFindMany({ search: "xyz" });
+        const fruits = await oRpcFruitFindMany({ searchByName: "xyz" });
 
         // Expect empty array
         expect(fruits).toBeDefined();
@@ -181,7 +180,7 @@ describe("GET /fruits (params)", () => {
 
     it("Order by name asc", async () => {
         // Execute function
-        const fruits = await oRpcFruitFindMany({ name: "asc" });
+        const fruits = await oRpcFruitFindMany({ orderByName: "asc" });
 
         // Expect sorted by name ascending
         expect(fruits).toBeDefined();
@@ -192,7 +191,7 @@ describe("GET /fruits (params)", () => {
 
     it("Order by name desc", async () => {
         // Execute function
-        const fruits = await oRpcFruitFindMany({ name: "desc" });
+        const fruits = await oRpcFruitFindMany({ orderByName: "desc" });
 
         // Expect sorted by name descending
         expect(fruits).toBeDefined();
@@ -203,7 +202,7 @@ describe("GET /fruits (params)", () => {
 
     it("Order by updatedAt asc", async () => {
         // Execute function
-        const fruits = await oRpcFruitFindMany({ updatedAt: "asc" });
+        const fruits = await oRpcFruitFindMany({ orderByUpdatedAt: "asc" });
 
         // Expect sorted by updatedAt ascending
         expect(fruits).toBeDefined();
@@ -213,7 +212,7 @@ describe("GET /fruits (params)", () => {
 
     it("Order by updatedAt desc", async () => {
         // Execute function
-        const fruits = await oRpcFruitFindMany({ updatedAt: "desc" });
+        const fruits = await oRpcFruitFindMany({ orderByUpdatedAt: "desc" });
 
         // Expect sorted by updatedAt descending
         expect(fruits).toBeDefined();

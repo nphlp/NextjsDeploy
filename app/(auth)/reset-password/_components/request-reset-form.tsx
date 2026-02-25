@@ -1,69 +1,74 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Field from "@atoms/filed";
-import Form from "@atoms/form";
+import { Field } from "@atoms/form/field";
+import Form, { OnSubmit } from "@atoms/form/form";
+import { emailSchema, emailSchemaProgressive } from "@atoms/form/schemas";
+import { useForm } from "@atoms/form/use-form";
 import Input from "@atoms/input/input";
 import { useToast } from "@atoms/toast";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useTurnstile } from "@atoms/use-turnstile";
 import { requestPasswordReset } from "@lib/auth-client";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const requestResetSchema = z.object({
-    email: z.email({ message: "Email invalide" }),
-});
-
-type RequestResetFormValues = z.infer<typeof requestResetSchema>;
+import z from "zod";
 
 export default function RequestResetForm() {
     const [emailSent, setEmailSent] = useState(false);
     const toast = useToast();
+    const { token, captchaHeaders, reset: resetCaptcha, widget: captchaWidget } = useTurnstile();
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = useForm<RequestResetFormValues>({
-        resolver: zodResolver(requestResetSchema),
-        defaultValues: {
-            email: "",
+    const { register, submit, reset } = useForm({
+        email: {
+            schema: emailSchema,
+            onChangeSchema: emailSchemaProgressive,
+            onBlurSchema: z.string(), // Eviter l'erreur si le champ à juste été cliqué
+            setter: (value: string) => value,
+            defaultValue: "",
         },
     });
 
-    const onSubmit = async (values: RequestResetFormValues) => {
-        const { data } = await requestPasswordReset({
-            email: values.email,
-            redirectTo: "/reset-password",
-        });
-
-        if (!data) {
-            toast.add({
-                title: "Erreur",
-                description: "Impossible d'envoyer l'email de réinitialisation.",
-                type: "error",
-            });
-            return;
-        }
+    const handleSubmit: OnSubmit = async (event) => {
+        event.preventDefault();
+        const values = submit();
+        if (!values) return;
 
         setEmailSent(true);
-        toast.add({ title: "Email envoyé", description: "Vérifiez votre boîte de réception.", type: "success" });
+
+        toast.add({
+            title: "Email envoyé",
+            description: "Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.",
+            type: "success",
+        });
+
+        setTimeout(() => {
+            setEmailSent(false);
+            resetCaptcha();
+            reset();
+        }, 5000);
+
+        requestPasswordReset({
+            email: values.email,
+            redirectTo: "/reset-password",
+            ...captchaHeaders,
+        });
     };
 
     return (
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form register={register} onSubmit={handleSubmit}>
             {/* Email */}
-            <Field label="Email" error={errors.email?.message}>
+            <Field name="email" label="Email" description="Entrez votre adresse email" disabled={emailSent} required>
                 <Input
-                    {...register("email")}
+                    name="email"
                     type="email"
                     placeholder="exemple@email.com"
                     autoComplete="email"
                     autoFocus
-                    disabled={isSubmitting || emailSent}
+                    useForm
                 />
             </Field>
+
+            {/* Captcha */}
+            {captchaWidget}
 
             {/* Login link */}
             <div className="space-x-2 text-center text-sm text-gray-500">
@@ -76,8 +81,7 @@ export default function RequestResetForm() {
                 <Button
                     type="submit"
                     label={emailSent ? "Email envoyé !" : "Envoyer l'email"}
-                    loading={isSubmitting}
-                    disabled={emailSent}
+                    disabled={!token || emailSent}
                     className="w-full sm:w-auto"
                 />
             </div>

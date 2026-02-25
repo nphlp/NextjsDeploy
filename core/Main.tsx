@@ -6,7 +6,10 @@ import { ReactNode } from "react";
 type MainProps = {
     vertical?: "center" | "start" | "end" | "stretch";
     horizontal?: "center" | "start" | "end" | "stretch";
-    className?: string;
+    className?: {
+        main?: string;
+        div?: string;
+    };
     children?: ReactNode;
 };
 
@@ -20,6 +23,7 @@ export default function Main(props: MainProps) {
                 "flex flex-col items-center justify-start",
                 "mx-auto w-full max-w-225",
                 DEBUG_LAYOUT && "bg-green-100",
+                className?.main,
             )}
         >
             <div
@@ -32,7 +36,7 @@ export default function Main(props: MainProps) {
                     "p-4 md:p-7",
                     "w-full flex-1",
                     DEBUG_LAYOUT && "bg-blue-100",
-                    className,
+                    className?.div,
                 )}
             >
                 {children}
@@ -51,6 +55,7 @@ export const MainSuspense = (props: MainProps) => {
                 "flex flex-col items-center justify-start",
                 "mx-auto w-full max-w-225",
                 DEBUG_LAYOUT && "bg-green-100",
+                className?.main,
             )}
         >
             <div
@@ -63,7 +68,7 @@ export const MainSuspense = (props: MainProps) => {
                     "p-4 md:p-7",
                     "w-full flex-1",
                     DEBUG_LAYOUT && "bg-blue-100",
-                    className,
+                    className?.div,
                 )}
             >
                 <Loader className="size-6 animate-spin text-gray-600" />

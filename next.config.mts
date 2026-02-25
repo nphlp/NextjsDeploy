@@ -6,6 +6,14 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const isStandalone = process.env.NEXTJS_STANDALONE === "true";
+const isDev = process.env.NODE_ENV === "development";
+
+// Scalar API reference CDN (dev only, for /api/auth/reference)
+const scalarDomains = isDev ? "https://cdn.jsdelivr.net https://proxy.scalar.com https://fonts.scalar.com" : "";
+const withData = isDev ? "data:" : "";
+
+// Cloudflare Turnstile captcha
+const turnstileDomain = "https://challenges.cloudflare.com";
 
 // Security headers config
 const securityHeaders = [
@@ -22,10 +30,12 @@ const securityHeaders = [
         key: "Content-Security-Policy",
         value: [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-            "style-src 'self' 'unsafe-inline'",
-            "connect-src 'self'",
-            "font-src 'self'",
+            `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${scalarDomains} ${turnstileDomain}`,
+            `style-src 'self' 'unsafe-inline' ${scalarDomains}`,
+            `frame-src ${turnstileDomain}`,
+            `connect-src 'self' ${scalarDomains}`,
+            `font-src 'self' ${scalarDomains} ${withData}`,
+            `img-src 'self' ${withData}`,
         ].join("; "),
     },
 ];

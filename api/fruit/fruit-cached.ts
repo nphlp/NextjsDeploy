@@ -24,4 +24,11 @@ const fruitFindUniqueCached = async <T extends Prisma.FruitFindUniqueArgs>(
     return await PrismaInstance.fruit.findUnique(props);
 };
 
-export { fruitFindManyCached, fruitFindUniqueCached };
+const fruitCountCached = async (where: Prisma.FruitWhereInput | undefined, tags: string[]) => {
+    "use cache";
+    cacheTag(...tags);
+    cacheLife("hours");
+    return await PrismaInstance.fruit.count({ where });
+};
+
+export { fruitCountCached, fruitFindManyCached, fruitFindUniqueCached };

@@ -1,47 +1,54 @@
 "use client";
 
+import { useFormContext } from "@atoms/form/_context/use-form-context";
 import { Separator } from "@base-ui/react";
-import { SelectRootChangeEventDetails } from "@base-ui/react/select";
-import { ReactNode } from "react";
-import { Group, Item, List, Placeholder, Popup, Portal, Positioner, Root, Trigger, Value } from "./atoms";
+import { Dispatch, ReactNode, SetStateAction } from "react";
+import {
+    Group,
+    Item,
+    ItemType,
+    List,
+    Placeholder,
+    Popup,
+    Portal,
+    Positioner,
+    Root,
+    SetSelectedItemType,
+    Trigger,
+    Value,
+} from "./atoms";
 import { renderValue } from "./utils";
-
-export type ItemType = {
-    [key: string]: string | null;
-};
 
 type SelectProps = {
     children?: ReactNode;
-    multiple?: boolean;
-
-    /**
-     * State management
-     * - string for single mode
-     * - string[] for multiple mode
-     */
-    selected?: string | string[] | null;
-    setSelected?: (value: string | string[] | null, eventDetails: SelectRootChangeEventDetails) => void;
+    selected?: string | null;
+    setSelected?: Dispatch<SetStateAction<string | null>>;
+    name?: string;
+    useForm?: boolean;
 };
 
-/**
- * TODO
- * - Default value
- * - Disabled component
- * - Disabled items
- * - Est-ce 'isItemEqualToValue' que peut être utile ?
- */
-
 export default function Select(props: SelectProps) {
-    const { selected, setSelected, children, multiple } = props;
+    const { selected, setSelected, name, useForm = false, children } = props;
+
+    // Form and Field context
+    const register = useFormContext();
+    const field = useForm && name ? register(name) : null;
+
+    const resolvedSelected = field ? field.value : selected;
+
+    const handleSelect: SetSelectedItemType = (value) => {
+        field?.onChange(value);
+        setSelected?.(value as string | null);
+    };
 
     if (children)
         return (
-            <Root selected={selected} onSelect={setSelected} multiple={multiple}>
+            <Root selected={resolvedSelected} onSelect={handleSelect}>
                 {children}
             </Root>
         );
 
-    const placeholder = multiple ? "Select multiple options" : "Select an option";
+    const placeholder = "Select an option";
 
     const items: ItemType = {
         arial: "Arial",
@@ -56,16 +63,16 @@ export default function Select(props: SelectProps) {
     };
 
     return (
-        <Root selected={selected} onSelect={setSelected} multiple={multiple}>
+        <Root selected={resolvedSelected} onSelect={handleSelect}>
             <Trigger>
                 <Value>{(value) => renderValue({ placeholder, value, items })}</Value>
             </Trigger>
 
             <Portal>
-                <Positioner alignItemWithTrigger={!multiple}>
+                <Positioner alignItemWithTrigger>
                     <Popup withScrollArrows>
                         <List>
-                            {!multiple && <Placeholder label={placeholder} />}
+                            <Placeholder label={placeholder} />
 
                             <Group label="Sans-serif">
                                 <Item label="Arial" itemKey="arial" />

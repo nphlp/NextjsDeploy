@@ -1,108 +1,166 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Field from "@atoms/filed";
-import Form from "@atoms/form";
+import { Field } from "@atoms/form/field";
+import Form, { OnSubmit } from "@atoms/form/form";
+import {
+    emailSchema,
+    emailSchemaProgressive,
+    nameSchema,
+    passwordSchema,
+    passwordSchemaOnBlur,
+    passwordSchemaOnChange,
+} from "@atoms/form/schemas";
+import { useForm } from "@atoms/form/use-form";
 import Input from "@atoms/input/input";
 import InputPassword from "@atoms/input/input-password";
+import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useTurnstile } from "@atoms/use-turnstile";
 import { signUp } from "@lib/auth-client";
-import oRPC from "@lib/orpc";
+import { isValidationError, translateAuthError } from "@lib/auth-errors";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { z } from "zod";
-
-const registerSchema = z.object({
-    firstname: z.string().min(2, { message: "Le prénom doit contenir au moins 2 caractères" }),
-    lastname: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
-    email: z.email({ message: "Email invalide" }),
-    password: z.string().min(8, { message: "Le mot de passe doit contenir au moins 8 caractères" }),
-});
-
-type RegisterFormValues = z.infer<typeof registerSchema>;
+import { queryUrlSerializer } from "../success/_lib/query-params";
 
 export default function RegisterForm() {
     const router = useRouter();
     const toast = useToast();
+    const { token, captchaHeaders, reset: resetCaptcha, widget: captchaWidget } = useTurnstile();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = useForm<RegisterFormValues>({
-        resolver: zodResolver(registerSchema),
-        defaultValues: {
-            firstname: "",
-            lastname: "",
-            email: "",
-            password: "",
+    const [password, setPassword] = useState("");
+
+    const { register, states, submit, reset } = useForm({
+        firstname: {
+            schema: nameSchema,
+            onBlurSchema: z.string(), // Eviter l'erreur si le champ à juste été cliqué
+            setter: (value: string) => value,
+            defaultValue: "",
+        },
+        lastname: {
+            schema: nameSchema,
+            setter: (value: string) => value,
+            defaultValue: "",
+        },
+        email: {
+            schema: emailSchema,
+            onChangeSchema: emailSchemaProgressive,
+            setter: (value: string) => value,
+            defaultValue: "",
+        },
+        password: {
+            schema: passwordSchema,
+            onChangeSchema: passwordSchemaOnChange,
+            onBlurSchema: passwordSchemaOnBlur,
+            setter: (value: string) => {
+                setPassword(value);
+                return value;
+            },
+            defaultValue: "",
+        },
+        confirmPassword: {
+            schema: z
+                .string()
+                .min(1, "La confirmation est requise")
+                .refine((confirmPassword) => password === confirmPassword, "Les mots de passe ne correspondent pas"),
+            setter: (value: string) => value,
+            defaultValue: "",
         },
     });
 
-    const onSubmit = async (values: RegisterFormValues) => {
-        const { firstname, lastname, email, password } = values;
+    const handleSubmit: OnSubmit = async (event) => {
+        event.preventDefault();
 
-        const { data } = await signUp.email({
+        const validated = submit();
+        if (!validated) return;
+
+        setIsSubmitting(true);
+
+        const { firstname, lastname, email, password } = validated;
+
+        const { data, error } = await signUp.email({
             name: firstname,
+            lastname,
             email,
             password,
+            ...captchaHeaders,
         });
 
         if (!data) {
-            toast.add({ title: "Échec de l'inscription", description: "Veuillez réessayer.", type: "error" });
-            return;
+            const isDisplayableError = isValidationError(error?.message);
+
+            if (isDisplayableError) {
+                toast.add({
+                    title: "Échec de l'inscription",
+                    description: translateAuthError(error?.message),
+                    type: "error",
+                });
+                resetCaptcha();
+                setIsSubmitting(false);
+                return;
+            }
         }
 
-        await oRPC.user.update({ id: data.user.id, lastname });
+        setTimeout(() => {
+            resetCaptcha();
+            reset();
+            setIsSubmitting(false);
+        }, 1000);
 
-        toast.add({ title: "Inscription réussie", description: "Bienvenue sur l'application !", type: "success" });
-        router.push("/");
+        router.push(queryUrlSerializer("/register/success", { email }));
     };
 
     return (
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form register={register} onSubmit={handleSubmit}>
             {/* Firstname */}
-            <Field label="Prénom" error={errors.firstname?.message}>
-                <Input
-                    {...register("firstname")}
-                    placeholder="Jean"
-                    autoComplete="given-name"
-                    autoFocus
-                    disabled={isSubmitting}
-                />
+            <Field name="firstname" label="Prénom" description="Entrez votre prénom" disabled={isSubmitting} required>
+                <Input name="firstname" placeholder="Jean" autoComplete="given-name" autoFocus useForm />
             </Field>
 
             {/* Lastname */}
-            <Field label="Nom" error={errors.lastname?.message}>
-                <Input
-                    {...register("lastname")}
-                    placeholder="Dupont"
-                    autoComplete="family-name"
-                    disabled={isSubmitting}
-                />
+            <Field name="lastname" label="Nom" description="Entrez votre nom" disabled={isSubmitting} required>
+                <Input name="lastname" placeholder="Dupont" autoComplete="family-name" useForm />
             </Field>
 
             {/* Email */}
-            <Field label="Email" error={errors.email?.message}>
-                <Input
-                    {...register("email")}
-                    type="email"
-                    placeholder="exemple@email.com"
-                    autoComplete="email"
-                    disabled={isSubmitting}
-                />
+            <Field name="email" label="Email" description="Entrez votre adresse email" disabled={isSubmitting} required>
+                <Input name="email" type="email" placeholder="exemple@email.com" autoComplete="email" useForm />
             </Field>
 
             {/* Password */}
-            <Field label="Mot de passe" error={errors.password?.message}>
+            <Field
+                name="password"
+                label="Mot de passe"
+                description="Veillez remplir tous les critères de sécurité"
+                disabled={isSubmitting}
+                required
+            >
+                <InputPassword name="password" placeholder="Mot de passe" autoComplete="new-password" useForm />
+            </Field>
+
+            {/* Password strength */}
+            <PasswordStrength password={states.password} />
+
+            {/* Confirm password */}
+            <Field
+                name="confirmPassword"
+                label="Confirmation"
+                description="Confirmez le mot de passe"
+                disabled={isSubmitting}
+                required
+            >
                 <InputPassword
-                    {...register("password")}
-                    placeholder="Minimum 8 caractères"
+                    name="confirmPassword"
+                    placeholder="Confirmez le mot de passe"
                     autoComplete="new-password"
-                    disabled={isSubmitting}
+                    useForm
                 />
             </Field>
+
+            {/* Captcha */}
+            {captchaWidget}
 
             {/* Login link */}
             <div className="space-x-2 text-center text-sm text-gray-500">
@@ -112,7 +170,13 @@ export default function RegisterForm() {
 
             {/* Submit button */}
             <div className="flex justify-center">
-                <Button type="submit" label="S'inscrire" loading={isSubmitting} className="w-full sm:w-auto" />
+                <Button
+                    type="submit"
+                    label="S'inscrire"
+                    loading={isSubmitting}
+                    disabled={!token}
+                    className="w-full sm:w-auto"
+                />
             </div>
         </Form>
     );

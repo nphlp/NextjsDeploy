@@ -17,10 +17,10 @@ export default function Collapsible(props: CollapsibleProps) {
                 Recovery keys
             </Trigger>
             <Panel>
-                <div className="mt-1 flex cursor-text flex-col gap-2 rounded-sm bg-gray-100 py-2 pl-7">
-                    <div>alien-bean-pasta</div>
-                    <div>wild-irish-burrito</div>
-                    <div>horse-battery-staple</div>
+                <div className="mt-2 flex cursor-text flex-col gap-2 rounded-sm bg-gray-50 px-4 py-2">
+                    <div>alien-bean-pasta-tomato-regular</div>
+                    <div>cactus-apple-banana-orange-smooth</div>
+                    <div>grape-carrot-pepper-lemon-juicy</div>
                 </div>
             </Panel>
         </Root>

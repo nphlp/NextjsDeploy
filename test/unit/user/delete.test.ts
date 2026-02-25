@@ -4,7 +4,6 @@ import { setMockSession } from "@test/mocks/session";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Node Modules mocks
-vi.mock("server-only", async () => import("@test/mocks/modules/server-only"));
 vi.mock("next/cache", async () => import("@test/mocks/modules/next-cache"));
 vi.mock("@lib/auth-server", async () => import("@test/mocks/modules/auth-server"));
 
@@ -18,17 +17,7 @@ const createInitialData = (): User[] => [
         emailVerified: true,
         image: null,
         role: "ADMIN",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "vendorId",
-        name: "Vendor",
-        lastname: "Debug",
-        email: "vendor@test.com",
-        emailVerified: true,
-        image: null,
-        role: "VENDOR",
+        twoFactorEnabled: false,
         createdAt: new Date(),
         updatedAt: new Date(),
     },
@@ -40,6 +29,7 @@ const createInitialData = (): User[] => [
         emailVerified: true,
         image: null,
         role: "USER",
+        twoFactorEnabled: false,
         createdAt: new Date(),
         updatedAt: new Date(),
     },
@@ -102,7 +92,7 @@ describe("DELETE /users/{id} (permissions)", () => {
         setMockSession("USER");
 
         // Expect unauthorized error (not admin)
-        await expect(oRpcUserDelete({ id: "vendorId" })).rejects.toThrow();
+        await expect(oRpcUserDelete({ id: "adminId" })).rejects.toThrow();
     });
 
     it("Role user -> own profile", async () => {
@@ -111,22 +101,6 @@ describe("DELETE /users/{id} (permissions)", () => {
 
         // Expect unauthorized error (only admin can delete)
         await expect(oRpcUserDelete({ id: "userId" })).rejects.toThrow();
-    });
-
-    it("Role vendor", async () => {
-        // Set vendor session
-        setMockSession("VENDOR");
-
-        // Expect unauthorized error (not admin)
-        await expect(oRpcUserDelete({ id: "userId" })).rejects.toThrow();
-    });
-
-    it("Role vendor -> own profile", async () => {
-        // Set vendor session
-        setMockSession("VENDOR");
-
-        // Expect unauthorized error (only admin can delete)
-        await expect(oRpcUserDelete({ id: "vendorId" })).rejects.toThrow();
     });
 
     it("Role admin -> own profile", async () => {
@@ -171,19 +145,5 @@ describe("DELETE /users/{id} (params)", () => {
         expect(user.id).toBe("userId");
         expect(user.name).toBe("User");
         expect(user.email).toBe("user@test.com");
-    });
-
-    it("Delete vendor", async () => {
-        // Set admin session
-        setMockSession("ADMIN");
-
-        // Execute function
-        const user = await oRpcUserDelete({ id: "vendorId" });
-
-        // Expect deleted user object
-        expect(user).toBeDefined();
-        expect(user.id).toBe("vendorId");
-        expect(user.name).toBe("Vendor");
-        expect(user.email).toBe("vendor@test.com");
     });
 });

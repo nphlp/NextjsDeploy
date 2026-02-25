@@ -1,10 +1,12 @@
-import MenuNavigation from "@comps/molecules/menu-navigation";
 import MenuProfile from "@comps/molecules/menu-profile";
 import MenuTheme from "@comps/molecules/menu-theme";
 import { getSession } from "@lib/auth-server";
 import cn from "@lib/cn";
 import { Suspense } from "react";
 import { HEADER_HEIGHT } from "./config";
+import DesktopNavigation from "./header/desktop-navigation";
+import DevSidebarTrigger from "./header/dev-sidebar-trigger";
+import MobileNavigation from "./header/mobile-navigation";
 
 type HeaderProps = {
     className?: string;
@@ -26,7 +28,18 @@ export default async function Header(props: HeaderProps) {
                         className,
                     )}
                 >
-                    <MenuNavigation serverSession={null} />
+                    {/* Mobile */}
+                    <div className="xs:hidden flex w-full gap-4">
+                        <MobileNavigation serverSession={null} />
+                        <DevSidebarTrigger />
+                    </div>
+
+                    {/* Tablette & Desktop */}
+                    <div className="max-xs:hidden flex w-full justify-end gap-2">
+                        <DevSidebarTrigger />
+                        <DesktopNavigation serverSession={null} />
+                    </div>
+
                     <MenuProfile serverSession={null} />
                     <MenuTheme />
                 </header>
@@ -55,7 +68,18 @@ const SuspendedHeader = async (props: HeaderProps) => {
                 className,
             )}
         >
-            <MenuNavigation serverSession={session} />
+            {/* Mobile */}
+            <div className="xs:hidden flex w-full gap-4">
+                <MobileNavigation serverSession={session} />
+                <DevSidebarTrigger />
+            </div>
+
+            {/* Tablette & Desktop */}
+            <div className="max-xs:hidden flex w-full justify-end gap-2">
+                <DevSidebarTrigger />
+                <DesktopNavigation serverSession={session} />
+            </div>
+
             <MenuProfile serverSession={session} />
             <MenuTheme />
         </header>
