@@ -222,6 +222,10 @@ export default function TotpSection(props: TotpSectionProps) {
                     <p className="text-sm text-gray-600">
                         Conservez ces codes en lieu sûr. Chaque code ne peut être utilisé qu&apos;une seule fois.
                     </p>
+                    <p className="text-sm text-amber-700">
+                        Stockez-les dans un endroit différent de votre gestionnaire de mots de passe pour pouvoir vous
+                        connecter même sans accès à votre application TOTP.
+                    </p>
                     <BackupCodesGrid codes={backupCodes} />
                     <div>
                         <p className="text-center text-xs text-gray-400">
@@ -304,6 +308,10 @@ export default function TotpSection(props: TotpSectionProps) {
                 <div className="space-y-3">
                     <p className="text-sm text-gray-600">
                         Vos nouveaux codes de secours. Les anciens codes ne sont plus valides.
+                    </p>
+                    <p className="text-sm text-amber-700">
+                        Stockez-les dans un endroit différent de votre gestionnaire de mots de passe pour pouvoir vous
+                        connecter même sans accès à votre application TOTP.
                     </p>
                     <BackupCodesGrid codes={backupCodes} />
                     <p className="text-center text-xs text-gray-400">
@@ -397,13 +405,43 @@ function PasswordForm(props: PasswordFormProps) {
 }
 
 function BackupCodesGrid({ codes }: { codes: string[] }) {
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = async () => {
+        await navigator.clipboard.writeText(codes.join("\n"));
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
     return (
-        <div className="grid grid-cols-2 gap-2 rounded-lg border border-gray-200 bg-gray-50 p-4">
-            {codes.map((code) => (
-                <code key={code} className="text-center font-mono text-sm">
-                    {code}
-                </code>
-            ))}
+        <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-2 rounded-lg border border-gray-200 bg-gray-50 p-4">
+                {codes.map((code) => (
+                    <code key={code} className="text-center font-mono text-sm">
+                        {code}
+                    </code>
+                ))}
+            </div>
+            <div className="flex justify-center">
+                <Button
+                    label={copied ? "Copié !" : "Copier les codes"}
+                    onClick={handleCopy}
+                    colors="outline"
+                    padding="sm"
+                >
+                    {copied ? (
+                        <>
+                            Copié !
+                            <Check className="size-4 text-green-600" />
+                        </>
+                    ) : (
+                        <>
+                            Copier
+                            <Copy className="size-4" />
+                        </>
+                    )}
+                </Button>
+            </div>
         </div>
     );
 }

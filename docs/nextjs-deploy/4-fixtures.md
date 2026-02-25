@@ -20,11 +20,10 @@ pnpm fixtures:reload   # Reset + setup (full reload)
 
 ## Test Credentials
 
-| Email              | Password      | Role   |
-| ------------------ | ------------- | ------ |
-| admin@example.com  | Password1234! | ADMIN  |
-| vendor@example.com | Password1234! | VENDOR |
-| user@example.com   | Password1234! | USER   |
+| Email             | Password      | Role  |
+| ----------------- | ------------- | ----- |
+| admin@example.com | Password1234! | ADMIN |
+| user@example.com  | Password1234! | USER  |
 
 ## Data
 

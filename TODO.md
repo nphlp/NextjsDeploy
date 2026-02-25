@@ -2,55 +2,40 @@
 
 ## Retour d'Alexis
 
-- Gestionnaire mot de passe
-
-Lors d'un changement de mdp (depuis Chrome), le gestionnaire de mpd Google enregistre uniquement le mdp sans proposer de nom d'utilisateur, ce qui implique qu'on doit réécrime manuellement notre email. Peut-être faire en sorte que l'email soit aussi inscrit ? Ca se fait peut-être avec un champ email caché ?
+- Changement de mdp (depuis Chrome)
+  Le gestionnaire de mpd Google enregistre uniquement le mdp sans proposer de nom d'utilisateur, ce qui implique qu'on doit réécrime manuellement notre email.
+  Peut-être faire en sorte que l'email soit aussi inscrit ? Ca se fait peut-être avec un champ email caché ?
 
 ## Bugs
 
-- Création 2FA mobile : pouvoir coller le TOTP + pouvoir copier les codes de récupération en un clic.
+- Si redirection pour loging -> redirection après login vers la page initiale
 
 - Si 2FA commencée, pouvoir "annuler" -> supprimer le cookie
 
 - Il se passe quoi si je me connecte sans avoir confirmé email ?
   Erreur ? Redirection pas de succes ?
 
-- Insertion Proton Pass qui ne déclenche pas les useEffect -> insertion invisible avant un onFocus ou autre
-
-- Mettre à jour .env Dokploy (SMTP, etc)
 - First admin en prod ?
 - Callback de redirection après login
 
-## Authentification béton
+- Renommer magik-link ? Passwordless ? Connexion par email ?
 
-- Captcha
-- Vérification faux emails
-- Provider OAuth (Google, Apple, Microsoft, GitHub, etc)
-- Confirmation Email obligatoire
-- Double auth (OTP, WebAuthn, passwordless, etc)
-- Meilleurs emails envoyés au clients
-
-## Security
-
-- OWASP
-- CNIL
-- RGPD
-- ANSSI
-- Cookies banner
-
-- Mentions légales
-- RGPD
-- Conditions générales d'utilisation
-- Politique de confidentialité
-- Politique de cookies
--
+- Provider OAuth (Google, Apple, Microsoft, GitHub, etc)`
 
 ## Inplement
 
-- useForm : auto reset when usePathname changes
+- Migration de PNPM à BUN
+- Migration de Makefile à Just
 
-- Just pour remplacer Makefile
-- Mailpit local
+- Passer de Compose à Swarm (objectif: zero-downtime deploy)
+    - Build Docker image
+    - Push image to registry
+    - Semantic Release (create version tag + changelog + GitHub Release)
+    - Deploy to Dokploy
+
+- Redis cache
+
+- Cloudflare R2 (stockage images + backup VPS + backup DATABASES)
 
 - Gestion variables d'environnements
     - Infisical
@@ -63,53 +48,9 @@ Lors d'un changement de mdp (depuis Chrome), le gestionnaire de mpd Google enreg
     - Glitchtip
     - SigNoz
 
-- Cloudflare R2 (stockage images + backup VPS + backup DATABASES)
-
-- Redis cache
-
-## Améliorations
-
-- Documenter useForm
-- Améliorer les emails, meilleurs UI
-- Passer à BUN
-
-## Environment variables generator
-
-- Refactor
-- Add {generation-date} in header
-
-## Pipeline
-
-- Build Docker image
-- Push image to registry
-- Semantic Release (create version tag + changelog + GitHub Release)
-- Deploy to Dokploy
-
-## Clean code
-
-- Lien de confirmation adresse email en localhost ?
-
-- Design et Layouts
-- Atoms, Molecules, Organisms
-- Skeletons
-
-- Supprimer les résidus de Shadcn -> ex: "-muted", "-border", etc
-
-- Centraliser les styles
-
 - useOtimistic et mutations
-- useQuery et filtres
-
-- useForm et formulaires
-
-- Organisation des fichiers
-- Tester toutes les pages, faire un plan
 
 - Mettre en place un système de logging (Sentry, Glitchtip, etc)
-
-## Feature
-
-- Si redirection pour loging -> redirection après login vers la page initiale
 
 ## Tests automatissé
 

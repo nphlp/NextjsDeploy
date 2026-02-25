@@ -1,7 +1,10 @@
 "use client";
 
+import Button from "@atoms/button";
 import { useFormContext } from "@atoms/form/_context/use-form-context";
+import { useToast } from "@atoms/toast";
 import cn from "@lib/cn";
+import { ClipboardPaste } from "lucide-react";
 import { ClipboardEvent, FocusEvent, KeyboardEvent, useRef } from "react";
 import { Root } from "./atoms";
 
@@ -31,6 +34,8 @@ export default function InputOtp(props: InputOtpProps) {
         value,
         onChange,
     } = props;
+
+    const toast = useToast();
 
     // Form context
     const register = useFormContext();
@@ -111,6 +116,27 @@ export default function InputOtp(props: InputOtpProps) {
         focusInput(Math.min(pasted.length, length - 1));
     };
 
+    const handlePasteFromClipboard = async () => {
+        try {
+            const text = await navigator.clipboard.readText();
+            const pasted = text.replace(/\D/g, "").slice(0, length);
+            if (pasted.length === 0) return;
+
+            const newDigits = [...digits];
+            for (let i = 0; i < pasted.length; i++) {
+                newDigits[i] = pasted[i];
+            }
+            updateDigits(newDigits);
+            focusInput(Math.min(pasted.length, length - 1));
+        } catch {
+            toast.add({
+                title: "Accès au presse-papier refusé",
+                description: "Autorisez l'accès au presse-papier dans les paramètres de votre navigateur.",
+                type: "error",
+            });
+        }
+    };
+
     // Container-level focus/blur for form context (avoids flicker between digits)
     const handleContainerFocus = () => {
         field?.onFocus();
@@ -123,34 +149,35 @@ export default function InputOtp(props: InputOtpProps) {
     };
 
     return (
-        <div
-            ref={containerRef}
-            className={cn("flex gap-2", className)}
-            onFocus={handleContainerFocus}
-            onBlur={handleContainerBlur}
-        >
-            {digits.map((digit, index) => (
-                <Root
-                    key={index}
-                    ref={(el) => {
-                        inputsRef.current[index] = el;
-                    }}
-                    type="text"
-                    value={digit}
-                    disabled={disabled}
-                    autoComplete="one-time-code"
-                    autoFocus={index === 0}
-                    onFocus={(e) => e.target.select()}
-                    onChange={() => {}}
-                    className="size-12 p-0 text-center text-lg font-semibold disabled:bg-gray-50"
-                    legacyProps={{
-                        inputMode: "numeric",
-                        maxLength: 1,
-                        onKeyDown: (e) => handleKeyDown(index, e),
-                        onPaste: handlePaste,
-                    }}
-                />
-            ))}
+        <div className={cn("flex flex-col items-center gap-2", className)}>
+            <div ref={containerRef} className="flex gap-2" onFocus={handleContainerFocus} onBlur={handleContainerBlur}>
+                {digits.map((digit, index) => (
+                    <Root
+                        key={index}
+                        ref={(el) => {
+                            inputsRef.current[index] = el;
+                        }}
+                        type="text"
+                        value={digit}
+                        disabled={disabled}
+                        autoComplete="one-time-code"
+                        autoFocus={index === 0}
+                        onFocus={(e) => e.target.select()}
+                        onChange={() => {}}
+                        className="size-12 p-0 text-center text-lg font-semibold disabled:bg-gray-50"
+                        legacyProps={{
+                            inputMode: "numeric",
+                            maxLength: 1,
+                            onKeyDown: (e) => handleKeyDown(index, e),
+                            onPaste: handlePaste,
+                        }}
+                    />
+                ))}
+            </div>
+            <Button label="Coller" onClick={handlePasteFromClipboard} disabled={disabled} colors="outline" padding="sm">
+                Coller
+                <ClipboardPaste className="size-4" />
+            </Button>
         </div>
     );
 }

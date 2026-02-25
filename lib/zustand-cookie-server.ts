@@ -23,7 +23,7 @@ export const getZustandCookie = async <T>(name: string, schema: ZodType<T>): Pro
         const { state } = cookieStorageSchema.parse(objectValue);
 
         return state;
-    } catch (error) {
-        throw new Error(`getZustandCookie -> ${(error as Error).message}`);
+    } catch {
+        return undefined;
     }
 };

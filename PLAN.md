@@ -50,27 +50,26 @@ Références : OWASP, CNIL, RGPD, ANSSI.
     - 20 req/10s global, 3 req/10s sur login/signup/reset
     - Par IP (cf-connecting-ip, x-forwarded-for, x-client-ip)
     - IPv6 subnet /64 (empêche rotation IPv6)
-- [x] **2FA / MFA** — TOTP, codes de récupération
-    - Plugin Better Auth `twoFactor` (TOTP + backup codes)
+- [x] **2FA / MFA** — TOTP, Email OTP, codes de récupération
+    - Plugin Better Auth `twoFactor` (TOTP + Email OTP + backup codes)
     - QR code setup + secret copiable + vérification + backup codes
-    - Page `/verify-2fa` avec formulaires TOTP, backup code
+    - Page `/verify-2fa` avec formulaires TOTP, Email OTP, backup code + trust device
     - Onglet Sécurité dans le profil (activer/désactiver, gérer backup codes)
-    - ⚠️ **Bug** : boutons activer/désactiver TOTP dans le profil ne fonctionnent pas
+    - UX : bouton Coller (clipboard) intégré dans InputOtp, bouton Copier les backup codes, avertissement stockage séparé
 - [x] **Passkeys (WebAuthn)** — inscription, connexion, gestion
     - Plugin Better Auth `passkey`
     - Ajout/suppression dans le profil + bouton passkey sur le login
 - [x] **Magic Link** — connexion sans mot de passe
     - Plugin Better Auth `magicLink`
     - Page `/magic-link` + formulaire email
-    - ⚠️ **Bug** : magic link crée un compte auto si l'email n'existe pas → crash Prisma (`lastname` requis)
-        - Scénario : nouvel utilisateur sans compte → va sur "Se connecter" → magic link → reçoit un email → clique → Better Auth tente `user.create()` sans `lastname` → erreur 500
-        - Cause : `lastname` est `String` (non nullable) dans le schéma Prisma, mais Better Auth ne le connaît pas
-        - Solutions possibles :
-            1. Rendre `lastname` optionnel (`String?`) dans Prisma — le plus simple
-            2. Désactiver la création auto de compte via magic link (si supporté par Better Auth)
-            3. Intercepter côté app : vérifier que l'email existe avant d'envoyer le magic link, sinon rediriger vers l'inscription
+    - Anti-énumération : si l'email n'existe pas, envoie un email "Créez votre compte" avec lien vers `/register` (même page de succès dans les deux cas)
 - [ ] **OAuth providers** — Google, GitHub (minimum)
     - Plugin Better Auth `socialProviders`
+- [ ] **Changement d'email** — permettre à l'utilisateur de changer son email
+    - API native Better Auth `changeEmail` ([docs](https://www.better-auth.com/docs/concepts/users-accounts#change-email))
+    - Envoi d'un email de vérification à la nouvelle adresse avant application
+- [ ] **Last login method** — tracer la dernière méthode de connexion utilisée
+    - Plugin Better Auth `lastLoginMethod` ([docs](https://www.better-auth.com/docs/plugins/last-login-method))
 
 ### 2.3 Sécurité générale
 
