@@ -1,21 +1,18 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Field from "@atoms/filed";
-import Form from "@atoms/form";
+import { Field } from "@atoms/form/field";
+import Form, { OnSubmit } from "@atoms/form/form";
+import { passwordSchema, passwordSchemaOnChange } from "@atoms/form/schemas";
+import { useForm } from "@atoms/form/use-form";
 import InputPassword from "@atoms/input/input-password";
+import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { resetPassword } from "@lib/auth-client";
+import { translateAuthError } from "@lib/auth-errors";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { z } from "zod";
-
-const resetPasswordSchema = z.object({
-    password: z.string().min(8, { message: "Le mot de passe doit contenir au moins 8 caractères" }),
-});
-
-type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
 type ResetPasswordFormProps = {
     token: string;
@@ -24,26 +21,47 @@ type ResetPasswordFormProps = {
 export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const router = useRouter();
     const toast = useToast();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = useForm<ResetPasswordFormValues>({
-        resolver: zodResolver(resetPasswordSchema),
-        defaultValues: {
-            password: "",
+    const [password, setPassword] = useState("");
+
+    const { register, states, submit, reset } = useForm({
+        password: {
+            schema: passwordSchema,
+            onChangeSchema: passwordSchemaOnChange,
+            onBlurSchema: z.string(), // Eviter l'erreur si le champ à juste été cliqué
+            setter: (value: string) => {
+                setPassword(value);
+                return value;
+            },
+            defaultValue: "",
+        },
+        confirmPassword: {
+            schema: z
+                .string()
+                .min(1, "La confirmation est requise")
+                .refine((confirmPassword) => password === confirmPassword, "Les mots de passe ne correspondent pas"),
+            setter: (value: string) => value,
+            defaultValue: "",
         },
     });
 
-    const onSubmit = async (values: ResetPasswordFormValues) => {
-        const { data } = await resetPassword({
-            newPassword: values.password,
+    const handleSubmit: OnSubmit = async (event) => {
+        event.preventDefault();
+
+        const validated = submit();
+        if (!validated) return;
+
+        setIsSubmitting(true);
+
+        const { data, error } = await resetPassword({
+            newPassword: validated.password,
             token,
         });
 
         if (!data) {
-            toast.add({ title: "Erreur", description: "Impossible de réinitialiser le mot de passe.", type: "error" });
+            toast.add({ title: "Erreur", description: translateAuthError(error?.message), type: "error" });
+            setIsSubmitting(false);
             return;
         }
 
@@ -52,18 +70,50 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
             description: "Vous allez être redirigé vers la connexion.",
             type: "success",
         });
-        setTimeout(() => router.push("/login"), 1000);
+
+        setTimeout(() => {
+            reset();
+            setIsSubmitting(false);
+        }, 1000);
+
+        router.push("/login");
     };
 
     return (
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form register={register} onSubmit={handleSubmit}>
             {/* Password */}
-            <Field label="Nouveau mot de passe" error={errors.password?.message}>
+            <Field
+                name="password"
+                label="Nouveau mot de passe"
+                description="Veillez remplir tous les critères de sécurité"
+                disabled={isSubmitting}
+                required
+            >
                 <InputPassword
-                    {...register("password")}
-                    placeholder="Minimum 8 caractères"
+                    name="password"
+                    placeholder="Nouveau mot de passe"
                     autoComplete="new-password"
-                    disabled={isSubmitting}
+                    autoFocus
+                    useForm
+                />
+            </Field>
+
+            {/* Password strength */}
+            <PasswordStrength password={states.password} />
+
+            {/* Confirm password */}
+            <Field
+                name="confirmPassword"
+                label="Confirmation"
+                description="Confirmez le mot de passe"
+                disabled={isSubmitting}
+                required
+            >
+                <InputPassword
+                    name="confirmPassword"
+                    placeholder="Confirmez le mot de passe"
+                    autoComplete="new-password"
+                    useForm
                 />
             </Field>
 

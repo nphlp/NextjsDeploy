@@ -1,4 +1,4 @@
-"use cache";
+"use client";
 
 import Card from "@atoms/card";
 import { SkeletonText } from "@atoms/skeleton";
@@ -11,7 +11,7 @@ type FruitCardProps = {
     fruit: Fruit & { inBasketCount: number };
 };
 
-export default async function FruitCard(props: FruitCardProps) {
+export default function FruitCard(props: FruitCardProps) {
     const { fruit } = props;
 
     return (
@@ -44,7 +44,7 @@ export default async function FruitCard(props: FruitCardProps) {
     );
 }
 
-export const FruitCardSkeleton = async () => {
+export const FruitCardSkeleton = () => {
     return (
         <Card className="@container h-full">
             {/* Titre */}

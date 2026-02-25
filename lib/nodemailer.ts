@@ -1,13 +1,5 @@
+import { IS_PROD, SMTP_HOST, SMTP_PASSWORD, SMTP_PORT, SMTP_USER } from "@lib/env";
 import nodemailer from "nodemailer";
-
-const SMTP_HOST = process.env.SMTP_HOST;
-const SMTP_PORT = process.env.SMTP_PORT;
-const SMTP_USER = process.env.SMTP_USER;
-const SMTP_PASSWORD = process.env.SMTP_PASSWORD;
-
-if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASSWORD) {
-    throw new Error("SMTP environment variables are not defined");
-}
 
 const nodemailerTransporterSingleton = () => {
     const port = Number(SMTP_PORT);
@@ -39,6 +31,6 @@ declare const globalThis: {
  */
 const NodemailerInstance = globalThis.nodemailerGlobal ?? nodemailerTransporterSingleton();
 
-if (process.env.NODE_ENV !== "production") globalThis.nodemailerGlobal = NodemailerInstance;
+if (!IS_PROD) globalThis.nodemailerGlobal = NodemailerInstance;
 
 export default NodemailerInstance;

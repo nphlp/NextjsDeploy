@@ -4,7 +4,6 @@ import { setMockSession } from "@test/mocks/session";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Node Modules mocks
-vi.mock("server-only", async () => import("@test/mocks/modules/server-only"));
 vi.mock("next/cache", async () => import("@test/mocks/modules/next-cache"));
 vi.mock("@lib/auth-server", async () => import("@test/mocks/modules/auth-server"));
 
@@ -19,17 +18,7 @@ vi.mock("@lib/prisma", () => {
             emailVerified: true,
             image: null,
             role: "ADMIN",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        },
-        {
-            id: "vendorId",
-            name: "Vendor",
-            lastname: "Debug",
-            email: "vendor@test.com",
-            emailVerified: true,
-            image: null,
-            role: "VENDOR",
+            twoFactorEnabled: false,
             createdAt: new Date(),
             updatedAt: new Date(),
         },
@@ -41,6 +30,7 @@ vi.mock("@lib/prisma", () => {
             emailVerified: true,
             image: null,
             role: "USER",
+            twoFactorEnabled: false,
             createdAt: new Date(),
             updatedAt: new Date(),
         },
@@ -89,14 +79,6 @@ describe("GET /users (permissions)", () => {
         await expect(oRpcUserFindMany()).rejects.toThrow();
     });
 
-    it("Role vendor", async () => {
-        // Set vendor session
-        setMockSession("VENDOR");
-
-        // Expect unauthorized error (not admin)
-        await expect(oRpcUserFindMany()).rejects.toThrow();
-    });
-
     it("Role admin", async () => {
         // Set admin session
         setMockSession("ADMIN");
@@ -107,7 +89,7 @@ describe("GET /users (permissions)", () => {
         // Expect array of user objects
         expect(users).toBeDefined();
         expect(Array.isArray(users)).toBe(true);
-        expect(users.length).toBe(3);
+        expect(users.length).toBe(2);
     });
 });
 
@@ -124,9 +106,9 @@ describe("GET /users (params)", () => {
         expect(Array.isArray(users)).toBe(true);
         expect(users.length).toBe(2);
 
-        // Expect first two users
+        // Expect both users
         expect(users[0].id).toBe("adminId");
-        expect(users[1].id).toBe("vendorId");
+        expect(users[1].id).toBe("userId");
     });
 
     it("Skip 1", async () => {
@@ -139,10 +121,9 @@ describe("GET /users (params)", () => {
         // Expect array of user objects
         expect(users).toBeDefined();
         expect(Array.isArray(users)).toBe(true);
-        expect(users.length).toBe(2);
+        expect(users.length).toBe(1);
 
-        // Expect users after skipping first
-        expect(users[0].id).toBe("vendorId");
-        expect(users[1].id).toBe("userId");
+        // Expect user after skipping first
+        expect(users[0].id).toBe("userId");
     });
 });

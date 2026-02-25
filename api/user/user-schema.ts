@@ -4,7 +4,7 @@ import { ZodType, z } from "zod";
 
 const userCreateInputSchema = z.object({
     name: z.string().min(1, "Name is required").describe("Firstname"),
-    lastname: z.string().optional().describe("Lastname"),
+    lastname: z.string().min(1, "Lastname is required").describe("Lastname"),
     email: z.string().describe("Email address"),
     image: z.string().optional().describe("Profile image URL"),
     role: z.enum($Enums.Role).optional().describe("User role: ADMIN, USER (default)"),
@@ -16,7 +16,7 @@ const userCreateInputSchema = z.object({
 const userUpdateInputSchema = z.object({
     id: z.string().describe("User ID"),
     name: z.string().min(1, "Name is required").optional().describe("Firstname"),
-    lastname: z.string().nullable().optional().describe("Lastname"),
+    lastname: z.string().optional().describe("Lastname"),
     image: z.string().nullable().optional().describe("Profile image URL"),
     role: z.enum($Enums.Role).optional().describe("User role: ADMIN, USER"),
     updateTags: z.array(z.string()).optional().describe("Array of update tags"),
@@ -34,11 +34,12 @@ const userDeleteInputSchema = z.object({
 const userOutputSchema: ZodType<User> = z.object({
     id: z.string().describe("Unique ID of the user (nanoid)"),
     name: z.string().describe("Firstname of the user"),
-    lastname: z.string().nullable().describe("Lastname of the user"),
+    lastname: z.string().describe("Lastname of the user"),
     email: z.string().describe("Email address"),
     emailVerified: z.boolean().describe("Email verification status (boolean)"),
     image: z.string().nullable().describe("Profile image URL"),
     role: z.enum($Enums.Role).describe("User role: ADMIN, USER (default)"),
+    twoFactorEnabled: z.boolean().describe("Two-factor authentication status"),
     createdAt: z.date().describe("Creation date"),
     updatedAt: z.date().describe("Last update date"),
 });

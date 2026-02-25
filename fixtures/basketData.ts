@@ -48,9 +48,9 @@ const basketData: Prisma.BasketCreateInput[] = [
             ],
         },
     },
-    // Basket 1 pour le vendor (4 fruits différents)
+    // Basket 1 pour le admin (4 fruits différents)
     {
-        User: { connect: { email: "vendor@example.com" } },
+        User: { connect: { email: "admin@example.com" } },
         Quantity: {
             create: [
                 { quantity: 2, Fruit: { connect: { name: "Mangue" } } },
@@ -60,9 +60,9 @@ const basketData: Prisma.BasketCreateInput[] = [
             ],
         },
     },
-    // Basket 2 pour le vendor (5 fruits différents)
+    // Basket 2 pour le admin (5 fruits différents)
     {
-        User: { connect: { email: "vendor@example.com" } },
+        User: { connect: { email: "admin@example.com" } },
         Quantity: {
             create: [
                 { quantity: 5, Fruit: { connect: { name: "Fraise" } } },

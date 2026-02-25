@@ -23,7 +23,7 @@ RUN apk add --no-cache libc6-compat
 ########################
 FROM base AS dev-deps
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 
 #########################
@@ -31,7 +31,7 @@ RUN pnpm install --frozen-lockfile
 #########################
 FROM base AS prod-deps
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --prod --frozen-lockfile
 
 ####################

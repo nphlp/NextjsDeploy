@@ -1,1 +1,2 @@
-export { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "./dialog";
+export { default } from "./dialog";
+export * from "./atoms";

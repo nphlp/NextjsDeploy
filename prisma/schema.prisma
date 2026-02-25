@@ -9,19 +9,22 @@ datasource db {
 }
 
 model User {
-    id            String  @id @default(nanoid())
-    name          String
-    lastname      String?
-    email         String  @unique
-    emailVerified Boolean
-    image         String? @db.Text
-    role          Role    @default(USER)
+    id               String  @id @default(nanoid())
+    name             String
+    lastname         String
+    email            String  @unique
+    emailVerified    Boolean
+    image            String? @db.Text
+    role             Role    @default(USER)
+    twoFactorEnabled Boolean @default(false)
 
     Fruits  Fruit[]
     Baskets Basket[]
 
-    Sessions Session[]
-    Accounts Account[]
+    Sessions   Session[]
+    Accounts   Account[]
+    TwoFactors TwoFactor[]
+    Passkeys   Passkey[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -88,9 +91,43 @@ model Verification {
     @@index([identifier])
 }
 
+model TwoFactor {
+    id          String @id @default(nanoid())
+    secret      String
+    backupCodes String
+
+    userId String
+    User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Indexes
+    @@index([userId])
+}
+
+model Passkey {
+    id           String  @id @default(nanoid())
+    name         String?
+    publicKey    String
+    userId       String
+    User         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    credentialID String  @unique
+    counter      Int
+    deviceType   String
+    backedUp     Boolean
+    transports   String?
+    aaguid       String?
+
+    createdAt DateTime @default(now())
+
+    // Indexes
+    @@index([userId])
+    @@index([credentialID])
+}
+
 enum Role {
     USER
-    VENDOR
     ADMIN
 }
 

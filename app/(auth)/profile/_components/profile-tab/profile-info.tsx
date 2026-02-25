@@ -8,6 +8,15 @@ import { Role } from "@prisma/client/client";
 import { CircleCheck, CircleX, Mail } from "lucide-react";
 import { useState } from "react";
 
+const formatRole = (role: Role) => {
+    switch (role) {
+        case "USER":
+            return "utilisateur";
+        case "ADMIN":
+            return "administrateur";
+    }
+};
+
 type ProfileInfoProps = {
     serverSession: NonNullable<SessionClient>;
 };
@@ -42,20 +51,9 @@ export default function ProfileInfo(props: ProfileInfoProps) {
         setIsLoading(false);
     };
 
-    const formatRole = (role: Role) => {
-        switch (role) {
-            case "USER":
-                return "utilisateur";
-            case "VENDOR":
-                return "vendeur";
-            case "ADMIN":
-                return "administrateur";
-        }
-    };
-
     return (
         <div className="flex w-full items-center justify-between gap-4">
-            <Card className="flex-row flex-wrap items-end justify-between">
+            <Card className="flex-row flex-wrap items-end justify-between py-4">
                 <div>
                     {/* Firstname Lastname (role) */}
                     <div className="space-x-1">

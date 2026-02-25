@@ -1,16 +1,23 @@
-import { customSessionClient } from "better-auth/client/plugins";
+import { passkeyClient } from "@better-auth/passkey/client";
+import {
+    customSessionClient,
+    inferAdditionalFields,
+    magicLinkClient,
+    twoFactorClient,
+} from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 import { auth } from "./auth";
-
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-
-if (!NEXT_PUBLIC_BASE_URL) {
-    throw new Error("NEXT_PUBLIC_BASE_URL environment variable is not defined");
-}
+import { NEXT_PUBLIC_BASE_URL } from "./env-client";
 
 export const authClient = createAuthClient({
     baseURL: NEXT_PUBLIC_BASE_URL,
-    plugins: [customSessionClient<typeof auth>()],
+    plugins: [
+        customSessionClient<typeof auth>(),
+        inferAdditionalFields<typeof auth>(),
+        twoFactorClient(),
+        passkeyClient(),
+        magicLinkClient(),
+    ],
 });
 
 export const {
@@ -26,6 +33,8 @@ export const {
     sendVerificationEmail,
     requestPasswordReset,
     resetPassword,
+    twoFactor,
+    passkey,
 } = authClient;
 
 /**

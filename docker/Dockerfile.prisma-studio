@@ -9,7 +9,7 @@ ARG DATABASE_URL
 
 RUN npm install -g pnpm
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY prisma ./prisma
 COPY prisma.config.mts ./prisma.config.mts
 
