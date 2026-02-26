@@ -33,24 +33,36 @@ export default function LoginContent() {
     const { title, description } = headers[method];
 
     const handlePasskeyLogin = async () => {
+        // Set loader
         setIsPasskeyLoading(true);
 
-        const { error } = await signIn.passkey();
+        try {
+            // Async submission
+            const { error } = await signIn.passkey();
 
-        if (error) {
+            if (error) {
+                setIsPasskeyLoading(false);
+                if ((error as { code: string }).code === "AUTH_CANCELLED") return;
+                // Toast error
+                toast.add({ title: "Échec de la connexion", description: "Passkey non reconnu.", type: "error" });
+                return;
+            }
+
+            // Toast success
+            toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
+
+            // Stop loader (delayed to avoid visible state change)
+            setTimeout(() => {
+                setIsPasskeyLoading(false);
+            }, 1000);
+
+            // Redirect
+            router.push(redirect || "/");
+        } catch {
+            // Toast error
+            toast.add({ title: "Erreur", description: "Une erreur est survenue.", type: "error" });
             setIsPasskeyLoading(false);
-            if ((error as { code: string }).code === "AUTH_CANCELLED") return;
-            toast.add({ title: "Échec de la connexion", description: "Passkey non reconnu.", type: "error" });
-            return;
         }
-
-        toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
-
-        setTimeout(() => {
-            setIsPasskeyLoading(false);
-        }, 1000);
-
-        router.push(redirect || "/");
     };
 
     return (

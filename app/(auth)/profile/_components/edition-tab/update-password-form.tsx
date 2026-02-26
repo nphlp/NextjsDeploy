@@ -50,35 +50,49 @@ export const UpdatePasswordForm = () => {
     const handleSubmit: OnSubmit = async (event) => {
         event.preventDefault();
 
+        // Validation
         const validated = submit();
+
+        // Cancel if validation fails
         if (!validated) return;
 
+        // Set loader after validation
         setIsSubmitting(true);
 
-        const { data, error } = await changePassword({
-            currentPassword: validated.currentPassword,
-            newPassword: validated.newPassword,
-            revokeOtherSessions: true,
-        });
-
-        if (!data) {
-            toast.add({
-                title: "Échec",
-                description: translateAuthError(error?.message),
-                type: "error",
+        try {
+            // Async submission
+            const { data, error } = await changePassword({
+                currentPassword: validated.currentPassword,
+                newPassword: validated.newPassword,
+                revokeOtherSessions: true,
             });
 
-            setIsSubmitting(false);
-            return;
+            if (!data) {
+                // Toast error
+                toast.add({
+                    title: "Échec",
+                    description: translateAuthError(error?.message),
+                    type: "error",
+                });
+                setIsSubmitting(false);
+                return;
+            }
+
+            // Toast success
+            toast.add({
+                title: "Mot de passe modifié",
+                description: "Vos modifications ont été enregistrées.",
+                type: "success",
+            });
+
+            // Reset form
+            reset();
+        } catch {
+            // Toast error
+            toast.add({ title: "Erreur", description: "Une erreur est survenue.", type: "error" });
         }
 
-        toast.add({
-            title: "Mot de passe modifié",
-            description: "Vos modifications ont été enregistrées.",
-            type: "success",
-        });
-
-        reset();
+        // Stop loader
         setIsSubmitting(false);
     };
 

@@ -33,30 +33,48 @@ export default function MagicLinkForm() {
     const handleSubmit: OnSubmit = async (event) => {
         event.preventDefault();
 
+        // Validation
         const values = submit();
+
+        // Cancel if validation fails
         if (!values) return;
 
+        // Set loader after validation
         setIsSubmitting(true);
 
         const { email } = values;
 
-        const { error } = await authClient.signIn.magicLink({
-            email,
-            callbackURL: redirect || "/",
-        });
+        try {
+            // Async submission
+            const { error } = await authClient.signIn.magicLink({
+                email,
+                callbackURL: redirect || "/",
+            });
 
-        if (error) {
-            toast.add({ title: "Erreur", description: "Impossible d'envoyer le lien de connexion.", type: "error" });
+            if (error) {
+                // Toast error
+                toast.add({
+                    title: "Erreur",
+                    description: "Impossible d'envoyer le lien de connexion.",
+                    type: "error",
+                });
+                setIsSubmitting(false);
+                return;
+            }
+
+            // Reset form (delayed to avoid visible field clearing)
+            setTimeout(() => {
+                reset();
+                setIsSubmitting(false);
+            }, 1000);
+
+            // Redirect
+            router.push(queryUrlSerializer("/login/success", { email }));
+        } catch {
+            // Toast error
+            toast.add({ title: "Erreur", description: "Une erreur est survenue.", type: "error" });
             setIsSubmitting(false);
-            return;
         }
-
-        setTimeout(() => {
-            reset();
-            setIsSubmitting(false);
-        }, 1000);
-
-        router.push(queryUrlSerializer("/login/success", { email }));
     };
 
     return (

@@ -30,32 +30,44 @@ export default function VerifyTotpForm(props: VerifyTotpFormProps) {
     });
 
     const handleComplete = async (completedCode: string) => {
+        // Set loader
         setIsSubmitting(true);
 
-        const { error } = await twoFactor.verifyTotp({
-            code: completedCode,
-            trustDevice,
-        });
-
-        if (error) {
-            toast.add({
-                title: "Code invalide",
-                description: "Vérifiez votre application d'authentification.",
-                type: "error",
+        try {
+            // Async submission
+            const { error } = await twoFactor.verifyTotp({
+                code: completedCode,
+                trustDevice,
             });
-            setStates.code("");
+
+            if (error) {
+                // Toast error
+                toast.add({
+                    title: "Code invalide",
+                    description: "Vérifiez votre application d'authentification.",
+                    type: "error",
+                });
+                setStates.code("");
+                setIsSubmitting(false);
+                return;
+            }
+
+            // Toast success
+            toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
+
+            // Reset form (delayed to avoid visible field clearing)
+            setTimeout(() => {
+                reset();
+                setIsSubmitting(false);
+            }, 1000);
+
+            // Redirect
+            setTimeout(() => router.push(redirect || "/"), 500);
+        } catch {
+            // Toast error
+            toast.add({ title: "Erreur", description: "Une erreur est survenue.", type: "error" });
             setIsSubmitting(false);
-            return;
         }
-
-        toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
-
-        setTimeout(() => {
-            reset();
-            setIsSubmitting(false);
-        }, 1000);
-
-        setTimeout(() => router.push(redirect || "/"), 500);
     };
 
     return (

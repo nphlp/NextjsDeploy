@@ -36,30 +36,45 @@ export default function VerifyBackupCodeForm(props: VerifyBackupCodeFormProps) {
     const handleSubmit: OnSubmit = async (event) => {
         event.preventDefault();
 
+        // Validation
         const values = submit();
+
+        // Cancel if validation fails
         if (!values) return;
 
+        // Set loader after validation
         setIsSubmitting(true);
 
-        const { error } = await twoFactor.verifyBackupCode({
-            code: values.code,
-            trustDevice,
-        });
+        try {
+            // Async submission
+            const { error } = await twoFactor.verifyBackupCode({
+                code: values.code,
+                trustDevice,
+            });
 
-        if (error) {
-            toast.add({ title: "Code invalide", description: "Vérifiez votre code de secours.", type: "error" });
+            if (error) {
+                // Toast error
+                toast.add({ title: "Code invalide", description: "Vérifiez votre code de secours.", type: "error" });
+                setIsSubmitting(false);
+                return;
+            }
+
+            // Toast success
+            toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
+
+            // Reset form (delayed to avoid visible field clearing)
+            setTimeout(() => {
+                reset();
+                setIsSubmitting(false);
+            }, 1000);
+
+            // Redirect
+            router.push(redirect || "/");
+        } catch {
+            // Toast error
+            toast.add({ title: "Erreur", description: "Une erreur est survenue.", type: "error" });
             setIsSubmitting(false);
-            return;
         }
-
-        toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
-
-        setTimeout(() => {
-            reset();
-            setIsSubmitting(false);
-        }, 1000);
-
-        router.push(redirect || "/");
     };
 
     return (

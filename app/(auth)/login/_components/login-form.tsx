@@ -40,36 +40,52 @@ export default function LoginForm() {
     const handleSubmit: OnSubmit = async (event) => {
         event.preventDefault();
 
+        // Validation
         const values = submit();
+
+        // Cancel if validation fails
         if (!values) return;
 
+        // Set loader after validation
         setIsSubmitting(true);
 
-        const { data } = await signIn.email(values);
+        try {
+            // Async submission
+            const { data } = await signIn.email(values);
 
-        if (!data) {
-            toast.add({
-                title: "Échec de la connexion",
-                description: "Identifiants invalides, compte inexistant, ou email non vérifié.",
-                type: "error",
-            });
+            if (!data) {
+                // Toast error
+                toast.add({
+                    title: "Échec de la connexion",
+                    description: "Identifiants invalides, compte inexistant, ou email non vérifié.",
+                    type: "error",
+                });
+                setIsSubmitting(false);
+                return;
+            }
+
+            // Reset form (delayed to avoid visible field clearing)
+            setTimeout(() => {
+                reset();
+                setIsSubmitting(false);
+            }, 1000);
+
+            if ("twoFactorRedirect" in data) {
+                // Redirect (2FA)
+                router.push(queryUrlSerializer("/verify-2fa", { redirect }));
+                return;
+            }
+
+            // Toast success
+            toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
+
+            // Redirect
+            router.push(redirect || "/");
+        } catch {
+            // Toast error
+            toast.add({ title: "Erreur", description: "Une erreur est survenue.", type: "error" });
             setIsSubmitting(false);
-            return;
         }
-
-        setTimeout(() => {
-            reset();
-            setIsSubmitting(false);
-        }, 1000);
-
-        if ("twoFactorRedirect" in data) {
-            router.push(queryUrlSerializer("/verify-2fa", { redirect }));
-            return;
-        }
-
-        toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
-
-        router.push(redirect || "/");
     };
 
     return (
