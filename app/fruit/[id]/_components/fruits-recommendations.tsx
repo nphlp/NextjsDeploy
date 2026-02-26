@@ -1,7 +1,6 @@
 import { Carousel, Slide } from "@atoms/carousel";
 import oRPC from "@lib/orpc";
 import FruitCard, { FruitCardSkeleton } from "@organisms/fruit-card";
-import { timeout } from "@utils/timout";
 import { Breakpoint } from "@utils/use-breakpoint";
 import { notFound } from "next/navigation";
 
@@ -24,7 +23,7 @@ const getFruitsRecommendationsCached = async (props: GetFruitsRecommendationsCac
     "use cache";
 
     // Wait 0.7 second to simulate a slow network or database
-    await timeout(700);
+    // await timeout(700);
 
     return await oRPC.fruit.findMany(props);
 };

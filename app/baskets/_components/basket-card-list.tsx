@@ -2,7 +2,6 @@ import Card from "@atoms/card";
 import Link from "@comps/atoms/button/link";
 import { Session } from "@lib/auth-server";
 import oRPC from "@lib/orpc";
-import { timeout } from "@utils/timout";
 import { ShoppingBasket } from "lucide-react";
 import BasketCard, { BasketCardSkeleton } from "./basket-card";
 
@@ -14,7 +13,7 @@ const getBasketsByUserCached = async (props: GetBasketsByUserCachedProps) => {
     "use cache";
 
     // Wait 1 second to simulate a slow network or database
-    await timeout(1000);
+    // await timeout(1000);
 
     return await oRPC.basket.findManyByUser(props);
 };

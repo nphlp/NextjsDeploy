@@ -3,7 +3,6 @@ import { SkeletonText } from "@atoms/skeleton";
 import Link from "@comps/atoms/button/link";
 import oRPC from "@lib/orpc";
 import { formatMediumDate } from "@utils/date-format";
-import { timeout } from "@utils/timout";
 import { ChevronRight } from "lucide-react";
 import { notFound } from "next/navigation";
 
@@ -15,7 +14,7 @@ const getFruitByIdCached = async (props: GetFruitByIdCachedProps) => {
     "use cache";
 
     // Wait 0.5 second to simulate a slow network or database
-    await timeout(500);
+    // await timeout(500);
 
     return await oRPC.fruit.findUnique(props);
 };

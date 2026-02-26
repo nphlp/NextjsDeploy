@@ -1,9 +1,8 @@
 import Card from "@atoms/card";
-import Main, { MainSuspense } from "@core/Main";
+import Main from "@core/Main";
 import { getSession } from "@lib/auth-server";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
 import RegisterForm from "./_components/register-form";
 
 export const metadata: Metadata = {
@@ -12,16 +11,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-    return (
-        <Suspense fallback={<MainSuspense />}>
-            <SuspendedPage />
-        </Suspense>
-    );
-}
-
-const SuspendedPage = async () => {
-    "use cache: private";
-
     const session = await getSession();
     if (session) redirect("/");
 
@@ -36,4 +25,4 @@ const SuspendedPage = async () => {
             </Card>
         </Main>
     );
-};
+}

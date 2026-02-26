@@ -1,9 +1,8 @@
 import Card from "@atoms/card";
-import Main, { MainSuspense } from "@core/Main";
+import Main from "@core/Main";
 import { getSession } from "@lib/auth-server";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
 import z, { ZodType } from "zod";
 import RequestResetForm from "./_components/request-reset-form";
 import ResetPasswordForm from "./_components/reset-password-form";
@@ -26,16 +25,6 @@ type PageProps = {
 };
 
 export default async function Page(props: PageProps) {
-    return (
-        <Suspense fallback={<MainSuspense />}>
-            <SuspendedPage {...props} />
-        </Suspense>
-    );
-}
-
-const SuspendedPage = async (props: PageProps) => {
-    "use cache: private";
-
     const { token } = paramsSchema.parse(await props.searchParams);
 
     const session = await getSession();
@@ -58,4 +47,4 @@ const SuspendedPage = async (props: PageProps) => {
             </Card>
         </Main>
     );
-};
+}

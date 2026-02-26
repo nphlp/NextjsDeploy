@@ -17,7 +17,7 @@ export default function Main(props: MainProps) {
     const { vertical = "center", horizontal = "center", className, children } = props;
 
     return (
-        <main
+        <div
             style={{ minHeight: `calc(100dvh - ${HEADER_HEIGHT}rem)` }}
             className={cn(
                 "flex flex-col items-center justify-start",
@@ -41,7 +41,7 @@ export default function Main(props: MainProps) {
             >
                 {children}
             </div>
-        </main>
+        </div>
     );
 }
 
@@ -49,7 +49,7 @@ export const MainSuspense = (props: MainProps) => {
     const { className } = props;
 
     return (
-        <main
+        <div
             style={{ minHeight: `calc(100dvh - ${HEADER_HEIGHT}rem)` }}
             className={cn(
                 "flex flex-col items-center justify-start",
@@ -73,6 +73,6 @@ export const MainSuspense = (props: MainProps) => {
             >
                 <Loader className="size-6 animate-spin text-gray-600" />
             </div>
-        </main>
+        </div>
     );
 };

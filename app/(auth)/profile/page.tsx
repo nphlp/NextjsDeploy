@@ -1,4 +1,4 @@
-import Main, { MainSuspense } from "@core/Main";
+import Main from "@core/Main";
 import { getSession } from "@lib/auth-server";
 import type { Metadata } from "next";
 import { unauthorized } from "next/navigation";
@@ -15,16 +15,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-    return (
-        <Suspense fallback={<MainSuspense />}>
-            <SuspendedPage />
-        </Suspense>
-    );
-}
-
-const SuspendedPage = async () => {
-    "use cache: private";
-
     const session = await getSession();
     if (!session) unauthorized();
 
@@ -42,4 +32,4 @@ const SuspendedPage = async () => {
             </Suspense>
         </Main>
     );
-};
+}

@@ -4,7 +4,7 @@ import Footer from "@core/Footer";
 import Header from "@core/Header";
 import Html from "@core/Html";
 import Theme from "@core/Theme";
-import { DEBUG_LAYOUT } from "@core/config";
+import { DEBUG_LAYOUT, HEADER_HEIGHT } from "@core/config";
 import cn from "@lib/cn";
 import { IS_UMAMI_DEFINED, UMAMI_WEBSITE_ID } from "@lib/env";
 import "@lib/orpc-server";
@@ -56,7 +56,12 @@ export default async function Layout(props: LayoutProps) {
                     <NuqsAdapter>
                         <Theme>
                             <Header />
-                            {children}
+                            <main
+                                style={{ minHeight: `calc(100dvh - ${HEADER_HEIGHT}rem)` }}
+                                className={cn(DEBUG_LAYOUT && "bg-teal-100")}
+                            >
+                                {children}
+                            </main>
                             <Footer />
                             <Breakpoints mode="onResize" />
                         </Theme>
