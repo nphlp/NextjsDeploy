@@ -13,38 +13,8 @@ type HeaderProps = {
 };
 
 export default async function Header(props: HeaderProps) {
-    const { className } = props;
-
     return (
-        <Suspense
-            fallback={
-                <header
-                    style={{ height: `${HEADER_HEIGHT}rem` }}
-                    className={cn(
-                        "bg-background",
-                        "sticky inset-x-0 top-0 z-10",
-                        "flex items-center justify-end gap-4",
-                        "px-4 py-3 md:px-7",
-                        className,
-                    )}
-                >
-                    {/* Mobile */}
-                    <div className="xs:hidden flex w-full gap-4">
-                        <MobileNavigation serverSession={null} />
-                        <DevSidebarTrigger />
-                    </div>
-
-                    {/* Tablette & Desktop */}
-                    <div className="max-xs:hidden flex w-full justify-end gap-2">
-                        <DevSidebarTrigger />
-                        <DesktopNavigation serverSession={null} />
-                    </div>
-
-                    <MenuProfile serverSession={null} />
-                    <MenuTheme />
-                </header>
-            }
-        >
+        <Suspense fallback={<HeaderSkeleton {...props} />}>
             <SuspendedHeader {...props} />
         </Suspense>
     );
@@ -81,6 +51,38 @@ const SuspendedHeader = async (props: HeaderProps) => {
             </div>
 
             <MenuProfile serverSession={session} />
+            <MenuTheme />
+        </header>
+    );
+};
+
+const HeaderSkeleton = (props: HeaderProps) => {
+    const { className } = props;
+
+    return (
+        <header
+            style={{ height: `${HEADER_HEIGHT}rem` }}
+            className={cn(
+                "bg-background",
+                "sticky inset-x-0 top-0 z-10",
+                "flex items-center justify-end gap-4",
+                "px-4 py-3 md:px-7",
+                className,
+            )}
+        >
+            {/* Mobile */}
+            <div className="xs:hidden flex w-full gap-4">
+                <MobileNavigation serverSession={null} />
+                <DevSidebarTrigger />
+            </div>
+
+            {/* Tablette & Desktop */}
+            <div className="max-xs:hidden flex w-full justify-end gap-2">
+                <DevSidebarTrigger />
+                <DesktopNavigation serverSession={null} />
+            </div>
+
+            <MenuProfile serverSession={null} />
             <MenuTheme />
         </header>
     );
