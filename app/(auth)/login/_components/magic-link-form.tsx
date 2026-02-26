@@ -41,7 +41,7 @@ export default function MagicLinkForm() {
         const { error } = await authClient.signIn.magicLink({ email });
 
         if (error) {
-            toast.add({ title: "Erreur", description: "Impossible d'envoyer le lien magique.", type: "error" });
+            toast.add({ title: "Erreur", description: "Impossible d'envoyer le lien de connexion.", type: "error" });
             setIsSubmitting(false);
             return;
         }

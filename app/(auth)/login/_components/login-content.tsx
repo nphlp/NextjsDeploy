@@ -3,7 +3,7 @@
 import Button from "@atoms/button";
 import { useToast } from "@atoms/toast";
 import { signIn } from "@lib/auth-client";
-import { Fingerprint, KeyRound, WandSparkles } from "lucide-react";
+import { Fingerprint, KeyRound, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import LoginForm from "./login-form";
@@ -17,7 +17,7 @@ const headers = {
         description: "Saisissez vos identifiants de connexion.",
     },
     "magic-link": {
-        title: "Lien magique",
+        title: "Connexion par email",
         description: "Recevez un lien de connexion par email.",
     },
 };
@@ -78,8 +78,8 @@ export default function LoginContent() {
                     colors="outline"
                     className="w-full text-xs"
                 >
-                    <WandSparkles className="size-4" />
-                    Lien magique
+                    <Mail className="size-4" />
+                    Connexion par email
                 </Button>
             )}
             {method === "magic-link" && (

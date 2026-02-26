@@ -59,7 +59,7 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 - [x] **Passkeys (WebAuthn)** — inscription, connexion, gestion
     - Plugin Better Auth `passkey`
     - Ajout/suppression dans le profil + bouton passkey sur le login
-- [x] **Magic Link** — connexion sans mot de passe
+- [x] **Connexion par email** — connexion sans mot de passe
     - Plugin Better Auth `magicLink`
     - Page `/magic-link` + formulaire email
     - Anti-énumération : si l'email n'existe pas, envoie un email "Créez votre compte" avec lien vers `/register` (même page de succès dans les deux cas)
@@ -152,7 +152,7 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 | IDs nanoid                 | ✅ Better Auth + Prisma cohérents                               |
 | 2FA / MFA                  | ✅ TOTP + backup codes (profil + verify-2fa)                    |
 | Passkeys (WebAuthn)        | ✅ Ajout/suppression/connexion                                  |
-| Magic Link                 | ✅ Connexion sans mot de passe                                  |
+| Connexion par email        | ✅ Connexion sans mot de passe                                  |
 | OAuth providers            | ❌ À faire                                                      |
 | Middleware de routes       | ❌ À faire                                                      |
 

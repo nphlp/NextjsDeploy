@@ -10,15 +10,14 @@
 
 - Si redirection pour loging -> redirection après login vers la page initiale
 
+- Callback de redirection après login
+
 - Si 2FA commencée, pouvoir "annuler" -> supprimer le cookie
 
 - Il se passe quoi si je me connecte sans avoir confirmé email ?
   Erreur ? Redirection pas de succes ?
 
 - First admin en prod ?
-- Callback de redirection après login
-
-- Renommer magik-link ? Passwordless ? Connexion par email ?
 
 - Provider OAuth (Google, Apple, Microsoft, GitHub, etc)`
 
