@@ -1,6 +1,6 @@
 [README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **Database Breaking Migrations**
 
-[← Dokploy Env Setup](./10-dokploy-env-setup.md)
+[← Dokploy Env Setup](./9-dokploy-env-setup.md)
 
 ---
 
@@ -156,6 +156,6 @@ Deploy the final migration. Disable maintenance mode.
 
 ---
 
-[← Dokploy Env Setup](./10-dokploy-env-setup.md)
+[← Dokploy Env Setup](./9-dokploy-env-setup.md)
 
 [README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **Database Breaking Migrations**

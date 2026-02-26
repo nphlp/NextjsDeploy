@@ -1,6 +1,6 @@
 [README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **Git Usage**
 
-[← MCP Servers](./6-mcp-servers.md) | [GitHub Pipelines →](./8-github-pipelines.md)
+[← MCP Servers](./5-mcp-servers.md) | [GitHub Pipelines →](./7-github-pipelines.md)
 
 ---
 
@@ -50,7 +50,7 @@ feat!: remove legacy API endpoint
 ```
 
 > [!NOTE]
-> Conventional commits are the foundation for [Semantic Release](./8-github-pipelines.md) (planned): commit types automatically determine version bumps (`feat` = minor, `fix` = patch, `feat!` = major).
+> Conventional commits are the foundation for [Semantic Release](./7-github-pipelines.md) (planned): commit types automatically determine version bumps (`feat` = minor, `fix` = patch, `feat!` = major).
 
 > [!NOTE]
 > Commit and push regularly: after each working addition, bug fix, or at the end of the day. If you work on multiple computers, be extra rigorous to avoid conflicts.
@@ -173,15 +173,15 @@ PRs are the only way to merge code into `test` and `main` (enforced by GitHub br
 
 1. Push your feature branch
 2. Create a PR targeting `test`
-3. CI pipeline runs (lint, format, type, test) — see [GitHub Pipelines](./8-github-pipelines.md)
+3. CI pipeline runs (lint, format, type, test) — see [GitHub Pipelines](./7-github-pipelines.md)
 4. Code review by lead dev
 5. **Squash merge** — all commits are squashed into one on the target branch
 
 > [!NOTE]
-> Squash merge is the only allowed merge method (configured in [GitHub branch protection](./9-github-env-setup.md)). This keeps the target branch history clean: one commit per feature.
+> Squash merge is the only allowed merge method (configured in [GitHub branch protection](./8-github-env-setup.md)). This keeps the target branch history clean: one commit per feature.
 
 ---
 
-[← MCP Servers](./6-mcp-servers.md) | [GitHub Pipelines →](./8-github-pipelines.md)
+[← MCP Servers](./5-mcp-servers.md) | [GitHub Pipelines →](./7-github-pipelines.md)
 
 [README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **Git Usage**
