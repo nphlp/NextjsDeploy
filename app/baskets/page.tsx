@@ -3,9 +3,15 @@ import Link from "@comps/atoms/button/link";
 import Main from "@core/Main";
 import { getSession } from "@lib/auth-server";
 import { ChevronRight } from "lucide-react";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import BasketCardList, { BasketCardListSkeleton } from "./_components/basket-card-list";
+
+export const metadata: Metadata = {
+    title: "Paniers",
+    description: "Consultez et gérez vos paniers de fruits.",
+};
 
 export default async function Page() {
     const session = await getSession();

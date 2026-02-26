@@ -1,4 +1,10 @@
 import Main from "@core/Main";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Colors",
+    description: "Color palette and theme tokens.",
+};
 
 export default function Page() {
     return (

@@ -8,6 +8,7 @@ import Switch from "@atoms/switch";
 import Tabs from "@atoms/tabs";
 import Tooltip from "@atoms/tooltip";
 import Main from "@core/Main";
+import type { Metadata } from "next";
 import AlertDialogComposed from "./_components/alert-dialog-composed";
 import CollapsibleComposed from "./_components/collapsible-composed";
 import ComboboxComposed from "./_components/combobox-composed";
@@ -18,6 +19,11 @@ import SliderComposed from "./_components/slider-composed";
 import SwitchComposed from "./_components/switch-composed";
 import TabsComposed from "./_components/tabs-composed";
 import TooltipComposed from "./_components/tooltip-composed";
+
+export const metadata: Metadata = {
+    title: "Components",
+    description: "Showcase of Base-UI components with default and composed demos.",
+};
 
 export default function ComponentsPage() {
     return (

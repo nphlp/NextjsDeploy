@@ -4,8 +4,14 @@ import Card from "@atoms/card";
 import Main from "@core/Main";
 import { getSession } from "@lib/auth-server";
 import { ChevronRight } from "lucide-react";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import CreateFruitForm from "./_components/create-fruit-form";
+
+export const metadata: Metadata = {
+    title: "Nouveau fruit",
+    description: "Ajoutez un nouveau fruit à la liste.",
+};
 
 export default async function Page() {
     const session = await getSession();

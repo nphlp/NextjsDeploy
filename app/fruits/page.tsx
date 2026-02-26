@@ -1,5 +1,6 @@
 import Main from "@core/Main";
 import cn from "@lib/cn";
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import AddFruitButton from "./_components/add-fruit-button";
 import BasketButton from "./_components/basket-button";
@@ -8,6 +9,11 @@ import FruitsGridLoader from "./_components/fruit-grid-loader";
 import SearchFilter from "./_components/search-filter";
 import SelectOrder from "./_components/select-order";
 import { QueryParamsCachedType, queryParamsCached } from "./_lib/query-params";
+
+export const metadata: Metadata = {
+    title: "Fruits",
+    description: "Parcourez et recherchez les fruits disponibles.",
+};
 
 type PageProps = {
     searchParams: Promise<QueryParamsCachedType>;

@@ -1,9 +1,15 @@
 import Card from "@atoms/card";
 import Main from "@core/Main";
 import { getSession, isPendingTwoFactor } from "@lib/auth-server";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { QueryParamsCachedType, queryParamsCached, queryUrlSerializer } from "../_lib/query-params";
 import VerifyTwoFactorContent from "./_components/verify-two-factor-content";
+
+export const metadata: Metadata = {
+    title: "Vérification 2FA",
+    description: "Confirmez votre identité avec la vérification en deux étapes.",
+};
 
 type PageProps = {
     searchParams: Promise<QueryParamsCachedType>;

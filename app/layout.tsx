@@ -29,7 +29,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
     title: "Nextjs Deploy",
-    description: "A ready to deploy application template 📝",
+    description: "A ready to deploy application template",
 };
 
 type LayoutProps = Readonly<{

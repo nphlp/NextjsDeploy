@@ -1,9 +1,15 @@
 import Card from "@atoms/card";
 import Main from "@core/Main";
 import { getSession, isPendingTwoFactor } from "@lib/auth-server";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { QueryParamsCachedType, queryParamsCached, queryUrlSerializer } from "../_lib/query-params";
 import LoginContent from "./_components/login-content";
+
+export const metadata: Metadata = {
+    title: "Connexion",
+    description: "Connectez-vous à votre compte.",
+};
 
 type PageProps = {
     searchParams: Promise<QueryParamsCachedType>;

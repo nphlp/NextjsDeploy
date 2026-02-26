@@ -1,6 +1,12 @@
 import Card from "@atoms/card";
 import Main from "@core/Main";
+import type { Metadata } from "next";
 import FormExample from "./_components/form-example";
+
+export const metadata: Metadata = {
+    title: "Form",
+    description: "Form example with useForm hook.",
+};
 
 export default function Page() {
     return (

@@ -1,11 +1,17 @@
 import Card from "@atoms/card";
 import Main, { MainSuspense } from "@core/Main";
 import { getSession } from "@lib/auth-server";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import z, { ZodType } from "zod";
 import RequestResetForm from "./_components/request-reset-form";
 import ResetPasswordForm from "./_components/reset-password-form";
+
+export const metadata: Metadata = {
+    title: "Mot de passe oublié",
+    description: "Réinitialisez votre mot de passe.",
+};
 
 type Token = {
     token?: string;

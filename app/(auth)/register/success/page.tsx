@@ -2,8 +2,14 @@ import { Link } from "@atoms/button";
 import Card from "@atoms/card";
 import Main from "@core/Main";
 import { CircleCheck, ExternalLink, Mail } from "lucide-react";
+import type { Metadata } from "next";
 import EmailProviderLink from "./_components/email-provider-link";
 import { QueryParamsCachedType, queryParamsCached } from "./_lib/query-params";
+
+export const metadata: Metadata = {
+    title: "Inscription réussie",
+    description: "Un email de confirmation a été envoyé.",
+};
 
 type PageProps = {
     searchParams: Promise<QueryParamsCachedType>;

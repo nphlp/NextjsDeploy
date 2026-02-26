@@ -1,7 +1,13 @@
 import { Link } from "@atoms/button";
 import Card from "@atoms/card";
 import Main from "@core/Main";
+import type { Metadata } from "next";
 import { devLinks } from "./_config/links";
+
+export const metadata: Metadata = {
+    title: "Index",
+    description: "Showcase pages and development tools.",
+};
 
 export default function Page() {
     return (

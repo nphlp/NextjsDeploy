@@ -1,9 +1,15 @@
 import Card from "@atoms/card";
 import Main, { MainSuspense } from "@core/Main";
 import { getSession } from "@lib/auth-server";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import RegisterForm from "./_components/register-form";
+
+export const metadata: Metadata = {
+    title: "Inscription",
+    description: "Créez votre compte.",
+};
 
 export default async function Page() {
     return (
