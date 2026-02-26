@@ -1,11 +1,9 @@
-import { queryUrlSerializer } from "@app/(auth)/_lib/query-params";
 import Card from "@atoms/card";
 import Link from "@comps/atoms/button/link";
-import { getSession } from "@lib/auth-server";
+import { Session } from "@lib/auth-server";
 import oRPC from "@lib/orpc";
 import { timeout } from "@utils/timout";
 import { ShoppingBasket } from "lucide-react";
-import { redirect } from "next/navigation";
 import BasketCard, { BasketCardSkeleton } from "./basket-card";
 
 type GetBasketsByUserCachedProps = {
@@ -21,9 +19,12 @@ const getBasketsByUserCached = async (props: GetBasketsByUserCachedProps) => {
     return await oRPC.basket.findManyByUser(props);
 };
 
-export default async function BasketCardList() {
-    const session = await getSession();
-    if (!session) redirect(queryUrlSerializer("/login", { redirect: "/baskets" }));
+type BasketCardListProps = {
+    session: NonNullable<Session>;
+};
+
+export default async function BasketCardList(props: BasketCardListProps) {
+    const { session } = props;
 
     const baskets = await getBasketsByUserCached({ userId: session.user.id });
 
