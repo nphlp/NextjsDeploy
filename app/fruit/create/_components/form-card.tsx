@@ -1,3 +1,4 @@
+import { queryUrlSerializer } from "@app/(auth)/_lib/query-params";
 import Card from "@atoms/card";
 import { getSession } from "@lib/auth-server";
 import { redirect } from "next/navigation";
@@ -7,7 +8,7 @@ export default async function FormCard() {
     "use cache: private";
 
     const session = await getSession();
-    if (!session) redirect("/login");
+    if (!session) redirect(queryUrlSerializer("/login", { redirect: "/fruit/create" }));
 
     return (
         <Card className="max-w-80">

@@ -6,6 +6,7 @@ import { signIn } from "@lib/auth-client";
 import { Fingerprint, KeyRound, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useQueryParams } from "../../_lib/use-query-params";
 import LoginForm from "./login-form";
 import MagicLinkForm from "./magic-link-form";
 
@@ -25,6 +26,7 @@ const headers = {
 export default function LoginContent() {
     const router = useRouter();
     const toast = useToast();
+    const { redirect } = useQueryParams();
     const [method, setMethod] = useState<Method>("credentials");
     const [isPasskeyLoading, setIsPasskeyLoading] = useState(false);
 
@@ -48,7 +50,7 @@ export default function LoginContent() {
             setIsPasskeyLoading(false);
         }, 1000);
 
-        router.push("/");
+        router.push(redirect || "/");
     };
 
     return (

@@ -2,14 +2,21 @@ import Card from "@atoms/card";
 import Main from "@core/Main";
 import { getSession, isPendingTwoFactor } from "@lib/auth-server";
 import { redirect } from "next/navigation";
+import { QueryParamsCachedType, queryParamsCached, queryUrlSerializer } from "../_lib/query-params";
 import VerifyTwoFactorContent from "./_components/verify-two-factor-content";
 
-export default async function Page() {
+type PageProps = {
+    searchParams: Promise<QueryParamsCachedType>;
+};
+
+export default async function Page(props: PageProps) {
+    const { redirect: redirectPath } = await queryParamsCached.parse(props.searchParams);
+
     const session = await getSession();
-    if (session) redirect("/");
+    if (session) redirect(redirectPath || "/");
 
     const pendingTwoFactor = await isPendingTwoFactor();
-    if (!pendingTwoFactor) redirect("/login");
+    if (!pendingTwoFactor) redirect(queryUrlSerializer("/login", { redirect: redirectPath }));
 
     return (
         <Main>

@@ -12,10 +12,12 @@ import { authClient } from "@lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import z from "zod";
+import { useQueryParams } from "../../_lib/use-query-params";
 
 export default function MagicLinkForm() {
     const router = useRouter();
     const toast = useToast();
+    const { redirect } = useQueryParams();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { register, submit, reset } = useForm({
@@ -38,7 +40,10 @@ export default function MagicLinkForm() {
 
         const { email } = values;
 
-        const { error } = await authClient.signIn.magicLink({ email });
+        const { error } = await authClient.signIn.magicLink({
+            email,
+            callbackURL: redirect || "/",
+        });
 
         if (error) {
             toast.add({ title: "Erreur", description: "Impossible d'envoyer le lien de connexion.", type: "error" });

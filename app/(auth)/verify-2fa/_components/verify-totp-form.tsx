@@ -7,6 +7,7 @@ import { twoFactor } from "@lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
+import { useQueryParams } from "../../_lib/use-query-params";
 
 type VerifyTotpFormProps = {
     trustDevice: boolean;
@@ -17,6 +18,7 @@ export default function VerifyTotpForm(props: VerifyTotpFormProps) {
 
     const router = useRouter();
     const toast = useToast();
+    const { redirect } = useQueryParams();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { states, setStates, reset } = useForm({
@@ -53,7 +55,7 @@ export default function VerifyTotpForm(props: VerifyTotpFormProps) {
             setIsSubmitting(false);
         }, 1000);
 
-        setTimeout(() => router.push("/"), 500);
+        setTimeout(() => router.push(redirect || "/"), 500);
     };
 
     return (

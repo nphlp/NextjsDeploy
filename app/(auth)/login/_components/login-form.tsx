@@ -12,10 +12,13 @@ import { signIn } from "@lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
+import { queryUrlSerializer } from "../../_lib/query-params";
+import { useQueryParams } from "../../_lib/use-query-params";
 
 export default function LoginForm() {
     const router = useRouter();
     const toast = useToast();
+    const { redirect } = useQueryParams();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { register, submit, reset } = useForm({
@@ -60,13 +63,13 @@ export default function LoginForm() {
         }, 1000);
 
         if ("twoFactorRedirect" in data) {
-            router.push("/verify-2fa");
+            router.push(queryUrlSerializer("/verify-2fa", { redirect }));
             return;
         }
 
         toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
 
-        router.push("/");
+        router.push(redirect || "/");
     };
 
     return (

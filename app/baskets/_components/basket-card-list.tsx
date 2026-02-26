@@ -1,3 +1,4 @@
+import { queryUrlSerializer } from "@app/(auth)/_lib/query-params";
 import Card from "@atoms/card";
 import Link from "@comps/atoms/button/link";
 import { getSession } from "@lib/auth-server";
@@ -22,7 +23,7 @@ const getBasketsByUserCached = async (props: GetBasketsByUserCachedProps) => {
 
 export default async function BasketCardList() {
     const session = await getSession();
-    if (!session) redirect("/login");
+    if (!session) redirect(queryUrlSerializer("/login", { redirect: "/baskets" }));
 
     const baskets = await getBasketsByUserCached({ userId: session.user.id });
 

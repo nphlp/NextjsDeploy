@@ -10,6 +10,7 @@ import { twoFactor } from "@lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
+import { useQueryParams } from "../../_lib/use-query-params";
 
 type VerifyBackupCodeFormProps = {
     trustDevice: boolean;
@@ -20,6 +21,7 @@ export default function VerifyBackupCodeForm(props: VerifyBackupCodeFormProps) {
 
     const router = useRouter();
     const toast = useToast();
+    const { redirect } = useQueryParams();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { register, submit, reset } = useForm({
@@ -57,7 +59,7 @@ export default function VerifyBackupCodeForm(props: VerifyBackupCodeFormProps) {
             setIsSubmitting(false);
         }, 1000);
 
-        router.push("/");
+        router.push(redirect || "/");
     };
 
     return (

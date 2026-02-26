@@ -8,10 +8,6 @@
 
 ## Bugs
 
-- Si redirection pour loging -> redirection après login vers la page initiale
-
-- Callback de redirection après login
-
 - Si 2FA commencée, pouvoir "annuler" -> supprimer le cookie
 
 - Il se passe quoi si je me connecte sans avoir confirmé email ?
@@ -20,6 +16,8 @@
 - First admin en prod ?
 
 - Provider OAuth (Google, Apple, Microsoft, GitHub, etc)`
+
+- Page des fruits : sur mobile, l'auto scroll n'arrive pas à remonter tout en haut
 
 ## Inplement
 
