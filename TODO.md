@@ -8,13 +8,9 @@
 
 ## Bugs
 
-- Si 2FA commencée, pouvoir "annuler" -> supprimer le cookie
-
 - First admin en prod ?
 
 - Provider OAuth (Google, Apple, Microsoft, GitHub, etc)`
-
-- Page des fruits : sur mobile, l'auto scroll n'arrive pas à remonter tout en haut
 
 ## Inplement
 

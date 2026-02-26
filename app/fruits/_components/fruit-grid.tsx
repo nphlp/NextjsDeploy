@@ -60,7 +60,7 @@ export default function FruitsGrid(props: FruitsGridProps) {
 
     const handlePageChange = (newPage: number) => {
         setPage(newPage);
-        document.querySelector("html")?.scrollTo({ top: 0, behavior: "smooth" });
+        window.scrollTo(0, 0);
     };
 
     // Loading state
