@@ -13,8 +13,8 @@ import {
 } from "@atoms/drawer/atoms";
 import Drawer from "@atoms/drawer/drawer";
 import DrawerSnapPoints from "@atoms/drawer/drawer-snap-points";
+import useDevSidebarStore from "@core/header/dev-sidebar-store";
 import cn from "@lib/cn";
-import useDevSidebarStore from "@utils/stores/dev-sidebar-store";
 import useBreakpoint, { Breakpoint } from "@utils/use-breakpoint";
 import { CSSProperties } from "react";
 import SidebarNav from "./sidebar-nav";

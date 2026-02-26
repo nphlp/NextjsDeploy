@@ -1,6 +1,5 @@
-import { IS_DEV } from "@lib/env";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { assertDevAccess } from "../_lib/dev-guard";
 import ScalarDocs from "./dynamic-loading";
 
 export const metadata: Metadata = {
@@ -8,8 +7,8 @@ export const metadata: Metadata = {
     description: "Interactive API documentation.",
 };
 
-export default function Page() {
-    if (!IS_DEV) return notFound();
+export default async function Page() {
+    await assertDevAccess();
 
     return (
         <div className="bg-background absolute inset-0">

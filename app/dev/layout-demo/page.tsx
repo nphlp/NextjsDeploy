@@ -1,7 +1,6 @@
 import Main from "@core/Main";
-import { IS_DEV } from "@lib/env";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { assertDevAccess } from "../_lib/dev-guard";
 import Content from "./_components/content";
 
 export const metadata: Metadata = {
@@ -9,8 +8,8 @@ export const metadata: Metadata = {
     description: "Layout and spacing demo.",
 };
 
-export default function Page() {
-    if (!IS_DEV) notFound();
+export default async function Page() {
+    await assertDevAccess();
 
     return (
         <Main>

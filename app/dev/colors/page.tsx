@@ -1,12 +1,15 @@
 import Main from "@core/Main";
 import type { Metadata } from "next";
+import { assertDevAccess } from "../_lib/dev-guard";
 
 export const metadata: Metadata = {
     title: "Colors",
     description: "Color palette and theme tokens.",
 };
 
-export default function Page() {
+export default async function Page() {
+    await assertDevAccess();
+
     return (
         <Main horizontal="stretch">
             <section>

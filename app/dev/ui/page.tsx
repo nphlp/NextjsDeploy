@@ -1,5 +1,6 @@
 import Main from "@core/Main";
 import type { Metadata } from "next";
+import { assertDevAccess } from "../_lib/dev-guard";
 import ButtonConfig from "./_components/button-config";
 
 export const metadata: Metadata = {
@@ -7,7 +8,9 @@ export const metadata: Metadata = {
     description: "Button variants and configuration playground.",
 };
 
-export default function Page() {
+export default async function Page() {
+    await assertDevAccess();
+
     return (
         <Main>
             <ButtonConfig />
