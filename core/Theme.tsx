@@ -1,5 +1,6 @@
 import ThemeProvider from "@core/theme/theme-provider";
 import { ReactNode, Suspense } from "react";
+import { SSR_THEME } from "./config";
 import { getTheme } from "./theme/theme-server";
 
 type ThemeProps = {
@@ -7,9 +8,19 @@ type ThemeProps = {
 };
 
 export default async function Theme(props: ThemeProps) {
+    const { children } = props;
+
+    if (!SSR_THEME) {
+        return (
+            <Suspense>
+                <ThemeProvider initialTheme={undefined}>{children}</ThemeProvider>
+            </Suspense>
+        );
+    }
+
     return (
         <Suspense>
-            <SuspendedTheme {...props} />
+            <SuspendedTheme>{children}</SuspendedTheme>
         </Suspense>
     );
 }

@@ -3,22 +3,13 @@
 import { ButtonItem, Popup, Portal, Positioner, Trigger } from "@comps/atoms/menu/atoms";
 import Menu from "@comps/atoms/menu/menu";
 import { signOut, useSession } from "@lib/auth-client";
-import { Session } from "@lib/auth-server";
 import { Loader, LogOut, UserPlus, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-type MenuProfileProps = {
-    serverSession: Session;
-};
-
-export default function MenuProfile(props: MenuProfileProps) {
-    const { serverSession } = props;
-    const { data: clientSession, isPending } = useSession();
-
-    // SSR session
-    const session = isPending ? serverSession : clientSession;
+export default function MenuProfile() {
+    const { data: session } = useSession();
 
     // Logout management
     const router = useRouter();

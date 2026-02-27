@@ -1,22 +1,16 @@
 import cn from "@lib/cn";
 import { ReactNode, Suspense } from "react";
-import { DEBUG_LAYOUT } from "./config";
+import { DEBUG_LAYOUT, SSR_THEME } from "./config";
 import { getTheme } from "./theme/theme-server";
 
 type HtmlProps = {
-    /**
-     * Enable server-side rendering of theme class on HTML element
-     * - `true`: prevent theme flashing on initial load, but make HTML component dynamic, that subsequently disable static optimization
-     * - `false`: keep static HTML component, but may have a short theme flashing on initial load
-     */
-    ssrTheme?: boolean;
     children?: ReactNode;
 };
 
 export default async function Html(props: HtmlProps) {
-    const { ssrTheme = false, children } = props;
+    const { children } = props;
 
-    if (!ssrTheme) {
+    if (!SSR_THEME) {
         return (
             <html lang="fr" className={cn("min-h-dvh", DEBUG_LAYOUT && "bg-amber-100")}>
                 {children}
