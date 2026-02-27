@@ -19,13 +19,7 @@ export default async function Page() {
 
     return (
         <Main horizontal="stretch" vertical="start">
-            <h1 className="flex items-center gap-2 text-2xl font-bold">
-                <Link label="Fruits" href="/fruits" className="text-2xl font-bold" noStyle>
-                    Fruits
-                </Link>
-                <ChevronRight className="size-4" />
-                Mes paniers
-            </h1>
+            <PageHeader />
 
             <Suspense fallback={<BasketCardListSkeleton />}>
                 <BasketCardList session={session} />
@@ -33,3 +27,15 @@ export default async function Page() {
         </Main>
     );
 }
+
+const PageHeader = async () => {
+    return (
+        <h1 className="flex items-center gap-2 text-2xl font-bold">
+            <Link label="Fruits" href="/fruits" className="text-2xl font-bold" noStyle>
+                Fruits
+            </Link>
+            <ChevronRight className="size-4" />
+            Mes paniers
+        </h1>
+    );
+};

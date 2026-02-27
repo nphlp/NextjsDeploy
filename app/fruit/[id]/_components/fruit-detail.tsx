@@ -18,6 +18,7 @@ const getFruitByIdCached = async (props: GetFruitByIdCachedProps) => {
 
     return await oRPC.fruit.findUnique(props);
 };
+
 type FruitDetailProps = {
     id: string;
 };

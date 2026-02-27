@@ -22,32 +22,43 @@ type PageProps = {
 export default async function Page(props: PageProps) {
     const { searchParams } = props;
 
-    const { search, order, page } = await queryParamsCached.parse(searchParams);
+    const params = await queryParamsCached.parse(searchParams);
 
     return (
         <Main horizontal="stretch" vertical="start">
-            <section className={cn("flex flex-col gap-2", "xs:flex-row xs:items-center xs:justify-between")}>
-                <h1 className="text-2xl font-bold">Fruits</h1>
-                <div className="flex gap-2">
-                    <AddFruitButton />
-                    <BasketButton />
-                </div>
-            </section>
-
-            <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <div className="space-y-1">
-                    <p className="text-sm font-semibold text-gray-700">Order</p>
-                    <SelectOrder />
-                </div>
-                <div className="space-y-1">
-                    <p className="text-sm font-semibold text-gray-700">Search</p>
-                    <SearchFilter />
-                </div>
-            </section>
+            <PageHeader />
+            <FruitsFilters />
 
             <Suspense fallback={<FruitsGridSkeleton />}>
-                <FruitsGridLoader order={order} page={page} search={search} />
+                <FruitsGridLoader {...params} />
             </Suspense>
         </Main>
     );
 }
+
+const PageHeader = async () => {
+    return (
+        <section className={cn("flex flex-col gap-2", "xs:flex-row xs:items-center xs:justify-between")}>
+            <h1 className="text-2xl font-bold">Fruits</h1>
+            <div className="flex gap-2">
+                <AddFruitButton />
+                <BasketButton />
+            </div>
+        </section>
+    );
+};
+
+const FruitsFilters = async () => {
+    return (
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="space-y-1">
+                <p className="text-sm font-semibold text-gray-700">Order</p>
+                <SelectOrder />
+            </div>
+            <div className="space-y-1">
+                <p className="text-sm font-semibold text-gray-700">Search</p>
+                <SearchFilter />
+            </div>
+        </section>
+    );
+};

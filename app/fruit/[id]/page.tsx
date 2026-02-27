@@ -1,3 +1,5 @@
+"use cache";
+
 import Main from "@core/Main";
 import oRPC from "@lib/orpc";
 import type { Metadata } from "next";

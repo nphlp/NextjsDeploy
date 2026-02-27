@@ -1,5 +1,3 @@
-"use cache";
-
 import Main from "@core/Main";
 
 export default async function Page() {

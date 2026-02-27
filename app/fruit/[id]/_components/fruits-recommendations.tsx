@@ -37,7 +37,7 @@ export default async function FruitsRecommendations(props: FruitsRecommendations
 
     const { fruitIdToExclude } = props;
 
-    const fruits = await getFruitsRecommendationsCached({ excludeIds: [fruitIdToExclude], take: 5 });
+    const fruits = await getFruitsRecommendationsCached({ excludeIds: [fruitIdToExclude], take: 10 });
 
     if (!fruits) notFound();
 
