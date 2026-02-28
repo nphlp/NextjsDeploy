@@ -9,14 +9,12 @@ import Input from "@atoms/input/input";
 import InputPassword from "@atoms/input/input-password";
 import { useToast } from "@atoms/toast";
 import { signIn } from "@lib/auth-client";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
 import { queryUrlSerializer } from "../../_lib/query-params";
 import { useQueryParams } from "../../_lib/use-query-params";
 
 export default function LoginForm() {
-    const router = useRouter();
     const toast = useToast();
     const { redirect } = useQueryParams();
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -71,16 +69,16 @@ export default function LoginForm() {
             }, 1000);
 
             if ("twoFactorRedirect" in data) {
-                // Redirect (2FA)
-                router.push(queryUrlSerializer("/verify-2fa", { redirect }));
+                // Hard navigation to bypass Router Cache (proxy redirects are cached)
+                window.location.href = queryUrlSerializer("/verify-2fa", { redirect });
                 return;
             }
 
             // Toast success
             toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
 
-            // Redirect
-            router.push(redirect || "/");
+            // Hard navigation to bypass Router Cache (proxy redirects are cached)
+            window.location.href = redirect || "/";
         } catch {
             // Toast error
             toast.add({ title: "Erreur", description: "Une erreur est survenue.", type: "error" });

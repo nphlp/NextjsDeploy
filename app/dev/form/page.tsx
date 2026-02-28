@@ -1,7 +1,6 @@
 import Card from "@atoms/card";
 import Main from "@core/Main";
 import type { Metadata } from "next";
-import { assertDevAccess } from "../_lib/dev-guard";
 import FormExample from "./_components/form-example";
 
 export const metadata: Metadata = {
@@ -10,8 +9,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-    await assertDevAccess();
-
     return (
         <Main>
             <Card className="max-w-80">

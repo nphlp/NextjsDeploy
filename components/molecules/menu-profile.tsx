@@ -5,14 +5,12 @@ import Menu from "@comps/atoms/menu/menu";
 import { signOut, useSession } from "@lib/auth-client";
 import { Loader, LogOut, UserPlus, UserRound } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function MenuProfile() {
     const { data: session } = useSession();
 
     // Logout management
-    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
 
     const handleLogout = async () => {
@@ -21,7 +19,8 @@ export default function MenuProfile() {
         const { data } = await signOut();
 
         if (data) {
-            router.push("/");
+            // Hard navigation to clear client state after logout
+            window.location.href = "/";
         } else {
             throw new Error("Something went wrong...");
         }

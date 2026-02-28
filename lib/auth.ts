@@ -242,7 +242,7 @@ export const auth = betterAuth({
             // Limit sensitive auth endpoints to 3 attempts every 10 seconds
             "/sign-in/email": { window: 10, max: 3 },
             "/sign-up/email": { window: 10, max: 3 },
-            "/reset-password": { window: 10, max: 3 },
+            "/request-password-reset": { window: 10, max: 3 },
             "/two-factor/*": { window: 10, max: 3 },
             "/sign-in/magic-link": { window: 10, max: 3 },
             "/sign-in/passkey": { window: 10, max: 5 },
@@ -254,14 +254,14 @@ export const auth = betterAuth({
     plugins: [
         /**
          * Captcha plugin using Cloudflare Turnstile
-         * -> Protects sign-up and reset-password endpoints
+         * -> Protects sign-up and request-password-reset endpoints
          * -> Sign-in relies on rate limiting only
          * -> Client must send token via x-captcha-response header
          */
         captcha({
             provider: "cloudflare-turnstile",
             secretKey: TURNSTILE_SECRET_KEY,
-            endpoints: ["/sign-up/email", "/reset-password"],
+            endpoints: ["/sign-up/email", "/request-password-reset"],
         }),
         /**
          * Have I Been Pwned — check passwords against known data breaches

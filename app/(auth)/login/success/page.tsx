@@ -1,24 +1,18 @@
 import { Link } from "@atoms/button";
 import Card from "@atoms/card";
 import Main from "@core/Main";
+import { SMTP_HOST } from "@lib/env";
 import { CircleCheck, ExternalLink, Mail } from "lucide-react";
-import type { Metadata } from "next";
+import type { Metadata, Route } from "next";
 import EmailProviderLink from "./_components/email-provider-link";
-import { QueryParamsCachedType, queryParamsCached } from "./_lib/query-params";
 
 export const metadata: Metadata = {
     title: "Connexion réussie",
     description: "Un lien de connexion a été envoyé par email.",
 };
 
-type PageProps = {
-    searchParams: Promise<QueryParamsCachedType>;
-};
-
-export default async function Page(props: PageProps) {
-    const { searchParams } = props;
-
-    const { email } = await queryParamsCached.parse(searchParams);
+export default async function Page() {
+    const isMailpit = SMTP_HOST === "localhost";
 
     return (
         <Main>
@@ -49,7 +43,20 @@ export default async function Page(props: PageProps) {
 
                     <div className="flex w-full flex-col items-center gap-2">
                         {/* Email provider link */}
-                        <EmailProviderLink email={email} />
+                        {isMailpit ? (
+                            <Link
+                                href={`http://localhost:8025` as Route}
+                                label={`Ouvrir Mailpit`}
+                                colors="outline"
+                                className="w-full text-gray-700"
+                                legacyProps={{ target: "_blank" }}
+                            >
+                                Ouvrir Mailpit
+                                <ExternalLink className="size-4" />
+                            </Link>
+                        ) : (
+                            <EmailProviderLink />
+                        )}
 
                         {/* Back to login */}
                         <Link

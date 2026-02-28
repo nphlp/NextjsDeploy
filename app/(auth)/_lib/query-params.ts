@@ -1,11 +1,12 @@
+import { sanitizeRedirect } from "@utils/sanitize-redirect";
 import { createParser, createSearchParamsCache, createSerializer } from "nuqs/server";
 
 /**
  * Redirect parser
- * -> Relative path only, no open redirect (rejects "//" and non-"/" prefixed values)
+ * -> Sanitized relative path only, no open redirect
  */
 const redirectParser = createParser({
-    parse: (value: string) => (value.startsWith("/") && !value.startsWith("//") ? value : ""),
+    parse: (value: string) => sanitizeRedirect(value),
     serialize: (value: string) => value,
 });
 

@@ -1,11 +1,8 @@
-import { queryUrlSerializer } from "@app/(auth)/_lib/query-params";
 import { Link } from "@atoms/button";
 import Card from "@atoms/card";
 import Main from "@core/Main";
-import { getSession } from "@lib/auth-server";
 import { ChevronRight } from "lucide-react";
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import CreateFruitForm from "./_components/create-fruit-form";
 
 export const metadata: Metadata = {
@@ -14,9 +11,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-    const session = await getSession();
-    if (!session) redirect(queryUrlSerializer("/login", { redirect: "/fruit/create" }));
-
     return (
         <Main horizontal="stretch" vertical="start">
             <h1 className="flex items-center gap-2 text-2xl font-bold">

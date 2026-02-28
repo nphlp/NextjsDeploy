@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 import Sidebar from "./_components/sidebar";
-import { assertDevAccess } from "./_lib/dev-guard";
 
 export const metadata: Metadata = {
     title: {
@@ -17,8 +16,6 @@ type LayoutProps = {
 
 export default async function Layout(props: LayoutProps) {
     const { children } = props;
-
-    await assertDevAccess();
 
     return (
         <div className="flex">

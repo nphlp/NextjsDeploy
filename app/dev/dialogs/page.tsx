@@ -5,7 +5,6 @@ import DrawerNonModal from "@atoms/drawer/drawer-non-modal";
 import DrawerSnapPoints from "@atoms/drawer/drawer-snap-points";
 import Main from "@core/Main";
 import type { Metadata } from "next";
-import { assertDevAccess } from "../_lib/dev-guard";
 import Section from "./_components/section";
 
 export const metadata: Metadata = {
@@ -14,8 +13,6 @@ export const metadata: Metadata = {
 };
 
 export default async function DialogsPage() {
-    await assertDevAccess();
-
     return (
         <Main horizontal="stretch" vertical="start">
             <h1 className="text-2xl font-bold">Dialogs &amp; Drawers</h1>

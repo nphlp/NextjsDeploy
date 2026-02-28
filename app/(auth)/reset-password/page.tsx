@@ -1,8 +1,6 @@
 import Card from "@atoms/card";
 import Main from "@core/Main";
-import { getSession } from "@lib/auth-server";
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import z, { ZodType } from "zod";
 import RequestResetForm from "./_components/request-reset-form";
 import ResetPasswordForm from "./_components/reset-password-form";
@@ -26,9 +24,6 @@ type PageProps = {
 
 export default async function Page(props: PageProps) {
     const { token } = paramsSchema.parse(await props.searchParams);
-
-    const session = await getSession();
-    if (session) redirect("/");
 
     return (
         <Main>

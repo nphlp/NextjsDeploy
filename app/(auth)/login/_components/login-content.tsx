@@ -4,7 +4,6 @@ import Button from "@atoms/button";
 import { useToast } from "@atoms/toast";
 import { signIn } from "@lib/auth-client";
 import { Fingerprint, KeyRound, Mail } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useQueryParams } from "../../_lib/use-query-params";
 import LoginForm from "./login-form";
@@ -24,7 +23,6 @@ const headers = {
 };
 
 export default function LoginContent() {
-    const router = useRouter();
     const toast = useToast();
     const { redirect } = useQueryParams();
     const [method, setMethod] = useState<Method>("credentials");
@@ -55,8 +53,8 @@ export default function LoginContent() {
                 setIsPasskeyLoading(false);
             }, 1000);
 
-            // Redirect
-            router.push(redirect || "/");
+            // Hard navigation to bypass Router Cache (proxy redirects are cached)
+            window.location.href = redirect || "/";
         } catch {
             // Toast error
             toast.add({ title: "Erreur", description: "Une erreur est survenue.", type: "error" });

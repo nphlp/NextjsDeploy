@@ -151,6 +151,10 @@ pnpm build && pnpm start
 
 - For boolean variables: use `every` prefix instead of `all` (e.g. `everyValid`, `everyPassed`, not `allValid`, `allPassed`).
 
+### Forms
+
+- **Always reset forms after submission** — Next.js is a SPA. Even with `window.location.href`, the user can navigate back. Forms must always call `reset()` (form fields), `resetCaptcha()` (if applicable), and stop loaders (`setIsSubmitting(false)`) via a delayed `setTimeout` after submission. Never remove these cleanup calls.
+
 ### Environment Variables
 
 **Architecture:**

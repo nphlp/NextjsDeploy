@@ -9,7 +9,6 @@ import Tabs from "@atoms/tabs";
 import Tooltip from "@atoms/tooltip";
 import Main from "@core/Main";
 import type { Metadata } from "next";
-import { assertDevAccess } from "../_lib/dev-guard";
 import AlertDialogComposed from "./_components/alert-dialog-composed";
 import CollapsibleComposed from "./_components/collapsible-composed";
 import ComboboxComposed from "./_components/combobox-composed";
@@ -27,8 +26,6 @@ export const metadata: Metadata = {
 };
 
 export default async function ComponentsPage() {
-    await assertDevAccess();
-
     return (
         <Main horizontal="stretch" vertical="start">
             <h1 className="text-2xl font-bold">Components</h1>

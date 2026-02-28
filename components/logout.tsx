@@ -1,7 +1,6 @@
 "use client";
 
 import { signOut } from "@lib/auth-client";
-import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
 import Button from "./atoms/button/button";
 
@@ -12,7 +11,6 @@ type LogoutProps = {
 export default function Logout(props: LogoutProps) {
     const { children } = props;
 
-    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
 
     const handleClick = async () => {
@@ -21,7 +19,8 @@ export default function Logout(props: LogoutProps) {
         const { data } = await signOut();
 
         if (data) {
-            router.push("/");
+            // Hard navigation to clear client state after logout
+            window.location.href = "/";
         } else {
             throw new Error("Something went wrong...");
         }

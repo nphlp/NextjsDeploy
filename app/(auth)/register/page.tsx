@@ -1,8 +1,6 @@
 import Card from "@atoms/card";
 import Main from "@core/Main";
-import { getSession } from "@lib/auth-server";
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import RegisterForm from "./_components/register-form";
 
 export const metadata: Metadata = {
@@ -11,9 +9,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-    const session = await getSession();
-    if (session) redirect("/");
-
     return (
         <Main>
             <Card className="max-w-80">

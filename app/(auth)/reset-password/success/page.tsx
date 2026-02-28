@@ -7,8 +7,8 @@ import type { Metadata, Route } from "next";
 import EmailProviderLink from "./_components/email-provider-link";
 
 export const metadata: Metadata = {
-    title: "Inscription réussie",
-    description: "Un email de confirmation a été envoyé.",
+    title: "Email envoyé",
+    description: "Un email de réinitialisation a été envoyé.",
 };
 
 export default async function Page() {
@@ -25,9 +25,9 @@ export default async function Page() {
 
                     {/* Title */}
                     <div className="space-y-2 text-center">
-                        <h3 className="text-xl font-semibold">Inscription r&eacute;ussie</h3>
+                        <h3 className="text-xl font-semibold">Email envoy&eacute; !</h3>
                         <p className="text-sm text-gray-500">
-                            Vous allez recevoir un email avec un lien pour finaliser la cr&eacute;ation de votre compte.
+                            Si un compte existe avec cet email, vous recevrez un lien de r&eacute;initialisation.
                         </p>
                     </div>
 
@@ -35,7 +35,7 @@ export default async function Page() {
                     <div className="w-full space-y-3 rounded-lg bg-gray-50 p-4 text-sm text-gray-600">
                         <div className="flex items-start gap-2.5">
                             <Mail className="mt-0.5 size-4 shrink-0 text-gray-400" />
-                            <p>Le lien de confirmation vous connectera automatiquement &agrave; l&apos;application.</p>
+                            <p>Cliquez sur le lien dans l&apos;email pour r&eacute;initialiser votre mot de passe.</p>
                         </div>
                         <div className="flex items-start gap-2.5">
                             <ExternalLink className="mt-0.5 size-4 shrink-0 text-gray-400" />

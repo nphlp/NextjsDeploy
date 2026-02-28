@@ -3,7 +3,6 @@ import Card from "@atoms/card";
 import Main from "@core/Main";
 import type { Metadata } from "next";
 import { devLinks } from "./_config/links";
-import { assertDevAccess } from "./_lib/dev-guard";
 
 export const metadata: Metadata = {
     title: "Index",
@@ -11,8 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-    await assertDevAccess();
-
     return (
         <Main vertical="start" horizontal="stretch">
             <h1 className="text-3xl font-bold">Developer Hub</h1>
