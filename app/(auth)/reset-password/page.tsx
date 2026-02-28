@@ -29,9 +29,9 @@ export default async function Page(props: PageProps) {
         <Main>
             <Card className="max-w-80">
                 <div className="space-y-2 text-center">
-                    <h3 className="text-xl font-semibold">
+                    <h1 className="text-xl font-semibold">
                         {token ? "Réinitialiser le mot de passe" : "Mot de passe oublié"}
-                    </h3>
+                    </h1>
                     <p className="text-sm text-gray-500">
                         {token
                             ? "Saisissez votre nouveau mot de passe."

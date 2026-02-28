@@ -25,7 +25,7 @@ export default async function Page() {
 
                     {/* Title */}
                     <div className="space-y-2 text-center">
-                        <h3 className="text-xl font-semibold">Email envoy&eacute; !</h3>
+                        <h1 className="text-xl font-semibold">Email envoy&eacute; !</h1>
                         <p className="text-sm text-gray-500">
                             Si un compte existe avec cet email, vous recevrez un lien de r&eacute;initialisation.
                         </p>

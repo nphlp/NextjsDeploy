@@ -13,7 +13,7 @@ export default async function Page() {
         <Main>
             <Card className="max-w-96">
                 <div className="space-y-2 text-center">
-                    <h3 className="text-xl font-semibold">Vérification en deux étapes</h3>
+                    <h1 className="text-xl font-semibold">Vérification en deux étapes</h1>
                     <p className="text-sm text-gray-500">Confirmez votre identité pour continuer.</p>
                 </div>
                 <VerifyTwoFactorContent />

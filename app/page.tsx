@@ -1,4 +1,10 @@
 import Main from "@core/Main";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Accueil",
+    description: "A ready to deploy application template.",
+};
 
 export default async function Page() {
     return (

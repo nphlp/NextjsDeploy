@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 export default async function Page() {
     return (
         <Main horizontal="stretch">
+            <h1 className="text-xl font-bold">Skeleton</h1>
             <SkeletonTextConfig debugTextSkeleton={false} />
 
             <div className="w-full space-y-1">

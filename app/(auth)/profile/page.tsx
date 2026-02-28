@@ -20,6 +20,8 @@ export default async function Page() {
 
     return (
         <Main horizontal="stretch" vertical="start">
+            <h1 className="text-xl font-semibold">Profil</h1>
+
             <ProfileTabs
                 profilePanel={<ProfileTab serverSession={session} />}
                 editionPanel={<EditionTab serverSession={session} />}

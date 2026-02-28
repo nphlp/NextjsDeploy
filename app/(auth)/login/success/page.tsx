@@ -25,7 +25,7 @@ export default async function Page() {
 
                     {/* Title */}
                     <div className="space-y-2 text-center">
-                        <h3 className="text-xl font-semibold">Lien de connexion envoy&eacute; !</h3>
+                        <h1 className="text-xl font-semibold">Lien de connexion envoy&eacute; !</h1>
                         <p className="text-sm text-gray-500">Vous allez recevoir un lien de connexion par email.</p>
                     </div>
 

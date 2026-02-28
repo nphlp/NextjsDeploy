@@ -13,7 +13,7 @@ export default async function Page() {
         <Main>
             <Card className="max-w-80">
                 <div className="space-y-2 text-center">
-                    <h3 className="text-xl font-semibold">Form Example</h3>
+                    <h1 className="text-xl font-semibold">Form Example</h1>
                     <p className="text-sm text-gray-500">Saisissez vos informations.</p>
                 </div>
                 <FormExample />

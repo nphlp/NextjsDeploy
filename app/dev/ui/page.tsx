@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 export default async function Page() {
     return (
         <Main>
+            <h1 className="text-xl font-bold">UI</h1>
             <ButtonConfig />
         </Main>
     );

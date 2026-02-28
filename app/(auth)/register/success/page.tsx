@@ -25,7 +25,7 @@ export default async function Page() {
 
                     {/* Title */}
                     <div className="space-y-2 text-center">
-                        <h3 className="text-xl font-semibold">Inscription r&eacute;ussie</h3>
+                        <h1 className="text-xl font-semibold">Inscription r&eacute;ussie</h1>
                         <p className="text-sm text-gray-500">
                             Vous allez recevoir un email avec un lien pour finaliser la cr&eacute;ation de votre compte.
                         </p>

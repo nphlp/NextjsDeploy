@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 export default async function Page() {
     return (
         <div className="bg-background absolute inset-0">
+            <h1 className="sr-only">Scalar API Documentation</h1>
             <ScalarDocs />
         </div>
     );
