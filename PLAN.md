@@ -37,6 +37,7 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 - [x] **Hashing sécurisé** — scrypt (natif Better Auth) + salt 16 bytes par mot de passe
 - [x] **Have I Been Pwned** — blocage des mots de passe compromis (plugin Better Auth, k-anonymity)
 - [x] **Anti-énumération email** — proxy route masque USER_ALREADY_EXISTS en fake 200 (OWASP)
+    - Test E2E "register with existing email" non implémenté (cf. E2E.md Gaps)
 - [ ] **Email contextuel à l'inscription** — envoyer un email "vous avez déjà un compte" si l'email existe déjà
     - Actuellement le proxy retourne un fake 200 mais aucun email n'est envoyé à l'utilisateur existant
     - Idéalement corrigé upstream par Better Auth ([#7972](https://github.com/better-auth/better-auth/issues/7972))
@@ -50,12 +51,13 @@ Références : OWASP, CNIL, RGPD, ANSSI.
     - 20 req/10s global, 3 req/10s sur login/signup/reset
     - Par IP (cf-connecting-ip, x-forwarded-for, x-client-ip)
     - IPv6 subnet /64 (empêche rotation IPv6)
-- [x] **2FA / MFA** — TOTP, Email OTP, codes de récupération
-    - Plugin Better Auth `twoFactor` (TOTP + Email OTP + backup codes)
+- [x] **2FA / MFA** — TOTP + codes de récupération
+    - Plugin Better Auth `twoFactor` (TOTP + backup codes)
     - QR code setup + secret copiable + vérification + backup codes
-    - Page `/verify-2fa` avec formulaires TOTP, Email OTP, backup code + trust device
+    - Page `/verify-2fa` avec formulaires TOTP, backup code + trust device
     - Onglet Sécurité dans le profil (activer/désactiver, gérer backup codes)
     - UX : bouton Coller (clipboard) intégré dans InputOtp, bouton Copier les backup codes, avertissement stockage séparé
+    - Email OTP non implémenté
 - [x] **Passkeys (WebAuthn)** — inscription, connexion, gestion
     - Plugin Better Auth `passkey`
     - Ajout/suppression dans le profil + bouton passkey sur le login
@@ -150,9 +152,10 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 | Anti-énumération email     | ⚠️ Proxy fake 200 OK, mais pas d'email à l'utilisateur existant |
 | Codes d'erreur             | ✅ Standardisés + traduction FR côté client                     |
 | IDs nanoid                 | ✅ Better Auth + Prisma cohérents                               |
-| 2FA / MFA                  | ✅ TOTP + backup codes (profil + verify-2fa)                    |
+| 2FA / MFA                  | ✅ TOTP + backup codes (Email OTP non implémenté)               |
 | Passkeys (WebAuthn)        | ✅ Ajout/suppression/connexion                                  |
 | Connexion par email        | ✅ Connexion sans mot de passe                                  |
+| Tests E2E                  | ✅ 51 tests (10 specs) — voir `E2E.md`                          |
 | OAuth providers            | ❌ À faire                                                      |
 | Middleware de routes       | ❌ À faire                                                      |
 

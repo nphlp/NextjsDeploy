@@ -16,14 +16,15 @@ test.describe.serial("Logout", () => {
     test("logout redirects to home with no session", async ({ page }) => {
         await login(page, credentials.email, credentials.password);
 
-        // Open user menu and click "Déconnexion"
+        // Listen for page reload BEFORE clicking — window.location.href = "/" triggers hard reload
+        const reloadDone = page.waitForEvent("load");
         const userIcon = page.locator(".lucide-user-round").first();
         await expect(userIcon).toBeVisible();
         await userIcon.click();
         await page.getByText("Déconnexion").click();
+        await reloadDone;
 
-        // Should redirect to / (hard navigation via window.location.href)
-        await page.waitForURL("/");
+        // Should be on /
         await expect(page).toHaveURL("/");
 
         // Verify no session — menu should show "Connexion" instead of "Déconnexion"
