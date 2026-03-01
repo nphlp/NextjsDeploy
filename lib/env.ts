@@ -30,6 +30,7 @@ export const SMTP_FROM_NAME = required("SMTP_FROM_NAME");
 // Derived
 export const IS_DEV = NODE_ENV === "development";
 export const IS_PROD = NODE_ENV === "production";
+export const IS_TEST = NODE_ENV === "test";
 
 // Umami analytics (optional)
 export const UMAMI_URL = process.env.UMAMI_URL;

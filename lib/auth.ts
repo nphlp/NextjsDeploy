@@ -10,7 +10,9 @@ import { nextCookies } from "better-auth/next-js";
 import { captcha, customSession, haveIBeenPwned, magicLink, openAPI, twoFactor } from "better-auth/plugins";
 import { nanoid } from "nanoid";
 import { authBeforeMiddleware } from "./auth-middleware";
-import { BETTER_AUTH_SECRET, IS_DEV, NEXT_PUBLIC_BASE_URL, TURNSTILE_SECRET_KEY } from "./env";
+import { BETTER_AUTH_SECRET, IS_DEV, IS_TEST, NEXT_PUBLIC_BASE_URL, TURNSTILE_SECRET_KEY } from "./env";
+
+const isRateLimitDisabled = IS_TEST === true;
 
 type SendResetPasswordProps = NonNullable<NonNullable<BetterAuthOptions["emailAndPassword"]>["sendResetPassword"]>;
 
@@ -70,13 +72,19 @@ const sendMagicLink = async (data: { email: string; url: string; token: string }
 };
 
 /**
- * Prisma instance with P2025 error suppression on Verification.delete.
- * Better Auth tries to delete the Verification record after it's already gone
- * (race condition between cleanup and explicit delete in passkey/OTP flows).
- * @see https://github.com/better-auth/better-auth/issues/7129
- * @see https://github.com/better-auth/better-auth/issues/6267
+ * Prisma instance with workarounds for Better Auth + Prisma 7 compatibility.
+ *
+ * 1. Verification.delete — P2025 suppression: Better Auth tries to delete the
+ *    Verification record after it's already gone (race condition in passkey/OTP flows).
+ *    @see https://github.com/better-auth/better-auth/issues/7129
+ *    @see https://github.com/better-auth/better-auth/issues/6267
+ *
+ * 2. TwoFactor.delete — non-unique where: Better Auth calls delete({ where: { userId } })
+ *    but Prisma 7 requires a unique field for delete(). Workaround: findFirst then delete by id.
+ *    @see https://github.com/better-auth/better-auth/issues/5929
+ *    @todo Remove when upgrading to better-auth 1.5+ (fix merged in PR #7096)
  */
-const prismaInstanceWithP2025Fix = PrismaInstance.$extends({
+const prismaInstanceWithWorkarounds = PrismaInstance.$extends({
     query: {
         verification: {
             async delete({ args, query }) {
@@ -88,6 +96,16 @@ const prismaInstanceWithP2025Fix = PrismaInstance.$extends({
                     }
                     throw error;
                 }
+            },
+        },
+        twoFactor: {
+            async delete({ args, query }) {
+                if (!("id" in args.where) || !args.where.id) {
+                    const record = await PrismaInstance.twoFactor.findFirst({ where: args.where as never });
+                    if (!record) return null as never;
+                    args.where = { id: record.id };
+                }
+                return query(args);
             },
         },
     },
@@ -138,7 +156,7 @@ export const auth = betterAuth({
     /**
      * Database adapter using Prisma
      */
-    database: prismaAdapter(prismaInstanceWithP2025Fix, { provider: "postgresql" }),
+    database: prismaAdapter(prismaInstanceWithWorkarounds, { provider: "postgresql" }),
     /**
      * Extend user schema with custom fields
      */
@@ -234,7 +252,7 @@ export const auth = betterAuth({
      * -> 3 attempts every 10 seconds per IP address for login, signup, and password reset endpoints
      */
     rateLimit: {
-        enabled: true,
+        enabled: !isRateLimitDisabled,
         window: 10, // Time window to use for rate limiting in seconds (default 10 seconds)
         max: 20, // Max number of requests allowed within the time window (default 100)
         storage: "memory", // Storage method (default: "memory")

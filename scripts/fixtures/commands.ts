@@ -117,6 +117,8 @@ export const reset = async () => {
         await PrismaInstance.quantity.deleteMany({});
         await PrismaInstance.basket.deleteMany({});
         await PrismaInstance.fruit.deleteMany({});
+        await PrismaInstance.passkey.deleteMany({});
+        await PrismaInstance.twoFactor.deleteMany({});
         await PrismaInstance.verification.deleteMany({});
         await PrismaInstance.session.deleteMany({});
         await PrismaInstance.account.deleteMany({});

@@ -94,7 +94,30 @@ dev: postgres app-setup
 
 # Local build server for testing -> http://localhost:3000
 start: postgres app-setup
-	@pnpm build && pnpm start; make postgres-stop
+	@pnpm build
+	@echo ""
+	@echo "🚀 Nextjs Server: http://localhost:3000 ✅"
+	@echo "📚 Prisma Studio: http://localhost:5555 🔥"
+	@echo "📬 Mailpit: http://localhost:8025 📤"
+	@pnpm start; make postgres-stop
+
+################
+#   E2E Test   #
+################
+
+# Production server with test mode (rate limiting disabled)
+# -> Run `pnpm test:e2e` in a separate terminal
+.PHONY: test
+
+test: postgres app-setup
+	@pnpm fixtures:reload
+	@pnpm build
+	@echo ""
+	@echo "🚀 Nextjs Server: http://localhost:3000 ✅"
+	@echo "📚 Prisma Studio: http://localhost:5555 🔥"
+	@echo "📬 Mailpit: http://localhost:8025"
+	@echo "👉 Run 'pnpm test:e2e' in another terminal"
+	@NODE_ENV=test pnpm start; make postgres-stop
 
 ################
 #  Make Basic  #

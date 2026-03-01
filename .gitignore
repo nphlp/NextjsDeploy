@@ -40,5 +40,8 @@ PDF/
 # Vitest
 coverage/
 
+# Playwright
+test-results/
+
 # Vps config
 VpsDeploy/
