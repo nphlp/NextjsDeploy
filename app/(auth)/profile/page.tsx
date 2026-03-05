@@ -1,5 +1,6 @@
-import Main, { MainSuspense } from "@core/Main";
+import Main from "@core/Main";
 import { getSession } from "@lib/auth-server";
+import type { Metadata } from "next";
 import { unauthorized } from "next/navigation";
 import { Suspense } from "react";
 import EditionTab from "./_components/edition-tab";
@@ -8,22 +9,19 @@ import ProfileTab from "./_components/profile-tab";
 import ProfileTabs from "./_components/profile-tabs";
 import SecurityTab from "./_components/security-tab";
 
+export const metadata: Metadata = {
+    title: "Profil",
+    description: "Gérez votre profil et vos paramètres de sécurité.",
+};
+
 export default async function Page() {
-    return (
-        <Suspense fallback={<MainSuspense />}>
-            <SuspendedPage />
-        </Suspense>
-    );
-}
-
-const SuspendedPage = async () => {
-    "use cache: private";
-
     const session = await getSession();
     if (!session) unauthorized();
 
     return (
         <Main horizontal="stretch" vertical="start">
+            <h1 className="text-xl font-semibold">Profil</h1>
+
             <ProfileTabs
                 profilePanel={<ProfileTab serverSession={session} />}
                 editionPanel={<EditionTab serverSession={session} />}
@@ -36,4 +34,4 @@ const SuspendedPage = async () => {
             </Suspense>
         </Main>
     );
-};
+}

@@ -73,43 +73,58 @@ export default function RegisterForm() {
     const handleSubmit: OnSubmit = async (event) => {
         event.preventDefault();
 
+        // Validation
         const validated = submit();
+
+        // Cancel if validation fails
         if (!validated) return;
 
+        // Set loader after validation
         setIsSubmitting(true);
 
         const { firstname, lastname, email, password } = validated;
 
-        const { data, error } = await signUp.email({
-            name: firstname,
-            lastname,
-            email,
-            password,
-            ...captchaHeaders,
-        });
+        try {
+            // Async submission
+            const { data, error } = await signUp.email({
+                name: firstname,
+                lastname,
+                email,
+                password,
+                ...captchaHeaders,
+            });
 
-        if (!data) {
-            const isDisplayableError = isValidationError(error?.message);
+            if (!data) {
+                const isDisplayableError = isValidationError(error?.message);
 
-            if (isDisplayableError) {
-                toast.add({
-                    title: "Échec de l'inscription",
-                    description: translateAuthError(error?.message),
-                    type: "error",
-                });
-                resetCaptcha();
-                setIsSubmitting(false);
-                return;
+                if (isDisplayableError) {
+                    // Toast error
+                    toast.add({
+                        title: "Échec de l'inscription",
+                        description: translateAuthError(error?.message),
+                        type: "error",
+                    });
+                    resetCaptcha();
+                    setIsSubmitting(false);
+                    return;
+                }
             }
-        }
 
-        setTimeout(() => {
+            // Reset form (delayed to avoid visible field clearing)
+            setTimeout(() => {
+                resetCaptcha();
+                reset();
+                setIsSubmitting(false);
+            }, 1000);
+
+            // Redirect
+            router.push(queryUrlSerializer("/register/success", { email }));
+        } catch {
+            // Toast error
+            toast.add({ title: "Erreur", description: "Une erreur est survenue.", type: "error" });
             resetCaptcha();
-            reset();
             setIsSubmitting(false);
-        }, 1000);
-
-        router.push(queryUrlSerializer("/register/success", { email }));
+        }
     };
 
     return (

@@ -5,23 +5,14 @@ import { ButtonItem, Popup, Portal, Positioner, Trigger } from "@comps/atoms/men
 import Menu from "@comps/atoms/menu/menu";
 import { linksToRender } from "@core/header-links";
 import { useSession } from "@lib/auth-client";
-import { Session } from "@lib/auth-server";
 import cn from "@lib/cn";
 import { Menu as MenuIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 
-type MobileNavigationProps = {
-    serverSession: Session | null;
-};
-
-export default function MobileNavigation(props: MobileNavigationProps) {
-    const { serverSession } = props;
-    const { data: clientSession, isPending } = useSession();
-
+export default function MobileNavigation() {
+    const { data: session } = useSession();
     const path = usePathname();
 
-    // SSR session
-    const session = isPending ? serverSession : clientSession;
     const isDev = process.env.NODE_ENV === "development";
     const isAdmin = session?.user.role === "ADMIN";
 

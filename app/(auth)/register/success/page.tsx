@@ -1,18 +1,18 @@
 import { Link } from "@atoms/button";
 import Card from "@atoms/card";
 import Main from "@core/Main";
+import { SMTP_HOST } from "@lib/env";
 import { CircleCheck, ExternalLink, Mail } from "lucide-react";
+import type { Metadata, Route } from "next";
 import EmailProviderLink from "./_components/email-provider-link";
-import { QueryParamsCachedType, queryParamsCached } from "./_lib/query-params";
 
-type PageProps = {
-    searchParams: Promise<QueryParamsCachedType>;
+export const metadata: Metadata = {
+    title: "Inscription réussie",
+    description: "Un email de confirmation a été envoyé.",
 };
 
-export default async function Page(props: PageProps) {
-    const { searchParams } = props;
-
-    const { email } = await queryParamsCached.parse(searchParams);
+export default async function Page() {
+    const isMailpit = SMTP_HOST === "localhost";
 
     return (
         <Main>
@@ -25,7 +25,7 @@ export default async function Page(props: PageProps) {
 
                     {/* Title */}
                     <div className="space-y-2 text-center">
-                        <h3 className="text-xl font-semibold">Inscription r&eacute;ussie</h3>
+                        <h1 className="text-xl font-semibold">Inscription r&eacute;ussie</h1>
                         <p className="text-sm text-gray-500">
                             Vous allez recevoir un email avec un lien pour finaliser la cr&eacute;ation de votre compte.
                         </p>
@@ -45,7 +45,20 @@ export default async function Page(props: PageProps) {
 
                     <div className="flex w-full flex-col items-center gap-2">
                         {/* Email provider link */}
-                        <EmailProviderLink email={email} />
+                        {isMailpit ? (
+                            <Link
+                                href={`http://localhost:8025` as Route}
+                                label={`Ouvrir Mailpit`}
+                                colors="outline"
+                                className="w-full text-gray-700"
+                                legacyProps={{ target: "_blank" }}
+                            >
+                                Ouvrir Mailpit
+                                <ExternalLink className="size-4" />
+                            </Link>
+                        ) : (
+                            <EmailProviderLink />
+                        )}
 
                         {/* Back to login */}
                         <Link

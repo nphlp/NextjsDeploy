@@ -6,15 +6,14 @@ import Form, { OnSubmit } from "@atoms/form/form";
 import { emailSchema, emailSchemaProgressive } from "@atoms/form/schemas";
 import { useForm } from "@atoms/form/use-form";
 import Input from "@atoms/input/input";
-import { useToast } from "@atoms/toast";
 import { useTurnstile } from "@atoms/use-turnstile";
 import { requestPasswordReset } from "@lib/auth-client";
 import { useState } from "react";
 import z from "zod";
+import { queryUrlSerializer } from "../success/_lib/query-params";
 
 export default function RequestResetForm() {
     const [emailSent, setEmailSent] = useState(false);
-    const toast = useToast();
     const { token, captchaHeaders, reset: resetCaptcha, widget: captchaWidget } = useTurnstile();
 
     const { register, submit, reset } = useForm({
@@ -29,28 +28,26 @@ export default function RequestResetForm() {
 
     const handleSubmit: OnSubmit = async (event) => {
         event.preventDefault();
+
         const values = submit();
         if (!values) return;
 
         setEmailSent(true);
-
-        toast.add({
-            title: "Email envoyé",
-            description: "Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.",
-            type: "success",
-        });
-
-        setTimeout(() => {
-            setEmailSent(false);
-            resetCaptcha();
-            reset();
-        }, 5000);
 
         requestPasswordReset({
             email: values.email,
             redirectTo: "/reset-password",
             ...captchaHeaders,
         });
+
+        setTimeout(() => {
+            setEmailSent(false);
+            resetCaptcha();
+            reset();
+        }, 1000);
+
+        // Redirect to success page
+        window.location.href = queryUrlSerializer("/reset-password/success", { email: values.email });
     };
 
     return (

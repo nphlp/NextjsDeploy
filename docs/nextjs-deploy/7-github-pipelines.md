@@ -1,6 +1,6 @@
 [README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **GitHub Pipelines**
 
-[← Git Usage](./7-git-usage.md) | [GitHub Env Setup →](./9-github-env-setup.md)
+[← Git Usage](./6-git-usage.md) | [GitHub Env Setup →](./8-github-env-setup.md)
 
 ---
 
@@ -72,7 +72,7 @@ Here's the planned pipeline structure:
 > [!NOTE]
 > Not yet configured. This section explains how it will work once set up.
 
-[Semantic Release](https://github.com/semantic-release/semantic-release) automates versioning based on [Conventional Commits](./7-git-usage.md#conventional-commits).
+[Semantic Release](https://github.com/semantic-release/semantic-release) automates versioning based on [Conventional Commits](./6-git-usage.md#conventional-commits).
 
 ### Definitions
 
@@ -113,6 +113,6 @@ Remaining setup:
 
 ---
 
-[← Git Usage](./7-git-usage.md) | [GitHub Env Setup →](./9-github-env-setup.md)
+[← Git Usage](./6-git-usage.md) | [GitHub Env Setup →](./8-github-env-setup.md)
 
 [README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **GitHub Pipelines**

@@ -7,9 +7,9 @@ import { useForm } from "@atoms/form/use-form";
 import Input from "@atoms/input/input";
 import { useToast } from "@atoms/toast";
 import { twoFactor } from "@lib/auth-client";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
+import { useQueryParams } from "../../_lib/use-query-params";
 
 type VerifyBackupCodeFormProps = {
     trustDevice: boolean;
@@ -18,8 +18,8 @@ type VerifyBackupCodeFormProps = {
 export default function VerifyBackupCodeForm(props: VerifyBackupCodeFormProps) {
     const { trustDevice } = props;
 
-    const router = useRouter();
     const toast = useToast();
+    const { redirect } = useQueryParams();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { register, submit, reset } = useForm({
@@ -34,30 +34,45 @@ export default function VerifyBackupCodeForm(props: VerifyBackupCodeFormProps) {
     const handleSubmit: OnSubmit = async (event) => {
         event.preventDefault();
 
+        // Validation
         const values = submit();
+
+        // Cancel if validation fails
         if (!values) return;
 
+        // Set loader after validation
         setIsSubmitting(true);
 
-        const { error } = await twoFactor.verifyBackupCode({
-            code: values.code,
-            trustDevice,
-        });
+        try {
+            // Async submission
+            const { error } = await twoFactor.verifyBackupCode({
+                code: values.code,
+                trustDevice,
+            });
 
-        if (error) {
-            toast.add({ title: "Code invalide", description: "Vérifiez votre code de secours.", type: "error" });
+            if (error) {
+                // Toast error
+                toast.add({ title: "Code invalide", description: "Vérifiez votre code de secours.", type: "error" });
+                setIsSubmitting(false);
+                return;
+            }
+
+            // Toast success
+            toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
+
+            // Reset form (delayed to avoid visible field clearing)
+            setTimeout(() => {
+                reset();
+                setIsSubmitting(false);
+            }, 1000);
+
+            // Hard navigation to bypass Router Cache (proxy redirects are cached)
+            window.location.href = redirect || "/";
+        } catch {
+            // Toast error
+            toast.add({ title: "Erreur", description: "Une erreur est survenue.", type: "error" });
             setIsSubmitting(false);
-            return;
         }
-
-        toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
-
-        setTimeout(() => {
-            reset();
-            setIsSubmitting(false);
-        }, 1000);
-
-        router.push("/");
     };
 
     return (

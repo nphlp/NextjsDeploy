@@ -3,9 +3,9 @@
 import Button from "@atoms/button";
 import { useToast } from "@atoms/toast";
 import { signIn } from "@lib/auth-client";
-import { Fingerprint, KeyRound, WandSparkles } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Fingerprint, KeyRound, Mail } from "lucide-react";
 import { useState } from "react";
+import { useQueryParams } from "../../_lib/use-query-params";
 import LoginForm from "./login-form";
 import MagicLinkForm from "./magic-link-form";
 
@@ -17,45 +17,56 @@ const headers = {
         description: "Saisissez vos identifiants de connexion.",
     },
     "magic-link": {
-        title: "Lien magique",
+        title: "Connexion par email",
         description: "Recevez un lien de connexion par email.",
     },
 };
 
 export default function LoginContent() {
-    const router = useRouter();
     const toast = useToast();
+    const { redirect } = useQueryParams();
     const [method, setMethod] = useState<Method>("credentials");
     const [isPasskeyLoading, setIsPasskeyLoading] = useState(false);
 
     const { title, description } = headers[method];
 
     const handlePasskeyLogin = async () => {
+        // Set loader
         setIsPasskeyLoading(true);
 
-        const { error } = await signIn.passkey();
+        try {
+            // Async submission
+            const { error } = await signIn.passkey();
 
-        if (error) {
+            if (error) {
+                setIsPasskeyLoading(false);
+                // Toast error
+                toast.add({ title: "Échec de la connexion", description: "Passkey non reconnu.", type: "error" });
+                return;
+            }
+
+            // Toast success
+            toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
+
+            // Stop loader (delayed to avoid visible state change)
+            setTimeout(() => {
+                setIsPasskeyLoading(false);
+            }, 1000);
+
+            // Hard navigation to bypass Router Cache (proxy redirects are cached)
+            window.location.href = redirect || "/";
+        } catch {
+            // Toast error
+            toast.add({ title: "Erreur", description: "Une erreur est survenue.", type: "error" });
             setIsPasskeyLoading(false);
-            if ((error as { code: string }).code === "AUTH_CANCELLED") return;
-            toast.add({ title: "Échec de la connexion", description: "Passkey non reconnu.", type: "error" });
-            return;
         }
-
-        toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
-
-        setTimeout(() => {
-            setIsPasskeyLoading(false);
-        }, 1000);
-
-        router.push("/");
     };
 
     return (
         <>
             {/* Header */}
             <div className="space-y-2 text-center">
-                <h3 className="text-xl font-semibold">{title}</h3>
+                <h1 className="text-xl font-semibold">{title}</h1>
                 <p className="text-sm text-gray-500">{description}</p>
             </div>
 
@@ -78,8 +89,8 @@ export default function LoginContent() {
                     colors="outline"
                     className="w-full text-xs"
                 >
-                    <WandSparkles className="size-4" />
-                    Lien magique
+                    <Mail className="size-4" />
+                    Connexion par email
                 </Button>
             )}
             {method === "magic-link" && (

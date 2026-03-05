@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@atoms/button";
-import useDevSidebarStore from "@utils/stores/dev-sidebar-store";
+import useDevSidebarStore from "@core/header/dev-sidebar-store";
 import { PanelBottom, PanelLeft } from "lucide-react";
 import { usePathname } from "next/navigation";
 

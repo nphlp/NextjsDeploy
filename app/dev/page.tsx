@@ -1,9 +1,15 @@
 import { Link } from "@atoms/button";
 import Card from "@atoms/card";
 import Main from "@core/Main";
+import type { Metadata } from "next";
 import { devLinks } from "./_config/links";
 
-export default function Page() {
+export const metadata: Metadata = {
+    title: "Index",
+    description: "Showcase pages and development tools.",
+};
+
+export default async function Page() {
     return (
         <Main vertical="start" horizontal="stretch">
             <h1 className="text-3xl font-bold">Developer Hub</h1>

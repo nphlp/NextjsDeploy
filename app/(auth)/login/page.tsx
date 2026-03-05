@@ -1,16 +1,14 @@
 import Card from "@atoms/card";
 import Main from "@core/Main";
-import { getSession, isPendingTwoFactor } from "@lib/auth-server";
-import { redirect } from "next/navigation";
+import type { Metadata } from "next";
 import LoginContent from "./_components/login-content";
 
+export const metadata: Metadata = {
+    title: "Connexion",
+    description: "Connectez-vous à votre compte.",
+};
+
 export default async function Page() {
-    const session = await getSession();
-    if (session) redirect("/");
-
-    const pendingTwoFactor = await isPendingTwoFactor();
-    if (pendingTwoFactor) redirect("/verify-2fa");
-
     return (
         <Main>
             <Card className="max-w-80">

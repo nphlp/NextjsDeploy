@@ -1,9 +1,10 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
-import { setThemeClass, setThemeCookie } from "./theme-client";
+import { ReactNode, useEffect } from "react";
+import { setThemeClass } from "./theme-client";
 import { ThemeContext } from "./theme-context";
-import { Theme, defaultTheme } from "./theme-utils";
+import { Theme } from "./theme-utils";
+import { useCookieTheme } from "./use-cookie-theme";
 import { useSystemTheme } from "./use-system-theme";
 
 type ContextProviderProps = {
@@ -14,11 +15,9 @@ type ContextProviderProps = {
 export default function ThemeProvider(props: ContextProviderProps) {
     const { initialTheme, children } = props;
 
-    // Use initial data to prevent hydration issues
-    const [theme, setTheme] = useState<Theme>(initialTheme ?? defaultTheme);
-
-    // Sync system theme using useSyncExternalStore (SSR safe)
-    // Do not trust server, start with undefined system theme
+    // Cookie is the single source of truth
+    // initialTheme is used as server snapshot to prevent flash in SSR mode
+    const { theme, setTheme } = useCookieTheme(initialTheme);
     const systemTheme = useSystemTheme();
 
     const toggleTheme = () => {
@@ -27,15 +26,10 @@ export default function ThemeProvider(props: ContextProviderProps) {
         if (theme === "light") setTheme("system");
     };
 
-    // Update CSS class and cookie
+    // Update CSS class
     useEffect(() => {
         if (systemTheme === undefined) return;
-
-        // Update CSS class
         setThemeClass(theme, systemTheme);
-
-        // Update cookie
-        setThemeCookie(theme);
     }, [theme, systemTheme]);
 
     const value = { theme, systemTheme, setTheme, toggleTheme };

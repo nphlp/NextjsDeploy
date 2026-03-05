@@ -49,13 +49,21 @@ See [Setup local](./docs/nextjs-deploy/1-setup-local.md) for all options and det
 - [Environment variables](./docs/nextjs-deploy/2-environment-variables.md)
 - [Containerization](./docs/nextjs-deploy/3-containerization.md)
 - [Fixtures](./docs/nextjs-deploy/4-fixtures.md)
-- [Good Practices](./docs/nextjs-deploy/5-good-practices.md)
-- [MCP Servers](./docs/nextjs-deploy/6-mcp-servers.md)
-- [Git Usage](./docs/nextjs-deploy/7-git-usage.md)
-- [GitHub Pipelines](./docs/nextjs-deploy/8-github-pipelines.md)
-- [GitHub Env Setup](./docs/nextjs-deploy/9-github-env-setup.md)
-- [Dokploy Env Setup](./docs/nextjs-deploy/10-dokploy-env-setup.md)
-- [Database Breaking Migrations](./docs/nextjs-deploy/11-database-breaking-migrations.md)
+- [MCP Servers](./docs/nextjs-deploy/5-mcp-servers.md)
+- [Git Usage](./docs/nextjs-deploy/6-git-usage.md)
+- [GitHub Pipelines](./docs/nextjs-deploy/7-github-pipelines.md)
+- [GitHub Env Setup](./docs/nextjs-deploy/8-github-env-setup.md)
+- [Dokploy Env Setup](./docs/nextjs-deploy/9-dokploy-env-setup.md)
+- [Database Breaking Migrations](./docs/nextjs-deploy/10-database-breaking-migrations.md)
+
+### Good Practices — `docs/good-practices/`
+
+- [Next.js](./docs/good-practices/1-nextjs.md)
+- [Components](./docs/good-practices/2-components.md)
+- [TypeScript](./docs/good-practices/3-typescript.md)
+- [Context](./docs/good-practices/4-context.md)
+- [useForm](./docs/good-practices/5-use-form.md)
+- [Query Parameters (nuqs)](./docs/good-practices/6-nuqs.md)
 
 ### Infrastructure — `docs/vps-infra/`
 

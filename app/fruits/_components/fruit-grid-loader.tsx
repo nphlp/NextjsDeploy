@@ -1,5 +1,4 @@
 import oRPC from "@lib/orpc";
-import { timeout } from "@utils/timout";
 import { ITEMS_PER_PAGE, QueryParamsCachedType } from "@/app/fruits/_lib/query-params";
 import FruitsGrid from "./fruit-grid";
 
@@ -9,7 +8,7 @@ const getFruitsCached = async (props: GetFruitsCachedProps) => {
     "use cache";
 
     // Wait 1 second to simulate a slow network or database
-    await timeout(1000);
+    // await timeout(1000);
 
     return await oRPC.fruit.findMany(props);
 };

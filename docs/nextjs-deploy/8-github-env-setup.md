@@ -1,6 +1,6 @@
 [README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **GitHub Env Setup**
 
-[← GitHub Pipelines](./8-github-pipelines.md) | [Dokploy Env Setup →](./10-dokploy-env-setup.md)
+[← GitHub Pipelines](./7-github-pipelines.md) | [Dokploy Env Setup →](./9-dokploy-env-setup.md)
 
 ---
 
@@ -53,6 +53,6 @@ Ruleset **"Enforce PR on main and test"** applies to `main` and `test`:
 
 ---
 
-[← GitHub Pipelines](./8-github-pipelines.md) | [Dokploy Env Setup →](./10-dokploy-env-setup.md)
+[← GitHub Pipelines](./7-github-pipelines.md) | [Dokploy Env Setup →](./9-dokploy-env-setup.md)
 
 [README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **GitHub Env Setup**

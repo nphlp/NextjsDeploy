@@ -1,8 +1,14 @@
 import { Link } from "@atoms/button";
+import Card from "@atoms/card";
 import Main from "@core/Main";
 import { ChevronRight } from "lucide-react";
-import { Suspense } from "react";
-import FormCard from "./_components/form-card";
+import type { Metadata } from "next";
+import CreateFruitForm from "./_components/create-fruit-form";
+
+export const metadata: Metadata = {
+    title: "Nouveau fruit",
+    description: "Ajoutez un nouveau fruit à la liste.",
+};
 
 export default async function Page() {
     return (
@@ -16,9 +22,13 @@ export default async function Page() {
             </h1>
 
             <div className="flex flex-1 items-center justify-center">
-                <Suspense>
-                    <FormCard />
-                </Suspense>
+                <Card className="max-w-80">
+                    <div className="space-y-2 text-center">
+                        <h3 className="text-xl font-semibold">Créer un fruit</h3>
+                        <p className="text-sm text-gray-500">Ajoutez un nouveau fruit à la liste.</p>
+                    </div>
+                    <CreateFruitForm />
+                </Card>
             </div>
         </Main>
     );

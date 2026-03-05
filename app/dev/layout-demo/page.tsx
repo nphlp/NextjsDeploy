@@ -1,11 +1,13 @@
 import Main from "@core/Main";
-import { IS_DEV } from "@lib/env";
-import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import Content from "./_components/content";
 
-export default function Page() {
-    if (!IS_DEV) notFound();
+export const metadata: Metadata = {
+    title: "Layout",
+    description: "Layout and spacing demo.",
+};
 
+export default async function Page() {
     return (
         <Main>
             <h1 className="text-3xl font-bold">Welcome to Cubiing</h1>

@@ -4,9 +4,15 @@ import Drawer from "@atoms/drawer";
 import DrawerNonModal from "@atoms/drawer/drawer-non-modal";
 import DrawerSnapPoints from "@atoms/drawer/drawer-snap-points";
 import Main from "@core/Main";
+import type { Metadata } from "next";
 import Section from "./_components/section";
 
-export default function DialogsPage() {
+export const metadata: Metadata = {
+    title: "Dialogs",
+    description: "Dialog, alert dialog, and drawer variants.",
+};
+
+export default async function DialogsPage() {
     return (
         <Main horizontal="stretch" vertical="start">
             <h1 className="text-2xl font-bold">Dialogs &amp; Drawers</h1>

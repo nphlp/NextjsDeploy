@@ -2,11 +2,18 @@ import Input, { InputSkeleton } from "@atoms/input/input";
 import InputPassword, { InputPasswordSkeleton } from "@atoms/input/input-password";
 import TextArea, { TextAreaSkeleton } from "@atoms/input/text-area";
 import Main from "@core/Main";
+import type { Metadata } from "next";
 import SkeletonTextConfig from "./_components/skeleton-text-config";
 
-export default function Page() {
+export const metadata: Metadata = {
+    title: "Skeleton",
+    description: "Skeleton loading state demos for inputs.",
+};
+
+export default async function Page() {
     return (
         <Main horizontal="stretch">
+            <h1 className="text-xl font-bold">Skeleton</h1>
             <SkeletonTextConfig debugTextSkeleton={false} />
 
             <div className="w-full space-y-1">

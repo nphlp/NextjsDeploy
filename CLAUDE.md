@@ -113,13 +113,25 @@ pnpm build && pnpm start
     - `2-environment-variables.md` — Env generation system, variables reference
     - `3-containerization.md` — Compose files, Dockerfiles, volumes
     - `4-fixtures.md` — Commands, test credentials, seed data
-    - `5-good-practices.md` — Components, pages, cache, nuqs, base-ui, oRPC
-    - `6-mcp-servers.md` — MCP servers configuration
-    - `7-git-usage.md` — Branching, commits, conventions
-    - `8-github-pipelines.md` — CI/CD workflows
-    - `9-github-env-setup.md` — GitHub environment variables
-    - `10-dokploy-env-setup.md` — Dokploy environment setup
-    - `11-database-breaking-migrations.md` — Safe migration strategies
+    - `5-mcp-servers.md` — MCP servers configuration
+    - `6-git-usage.md` — Branching, commits, conventions
+    - `7-github-pipelines.md` — CI/CD workflows
+    - `8-github-env-setup.md` — GitHub environment variables
+    - `9-dokploy-env-setup.md` — Dokploy environment setup
+    - `10-database-breaking-migrations.md` — Safe migration strategies
+- `docs/good-practices/` — Code conventions and patterns
+    - `1-nextjs.md` — Page architecture, file structure per page
+    - `2-components.md` — Component structure, props, JSX conventions
+    - `3-typescript.md` — TypeScript conventions
+    - `4-context.md` — Context structure (3-file pattern)
+    - `5-use-form.md` — Form submission patterns (useForm + Better Auth)
+    - `6-nuqs.md` — Query parameters with nuqs
+    - `7-zustand-cookie.md` — Store cookie patterns (TBD)
+- `docs/testing/` — Test suites documentation
+    - `e2e.md` — Playwright E2E tests (57 tests / 10 specs)
+    - `unit.md` — Vitest unit tests (13 tests)
+    - `functional.md` — Functional tests (placeholder)
+    - `integration.md` — Integration tests (placeholder)
 - `docs/vps-infra/` — VPS setup, DNS, firewall, Dokploy, Tailscale, analytics
     - `1-setup-vps.md` — VPS initial setup
     - `2-firewall-config.md` — UFW firewall rules
@@ -143,6 +155,10 @@ pnpm build && pnpm start
 ### Naming
 
 - For boolean variables: use `every` prefix instead of `all` (e.g. `everyValid`, `everyPassed`, not `allValid`, `allPassed`).
+
+### Forms
+
+- **Always reset forms after submission** — Next.js is a SPA. Even with `window.location.href`, the user can navigate back. Forms must always call `reset()` (form fields), `resetCaptcha()` (if applicable), and stop loaders (`setIsSubmitting(false)`) via a delayed `setTimeout` after submission. Never remove these cleanup calls.
 
 ### Environment Variables
 

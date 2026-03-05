@@ -49,34 +49,49 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const handleSubmit: OnSubmit = async (event) => {
         event.preventDefault();
 
+        // Validation
         const validated = submit();
+
+        // Cancel if validation fails
         if (!validated) return;
 
+        // Set loader after validation
         setIsSubmitting(true);
 
-        const { data, error } = await resetPassword({
-            newPassword: validated.password,
-            token,
-        });
+        try {
+            // Async submission
+            const { data, error } = await resetPassword({
+                newPassword: validated.password,
+                token,
+            });
 
-        if (!data) {
-            toast.add({ title: "Erreur", description: translateAuthError(error?.message), type: "error" });
+            if (!data) {
+                // Toast error
+                toast.add({ title: "Erreur", description: translateAuthError(error?.message), type: "error" });
+                setIsSubmitting(false);
+                return;
+            }
+
+            // Toast success
+            toast.add({
+                title: "Mot de passe réinitialisé",
+                description: "Vous allez être redirigé vers la connexion.",
+                type: "success",
+            });
+
+            // Reset form (delayed to avoid visible field clearing)
+            setTimeout(() => {
+                reset();
+                setIsSubmitting(false);
+            }, 1000);
+
+            // Redirect
+            router.push("/login");
+        } catch {
+            // Toast error
+            toast.add({ title: "Erreur", description: "Une erreur est survenue.", type: "error" });
             setIsSubmitting(false);
-            return;
         }
-
-        toast.add({
-            title: "Mot de passe réinitialisé",
-            description: "Vous allez être redirigé vers la connexion.",
-            type: "success",
-        });
-
-        setTimeout(() => {
-            reset();
-            setIsSubmitting(false);
-        }, 1000);
-
-        router.push("/login");
     };
 
     return (

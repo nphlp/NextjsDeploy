@@ -9,13 +9,14 @@ import Input from "@atoms/input/input";
 import InputPassword from "@atoms/input/input-password";
 import { useToast } from "@atoms/toast";
 import { signIn } from "@lib/auth-client";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
+import { queryUrlSerializer } from "../../_lib/query-params";
+import { useQueryParams } from "../../_lib/use-query-params";
 
 export default function LoginForm() {
-    const router = useRouter();
     const toast = useToast();
+    const { redirect } = useQueryParams();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { register, submit, reset } = useForm({
@@ -37,36 +38,52 @@ export default function LoginForm() {
     const handleSubmit: OnSubmit = async (event) => {
         event.preventDefault();
 
+        // Validation
         const values = submit();
+
+        // Cancel if validation fails
         if (!values) return;
 
+        // Set loader after validation
         setIsSubmitting(true);
 
-        const { data } = await signIn.email(values);
+        try {
+            // Async submission
+            const { data } = await signIn.email(values);
 
-        if (!data) {
-            toast.add({
-                title: "Échec de la connexion",
-                description: "Identifiants invalides, compte inexistant, ou email non vérifié.",
-                type: "error",
-            });
+            if (!data) {
+                // Toast error
+                toast.add({
+                    title: "Échec de la connexion",
+                    description: "Identifiants invalides, compte inexistant, ou email non vérifié.",
+                    type: "error",
+                });
+                setIsSubmitting(false);
+                return;
+            }
+
+            // Reset form (delayed to avoid visible field clearing)
+            setTimeout(() => {
+                reset();
+                setIsSubmitting(false);
+            }, 1000);
+
+            if ("twoFactorRedirect" in data) {
+                // Hard navigation to bypass Router Cache (proxy redirects are cached)
+                window.location.href = queryUrlSerializer("/verify-2fa", { redirect });
+                return;
+            }
+
+            // Toast success
+            toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
+
+            // Hard navigation to bypass Router Cache (proxy redirects are cached)
+            window.location.href = redirect || "/";
+        } catch {
+            // Toast error
+            toast.add({ title: "Erreur", description: "Une erreur est survenue.", type: "error" });
             setIsSubmitting(false);
-            return;
         }
-
-        setTimeout(() => {
-            reset();
-            setIsSubmitting(false);
-        }, 1000);
-
-        if ("twoFactorRedirect" in data) {
-            router.push("/verify-2fa");
-            return;
-        }
-
-        toast.add({ title: "Connexion réussie", description: "Bienvenue sur l'application.", type: "success" });
-
-        router.push("/");
     };
 
     return (

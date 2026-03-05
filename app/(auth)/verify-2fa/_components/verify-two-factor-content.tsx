@@ -1,15 +1,25 @@
 "use client";
 
+import CancelTwoFactorAction from "@actions/CancelTwoFactorAction";
 import Button from "@atoms/button";
 import { useState } from "react";
+import { queryUrlSerializer } from "../../_lib/query-params";
+import { useQueryParams } from "../../_lib/use-query-params";
 import VerifyBackupCodeForm from "./verify-backup-code-form";
 import VerifyTotpForm from "./verify-totp-form";
 
 type Method = "totp" | "backup-code";
 
 export default function VerifyTwoFactorContent() {
+    const { redirect } = useQueryParams();
     const [method, setMethod] = useState<Method>("totp");
     const [trustDevice, setTrustDevice] = useState(false);
+
+    const handleCancel = async () => {
+        await CancelTwoFactorAction();
+        // Hard navigation to bypass Router Cache (proxy redirects are cached)
+        window.location.href = queryUrlSerializer("/login", { redirect });
+    };
 
     return (
         <>
@@ -48,6 +58,13 @@ export default function VerifyTwoFactorContent() {
                         className="text-xs text-gray-500 hover:underline"
                     />
                 )}
+                <Button
+                    label="Retour à la connexion"
+                    onClick={handleCancel}
+                    colors="link"
+                    noStyle
+                    className="text-xs text-gray-500 hover:underline"
+                />
             </div>
         </>
     );
