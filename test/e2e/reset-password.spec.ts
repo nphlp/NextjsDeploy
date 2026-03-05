@@ -131,4 +131,21 @@ test.describe("Reset Password", () => {
         await page.waitForURL("/");
         await expect(page).toHaveURL("/");
     });
+
+    test("invalid reset token shows error", async ({ page }) => {
+        await page.goto("/reset-password?token=invalid-token-123");
+
+        // Token exists so ResetPasswordForm is rendered
+        await expect(page.getByRole("heading", { name: "Réinitialiser le mot de passe" })).toBeVisible();
+
+        // Fill valid passwords
+        await page.fill('input[name="password"]', "ValidNewPass123!!");
+        await page.fill('input[name="confirmPassword"]', "ValidNewPass123!!");
+
+        // Submit
+        await page.click('button[type="submit"]');
+
+        // Assert error toast
+        await expect(page.getByText("Erreur")).toBeVisible();
+    });
 });

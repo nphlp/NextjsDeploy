@@ -101,4 +101,58 @@ test.describe.serial("Profile", () => {
         await login(page, credentials.email, newPassword);
         await expect(page).toHaveURL("/");
     });
+
+    test("wrong current password shows error", async ({ page }) => {
+        await login(page, credentials.email, newPassword);
+        await page.goto("/profile?tab=edition");
+
+        // Fill with wrong current password
+        await page.fill('input[name="currentPassword"]', "WrongPassword123!!");
+        await page.fill('input[name="newPassword"]', "AnotherPass789!!");
+        await page.fill('input[name="confirmPassword"]', "AnotherPass789!!");
+
+        // Submit (third button — .nth(2))
+        await page.getByRole("button", { name: "Valider" }).nth(2).click();
+        await expect(page.getByText("Échec")).toBeVisible();
+    });
+
+    test("session revoke single", async ({ page }) => {
+        await login(page, credentials.email, newPassword);
+
+        // Previous tests created multiple sessions — go to profile to see them
+        await page.goto("/profile");
+
+        // Assert at least 1 other session visible
+        const sessionItems = page.getByRole("button", { name: /Déconnecter la session/ });
+        await expect(sessionItems.first()).toBeVisible();
+        const countBefore = await sessionItems.count();
+
+        // Click first session revoke button → AlertDialog
+        await sessionItems.first().click();
+        await expect(page.getByText("Souhaitez-vous déconnecter cette session ?")).toBeVisible();
+
+        // Confirm disconnect (exact: true to avoid matching "Déconnecter la session du...")
+        await page.getByRole("button", { name: "Déconnecter", exact: true }).click();
+
+        // Assert session count decreased by 1
+        await expect(sessionItems).toHaveCount(countBefore - 1);
+    });
+
+    test("session revoke all", async ({ page }) => {
+        await login(page, credentials.email, newPassword);
+
+        // Previous tests still have leftover sessions
+        await page.goto("/profile");
+
+        // Assert "Révoquer les sessions" button is visible
+        await expect(page.getByRole("button", { name: "Révoquer les sessions" })).toBeVisible();
+
+        // Click → AlertDialog "Déconnexion globale"
+        await page.getByRole("button", { name: "Révoquer les sessions" }).click();
+        await expect(page.getByText("Déconnexion globale")).toBeVisible();
+
+        // Confirm disconnect (exact: true to avoid matching "Déconnecter la session du...")
+        await page.getByRole("button", { name: "Déconnecter", exact: true }).click();
+        await expect(page.getByText("Aucune autre session n'est active.")).toBeVisible();
+    });
 });

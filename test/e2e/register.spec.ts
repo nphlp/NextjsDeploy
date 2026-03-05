@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { register } from "./helpers/auth";
 import { extractLink } from "./helpers/mailpit";
 
 const timestamp = Date.now();
@@ -108,5 +109,33 @@ test.describe("Register", () => {
         // Should auto-login and redirect to home
         await page.waitForURL("/");
         await expect(page).toHaveURL("/");
+    });
+
+    test("register existing email (anti-enum)", async ({ page }) => {
+        const email = `test-antienum-${timestamp}@gmail.com`;
+
+        // Register and verify user
+        await register(page, email, credentials.password);
+        await page.context().clearCookies();
+
+        // Re-navigate to register with the SAME email
+        await page.goto("/register");
+        await page.fill('input[name="firstname"]', "Another");
+        await page.fill('input[name="lastname"]', "User");
+        await page.fill('input[name="email"]', email);
+        await page.fill('input[name="password"]', credentials.password);
+        await page.fill('input[name="confirmPassword"]', credentials.password);
+
+        // Wait for captcha and submit
+        await expect(page.getByRole("button", { name: "S'inscrire" })).toBeEnabled({ timeout: 20_000 });
+        await page.getByRole("button", { name: "S'inscrire" }).click();
+
+        // Assert redirect to success page (identical to normal case — anti-enum)
+        await page.waitForURL(/\/register\/success/);
+        await expect(page).toHaveURL(/\/register\/success\?email=/);
+        await expect(page.getByRole("heading", { name: "Inscription réussie" })).toBeVisible();
+
+        // Assert NO error toast visible
+        await expect(page.getByText("Erreur")).not.toBeVisible();
     });
 });

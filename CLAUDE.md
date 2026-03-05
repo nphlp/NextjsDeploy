@@ -127,6 +127,11 @@ pnpm build && pnpm start
     - `5-use-form.md` — Form submission patterns (useForm + Better Auth)
     - `6-nuqs.md` — Query parameters with nuqs
     - `7-zustand-cookie.md` — Store cookie patterns (TBD)
+- `docs/testing/` — Test suites documentation
+    - `e2e.md` — Playwright E2E tests (57 tests / 10 specs)
+    - `unit.md` — Vitest unit tests (13 tests)
+    - `functional.md` — Functional tests (placeholder)
+    - `integration.md` — Integration tests (placeholder)
 - `docs/vps-infra/` — VPS setup, DNS, firewall, Dokploy, Tailscale, analytics
     - `1-setup-vps.md` — VPS initial setup
     - `2-firewall-config.md` — UFW firewall rules

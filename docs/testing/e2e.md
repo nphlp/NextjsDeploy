@@ -1,6 +1,8 @@
+[< docs](../README.md)
+
 # E2E Tests — Auth
 
-Playwright E2E test suite for all authentication flows — **51 tests across 10 specs**.
+Playwright E2E test suite for all authentication flows — **57 tests across 10 specs**.
 
 ## Setup
 
@@ -75,7 +77,7 @@ export async function deleteAllEmails() {
 | 6   | Login with `?redirect=` → redirect target        |
 | 7   | Guest-only guard → redirect `/`                  |
 
-### `test/e2e/register.spec.ts` — 5 tests
+### `test/e2e/register.spec.ts` — 6 tests
 
 | #   | Test                                            |
 | --- | ----------------------------------------------- |
@@ -84,8 +86,9 @@ export async function deleteAllEmails() {
 | 3   | Client validation: weak password and mismatch   |
 | 4   | Register success → redirect `/register/success` |
 | 5   | Email verification via Mailpit auto-logs in     |
+| 6   | Register existing email (anti-enum)             |
 
-### `test/e2e/reset-password.spec.ts` — 5 tests
+### `test/e2e/reset-password.spec.ts` — 6 tests
 
 | #   | Test                                                                  |
 | --- | --------------------------------------------------------------------- |
@@ -94,14 +97,16 @@ export async function deleteAllEmails() {
 | 3   | Request reset → redirect success                                      |
 | 4   | Full flow: register → verify → request reset → email → reset password |
 | 5   | Login with new password                                               |
+| 6   | Invalid reset token → error                                           |
 
-### `test/e2e/magic-link.spec.ts` — 3 tests
+### `test/e2e/magic-link.spec.ts` — 4 tests
 
-| #   | Test                                         |
-| --- | -------------------------------------------- |
-| 1   | Send magic link → redirect to success page   |
-| 2   | Click email link → auto-login → redirect `/` |
-| 3   | Invalid magic link → error                   |
+| #   | Test                                                   |
+| --- | ------------------------------------------------------ |
+| 1   | Send magic link → redirect to success page             |
+| 2   | Click email link → auto-login → redirect `/`           |
+| 3   | Invalid magic link → error                             |
+| 4   | Magic link to non-existing user → sends register email |
 
 ### `test/e2e/passkey.spec.ts` — 6 tests
 
@@ -145,7 +150,7 @@ export async function deleteAllEmails() {
 | 5   | Cancel 2FA → return to `/login`            |
 | 6   | Switch between TOTP and backup code tabs   |
 
-### `test/e2e/profile.spec.ts` — 6 tests
+### `test/e2e/profile.spec.ts` — 9 tests
 
 | #   | Test                                        |
 | --- | ------------------------------------------- |
@@ -155,6 +160,9 @@ export async function deleteAllEmails() {
 | 4   | Edition tab: update lastname and firstname  |
 | 5   | Edition tab: password validation errors     |
 | 6   | Full flow: change password                  |
+| 7   | Wrong current password → error              |
+| 8   | Session revoke single                       |
+| 9   | Session revoke all                          |
 
 ### `test/e2e/logout.spec.ts` — 3 tests
 
@@ -164,18 +172,7 @@ export async function deleteAllEmails() {
 | 2   | Logout → redirect `/` → no session                |
 | 3   | After logout, protected route → redirect `/login` |
 
-## Gaps — Features Not Yet Tested
-
-### Testable (could have E2E tests)
-
-| Feature                              | Source                            | Priority |
-| ------------------------------------ | --------------------------------- | -------- |
-| Session revoke (single)              | `profile-tab/session-item.tsx`    | Medium   |
-| Session revoke (all)                 | `profile-tab/revoke-sessions.tsx` | Medium   |
-| Register existing email (anti-enum)  | Proxy route                       | Low      |
-| Invalid reset token → error          | `reset-password/page.tsx`         | Low      |
-| Wrong current password → error       | `profile/_components/edition-tab` | Low      |
-| Magic link non-existing user → email | `lib/auth.ts:sendMagicLink`       | Low      |
+## Gaps — Remaining
 
 ### Not Testable in E2E (infra/server)
 
@@ -184,6 +181,14 @@ export async function deleteAllEmails() {
 - CSP headers (server)
 - Session expiration (temporal)
 - Password compromised HIBP (external API)
+
+### Features Not Yet Implemented
+
+- OAuth providers (Google, GitHub)
+- Middleware Next.js (route protection)
+- Email change
+- Last login method
+- Email OTP (2FA by email)
 
 ## Notes
 
@@ -194,3 +199,5 @@ export async function deleteAllEmails() {
 - **Captcha** — Always-valid test keys auto-complete the widget. No interaction needed
 - **Independence** — Each spec creates its own users via `register()`. No shared fixtures between specs
 - **Email OTP** — Not implemented in E2E tests (only TOTP + backup codes are tested for 2FA)
+
+[< docs](../README.md)

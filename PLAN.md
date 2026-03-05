@@ -37,7 +37,7 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 - [x] **Hashing sécurisé** — scrypt (natif Better Auth) + salt 16 bytes par mot de passe
 - [x] **Have I Been Pwned** — blocage des mots de passe compromis (plugin Better Auth, k-anonymity)
 - [x] **Anti-énumération email** — proxy route masque USER_ALREADY_EXISTS en fake 200 (OWASP)
-    - Test E2E "register with existing email" non implémenté (cf. E2E.md Gaps)
+    - Test E2E "register with existing email" implémenté
 - [ ] **Email contextuel à l'inscription** — envoyer un email "vous avez déjà un compte" si l'email existe déjà
     - Actuellement le proxy retourne un fake 200 mais aucun email n'est envoyé à l'utilisateur existant
     - Idéalement corrigé upstream par Better Auth ([#7972](https://github.com/better-auth/better-auth/issues/7972))
@@ -155,7 +155,7 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 | 2FA / MFA                  | ✅ TOTP + backup codes (Email OTP non implémenté)               |
 | Passkeys (WebAuthn)        | ✅ Ajout/suppression/connexion                                  |
 | Connexion par email        | ✅ Connexion sans mot de passe                                  |
-| Tests E2E                  | ✅ 51 tests (10 specs) — voir `E2E.md`                          |
+| Tests E2E                  | ✅ 57 tests (10 specs) — voir `docs/testing/e2e.md`             |
 | OAuth providers            | ❌ À faire                                                      |
 | Middleware de routes       | ❌ À faire                                                      |
 
