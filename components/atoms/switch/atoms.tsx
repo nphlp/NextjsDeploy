@@ -6,6 +6,8 @@ import cn from "@lib/cn";
 import { ReactNode } from "react";
 
 export type SwitchProps = {
+    id?: string;
+
     className?: string;
     children?: ReactNode;
 
@@ -24,10 +26,11 @@ export const Root = (props: SwitchProps) => {
                 // Border
                 "border-2 outline-0",
                 // Background
-                "border-gray-200 bg-gray-200",
-                "data-checked:border-gray-500 data-checked:bg-gray-500",
+                "border-gray-100 bg-gray-200",
+                "data-checked:border-gray-300 data-checked:bg-gray-500",
                 // Shadow
-                // "shadow-[inset_0_1.5px_2px_var(--color-gray-200)]",
+                "inset-shadow-[1px_1px_3px_0px_var(--color-gray-500)]",
+                "data-checked:inset-shadow-[1px_1px_3px_0px_var(--color-gray-700)]",
                 // Animation
                 "transition-all duration-150 ease-in-out",
                 // State
@@ -62,12 +65,10 @@ export const Thumb = (props: SwitchThumbProps) => {
                 // Background
                 "bg-white",
                 // Shadow
-                // "shadow-[0_0_1px_1px_var(--color-gray-100),0_1px_1px_var(--color-gray-100),1px_2px_4px_-1px_var(--color-gray-100)]",
+                // "inset-shadow-[-1px_-1px_1.5px_0px_var(--color-gray-300)]",
                 // Animation
                 "transition-transform duration-150",
                 "data-checked:translate-x-4",
-                // Dark
-                // "dark:shadow-[0_0_1px_1px_rgb(0_0_0/0.25),0_1px_1px_rgb(0_0_0/0.25),1px_2px_4px_-1px_rgb(0_0_0/0.25)]",
                 // Overrides
                 className,
             )}

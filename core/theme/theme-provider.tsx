@@ -1,24 +1,30 @@
 "use client";
 
+import { useCookieState } from "@lib/cookie-state-client";
 import { ReactNode, useEffect } from "react";
-import { setThemeClass } from "./theme-client";
+import { getSystemTheme, setThemeClass } from "./theme-client";
 import { ThemeContext } from "./theme-context";
-import { Theme } from "./theme-utils";
-import { useCookieTheme } from "./use-cookie-theme";
+import { Theme, ThemeCookie, defaultTheme, themeCookieName } from "./theme-utils";
 import { useSystemTheme } from "./use-system-theme";
 
-type ContextProviderProps = {
-    initialTheme: Theme | undefined;
+type ThemeProviderProps = {
+    initialThemeCookie: ThemeCookie | undefined;
     children: ReactNode;
 };
 
-export default function ThemeProvider(props: ContextProviderProps) {
-    const { initialTheme, children } = props;
+const defaultThemeCookie: ThemeCookie = { theme: defaultTheme, systemTheme: "light" };
 
-    // Cookie is the single source of truth
-    // initialTheme is used as server snapshot to prevent flash in SSR mode
-    const { theme, setTheme } = useCookieTheme(initialTheme);
+export default function ThemeProvider(props: ThemeProviderProps) {
+    const { initialThemeCookie, children } = props;
+
+    const [themeCookie, setThemeCookie] = useCookieState(themeCookieName, initialThemeCookie ?? defaultThemeCookie);
     const systemTheme = useSystemTheme();
+
+    const theme = themeCookie.theme;
+
+    const setTheme = (newTheme: Theme) => {
+        setThemeCookie({ theme: newTheme, systemTheme: systemTheme ?? getSystemTheme() });
+    };
 
     const toggleTheme = () => {
         if (theme === "system") setTheme("dark");

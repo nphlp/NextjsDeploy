@@ -1,7 +1,8 @@
 import cn from "@lib/cn";
+import { getCookieState } from "@lib/cookie-state-server";
 import { ReactNode, Suspense } from "react";
 import { DEBUG_LAYOUT, SSR_THEME } from "./config";
-import { getTheme } from "./theme/theme-server";
+import { resolveThemeClass, themeCookieName, themeSchema } from "./theme/theme-utils";
 
 type HtmlProps = {
     children?: ReactNode;
@@ -34,10 +35,11 @@ export default async function Html(props: HtmlProps) {
 const SuspendedHtml = async (props: HtmlProps) => {
     const { children } = props;
 
-    const themeCookie = await getTheme();
+    const themeCookie = await getCookieState(themeCookieName, themeSchema);
+    const themeClass = resolveThemeClass(themeCookie);
 
     return (
-        <html lang="fr" className={cn("min-h-dvh", DEBUG_LAYOUT && "bg-amber-100", themeCookie?.themeClass)}>
+        <html lang="fr" className={cn("min-h-dvh", DEBUG_LAYOUT && "bg-amber-100", themeClass)}>
             {children}
         </html>
     );

@@ -10,7 +10,7 @@ type HeaderProps = {
     className?: string;
 };
 
-export default function Header(props: HeaderProps) {
+export default async function Header(props: HeaderProps) {
     const { className } = props;
 
     return (

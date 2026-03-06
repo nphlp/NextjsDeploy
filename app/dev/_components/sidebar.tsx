@@ -13,7 +13,7 @@ import {
 } from "@atoms/drawer/atoms";
 import Drawer from "@atoms/drawer/drawer";
 import DrawerSnapPoints from "@atoms/drawer/drawer-snap-points";
-import useDevSidebarStore from "@core/header/dev-sidebar-store";
+import useDevSidebar from "@core/header/use-dev-sidebar";
 import cn from "@lib/cn";
 import useBreakpoint, { Breakpoint } from "@utils/use-breakpoint";
 import { CSSProperties } from "react";
@@ -26,7 +26,7 @@ const smBreakpoints = new Set<Breakpoint>(["sm", "md"]);
 
 export default function Sidebar() {
     const breakpoint = useBreakpoint();
-    const { open, setOpen } = useDevSidebarStore();
+    const { open, setOpen } = useDevSidebar();
 
     const close = () => setOpen(false);
 

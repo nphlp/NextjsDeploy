@@ -1,13 +1,14 @@
 "use client";
 
 import Button from "@atoms/button";
-import useDevSidebarStore from "@core/header/dev-sidebar-store";
 import { PanelBottom, PanelLeft } from "lucide-react";
 import { usePathname } from "next/navigation";
+import useDevSidebar from "./use-dev-sidebar";
 
 export default function DevSidebarTrigger() {
     const pathname = usePathname();
-    const toggle = useDevSidebarStore((s) => s.toggle);
+
+    const { toggle } = useDevSidebar();
 
     if (!pathname.startsWith("/dev")) return null;
 

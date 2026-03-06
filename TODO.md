@@ -1,5 +1,10 @@
 # TODO
 
+## Idées Cookie Hook
+
+- AJOUTER UN LAYOUT à la RACINE pour auto-hydrater les hooks ? En utilisant un prefix "cookie-hook-{name}" pour identifier les cookies ?
+- Finir les docs : 7-cookie-state, 7-cross-state, etc
+
 ## Retour d'Alexis
 
 - Changement de mdp (depuis Chrome)

@@ -1,5 +1,6 @@
 {
     "enableAllProjectMcpServers": true,
+    "includeCoAuthoredBy": false,
     "permissions": {
         "allow": [
             "Bash(pnpm type:*)",
@@ -10,6 +11,7 @@
             "Bash(pnpm checks:*)",
             "Bash(pnpm test:run:*)",
             "Bash(pnpm test:coverage:*)",
+            "Bash(pnpm test:e2e:*)",
 
             "Bash(make:*)",
             "Bash(docker:*)",

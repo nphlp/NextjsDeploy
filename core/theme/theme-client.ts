@@ -1,38 +1,6 @@
 "use client";
 
-import { getCookie, setCookie } from "typescript-cookie";
-import {
-    SystemTheme,
-    Theme,
-    ThemeCookie,
-    defaultTheme,
-    resolveThemeToApply,
-    themeCookieName,
-    validateTheme,
-} from "./theme-utils";
-
-/**
- * Get theme from cookie (if exists), otherwise return default theme
- */
-export const getThemeCookie = (): Theme => {
-    const themeCookieString = getCookie(themeCookieName);
-    const themeCookieObject = themeCookieString ? JSON.parse(themeCookieString) : undefined;
-    const themeCookie = validateTheme(themeCookieObject);
-    if (!themeCookie) return defaultTheme;
-    return themeCookie.theme;
-};
-
-/**
- * Set theme client cookie
- */
-export const setThemeCookie = (newTheme: Theme) => {
-    const newThemeCookie: ThemeCookie = {
-        theme: newTheme,
-        systemTheme: getSystemTheme(),
-    };
-    const themeCookieString = JSON.stringify(newThemeCookie);
-    setCookie(themeCookieName, themeCookieString, { expires: 365 });
-};
+import { SystemTheme, Theme, resolveThemeToApply } from "./theme-utils";
 
 /**
  * Get system color scheme preference

@@ -19,18 +19,17 @@ export const themeCookieName = "theme-preference";
 
 export const defaultTheme: Theme = "system";
 
-export const themeSchema: ZodType<ThemeCookie | undefined> = z
-    .object({
-        theme: z.enum(["light", "dark", "system"]),
-        systemTheme: z.enum(["light", "dark"]),
-    })
-    .optional();
-
-export const validateTheme = (cookieTheme: string | undefined) => {
-    return themeSchema.parse(cookieTheme);
-};
+export const themeSchema = z.object({
+    theme: z.enum(["light", "dark", "system"]),
+    systemTheme: z.enum(["light", "dark"]),
+}) satisfies ZodType<ThemeCookie>;
 
 export const resolveThemeToApply = (theme: Theme, systemTheme: SystemTheme): SystemTheme => {
     if (theme === "system") return systemTheme;
     return theme;
+};
+
+export const resolveThemeClass = (themeCookie: ThemeCookie | undefined): SystemTheme | undefined => {
+    if (!themeCookie) return undefined;
+    return resolveThemeToApply(themeCookie.theme, themeCookie.systemTheme);
 };
