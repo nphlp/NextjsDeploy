@@ -24,7 +24,7 @@ export const Root = (props: SwitchProps) => {
                 // Layout
                 "relative flex h-6 w-10 flex-none cursor-pointer rounded-full",
                 // Border
-                "border-2 outline-0",
+                "border outline-0",
                 // Background
                 "border-gray-100 bg-gray-200",
                 "data-checked:border-gray-300 data-checked:bg-gray-500",
@@ -34,7 +34,7 @@ export const Root = (props: SwitchProps) => {
                 // Animation
                 "transition-all duration-150 ease-in-out",
                 // State
-                "before:outline-outline before:absolute before:rounded-full before:outline-offset-2",
+                "before:outline-outline before:absolute before:rounded-full before:outline-offset-1",
                 "focus-visible:before:inset-0 focus-visible:before:outline-2",
                 // Overrides
                 className,
@@ -65,7 +65,7 @@ export const Thumb = (props: SwitchThumbProps) => {
                 // Background
                 "bg-white",
                 // Shadow
-                // "inset-shadow-[-1px_-1px_1.5px_0px_var(--color-gray-300)]",
+                "inset-shadow-[0px_0px_1.5px_1px_var(--color-gray-50)]",
                 // Animation
                 "transition-transform duration-150",
                 "data-checked:translate-x-4",

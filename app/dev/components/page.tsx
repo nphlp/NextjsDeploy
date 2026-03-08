@@ -3,6 +3,7 @@ import Collapsible from "@atoms/collapsible";
 import Combobox from "@atoms/combobox";
 import Dialog from "@atoms/dialog";
 import Drawer from "@atoms/drawer";
+import Popover from "@atoms/popover";
 import Slider from "@atoms/slider";
 import Switch from "@atoms/switch";
 import Tabs from "@atoms/tabs";
@@ -14,6 +15,7 @@ import CollapsibleComposed from "./_components/collapsible-composed";
 import ComboboxComposed from "./_components/combobox-composed";
 import DialogComposed from "./_components/dialog-composed";
 import DrawerComposed from "./_components/drawer-composed";
+import PopoverComposed from "./_components/popover-composed";
 import Section from "./_components/section";
 import SliderComposed from "./_components/slider-composed";
 import SwitchComposed from "./_components/switch-composed";
@@ -30,7 +32,7 @@ export default async function ComponentsPage() {
         <Main horizontal="stretch" vertical="start">
             <h1 className="text-2xl font-bold">Components</h1>
             <p className="text-gray-600">
-                Showcase of the 9 standard Base-UI components. Each section shows a default demo and a composed usage.
+                Showcase of the 10 standard Base-UI components. Each section shows a default demo and a composed usage.
             </p>
 
             {/* ----- Alert Dialog ----- */}
@@ -114,6 +116,18 @@ export default async function ComponentsPage() {
                 <div>
                     <p className="mb-2 text-sm text-gray-500">Composed</p>
                     <TooltipComposed />
+                </div>
+            </Section>
+
+            {/* ----- Popover ----- */}
+            <Section title="Popover">
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">Demo</p>
+                    <Popover />
+                </div>
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">Composed</p>
+                    <PopoverComposed />
                 </div>
             </Section>
 

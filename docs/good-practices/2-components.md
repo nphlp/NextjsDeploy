@@ -27,6 +27,23 @@ export default function MyComponent(props: MyComponentProps) {
 }
 ```
 
+## Atoms (Base-UI Components)
+
+Each Base-UI component lives in `components/atoms/[component]/` with 3 files:
+
+- `atoms.tsx` — Styled wrappers around Base-UI sub-components (named exports)
+- `[component].tsx` — `"use client"` composable component with conditional children (default export)
+- `index.ts` — Re-exports: `export { default } from "./[component]"` + `export * from "./atoms"`
+
+**Import pattern** — Always import via the `index.ts` barrel:
+
+```tsx
+// Default = composable component, named = individual atoms
+import Popover, { Arrow, Popup, Portal, Positioner, Title, Trigger } from "@atoms/popover";
+```
+
+See `components/atoms/IMPORT.md` for the full guide and `components/atoms/INVENTORY.md` for the per-component breakdown.
+
 ## JSX — Avoid Complex Conditions
 
 Avoid complex conditions in JSX. Prefer assigning a constant in JS, then use it in JSX.
