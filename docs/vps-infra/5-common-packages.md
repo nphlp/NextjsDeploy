@@ -43,15 +43,6 @@ System monitor (CPU, memory, disk, network).
 apt install btop
 ```
 
-## Claude Code
-
-```bash
-curl -fsSL https://claude.ai/install.sh | bash
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-claude
-```
-
 ---
 
 [← Swap File](./4-swap-file.md) | [Docker Install →](./6-docker-install.md)

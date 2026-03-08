@@ -1,6 +1,6 @@
 [README](../../README.md) > [VPS Infra](./1-setup-vps.md) > **Tailscale VPN**
 
-[← Traefik DNS Challenge](./8-traefik-dns-challenge.md) | [Umami Analytics →](./10-umami.md)
+[← Traefik DNS Challenge](./9-traefik-dns-challenge.md) | [Umami Analytics →](./11-umami.md)
 
 ---
 
@@ -47,6 +47,6 @@ VPN-protected domains are not publicly accessible, so Let's Encrypt cannot valid
 
 ---
 
-[← Traefik DNS Challenge](./8-traefik-dns-challenge.md) | [Umami Analytics →](./10-umami.md)
+[← Traefik DNS Challenge](./9-traefik-dns-challenge.md) | [Umami Analytics →](./11-umami.md)
 
 [README](../../README.md) > [VPS Infra](./1-setup-vps.md) > **Tailscale VPN**

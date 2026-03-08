@@ -1,6 +1,6 @@
 [README](../../README.md) > [VPS Infra](./1-setup-vps.md) > **Traefik DNS Challenge**
 
-[← Dokploy Install](./7-dokploy-install.md) | [Tailscale VPN →](./9-tailscale-vpn.md)
+[← Claude Code](./8-claude-code.md) | [Tailscale VPN →](./10-tailscale-vpn.md)
 
 ---
 
@@ -106,6 +106,6 @@ The dashboard is read-only. VPN access is sufficient protection.
 
 ---
 
-[← Dokploy Install](./7-dokploy-install.md) | [Tailscale VPN →](./9-tailscale-vpn.md)
+[← Claude Code](./8-claude-code.md) | [Tailscale VPN →](./10-tailscale-vpn.md)
 
 [README](../../README.md) > [VPS Infra](./1-setup-vps.md) > **Traefik DNS Challenge**

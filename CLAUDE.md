@@ -140,9 +140,10 @@ pnpm build && pnpm start
     - `5-common-packages.md` — Essential packages
     - `6-docker-install.md` — Docker installation
     - `7-dokploy-install.md` — Dokploy installation
-    - `8-traefik-dns-challenge.md` — Traefik SSL with DNS challenge
-    - `9-tailscale-vpn.md` — Tailscale VPN setup
-    - `10-umami.md` — Umami analytics
+    - `8-claude-code.md` — Claude Code on the VPS
+    - `9-traefik-dns-challenge.md` — Traefik SSL with DNS challenge
+    - `10-tailscale-vpn.md` — Tailscale VPN setup
+    - `11-umami.md` — Umami analytics
 
 ## Rules
 

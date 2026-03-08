@@ -18,19 +18,46 @@ Install Ubuntu on the VPS from the Hostinger panel (auto-install).
 
 ## Configure SSH
 
-Configure SSH connection between the VPS and your local machine from the Hostinger panel.
-
-Connect to the VPS:
+### Generate a key
 
 ```bash
-ssh root@<vps-ip-address>
+ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_vps
+```
+
+Add the public key (`~/.ssh/id_ed25519_vps.pub`) to the VPS via the hPanel interface.
+
+### Local SSH config
+
+Add both hosts to `~/.ssh/config`:
+
+```
+# VPS Hostinger (root)
+Host vps-root
+  HostName <your-vps-ip>
+  User root
+  IdentityFile ~/.ssh/id_ed25519_vps
+  IdentitiesOnly yes
+
+# VPS Hostinger (user)
+Host vps-ubuntu
+  HostName <your-vps-ip>
+  User ubuntu
+  IdentityFile ~/.ssh/id_ed25519_vps
+  IdentitiesOnly yes
+```
+
+### Connect
+
+```bash
+ssh vps-ubuntu   # day-to-day (ubuntu)
+ssh vps-root     # admin tasks (root)
 ```
 
 > [!NOTE]
 > After a fresh Ubuntu install, you may see: "Warning: remote host identification has changed!"
 >
-> 1. Remove the old key: `ssh-keygen -R <vps-ip-address>`
-> 2. Reconnect: `ssh root@<vps-ip-address>`
+> 1. Remove the old key: `ssh-keygen -R <your-vps-ip>`
+> 2. Reconnect: `ssh vps-ubuntu`
 > 3. Accept the new key by typing `yes`
 
 ## Update & Upgrade

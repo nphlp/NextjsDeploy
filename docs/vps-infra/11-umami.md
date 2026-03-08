@@ -1,6 +1,6 @@
 [README](../../README.md) > [VPS Infra](./1-setup-vps.md) > **Umami Analytics**
 
-[← Tailscale VPN](./9-tailscale-vpn.md)
+[← Tailscale VPN](./10-tailscale-vpn.md)
 
 ---
 
@@ -112,6 +112,6 @@ To route events through the proxy, add `data-host-url`. Events will be sent to `
 
 ---
 
-[← Tailscale VPN](./9-tailscale-vpn.md)
+[← Tailscale VPN](./10-tailscale-vpn.md)
 
 [README](../../README.md) > [VPS Infra](./1-setup-vps.md) > **Umami Analytics**

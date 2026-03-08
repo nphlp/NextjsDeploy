@@ -74,9 +74,10 @@ See [Setup local](./docs/nextjs-deploy/1-setup-local.md) for all options and det
 - [Common packages](./docs/vps-infra/5-common-packages.md)
 - [Docker install](./docs/vps-infra/6-docker-install.md)
 - [Dokploy install](./docs/vps-infra/7-dokploy-install.md)
-- [Traefik DNS challenge](./docs/vps-infra/8-traefik-dns-challenge.md)
-- [Tailscale VPN](./docs/vps-infra/9-tailscale-vpn.md)
-- [Umami analytics](./docs/vps-infra/10-umami.md)
+- [Claude Code](./docs/vps-infra/8-claude-code.md)
+- [Traefik DNS challenge](./docs/vps-infra/9-traefik-dns-challenge.md)
+- [Tailscale VPN](./docs/vps-infra/10-tailscale-vpn.md)
+- [Umami analytics](./docs/vps-infra/11-umami.md)
 
 ## Fixtures
 
