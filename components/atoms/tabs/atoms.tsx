@@ -82,8 +82,8 @@ export const Tab = (props: TabsTabProps) => {
                 "flex h-8 items-center justify-center px-2",
                 // Border
                 "border-0 outline-none",
-                "before:outline-outline before:inset-x-0 before:inset-y-1 before:rounded-sm before:outline-offset-0",
-                "focus-visible:relative focus-visible:before:absolute focus-visible:before:outline-2",
+                "before:inset-x-0 before:inset-y-1 before:rounded-sm before:outline-2 before:outline-offset-0 before:outline-transparent",
+                "focus-visible:before:outline-outline focus-visible:relative focus-visible:before:absolute",
                 // Text
                 "cursor-pointer text-sm font-medium break-keep whitespace-nowrap select-none",
                 "text-gray-600",
@@ -148,9 +148,9 @@ export const Panel = (props: TabsPanelProps) => {
             className={cn(
                 // Layout
                 "relative",
-                // Border
-                "outline-outline -outline-offset-2",
-                "focus-visible:rounded-md focus-visible:outline-2",
+                // Outline
+                "outline-2 -outline-offset-2 outline-transparent",
+                "focus-visible:outline-outline focus-visible:rounded-md",
                 // Overrides
                 className,
             )}

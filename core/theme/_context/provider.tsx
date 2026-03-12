@@ -3,7 +3,7 @@
 import { useCookieState } from "@lib/cookie-state-client";
 import { ReactNode, useEffect } from "react";
 import { getSystemTheme, setThemeClass } from "../theme-client";
-import { Theme, ThemeCookie, defaultTheme, themeCookieName } from "../theme-utils";
+import { Theme, ThemeCookie, themeCookieName } from "../theme-utils";
 import { useSystemTheme } from "../use-system-theme";
 import { ThemeContext } from "./context";
 
@@ -11,7 +11,7 @@ type ProviderProps = {
     children: ReactNode;
 };
 
-const defaultThemeCookie: ThemeCookie = { theme: defaultTheme, systemTheme: "light" };
+const defaultThemeCookie: ThemeCookie = { theme: "system", systemTheme: "light" };
 
 export default function Provider(props: ProviderProps) {
     const { children } = props;

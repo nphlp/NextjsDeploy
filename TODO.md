@@ -11,6 +11,11 @@
   Le gestionnaire de mpd Google enregistre uniquement le mdp sans proposer de nom d'utilisateur, ce qui implique qu'on doit réécrime manuellement notre email.
   Peut-être faire en sorte que l'email soit aussi inscrit ? Ca se fait peut-être avec un champ email caché ?
 
+## Design
+
+- Finir l'import de base ui
+- Gérer les outline proprement
+
 ## Bugs
 
 - First admin en prod ?

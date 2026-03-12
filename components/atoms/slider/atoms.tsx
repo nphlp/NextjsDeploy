@@ -133,10 +133,10 @@ export const Thumb = (props: SliderThumbProps) => {
                 "size-4 rounded-full select-none",
                 // Background
                 "bg-white",
-                // Border
-                "outline-1 outline-gray-300",
+                // Outline
+                "outline-2 outline-gray-300",
                 // State
-                "has-focus-visible:outline-outline has-focus-visible:outline-2",
+                "has-focus-visible:outline-outline",
                 // Overrides
                 className,
             )}

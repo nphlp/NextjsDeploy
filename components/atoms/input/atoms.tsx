@@ -97,7 +97,8 @@ export const Root = (props: RootProps) => {
                 // Text
                 "text-base text-gray-900",
                 // Outline
-                "focus:outline-outline focus:outline-2 focus:outline-offset-0",
+                "outline-2 outline-transparent",
+                "focus:outline-outline",
                 // Form Field state
                 "group-data-disabled/field:bg-gray-50",
                 "group-data-invalid/field:border-red-800",

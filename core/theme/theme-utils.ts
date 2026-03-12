@@ -17,8 +17,6 @@ export type UseTheme = {
 
 export const themeCookieName = "theme-preference";
 
-export const defaultTheme: Theme = "system";
-
 export const themeSchema = z.object({
     theme: z.enum(["light", "dark", "system"]),
     systemTheme: z.enum(["light", "dark"]),

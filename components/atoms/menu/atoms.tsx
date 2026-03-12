@@ -33,7 +33,9 @@ export const Trigger = (
                 "flex h-10 items-center justify-center gap-1.5 px-3.5",
                 // Border
                 "rounded-md border border-gray-200",
-                "focus-visible:outline-outline focus-visible:outline-2 focus-visible:-outline-offset-1",
+                // Outline
+                "outline-2 -outline-offset-1 outline-transparent",
+                "focus-visible:outline-outline",
                 // Background
                 "bg-gray-50 hover:bg-gray-100 active:bg-gray-100 data-popup-open:bg-gray-100",
                 // Text

@@ -47,10 +47,12 @@ export const Trigger = (props: TooltipTriggerProps) => {
                 "bg-transparent",
                 // Text
                 "text-foreground select-none",
+                // Outline
+                "outline-2 outline-transparent",
                 // State
                 "hover:bg-gray-50",
                 "data-popup-open:bg-gray-50",
-                "focus-visible:outline-outline focus-visible:outline-2 focus-visible:outline-offset-0",
+                "focus-visible:outline-outline",
                 // Overrides
                 className,
             )}

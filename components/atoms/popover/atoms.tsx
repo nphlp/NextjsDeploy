@@ -40,10 +40,12 @@ export const Trigger = (props: PopoverTriggerProps) => {
                 "bg-background",
                 // Text
                 "text-foreground cursor-pointer select-none",
+                // Outline
+                "outline-2 outline-transparent",
                 // State
                 "hover:bg-gray-100 active:bg-gray-100",
                 "data-popup-open:bg-gray-100",
-                "focus-visible:outline-outline focus-visible:outline-2 focus-visible:outline-offset-0",
+                "focus-visible:outline-outline",
                 // Overrides
                 className,
             )}
@@ -279,9 +281,11 @@ export const Close = (props: PopoverCloseProps) => {
                 "bg-background",
                 // Text
                 "text-foreground cursor-pointer text-base font-medium select-none",
+                // Outline
+                "outline-2 outline-transparent",
                 // State
                 "hover:bg-gray-100 active:bg-gray-100",
-                "focus-visible:outline-outline focus-visible:outline-2 focus-visible:outline-offset-0",
+                "focus-visible:outline-outline",
                 // Overrides
                 className,
             )}

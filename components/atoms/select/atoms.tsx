@@ -69,7 +69,9 @@ export const Trigger = (props: { className?: string; children: ReactNode }) => {
                 "flex min-h-10 max-w-60 min-w-36 items-center justify-between gap-3 py-1.5 pr-3 pl-3.5",
                 // Border
                 "rounded-md border border-gray-200",
-                "focus-visible:outline-outline focus-visible:outline-2 focus-visible:-outline-offset-1",
+                // Outline
+                "outline-2 -outline-offset-1 outline-transparent",
+                "focus-visible:outline-outline",
                 // Background
                 "bg-background hover:bg-gray-100 data-popup-open:bg-gray-100",
                 // Text

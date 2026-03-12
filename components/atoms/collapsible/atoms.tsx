@@ -48,8 +48,10 @@ export const Trigger = (props: CollapsibleTriggerProps) => {
                 "cursor-pointer",
                 // Animation
                 "transition-all duration-100 ease-in-out",
+                // Outline
+                "outline-2 outline-transparent",
                 // State
-                "focus-visible:outline-outline focus-visible:outline-2 focus-visible:outline-offset-0",
+                "focus-visible:outline-outline",
                 // Overrides
                 className,
             )}

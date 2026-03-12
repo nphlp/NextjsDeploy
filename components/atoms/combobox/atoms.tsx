@@ -37,8 +37,10 @@ export const Input = (props: ComboboxInputProps) => {
                 "bg-background",
                 // Text
                 "text-foreground text-base font-normal",
+                // Outline
+                "outline-2 outline-transparent",
                 // State
-                "focus:outline-outline focus:outline-2 focus:outline-offset-0",
+                "focus:outline-outline",
                 // Overrides
                 className,
             )}
@@ -322,8 +324,10 @@ export const Chips = (props: ComboboxChipsProps) => {
                 "flex w-64 flex-wrap items-center gap-0.5 rounded-md px-1.5 py-1",
                 // Border
                 "border border-gray-200",
+                // Outline
+                "outline-2 outline-transparent",
                 // State
-                "focus-within:outline-outline focus-within:outline-2 focus-within:outline-offset-0",
+                "focus-within:outline-outline",
                 // Overrides
                 className,
             )}

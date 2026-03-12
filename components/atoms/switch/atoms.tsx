@@ -33,9 +33,9 @@ export const Root = (props: SwitchProps) => {
                 "data-checked:inset-shadow-[1px_1px_3px_0px_var(--color-gray-700)]",
                 // Animation
                 "transition-all duration-150 ease-in-out",
-                // State
-                "before:outline-outline before:absolute before:rounded-full before:outline-offset-1",
-                "focus-visible:before:inset-0 focus-visible:before:outline-2",
+                // Outline (before: pseudo-element)
+                "before:absolute before:rounded-full before:outline-2 before:outline-offset-1 before:outline-transparent",
+                "focus-visible:before:outline-outline focus-visible:before:inset-0",
                 // Overrides
                 className,
             )}

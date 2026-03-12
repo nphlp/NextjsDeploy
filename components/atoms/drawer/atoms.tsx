@@ -38,8 +38,11 @@ export const Trigger = (props: DrawerTriggerProps) => {
                 "bg-background",
                 // Text
                 "text-foreground cursor-pointer text-base font-medium select-none",
+                // Outline
+                "outline-2 outline-transparent",
                 // State
-                "focus-visible:outline-outline hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-0 active:bg-gray-100",
+                "hover:bg-gray-100 active:bg-gray-100",
+                "focus-visible:outline-outline",
                 // Overrides
                 className,
             )}
@@ -281,8 +284,11 @@ export const Close = (props: DrawerCloseProps) => {
                 "bg-background",
                 // Text
                 "text-foreground cursor-pointer text-base font-medium select-none",
+                // Outline
+                "outline-2 outline-transparent",
                 // State
-                "focus-visible:outline-outline hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-0 active:bg-gray-100",
+                "hover:bg-gray-100 active:bg-gray-100",
+                "focus-visible:outline-outline",
                 // Overrides
                 className,
             )}
