@@ -5,13 +5,16 @@
 
         var parsed = JSON.parse(decodeURIComponent(cookie[1]));
         var theme = parsed.theme;
+        var resolved = theme;
 
         if (theme === "system") {
-            theme = window.matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light";
+            resolved = window.matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light";
         }
 
-        if (theme === "dark" || theme === "light") {
-            document.documentElement.classList.add(theme);
+        document.documentElement.dataset.themePreference = theme;
+
+        if (resolved === "dark" || resolved === "light") {
+            document.documentElement.classList.add(resolved);
         }
     } catch {}
 })();

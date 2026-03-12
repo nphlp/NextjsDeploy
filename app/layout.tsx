@@ -2,7 +2,7 @@ import ToastProvider from "@atoms/toast/toast";
 import Breakpoints from "@comps/breakpoints";
 import Footer from "@core/Footer";
 import Header from "@core/Header";
-import { DEBUG_LAYOUT, HEADER_HEIGHT } from "@core/config";
+import { DEBUG_LAYOUT } from "@core/config";
 import ThemeProvider from "@core/theme/_context/provider";
 import ThemeScript from "@core/theme/theme-script";
 import cn from "@lib/cn";
@@ -59,12 +59,7 @@ export default async function Layout(props: LayoutProps) {
                     <NuqsAdapter>
                         <ThemeProvider>
                             <Header />
-                            <main
-                                style={{ minHeight: `calc(100dvh - ${HEADER_HEIGHT}rem)` }}
-                                className={cn(DEBUG_LAYOUT && "bg-teal-100")}
-                            >
-                                {children}
-                            </main>
+                            {children}
                             <Footer />
                             <Breakpoints mode="onResize" />
                         </ThemeProvider>

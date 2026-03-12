@@ -127,6 +127,7 @@ pnpm build && pnpm start
     - `5-use-form.md` — Form submission patterns (useForm + Better Auth)
     - `6-nuqs.md` — Query parameters with nuqs
     - `7-zustand-cookie.md` — Store cookie patterns (TBD)
+    - `10-theme.md` — Theme system (blocking script, CSS icons, zero flash)
 - `docs/testing/` — Test suites documentation
     - `e2e.md` — Playwright E2E tests (57 tests / 10 specs)
     - `unit.md` — Vitest unit tests (13 tests)

@@ -64,6 +64,7 @@ See [Setup local](./docs/nextjs-deploy/1-setup-local.md) for all options and det
 - [Context](./docs/good-practices/4-context.md)
 - [useForm](./docs/good-practices/5-use-form.md)
 - [Query Parameters (nuqs)](./docs/good-practices/6-nuqs.md)
+- [Theme](./docs/good-practices/10-theme.md)
 
 ### Infrastructure — `docs/vps-infra/`
 

@@ -11,9 +11,9 @@ export default function MenuTheme() {
     return (
         <Menu>
             <Trigger className="border-none bg-transparent px-2 hover:bg-gray-100">
-                {theme === "system" && <SunMoon className="size-6" />}
-                {theme === "dark" && <Moon className="size-6" />}
-                {theme === "light" && <Sun className="size-6" />}
+                <SunMoon className="size-6" data-theme-icon="system" />
+                <Moon className="size-6" data-theme-icon="dark" />
+                <Sun className="size-6" data-theme-icon="light" />
             </Trigger>
             <Portal>
                 <Positioner align="end">

@@ -33,6 +33,9 @@ export const setThemeClass = (theme: Theme, systemTheme: SystemTheme) => {
     if (themeToApply === "light") htmlClass.add("light");
     if (themeToApply === "dark") htmlClass.add("dark");
 
+    // Sync data attribute for CSS-driven icon visibility
+    document.documentElement.dataset.themePreference = theme;
+
     // Force reflow
     // eslint-disable-next-line
     document.documentElement.scrollHeight;

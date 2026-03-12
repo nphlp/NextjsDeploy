@@ -2,6 +2,17 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Theme icon visibility */
+[data-theme-icon] {
+    display: none;
+}
+html:not([data-theme-preference]) [data-theme-icon="system"],
+html[data-theme-preference="system"] [data-theme-icon="system"],
+html[data-theme-preference="dark"] [data-theme-icon="dark"],
+html[data-theme-preference="light"] [data-theme-icon="light"] {
+    display: inline;
+}
+
 /* Light theme */
 :root {
     --background: hsl(0, 0%, 100%);
