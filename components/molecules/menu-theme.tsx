@@ -1,7 +1,7 @@
 "use client";
 
 import Menu from "@comps/atoms/menu/menu";
-import useTheme from "@core/theme/useTheme";
+import useTheme from "@core/theme/_context/use-theme";
 import { Monitor, Moon, Sun, SunMoon } from "lucide-react";
 import { ButtonItem, Popup, Portal, Positioner, Trigger } from "../atoms/menu/atoms";
 

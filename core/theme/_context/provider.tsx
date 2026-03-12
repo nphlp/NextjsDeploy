@@ -2,22 +2,21 @@
 
 import { useCookieState } from "@lib/cookie-state-client";
 import { ReactNode, useEffect } from "react";
-import { getSystemTheme, setThemeClass } from "./theme-client";
-import { ThemeContext } from "./theme-context";
-import { Theme, ThemeCookie, defaultTheme, themeCookieName } from "./theme-utils";
-import { useSystemTheme } from "./use-system-theme";
+import { getSystemTheme, setThemeClass } from "../theme-client";
+import { Theme, ThemeCookie, defaultTheme, themeCookieName } from "../theme-utils";
+import { useSystemTheme } from "../use-system-theme";
+import { ThemeContext } from "./context";
 
-type ThemeProviderProps = {
-    initialThemeCookie: ThemeCookie | undefined;
+type ProviderProps = {
     children: ReactNode;
 };
 
 const defaultThemeCookie: ThemeCookie = { theme: defaultTheme, systemTheme: "light" };
 
-export default function ThemeProvider(props: ThemeProviderProps) {
-    const { initialThemeCookie, children } = props;
+export default function Provider(props: ProviderProps) {
+    const { children } = props;
 
-    const [themeCookie, setThemeCookie] = useCookieState(themeCookieName, initialThemeCookie ?? defaultThemeCookie);
+    const [themeCookie, setThemeCookie] = useCookieState(themeCookieName, defaultThemeCookie);
     const systemTheme = useSystemTheme();
 
     const theme = themeCookie.theme;

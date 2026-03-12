@@ -3,11 +3,13 @@ import { VariantProps, cva } from "class-variance-authority";
 
 const structure = cn(
     // Useless
-    "m-0 outline-0 block w-fit",
+    "m-0 block w-fit",
     // Cursor
     "cursor-pointer data-disabled:cursor-default",
     // Text
     "font-inherit text-base font-medium select-none",
+    // Outline
+    "outline-2 outline-transparent",
     // Transition
     "transition-all duration-100 ease-in-out",
 );
@@ -191,7 +193,7 @@ const buttonVariants = cva(structure, {
             false: "",
         },
         outline: {
-            true: "focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-outline",
+            true: "focus-visible:outline-outline",
             false: "",
         },
     },

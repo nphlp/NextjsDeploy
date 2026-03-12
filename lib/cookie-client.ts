@@ -25,7 +25,7 @@ export const writeCookie = (
     const stringifiedValue = typeof value === "object" ? JSON.stringify(value) : value;
     const encodedValue = encodeURIComponent(stringifiedValue);
 
-    const encodedPath = path ? encodeURIComponent(path) : DEFAULT_PATH;
+    const cookiePath = path ?? DEFAULT_PATH;
 
     const now = new Date().getTime();
     const cookieDuration = duration ?? COOKIE_MAX_AGE_MS;
@@ -33,7 +33,7 @@ export const writeCookie = (
 
     const cookieOptions = options?.join("; ") ?? DEFAULT_OPTIONS;
 
-    document.cookie = `${encodedName}=${encodedValue}; expires=${cookieExpires}; path=${encodedPath}; ${cookieOptions}`;
+    document.cookie = `${encodedName}=${encodedValue}; expires=${cookieExpires}; path=${cookiePath}; ${cookieOptions}`;
 };
 
 // Cache to ensure referential stability for objects (JSON.parse returns a new reference each time)
@@ -77,7 +77,7 @@ export const readCookie = <T extends string | object>(name: string, schema?: Zod
 
 export const deleteCookie = (name: string, path?: string) => {
     const encodedName = encodeURIComponent(name);
-    const encodedPath = path ? encodeURIComponent(path) : DEFAULT_PATH;
+    const cookiePath = path ?? DEFAULT_PATH;
 
-    document.cookie = `${encodedName}=; expires=${new Date(0).toUTCString()}; path=${encodedPath}; ${DEFAULT_OPTIONS}`;
+    document.cookie = `${encodedName}=; expires=${new Date(0).toUTCString()}; path=${cookiePath}; ${DEFAULT_OPTIONS}`;
 };

@@ -110,7 +110,10 @@
         "zod": "^4.3.6"
     },
     "lint-staged": {
-        "*.{js,ts,tsx}": "eslint --fix",
+        "*.{js,ts,tsx}": [
+            "eslint --fix",
+            "vitest related --run"
+        ],
         "*.{js,ts,tsx,json,css,md,yml,yaml}": "prettier --write"
     }
 }

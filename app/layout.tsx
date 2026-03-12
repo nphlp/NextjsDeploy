@@ -2,9 +2,9 @@ import ToastProvider from "@atoms/toast/toast";
 import Breakpoints from "@comps/breakpoints";
 import Footer from "@core/Footer";
 import Header from "@core/Header";
-import Html from "@core/Html";
-import Theme from "@core/Theme";
 import { DEBUG_LAYOUT, HEADER_HEIGHT } from "@core/config";
+import ThemeProvider from "@core/theme/_context/provider";
+import ThemeScript from "@core/theme/theme-script";
 import cn from "@lib/cn";
 import { IS_UMAMI_DEFINED, UMAMI_WEBSITE_ID } from "@lib/env";
 import "@lib/orpc-server";
@@ -40,7 +40,10 @@ export default async function Layout(props: LayoutProps) {
     const { children } = props;
 
     return (
-        <Html>
+        <html lang="fr" className={cn("min-h-dvh", DEBUG_LAYOUT && "bg-amber-100")} suppressHydrationWarning>
+            <head>
+                <ThemeScript />
+            </head>
             <body
                 className={cn(
                     geistSans.variable,
@@ -54,7 +57,7 @@ export default async function Layout(props: LayoutProps) {
             >
                 <ToastProvider>
                     <NuqsAdapter>
-                        <Theme>
+                        <ThemeProvider>
                             <Header />
                             <main
                                 style={{ minHeight: `calc(100dvh - ${HEADER_HEIGHT}rem)` }}
@@ -64,7 +67,7 @@ export default async function Layout(props: LayoutProps) {
                             </main>
                             <Footer />
                             <Breakpoints mode="onResize" />
-                        </Theme>
+                        </ThemeProvider>
                     </NuqsAdapter>
                 </ToastProvider>
                 {IS_UMAMI_DEFINED && (
@@ -76,6 +79,6 @@ export default async function Layout(props: LayoutProps) {
                     />
                 )}
             </body>
-        </Html>
+        </html>
     );
 }
