@@ -1,6 +1,9 @@
+import Accordion from "@atoms/accordion";
 import AlertDialog from "@atoms/alert-dialog";
+import Checkbox from "@atoms/checkbox";
 import Collapsible from "@atoms/collapsible";
 import Combobox from "@atoms/combobox";
+import ContextMenu from "@atoms/context-menu";
 import Dialog from "@atoms/dialog";
 import Drawer from "@atoms/drawer";
 import DrawerNonModal from "@atoms/drawer/drawer-non-modal";
@@ -153,6 +156,21 @@ export default async function ComponentsPage() {
                     <p className="mb-2 text-sm text-gray-500">Composed</p>
                     <ComboboxComposed />
                 </div>
+            </Section>
+
+            {/* ----- Accordion ----- */}
+            <Section title="Accordion">
+                <Accordion />
+            </Section>
+
+            {/* ----- Checkbox ----- */}
+            <Section title="Checkbox">
+                <Checkbox />
+            </Section>
+
+            {/* ----- Context Menu ----- */}
+            <Section title="Context Menu">
+                <ContextMenu />
             </Section>
         </Main>
     );
