@@ -17,7 +17,7 @@ const structure = cn(
 const buttonVariants = cva(structure, {
     variants: {
         colors: {
-            default: cn(
+            solid: cn(
                 // Border
                 "border border-gray-950",
                 // Border (hover)

@@ -3,11 +3,12 @@ import Collapsible from "@atoms/collapsible";
 import Combobox from "@atoms/combobox";
 import Dialog from "@atoms/dialog";
 import Drawer from "@atoms/drawer";
+import DrawerNonModal from "@atoms/drawer/drawer-non-modal";
+import DrawerSnapPoints from "@atoms/drawer/drawer-snap-points";
 import Popover from "@atoms/popover";
 import Slider from "@atoms/slider";
 import Switch from "@atoms/switch";
 import Tabs from "@atoms/tabs";
-import Tooltip from "@atoms/tooltip";
 import Main from "@core/Main";
 import type { Metadata } from "next";
 import AlertDialogComposed from "./_components/alert-dialog-composed";
@@ -20,20 +21,23 @@ import Section from "./_components/section";
 import SliderComposed from "./_components/slider-composed";
 import SwitchComposed from "./_components/switch-composed";
 import TabsComposed from "./_components/tabs-composed";
-import TooltipComposed from "./_components/tooltip-composed";
+import TriggerVariants from "./_components/trigger-variants";
 
 export const metadata: Metadata = {
     title: "Components",
-    description: "Showcase of Base-UI components with default and composed demos.",
+    description: "Showcase of Base-UI components with demos, composed usage, and trigger variants.",
 };
 
 export default async function ComponentsPage() {
     return (
         <Main horizontal="stretch" vertical="start">
             <h1 className="text-2xl font-bold">Components</h1>
-            <p className="text-gray-600">
-                Showcase of the 10 standard Base-UI components. Each section shows a default demo and a composed usage.
-            </p>
+            <p className="text-gray-600">Base-UI component showcase — demos, composed usage, and trigger variants.</p>
+
+            {/* ----- Trigger Variants ----- */}
+            <Section title="Trigger Variants (buttonStyle)">
+                <TriggerVariants />
+            </Section>
 
             {/* ----- Alert Dialog ----- */}
             <Section title="Alert Dialog">
@@ -105,17 +109,13 @@ export default async function ComponentsPage() {
                     <p className="mb-2 text-sm text-gray-500">Composed</p>
                     <DrawerComposed />
                 </div>
-            </Section>
-
-            {/* ----- Tooltip ----- */}
-            <Section title="Tooltip">
                 <div>
-                    <p className="mb-2 text-sm text-gray-500">Demo</p>
-                    <Tooltip />
+                    <p className="mb-2 text-sm text-gray-500">Non-Modal</p>
+                    <DrawerNonModal />
                 </div>
                 <div>
-                    <p className="mb-2 text-sm text-gray-500">Composed</p>
-                    <TooltipComposed />
+                    <p className="mb-2 text-sm text-gray-500">Snap Points</p>
+                    <DrawerSnapPoints />
                 </div>
             </Section>
 

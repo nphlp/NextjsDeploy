@@ -88,7 +88,13 @@ export default function VerifyBackupCodeForm(props: VerifyBackupCodeFormProps) {
                 <Input name="code" placeholder="XXXXXXXXXX" autoComplete="off" autoFocus useForm />
             </Field>
             <div className="flex justify-center">
-                <Button type="submit" label="Vérifier" loading={isSubmitting} className="w-full sm:w-auto" />
+                <Button
+                    type="submit"
+                    label="Vérifier"
+                    colors="solid"
+                    loading={isSubmitting}
+                    className="w-full sm:w-auto"
+                />
             </div>
         </Form>
     );

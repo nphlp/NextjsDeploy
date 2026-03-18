@@ -47,7 +47,7 @@ export default function Link(props: LinkProps) {
         label,
         children,
         // Styles
-        colors = "default",
+        colors = "outline",
         rounded = "md",
         padding = "md",
         noFlex = false,
@@ -66,7 +66,7 @@ export default function Link(props: LinkProps) {
 
     // Loader color default
     const loaderDefaultColor = cn(
-        colors === "default" && "text-gray-300",
+        colors === "solid" && "text-gray-300",
         colors === "outline" && "text-gray-700",
         colors === "ghost" && "text-gray-700",
         colors === "primary" && "text-gray-200",

@@ -325,7 +325,7 @@ export default function PasskeysSection() {
 
                         <div className="mt-6 flex justify-end gap-2">
                             <DialogClose>Annuler</DialogClose>
-                            <Button label="Ajouter la clé" onClick={handleAdd} loading={isAdding}>
+                            <Button label="Ajouter la clé" colors="solid" onClick={handleAdd} loading={isAdding}>
                                 Ajouter la clé
                             </Button>
                         </div>

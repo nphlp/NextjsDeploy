@@ -5,7 +5,7 @@ import AlertDialog, { Backdrop, Close, Description, Popup, Portal, Title, Trigge
 export default function AlertDialogComposed() {
     return (
         <AlertDialog>
-            <Trigger className="text-destructive">Delete account</Trigger>
+            <Trigger colors="destructive">Delete account</Trigger>
             <Portal>
                 <Backdrop />
                 <Popup>
@@ -13,7 +13,7 @@ export default function AlertDialogComposed() {
                     <Description>All your data will be permanently removed.</Description>
                     <div className="flex justify-end gap-4">
                         <Close>Cancel</Close>
-                        <Close className="text-destructive">Delete</Close>
+                        <Close colors="destructive">Delete</Close>
                     </div>
                 </Popup>
             </Portal>

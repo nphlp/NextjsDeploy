@@ -234,7 +234,7 @@ export default function FormExample() {
 
             {/* Submit */}
             <div className="flex justify-center">
-                <Button type="submit" label="Envoyer" loading={isLoading} className="w-full sm:w-auto" />
+                <Button type="submit" label="Envoyer" colors="solid" loading={isLoading} className="w-full sm:w-auto" />
             </div>
         </Form>
     );

@@ -237,7 +237,7 @@ export default function TotpSection(props: TotpSectionProps) {
                         </p>
                     </div>
                     <div className="flex justify-center">
-                        <Button label="Terminer" onClick={() => setAlertOpen(true)} />
+                        <Button label="Terminer" colors="solid" onClick={() => setAlertOpen(true)} />
                     </div>
                     <AlertDialogRoot open={alertOpen} onOpenChange={setAlertOpen}>
                         <Portal>
@@ -318,7 +318,7 @@ export default function TotpSection(props: TotpSectionProps) {
                         Assurez-vous d&apos;avoir bien enregistré vos nouveaux codes de secours avant de continuer.
                     </p>
                     <div className="flex justify-center">
-                        <Button label="Terminé" onClick={() => setAlertOpen(true)} />
+                        <Button label="Terminé" colors="solid" onClick={() => setAlertOpen(true)} />
                     </div>
                     <AlertDialogRoot open={alertOpen} onOpenChange={setAlertOpen}>
                         <Portal>
@@ -355,11 +355,11 @@ type PasswordFormProps = {
     onCancel: () => void;
     isSubmitting: boolean;
     submitLabel?: string;
-    submitColors?: "default" | "destructive";
+    submitColors?: "solid" | "destructive";
 };
 
 function PasswordForm(props: PasswordFormProps) {
-    const { title, onSubmit, onCancel, isSubmitting, submitLabel = "Confirmer", submitColors = "default" } = props;
+    const { title, onSubmit, onCancel, isSubmitting, submitLabel = "Confirmer", submitColors = "solid" } = props;
 
     const { register, submit } = useForm({
         password: {

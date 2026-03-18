@@ -75,7 +75,7 @@ export default function Pagination(props: PaginationProps) {
                         key={item}
                         label={`Page ${item}`}
                         onClick={() => onPageChange(item)}
-                        colors={isCurrent ? "default" : "ghost"}
+                        colors={isCurrent ? "solid" : "ghost"}
                         padding="sm"
                         noFlex
                         className={cn("min-h-9 min-w-9", !isCurrent && "text-gray-600")}

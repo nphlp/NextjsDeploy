@@ -188,6 +188,7 @@ export default function RegisterForm() {
                 <Button
                     type="submit"
                     label="S'inscrire"
+                    colors="solid"
                     loading={isSubmitting}
                     disabled={!token}
                     className="w-full sm:w-auto"

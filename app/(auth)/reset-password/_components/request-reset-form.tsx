@@ -78,6 +78,7 @@ export default function RequestResetForm() {
                 <Button
                     type="submit"
                     label={emailSent ? "Email envoyé !" : "Envoyer l'email"}
+                    colors="solid"
                     disabled={!token || emailSent}
                     className="w-full sm:w-auto"
                 />

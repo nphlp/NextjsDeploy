@@ -129,7 +129,13 @@ export default function LoginForm() {
             </div>
 
             <div className="flex justify-center">
-                <Button type="submit" label="Connexion" loading={isSubmitting} className="w-full sm:w-auto" />
+                <Button
+                    type="submit"
+                    label="Connexion"
+                    colors="solid"
+                    loading={isSubmitting}
+                    className="w-full sm:w-auto"
+                />
             </div>
         </Form>
     );

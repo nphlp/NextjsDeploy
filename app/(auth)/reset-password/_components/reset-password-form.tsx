@@ -140,7 +140,13 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
             {/* Submit button */}
             <div className="flex justify-center">
-                <Button type="submit" label="Réinitialiser" loading={isSubmitting} className="w-full sm:w-auto" />
+                <Button
+                    type="submit"
+                    label="Réinitialiser"
+                    colors="solid"
+                    loading={isSubmitting}
+                    className="w-full sm:w-auto"
+                />
             </div>
         </Form>
     );

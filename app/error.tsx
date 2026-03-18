@@ -27,7 +27,7 @@ export default function Error(props: ErrorProps) {
                 </div>
                 <Card>{error.message}</Card>
                 <div className="flex justify-center">
-                    <Button label="Try Again" onClick={reset} />
+                    <Button label="Try Again" colors="solid" onClick={reset} />
                 </div>
             </div>
         </Main>

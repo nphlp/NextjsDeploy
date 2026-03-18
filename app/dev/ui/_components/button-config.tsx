@@ -15,14 +15,14 @@ const Field = (props: { label: string; children: ReactNode }) => {
 export default function ButtonConfig() {
     return (
         <div className="grid grid-cols-3 gap-4">
-            <Field label="Default">
-                <Button label="Button" colors="default" />
+            <Field label="Solid">
+                <Button label="Button" colors="solid" />
             </Field>
-            <Field label="Default">
-                <Button label="Button" colors="default" disabled />
+            <Field label="Solid">
+                <Button label="Button" colors="solid" disabled />
             </Field>
-            <Field label="Default">
-                <Button label="Button" colors="default" loading />
+            <Field label="Solid">
+                <Button label="Button" colors="solid" loading />
             </Field>
 
             <Field label="Outline">

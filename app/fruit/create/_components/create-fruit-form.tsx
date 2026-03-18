@@ -86,7 +86,13 @@ export default function CreateFruitForm() {
 
             {/* Submit button */}
             <div className="flex justify-center">
-                <Button type="submit" label="Créer le fruit" loading={isSubmitting} className="w-full sm:w-auto" />
+                <Button
+                    type="submit"
+                    label="Créer le fruit"
+                    colors="solid"
+                    loading={isSubmitting}
+                    className="w-full sm:w-auto"
+                />
             </div>
         </Form>
     );

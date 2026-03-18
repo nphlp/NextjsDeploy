@@ -91,7 +91,13 @@ export default function MagicLinkForm() {
             </Field>
 
             <div className="flex justify-center">
-                <Button type="submit" label="Envoyer le lien" loading={isSubmitting} className="w-full sm:w-auto" />
+                <Button
+                    type="submit"
+                    label="Envoyer le lien"
+                    colors="solid"
+                    loading={isSubmitting}
+                    className="w-full sm:w-auto"
+                />
             </div>
         </Form>
     );

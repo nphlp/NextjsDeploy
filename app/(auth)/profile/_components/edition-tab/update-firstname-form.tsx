@@ -70,7 +70,13 @@ export const UpdateFirstnameForm = (props: UpdateFirstnameFormProps) => {
             </Field>
 
             <div className="flex justify-center">
-                <Button type="submit" label="Valider" loading={isSubmitting} className="w-full md:w-fit" />
+                <Button
+                    type="submit"
+                    label="Valider"
+                    colors="solid"
+                    loading={isSubmitting}
+                    className="w-full md:w-fit"
+                />
             </div>
         </Form>
     );
