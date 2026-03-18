@@ -11,7 +11,7 @@ export default function Collapsible(props: CollapsibleProps) {
     }
 
     return (
-        <Root {...otherProps}>
+        <Root className="w-full max-w-96" {...otherProps}>
             <Trigger>
                 <ChevronRight className="size-3 transition-all ease-out group-data-panel-open:rotate-90" />
                 Recovery keys

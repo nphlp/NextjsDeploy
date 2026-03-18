@@ -1,6 +1,7 @@
 import Accordion from "@atoms/accordion";
 import AlertDialog from "@atoms/alert-dialog";
 import Checkbox from "@atoms/checkbox";
+import CheckboxChip from "@atoms/checkbox/checkbox-chip";
 import Collapsible from "@atoms/collapsible";
 import Combobox from "@atoms/combobox";
 import ComboboxAsync from "@atoms/combobox/combobox-async";
@@ -23,28 +24,19 @@ import Tabs from "@atoms/tabs";
 import TabsVertical from "@atoms/tabs/tabs-vertical";
 import Main from "@core/Main";
 import type { Metadata } from "next";
-import AlertDialogComposed from "./_components/alert-dialog-composed";
-import CollapsibleComposed from "./_components/collapsible-composed";
-import ComboboxComposed from "./_components/combobox-composed";
-import DialogComposed from "./_components/dialog-composed";
-import DrawerComposed from "./_components/drawer-composed";
-import PopoverComposed from "./_components/popover-composed";
 import Section from "./_components/section";
-import SliderComposed from "./_components/slider-composed";
-import SwitchComposed from "./_components/switch-composed";
-import TabsComposed from "./_components/tabs-composed";
 import TriggerVariants from "./_components/trigger-variants";
 
 export const metadata: Metadata = {
     title: "Components",
-    description: "Showcase of Base-UI components with demos, composed usage, and trigger variants.",
+    description: "Showcase of Base-UI components with demos and variants.",
 };
 
 export default async function ComponentsPage() {
     return (
         <Main horizontal="stretch" vertical="start">
             <h1 className="text-2xl font-bold">Components</h1>
-            <p className="text-gray-600">Base-UI component showcase — demos, composed usage, and trigger variants.</p>
+            <p className="text-gray-600">Base-UI component showcase — demos and variants.</p>
 
             {/* ----- Trigger Variants ----- */}
             <Section title="Trigger Variants (buttonStyle)">
@@ -53,38 +45,17 @@ export default async function ComponentsPage() {
 
             {/* ----- Alert Dialog ----- */}
             <Section title="Alert Dialog">
-                <div>
-                    <p className="mb-2 text-sm text-gray-500">Demo</p>
-                    <AlertDialog />
-                </div>
-                <div>
-                    <p className="mb-2 text-sm text-gray-500">Composed</p>
-                    <AlertDialogComposed />
-                </div>
+                <AlertDialog />
             </Section>
 
             {/* ----- Dialog ----- */}
             <Section title="Dialog">
-                <div>
-                    <p className="mb-2 text-sm text-gray-500">Demo</p>
-                    <Dialog />
-                </div>
-                <div>
-                    <p className="mb-2 text-sm text-gray-500">Composed</p>
-                    <DialogComposed />
-                </div>
+                <Dialog />
             </Section>
 
             {/* ----- Collapsible ----- */}
             <Section title="Collapsible">
-                <div>
-                    <p className="mb-2 text-sm text-gray-500">Demo</p>
-                    <Collapsible />
-                </div>
-                <div>
-                    <p className="mb-2 text-sm text-gray-500">Composed</p>
-                    <CollapsibleComposed />
-                </div>
+                <Collapsible />
             </Section>
 
             {/* ----- Tabs ----- */}
@@ -92,10 +63,6 @@ export default async function ComponentsPage() {
                 <div>
                     <p className="mb-2 text-sm text-gray-500">Demo</p>
                     <Tabs />
-                </div>
-                <div>
-                    <p className="mb-2 text-sm text-gray-500">Composed</p>
-                    <TabsComposed />
                 </div>
                 <div>
                     <p className="mb-2 text-sm text-gray-500">Vertical</p>
@@ -110,12 +77,8 @@ export default async function ComponentsPage() {
                     <Switch />
                 </div>
                 <div>
-                    <p className="mb-2 text-sm text-gray-500">Composed</p>
-                    <SwitchComposed />
-                </div>
-                <div>
                     <p className="mb-2 text-sm text-gray-500">Chip</p>
-                    <SwitchChip label="Dark mode" checkedLabel="Dark mode" />
+                    <SwitchChip label="Dark mode" />
                 </div>
             </Section>
 
@@ -124,10 +87,6 @@ export default async function ComponentsPage() {
                 <div>
                     <p className="mb-2 text-sm text-gray-500">Demo</p>
                     <Drawer />
-                </div>
-                <div>
-                    <p className="mb-2 text-sm text-gray-500">Composed</p>
-                    <DrawerComposed />
                 </div>
                 <div>
                     <p className="mb-2 text-sm text-gray-500">Non-Modal</p>
@@ -141,14 +100,7 @@ export default async function ComponentsPage() {
 
             {/* ----- Popover ----- */}
             <Section title="Popover">
-                <div>
-                    <p className="mb-2 text-sm text-gray-500">Demo</p>
-                    <Popover />
-                </div>
-                <div>
-                    <p className="mb-2 text-sm text-gray-500">Composed</p>
-                    <PopoverComposed />
-                </div>
+                <Popover />
             </Section>
 
             {/* ----- Slider ----- */}
@@ -156,10 +108,6 @@ export default async function ComponentsPage() {
                 <div>
                     <p className="mb-2 text-sm text-gray-500">Demo</p>
                     <Slider />
-                </div>
-                <div>
-                    <p className="mb-2 text-sm text-gray-500">Composed</p>
-                    <SliderComposed />
                 </div>
                 <div>
                     <p className="mb-2 text-sm text-gray-500">Range</p>
@@ -172,10 +120,6 @@ export default async function ComponentsPage() {
                 <div>
                     <p className="mb-2 text-sm text-gray-500">Demo</p>
                     <Combobox />
-                </div>
-                <div>
-                    <p className="mb-2 text-sm text-gray-500">Composed</p>
-                    <ComboboxComposed />
                 </div>
                 <div>
                     <p className="mb-2 text-sm text-gray-500">Multiple</p>
@@ -215,7 +159,14 @@ export default async function ComponentsPage() {
 
             {/* ----- Checkbox ----- */}
             <Section title="Checkbox">
-                <Checkbox />
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">Demo</p>
+                    <Checkbox />
+                </div>
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">Chip</p>
+                    <CheckboxChip label="Dark mode" />
+                </div>
             </Section>
 
             {/* ----- Context Menu ----- */}

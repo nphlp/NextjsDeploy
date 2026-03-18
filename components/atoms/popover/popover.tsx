@@ -23,8 +23,8 @@ export default function Popover(props: PopoverProps) {
                         <Arrow />
                         <Title>Notifications</Title>
                         <Description>You are all caught up. Good job!</Description>
-                        <div className="mt-4 flex justify-end">
-                            <Close>Close</Close>
+                        <div className="mt-2 flex justify-center">
+                            <Close padding="sm">Okay</Close>
                         </div>
                     </Popup>
                 </Positioner>

@@ -2,7 +2,7 @@
 
 import { Menu as MenuBaseUi } from "@base-ui/react/menu";
 import cn from "@lib/cn";
-import { CheckIcon, ChevronDown, ChevronRightIcon, CircleSmallIcon } from "lucide-react";
+import { CheckIcon, ChevronDown, ChevronRightIcon } from "lucide-react";
 import { ReactNode } from "react";
 
 export const Root = (props: { children: ReactNode }) => {
@@ -224,8 +224,8 @@ export const RadioSet = (props: {
     );
 };
 
-export const RadioItem = (props: { label: string; value: string; displayUnselectedIcon?: boolean }) => {
-    const { label, value, displayUnselectedIcon = false } = props;
+export const RadioItem = (props: { label: string; value: string }) => {
+    const { label, value } = props;
 
     return (
         <MenuBaseUi.RadioItem
@@ -245,12 +245,9 @@ export const RadioItem = (props: { label: string; value: string; displayUnselect
                 "data-highlighted:text-gray-50",
             )}
         >
-            {/* Unselected icon (hidden when checked via group) */}
-            {displayUnselectedIcon && <CircleSmallIcon className="col-start-1 size-4 group-data-checked:hidden" />}
-
             {/* Selected icon */}
             <MenuBaseUi.RadioItemIndicator className="col-start-1">
-                <CircleSmallIcon className="fill-foreground size-4 group-data-highlighted:fill-gray-50" />
+                <CheckIcon className="size-4" />
             </MenuBaseUi.RadioItemIndicator>
             <span className="col-start-2">{label}</span>
         </MenuBaseUi.RadioItem>

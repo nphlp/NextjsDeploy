@@ -11,7 +11,7 @@ export default function Tabs(props: TabsProps) {
     }
 
     return (
-        <Root defaultValue="overview" {...otherProps}>
+        <Root defaultValue="overview" {...otherProps} className="w-70">
             <List>
                 <Tab value="overview">Overview</Tab>
                 <Tab value="projects">Projects</Tab>

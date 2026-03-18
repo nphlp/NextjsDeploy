@@ -18,7 +18,7 @@ export const Root = (props: AccordionProps) => {
         <AccordionBaseUi.Root
             className={cn(
                 // Layout
-                "flex flex-col justify-center",
+                "flex w-full max-w-96 flex-col justify-center",
                 // Text
                 "text-foreground",
                 // Overrides

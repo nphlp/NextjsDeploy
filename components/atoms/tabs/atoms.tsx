@@ -47,9 +47,9 @@ export const List = (props: TabsListProps) => {
         <TabsBaseUI.List
             className={cn(
                 // Layout
-                "relative z-0 flex gap-1 px-1",
+                "relative z-0 flex gap-1 p-1",
                 // Border
-                "shadow-[inset_0_-1px] shadow-gray-200",
+                "border-b border-gray-200",
                 // Overrides
                 className,
             )}
@@ -79,16 +79,15 @@ export const Tab = (props: TabsTabProps) => {
         <TabsBaseUI.Tab
             className={cn(
                 // Layout
-                "flex h-8 items-center justify-center px-2",
-                // Border
-                "border-0 outline-none",
-                "before:inset-x-0 before:inset-y-1 before:rounded-sm before:outline-2 before:outline-offset-0 before:outline-transparent",
-                "focus-visible:before:outline-outline focus-visible:relative focus-visible:before:absolute",
+                "flex h-8 items-center justify-center rounded-sm px-2",
                 // Text
                 "cursor-pointer text-sm font-medium break-keep whitespace-nowrap select-none",
                 "text-gray-600",
                 "hover:text-gray-900",
                 "data-active:text-gray-900",
+                // Outline
+                "outline-2 outline-transparent",
+                "focus-visible:outline-outline",
                 // Overrides
                 className,
             )}
@@ -116,7 +115,7 @@ export const Indicator = (props: TabsIndicatorProps) => {
             className={cn(
                 // Layout
                 "absolute top-1/2 left-0 z-[-1] h-6",
-                "w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-1/2",
+                "h-(--active-tab-height) w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-1/2",
                 // Border
                 "rounded-sm",
                 // Background
