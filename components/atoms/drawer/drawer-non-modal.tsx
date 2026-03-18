@@ -1,17 +1,7 @@
 "use client";
 
-import {
-    Close,
-    Content,
-    Description,
-    DrawerProps,
-    NonModalPopup,
-    NonModalViewport,
-    Portal,
-    Root,
-    Title,
-    Trigger,
-} from "./atoms";
+import { Close, Content, Description, DrawerProps, Portal, Root, Title, Trigger } from "./atoms";
+import { NonModalPopup, NonModalViewport } from "./atoms-non-modal";
 
 export default function DrawerNonModal(props: DrawerProps) {
     const { children, ...otherProps } = props;

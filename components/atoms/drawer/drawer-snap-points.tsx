@@ -1,20 +1,8 @@
 "use client";
 
 import { CSSProperties } from "react";
-import {
-    Backdrop,
-    Close,
-    Description,
-    DragHandle,
-    DrawerProps,
-    Portal,
-    Root,
-    SnapContent,
-    SnapPopup,
-    SnapViewport,
-    Title,
-    Trigger,
-} from "./atoms";
+import { Backdrop, Close, Description, DrawerProps, Portal, Root, Title, Trigger } from "./atoms";
+import { DragHandle, SnapContent, SnapPopup, SnapViewport } from "./atoms-snap";
 
 const TOP_MARGIN_REM = 1;
 const VISIBLE_SNAP_POINTS_REM = [30];

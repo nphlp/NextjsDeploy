@@ -1,6 +1,6 @@
 "use client";
 
-import {
+import Drawer, {
     Backdrop,
     Content,
     DragHandle,
@@ -10,8 +10,7 @@ import {
     SnapPopup,
     SnapViewport,
     Viewport,
-} from "@atoms/drawer/atoms";
-import Drawer from "@atoms/drawer/drawer";
+} from "@atoms/drawer";
 import DrawerSnapPoints from "@atoms/drawer/drawer-snap-points";
 import useDevSidebar from "@core/header/use-dev-sidebar";
 import cn from "@lib/cn";
