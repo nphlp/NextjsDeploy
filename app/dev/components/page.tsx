@@ -4,9 +4,7 @@ import Checkbox from "@atoms/checkbox";
 import CheckboxChip from "@atoms/checkbox/checkbox-chip";
 import Collapsible from "@atoms/collapsible";
 import Combobox from "@atoms/combobox";
-import ComboboxAsync from "@atoms/combobox/combobox-async";
 import ComboboxMultiple from "@atoms/combobox/combobox-multiple";
-import ComboboxMultipleAsync from "@atoms/combobox/combobox-multiple-async";
 import ContextMenu from "@atoms/context-menu";
 import Dialog from "@atoms/dialog";
 import Drawer from "@atoms/drawer";
@@ -24,6 +22,8 @@ import Tabs from "@atoms/tabs";
 import TabsVertical from "@atoms/tabs/tabs-vertical";
 import Main from "@core/Main";
 import type { Metadata } from "next";
+import ComboboxAsyncDemo from "./_components/combobox-async-demo";
+import ComboboxMultipleAsyncDemo from "./_components/combobox-multiple-async-demo";
 import Section from "./_components/section";
 import TriggerVariants from "./_components/trigger-variants";
 
@@ -127,11 +127,11 @@ export default async function ComponentsPage() {
                 </div>
                 <div>
                     <p className="mb-2 text-sm text-gray-500">Async</p>
-                    <ComboboxAsync />
+                    <ComboboxAsyncDemo />
                 </div>
                 <div>
                     <p className="mb-2 text-sm text-gray-500">Multiple Async</p>
-                    <ComboboxMultipleAsync />
+                    <ComboboxMultipleAsyncDemo />
                 </div>
             </Section>
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { useCallback, useState, useTransition } from "react";
 import {
     Clear,
     ComboboxProps,
@@ -16,49 +15,17 @@ import {
     Trigger,
 } from "./atoms";
 
-const everyFruit = [
-    "Apple",
-    "Banana",
-    "Blueberry",
-    "Cherry",
-    "Grapes",
-    "Mango",
-    "Orange",
-    "Peach",
-    "Pineapple",
-    "Strawberry",
-];
+type ComboboxAsyncProps = {
+    items: string[];
+    isFetching?: boolean;
+    onSearchChange: (value: string) => void;
+} & Omit<ComboboxProps, "children">;
 
-function simulateSearch(query: string): Promise<string[]> {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(everyFruit.filter((f) => f.toLowerCase().includes(query.toLowerCase())));
-        }, 300);
-    });
-}
-
-export default function ComboboxAsync(props: ComboboxProps) {
-    const { children, ...otherProps } = props;
-    const [items, setItems] = useState<string[]>([]);
-    const [isPending, startTransition] = useTransition();
-
-    const handleInputValueChange = useCallback((value: string) => {
-        if (!value.trim()) {
-            setItems([]);
-            return;
-        }
-        startTransition(async () => {
-            const results = await simulateSearch(value);
-            setItems(results);
-        });
-    }, []);
-
-    if (children) {
-        return <Root {...otherProps}>{children}</Root>;
-    }
+export default function ComboboxAsync(props: ComboboxAsyncProps) {
+    const { items, isFetching = false, onSearchChange, ...otherProps } = props;
 
     return (
-        <Root items={items} filter={null} onInputValueChange={handleInputValueChange} {...otherProps}>
+        <Root items={items} filter={null} onInputValueChange={onSearchChange} {...otherProps}>
             <div className="relative flex flex-col gap-1 text-sm font-medium">
                 <label>Search a fruit</label>
                 <div className="relative">
@@ -72,7 +39,7 @@ export default function ComboboxAsync(props: ComboboxProps) {
             <Portal>
                 <Positioner>
                     <Popup>
-                        <Empty>{isPending ? "Searching..." : "No results found"}</Empty>
+                        <Empty>{isFetching ? "Searching..." : "No results found"}</Empty>
                         <List>
                             {(item: string) => (
                                 <Item key={item} value={item}>

@@ -1,54 +1,22 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { useCallback, useRef, useState, useTransition } from "react";
+import { useRef } from "react";
 import { ComboboxProps, Empty, Item, ItemIndicator, List, Popup, Portal, Positioner, Root } from "./atoms";
 import { ChipsContainer, ChipsInput, MultipleChip, MultipleChipRemove, Value } from "./atoms-multiple";
 
-const everyFruit = [
-    "Apple",
-    "Banana",
-    "Blueberry",
-    "Cherry",
-    "Grapes",
-    "Mango",
-    "Orange",
-    "Peach",
-    "Pineapple",
-    "Strawberry",
-];
+type ComboboxMultipleAsyncProps = {
+    items: string[];
+    isFetching?: boolean;
+    onSearchChange: (value: string) => void;
+} & Omit<ComboboxProps, "children">;
 
-function simulateSearch(query: string): Promise<string[]> {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(everyFruit.filter((f) => f.toLowerCase().includes(query.toLowerCase())));
-        }, 300);
-    });
-}
-
-export default function ComboboxMultipleAsync(props: ComboboxProps) {
-    const { children, ...otherProps } = props;
+export default function ComboboxMultipleAsync(props: ComboboxMultipleAsyncProps) {
+    const { items, isFetching = false, onSearchChange, ...otherProps } = props;
     const containerRef = useRef<HTMLDivElement>(null);
-    const [items, setItems] = useState<string[]>([]);
-    const [isPending, startTransition] = useTransition();
-
-    const handleInputValueChange = useCallback((value: string) => {
-        if (!value.trim()) {
-            setItems([]);
-            return;
-        }
-        startTransition(async () => {
-            const results = await simulateSearch(value);
-            setItems(results);
-        });
-    }, []);
-
-    if (children) {
-        return <Root {...otherProps}>{children}</Root>;
-    }
 
     return (
-        <Root items={items} multiple filter={null} onInputValueChange={handleInputValueChange} {...otherProps}>
+        <Root items={items} multiple filter={null} onInputValueChange={onSearchChange} {...otherProps}>
             <div className="flex flex-col gap-1 text-sm font-medium">
                 <label>Search fruits</label>
                 <ChipsContainer ref={containerRef}>
@@ -70,7 +38,7 @@ export default function ComboboxMultipleAsync(props: ComboboxProps) {
             <Portal>
                 <Positioner anchor={containerRef}>
                     <Popup>
-                        <Empty>{isPending ? "Searching..." : "No results found"}</Empty>
+                        <Empty>{isFetching ? "Searching..." : "No results found"}</Empty>
                         <List>
                             {(item: string) => (
                                 <Item key={item} value={item}>
