@@ -6,7 +6,7 @@ import { Monitor, Moon, Sun, SunMoon } from "lucide-react";
 import { ButtonItem, Popup, Portal, Positioner, Trigger } from "../atoms/menu/atoms";
 
 export default function MenuTheme() {
-    const { theme, setTheme } = useTheme();
+    const { setTheme } = useTheme();
 
     return (
         <Menu>

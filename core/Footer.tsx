@@ -2,8 +2,17 @@
 
 import cn from "@lib/cn";
 import { usePathname } from "next/navigation";
+import { Suspense } from "react";
 
 export default function Footer() {
+    return (
+        <Suspense>
+            <SuspendedFooter />
+        </Suspense>
+    );
+}
+
+function SuspendedFooter() {
     const pathname = usePathname();
 
     if (pathname === "/") {

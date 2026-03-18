@@ -1,6 +1,7 @@
 import MenuProfile from "@comps/molecules/menu-profile";
 import MenuTheme from "@comps/molecules/menu-theme";
 import cn from "@lib/cn";
+import { Suspense } from "react";
 import { HEADER_HEIGHT } from "./config";
 import DesktopNavigation from "./header/desktop-navigation";
 import DevSidebarTrigger from "./header/dev-sidebar-trigger";
@@ -11,6 +12,14 @@ type HeaderProps = {
 };
 
 export default async function Header(props: HeaderProps) {
+    return (
+        <Suspense>
+            <SuspendedFooter {...props} />
+        </Suspense>
+    );
+}
+
+function SuspendedFooter(props: HeaderProps) {
     const { className } = props;
 
     return (

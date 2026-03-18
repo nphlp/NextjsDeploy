@@ -1,11 +1,14 @@
 (function () {
     try {
         var cookie = document.cookie.match(/theme-preference=([^;]+)/);
-        if (!cookie) return;
+        var theme = "system";
+        var resolved;
 
-        var parsed = JSON.parse(decodeURIComponent(cookie[1]));
-        var theme = parsed.theme;
-        var resolved = theme;
+        if (cookie) {
+            var parsed = JSON.parse(decodeURIComponent(cookie[1]));
+            theme = parsed.theme;
+            resolved = theme;
+        }
 
         if (theme === "system") {
             resolved = window.matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light";

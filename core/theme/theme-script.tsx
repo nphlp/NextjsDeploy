@@ -1,8 +1,8 @@
+import { readFileSync } from "fs";
+import { join } from "path";
+
+const themeScript = readFileSync(join(process.cwd(), "public/theme-script.js"), "utf-8");
+
 export default function ThemeScript() {
-    return (
-        <>
-            {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-            <script src="/theme-script.js" />
-        </>
-    );
+    return <script dangerouslySetInnerHTML={{ __html: themeScript }} />;
 }

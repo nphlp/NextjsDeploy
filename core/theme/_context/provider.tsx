@@ -1,7 +1,7 @@
 "use client";
 
 import { useCookieState } from "@lib/cookie-state-client";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useLayoutEffect } from "react";
 import { getSystemTheme, setThemeClass } from "../theme-client";
 import { Theme, ThemeCookie, themeCookieName } from "../theme-utils";
 import { useSystemTheme } from "../use-system-theme";
@@ -31,8 +31,8 @@ export default function Provider(props: ProviderProps) {
         if (theme === "light") setTheme("system");
     };
 
-    // Update CSS class
-    useEffect(() => {
+    // Update CSS class (useLayoutEffect to run before browser paint)
+    useLayoutEffect(() => {
         if (systemTheme === undefined) return;
         setThemeClass(theme, systemTheme);
     }, [theme, systemTheme]);
