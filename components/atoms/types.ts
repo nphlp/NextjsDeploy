@@ -1,3 +1,4 @@
+import { ButtonColorsType, ButtonPaddingType, ButtonRoundedType } from "@atoms/button/button-variants";
 import { ButtonHTMLAttributes, ComponentProps, HTMLAttributes } from "react";
 
 // ----- Standard React Types ----- //
@@ -26,3 +27,21 @@ export type BaseUiProps<
     T extends HTMLAttributes<HTMLElement>,
     K extends string = never,
 > = Omit<ComponentProps<C>, Exclude<keyof T, K>>;
+
+// ----- Button Style Props ----- //
+
+/**
+ * Shared styling props for button-like atoms (Trigger, Close, etc.).
+ * Uses `buttonVariants` from `@atoms/button/button-variants`.
+ */
+export type ButtonStyleProps = {
+    colors?: ButtonColorsType;
+    rounded?: ButtonRoundedType;
+    padding?: ButtonPaddingType;
+    /** Disable flex styles */
+    noFlex?: boolean;
+    /** Disable outline styles */
+    noOutline?: boolean;
+    /** Disable all styles (except outline) */
+    noStyle?: boolean;
+};

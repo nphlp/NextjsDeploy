@@ -5,7 +5,7 @@ import { Loader } from "lucide-react";
 import { Route } from "next";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import { AnchorHTMLAttributes, ReactNode, RefObject } from "react";
-import buttonVariants, { ButtonColorsType, ButtonPaddingType, ButtonRoundedType } from "./button-variants";
+import { ButtonColorsType, ButtonPaddingType, ButtonRoundedType, buttonStyle } from "./button-variants";
 
 type OnNavigateEvent = { preventDefault: () => void };
 
@@ -64,24 +64,6 @@ export default function Link(props: LinkProps) {
         ...othersProps
     } = props;
 
-    // No style mode (outline still appliable)
-    const noStyleMode = {
-        colors: false,
-        rounded: false,
-        padding: false,
-        flex: false,
-        outline: !noOutline,
-    };
-
-    // With style mode
-    const styledMode = {
-        colors,
-        rounded,
-        padding,
-        flex: !noFlex,
-        outline: !noOutline,
-    };
-
     // Loader color default
     const loaderDefaultColor = cn(
         colors === "default" && "text-gray-300",
@@ -106,7 +88,7 @@ export default function Link(props: LinkProps) {
             href={href}
             aria-label={label}
             className={cn(
-                buttonVariants(noStyle ? noStyleMode : styledMode),
+                buttonStyle({ colors, rounded, padding, noFlex, noOutline, noStyle }),
                 "relative",
                 // Not first child invisible when loading
                 loading && "text-transparent! [&>*:not([data-loader])]:invisible",

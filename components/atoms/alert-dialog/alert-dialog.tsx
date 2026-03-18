@@ -11,7 +11,7 @@ export default function AlertDialog(props: AlertDialogProps) {
 
     return (
         <Root {...otherProps}>
-            <Trigger>Discard draft</Trigger>
+            <Trigger colors="destructive">Discard draft</Trigger>
             <Portal>
                 <Backdrop />
                 <Popup>
@@ -19,7 +19,7 @@ export default function AlertDialog(props: AlertDialogProps) {
                     <Description>You can&apos;t undo this action.</Description>
                     <div className="flex justify-end gap-4">
                         <Close>Cancel</Close>
-                        <Close className="text-destructive">Discard</Close>
+                        <Close colors="destructive">Discard</Close>
                     </div>
                 </Popup>
             </Portal>

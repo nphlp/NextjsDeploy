@@ -207,4 +207,25 @@ type ButtonPaddingType = ButtonVariantsType["padding"];
 
 export type { ButtonVariantsType, ButtonColorsType, ButtonRoundedType, ButtonPaddingType };
 
+/**
+ * Resolves `ButtonStyleProps` into a `buttonVariants()` className string.
+ * Each component sets its own defaults before calling this.
+ */
+export function buttonStyle(props: {
+    colors: ButtonColorsType;
+    rounded: ButtonRoundedType;
+    padding: ButtonPaddingType;
+    noFlex: boolean;
+    noOutline: boolean;
+    noStyle: boolean;
+}) {
+    return buttonVariants({
+        colors: props.noStyle ? false : props.colors,
+        rounded: props.noStyle ? false : props.rounded,
+        padding: props.noStyle ? false : props.padding,
+        flex: props.noStyle ? false : !props.noFlex,
+        outline: !props.noOutline,
+    });
+}
+
 export default buttonVariants;

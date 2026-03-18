@@ -1,7 +1,11 @@
-import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/types";
+/**
+ * @see https://base-ui.com/react/components/alert-dialog
+ */
+import { BaseUiProps, ButtonAttributes, ButtonStyleProps, LegacyProps, StandardAttributes } from "@atoms/types";
 import { AlertDialog as AlertDialogBaseUi } from "@base-ui/react/alert-dialog";
 import cn from "@lib/cn";
 import { ComponentProps, MouseEventHandler, ReactNode } from "react";
+import { buttonStyle } from "../button/button-variants";
 
 export type AlertDialogProps = {
     children?: ReactNode;
@@ -22,30 +26,28 @@ type AlertDialogTriggerProps = {
 
     // Legacy props
     legacyProps?: LegacyProps<ButtonAttributes, "onClick">;
-} & BaseUiProps<typeof AlertDialogBaseUi.Trigger, ButtonAttributes>;
+} & ButtonStyleProps &
+    BaseUiProps<typeof AlertDialogBaseUi.Trigger, ButtonAttributes>;
 
 export const Trigger = (props: AlertDialogTriggerProps) => {
-    const { className, children, legacyProps, ...otherProps } = props;
+    const {
+        className,
+        children,
+        // Style props
+        colors = "outline",
+        rounded = "md",
+        padding = "md",
+        noFlex = false,
+        noOutline = false,
+        noStyle = false,
+        // Others
+        legacyProps,
+        ...otherProps
+    } = props;
 
     return (
         <AlertDialogBaseUi.Trigger
-            className={cn(
-                // Layout
-                "flex h-10 items-center justify-center px-3.5",
-                // Border
-                "rounded-md border border-gray-200",
-                // Background
-                "bg-background",
-                // Text
-                "text-destructive cursor-pointer text-base font-medium select-none",
-                // Outline
-                "outline-2 outline-transparent",
-                // State
-                "hover:bg-gray-100 active:bg-gray-100",
-                "focus-visible:outline-outline",
-                // Overrides
-                className,
-            )}
+            className={cn(buttonStyle({ colors, rounded, padding, noFlex, noOutline, noStyle }), className)}
             {...legacyProps}
             {...otherProps}
         >
@@ -194,30 +196,28 @@ type AlertDialogCloseProps = {
 
     // Legacy props
     legacyProps?: LegacyProps<ButtonAttributes, "onClick">;
-} & BaseUiProps<typeof AlertDialogBaseUi.Close, ButtonAttributes>;
+} & ButtonStyleProps &
+    BaseUiProps<typeof AlertDialogBaseUi.Close, ButtonAttributes>;
 
 export const Close = (props: AlertDialogCloseProps) => {
-    const { className, children, legacyProps, ...otherProps } = props;
+    const {
+        className,
+        children,
+        // Style props
+        colors = "outline",
+        rounded = "md",
+        padding = "md",
+        noFlex = false,
+        noOutline = false,
+        noStyle = false,
+        // Others
+        legacyProps,
+        ...otherProps
+    } = props;
 
     return (
         <AlertDialogBaseUi.Close
-            className={cn(
-                // Layout
-                "flex h-10 items-center justify-center px-3.5",
-                // Border
-                "rounded-md border border-gray-200",
-                // Background
-                "bg-background",
-                // Text
-                "text-foreground cursor-pointer text-base font-medium select-none",
-                // Outline
-                "outline-2 outline-transparent",
-                // State
-                "hover:bg-gray-100 active:bg-gray-100",
-                "focus-visible:outline-outline",
-                // Overrides
-                className,
-            )}
+            className={cn(buttonStyle({ colors, rounded, padding, noFlex, noOutline, noStyle }), className)}
             {...legacyProps}
             {...otherProps}
         >
