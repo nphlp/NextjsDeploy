@@ -3,15 +3,24 @@ import AlertDialog from "@atoms/alert-dialog";
 import Checkbox from "@atoms/checkbox";
 import Collapsible from "@atoms/collapsible";
 import Combobox from "@atoms/combobox";
+import ComboboxAsync from "@atoms/combobox/combobox-async";
+import ComboboxMultiple from "@atoms/combobox/combobox-multiple";
+import ComboboxMultipleAsync from "@atoms/combobox/combobox-multiple-async";
 import ContextMenu from "@atoms/context-menu";
 import Dialog from "@atoms/dialog";
 import Drawer from "@atoms/drawer";
 import DrawerNonModal from "@atoms/drawer/drawer-non-modal";
 import DrawerSnapPoints from "@atoms/drawer/drawer-snap-points";
+import Menu from "@atoms/menu";
 import Popover from "@atoms/popover";
+import Select from "@atoms/select";
+import SelectMultiple from "@atoms/select/select-multiple";
 import Slider from "@atoms/slider";
+import SliderRange from "@atoms/slider/slider-range";
 import Switch from "@atoms/switch";
+import SwitchChip from "@atoms/switch/switch-chip";
 import Tabs from "@atoms/tabs";
+import TabsVertical from "@atoms/tabs/tabs-vertical";
 import Main from "@core/Main";
 import type { Metadata } from "next";
 import AlertDialogComposed from "./_components/alert-dialog-composed";
@@ -88,6 +97,10 @@ export default async function ComponentsPage() {
                     <p className="mb-2 text-sm text-gray-500">Composed</p>
                     <TabsComposed />
                 </div>
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">Vertical</p>
+                    <TabsVertical />
+                </div>
             </Section>
 
             {/* ----- Switch ----- */}
@@ -99,6 +112,10 @@ export default async function ComponentsPage() {
                 <div>
                     <p className="mb-2 text-sm text-gray-500">Composed</p>
                     <SwitchComposed />
+                </div>
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">Chip</p>
+                    <SwitchChip label="Dark mode" checkedLabel="Dark mode" />
                 </div>
             </Section>
 
@@ -144,6 +161,10 @@ export default async function ComponentsPage() {
                     <p className="mb-2 text-sm text-gray-500">Composed</p>
                     <SliderComposed />
                 </div>
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">Range</p>
+                    <SliderRange />
+                </div>
             </Section>
 
             {/* ----- Combobox ----- */}
@@ -156,6 +177,35 @@ export default async function ComponentsPage() {
                     <p className="mb-2 text-sm text-gray-500">Composed</p>
                     <ComboboxComposed />
                 </div>
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">Multiple</p>
+                    <ComboboxMultiple />
+                </div>
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">Async</p>
+                    <ComboboxAsync />
+                </div>
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">Multiple Async</p>
+                    <ComboboxMultipleAsync />
+                </div>
+            </Section>
+
+            {/* ----- Select ----- */}
+            <Section title="Select">
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">Demo</p>
+                    <Select />
+                </div>
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">Multiple</p>
+                    <SelectMultiple />
+                </div>
+            </Section>
+
+            {/* ----- Menu ----- */}
+            <Section title="Menu">
+                <Menu />
             </Section>
 
             {/* ----- Accordion ----- */}
