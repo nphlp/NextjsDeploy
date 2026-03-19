@@ -5,7 +5,13 @@ import { Loader } from "lucide-react";
 import { Route } from "next";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import { AnchorHTMLAttributes, ReactNode, RefObject } from "react";
-import { ButtonColorsType, ButtonPaddingType, ButtonRoundedType, buttonStyle } from "../_core/button-variants";
+import {
+    ButtonColorsType,
+    ButtonPaddingType,
+    ButtonRoundedType,
+    buttonStyle,
+    loaderColor,
+} from "../_core/button-variants";
 
 type OnNavigateEvent = { preventDefault: () => void };
 
@@ -64,17 +70,7 @@ export default function Link(props: LinkProps) {
         ...othersProps
     } = props;
 
-    // Loader color default
-    const loaderDefaultColor = cn(
-        colors === "solid" && "text-gray-300",
-        colors === "outline" && "text-gray-700",
-        colors === "ghost" && "text-gray-700",
-        colors === "primary" && "text-gray-200",
-        colors === "destructive" && "text-gray-200",
-        colors === "link" && "text-gray-500",
-        noStyle && "text-foreground",
-        noStyle && loaderColorClass,
-    );
+    const loaderDefaultColor = loaderColor(colors, noStyle, loaderColorClass);
 
     const handleNavigate = (e: OnNavigateEvent) => {
         if (disabled || loading) {

@@ -23,7 +23,7 @@ export default function InputPassword(props: InputPasswordProps) {
             <Button
                 label="Toggle password visibility"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute top-0 right-0 px-3 py-3 text-gray-600"
+                className="absolute top-0 right-0 rounded-md px-3 py-3 text-gray-600"
                 noStyle
             >
                 {showPassword ? <Eye className="size-4" /> : <EyeClosed className="size-4" />}

@@ -4,6 +4,6 @@ import { FormContext, FormContextType } from "./context";
 
 export function useFormContext<T extends UseFormProps>(): FormContextType<T> {
     const context = useContext(FormContext);
-    if (!context) throw new Error("useFromContext must be used within a <Form /> component");
+    if (!context) throw new Error("useFormContext must be used within a <Form /> component");
     return context;
 }

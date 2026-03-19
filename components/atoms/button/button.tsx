@@ -4,7 +4,13 @@ import { Button as ButtonBaseUi } from "@base-ui/react/button";
 import cn from "@lib/cn";
 import { Loader } from "lucide-react";
 import { ButtonHTMLAttributes, FocusEvent, MouseEvent, ReactNode, RefObject } from "react";
-import { ButtonColorsType, ButtonPaddingType, ButtonRoundedType, buttonStyle } from "../_core/button-variants";
+import {
+    ButtonColorsType,
+    ButtonPaddingType,
+    ButtonRoundedType,
+    buttonStyle,
+    loaderColor,
+} from "../_core/button-variants";
 
 type ButtonProps = {
     type?: "button" | "submit" | "reset";
@@ -59,17 +65,7 @@ export default function Button(props: ButtonProps) {
         ...othersProps
     } = props;
 
-    // Loader color default
-    const loaderDefaultColor = cn(
-        colors === "solid" && "text-gray-300",
-        colors === "outline" && "text-gray-700",
-        colors === "ghost" && "text-gray-700",
-        colors === "primary" && "text-gray-200",
-        colors === "destructive" && "text-gray-200",
-        colors === "link" && "text-gray-500",
-        noStyle && "text-foreground",
-        noStyle && loaderColorClass,
-    );
+    const loaderDefaultColor = loaderColor(colors, noStyle, loaderColorClass);
 
     return (
         <ButtonBaseUi

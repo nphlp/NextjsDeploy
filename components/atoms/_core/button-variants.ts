@@ -243,4 +243,20 @@ export function buttonStyle(props: {
     });
 }
 
+/**
+ * Resolves the default loader color based on the current `colors` variant.
+ */
+export function loaderColor(colors: ButtonColorsType, noStyle: boolean, loaderColorClass?: string) {
+    return cn(
+        colors === "solid" && "text-gray-300",
+        colors === "outline" && "text-gray-700",
+        colors === "ghost" && "text-gray-700",
+        colors === "primary" && "text-gray-200",
+        colors === "destructive" && "text-gray-200",
+        colors === "link" && "text-gray-500",
+        noStyle && "text-foreground",
+        noStyle && loaderColorClass,
+    );
+}
+
 export default buttonVariants;
