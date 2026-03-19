@@ -1,4 +1,4 @@
-import { LegacyProps, StandardAttributes } from "@atoms/types";
+import { LegacyProps, StandardAttributes } from "@atoms/_core/types";
 import { DrawerPreview as DrawerBaseUi } from "@base-ui/react/drawer";
 import cn from "@lib/cn";
 import { ReactNode } from "react";

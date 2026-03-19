@@ -1,7 +1,7 @@
 /**
  * @see https://base-ui.com/react/components/accordion
  */
-import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/types";
+import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/_core/types";
 import { Accordion as AccordionBaseUi } from "@base-ui/react/accordion";
 import cn from "@lib/cn";
 import { ComponentProps, MouseEventHandler, ReactNode } from "react";

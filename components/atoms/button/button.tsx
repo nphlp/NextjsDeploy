@@ -4,7 +4,7 @@ import { Button as ButtonBaseUi } from "@base-ui/react/button";
 import cn from "@lib/cn";
 import { Loader } from "lucide-react";
 import { ButtonHTMLAttributes, FocusEvent, MouseEvent, ReactNode, RefObject } from "react";
-import { ButtonColorsType, ButtonPaddingType, ButtonRoundedType, buttonStyle } from "./button-variants";
+import { ButtonColorsType, ButtonPaddingType, ButtonRoundedType, buttonStyle } from "../_core/button-variants";
 
 type ButtonProps = {
     type?: "button" | "submit" | "reset";

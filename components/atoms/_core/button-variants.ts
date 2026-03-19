@@ -208,6 +208,21 @@ type ButtonPaddingType = ButtonVariantsType["padding"];
 export type { ButtonVariantsType, ButtonColorsType, ButtonRoundedType, ButtonPaddingType };
 
 /**
+ * Shared styling props for button-like atoms (Trigger, Close, etc.).
+ */
+export type ButtonStyleProps = {
+    colors?: ButtonColorsType;
+    rounded?: ButtonRoundedType;
+    padding?: ButtonPaddingType;
+    /** Disable flex styles */
+    noFlex?: boolean;
+    /** Disable outline styles */
+    noOutline?: boolean;
+    /** Disable all styles (except outline) */
+    noStyle?: boolean;
+};
+
+/**
  * Resolves `ButtonStyleProps` into a `buttonVariants()` className string.
  * Each component sets its own defaults before calling this.
  */

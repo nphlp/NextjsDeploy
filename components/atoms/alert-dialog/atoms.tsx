@@ -1,11 +1,11 @@
 /**
  * @see https://base-ui.com/react/components/alert-dialog
  */
-import { BaseUiProps, ButtonAttributes, ButtonStyleProps, LegacyProps, StandardAttributes } from "@atoms/types";
+import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/_core/types";
 import { AlertDialog as AlertDialogBaseUi } from "@base-ui/react/alert-dialog";
 import cn from "@lib/cn";
 import { ComponentProps, MouseEventHandler, ReactNode } from "react";
-import { buttonStyle } from "../button/button-variants";
+import { ButtonStyleProps, buttonStyle } from "../_core/button-variants";
 
 export type AlertDialogProps = {
     children?: ReactNode;

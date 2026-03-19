@@ -4,7 +4,7 @@
 
 "use client";
 
-import { BaseUiProps, LegacyProps, StandardAttributes } from "@atoms/types";
+import { BaseUiProps, LegacyProps, StandardAttributes } from "@atoms/_core/types";
 import { Switch as SwitchBaseUi } from "@base-ui/react/switch";
 import cn from "@lib/cn";
 import { ReactNode } from "react";

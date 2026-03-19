@@ -4,7 +4,7 @@
 
 "use client";
 
-import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/types";
+import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/_core/types";
 import { Tabs as TabsBaseUI } from "@base-ui/react/tabs";
 import cn from "@lib/cn";
 import { MouseEventHandler, ReactNode } from "react";

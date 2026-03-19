@@ -5,7 +5,7 @@ import { Loader } from "lucide-react";
 import { Route } from "next";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import { AnchorHTMLAttributes, ReactNode, RefObject } from "react";
-import { ButtonColorsType, ButtonPaddingType, ButtonRoundedType, buttonStyle } from "./button-variants";
+import { ButtonColorsType, ButtonPaddingType, ButtonRoundedType, buttonStyle } from "../_core/button-variants";
 
 type OnNavigateEvent = { preventDefault: () => void };
 

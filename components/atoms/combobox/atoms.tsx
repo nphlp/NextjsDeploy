@@ -4,7 +4,7 @@
 
 "use client";
 
-import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/types";
+import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/_core/types";
 import { Combobox as ComboboxBaseUi } from "@base-ui/react/combobox";
 import cn from "@lib/cn";
 import { Check, ChevronDown, X } from "lucide-react";
