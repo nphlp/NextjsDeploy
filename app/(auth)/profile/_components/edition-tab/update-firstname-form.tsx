@@ -1,11 +1,8 @@
 "use client";
 
 import Button from "@atoms/button";
-import { Field } from "@atoms/form/field";
-import Form, { OnSubmit } from "@atoms/form/form";
-import { nameSchema } from "@atoms/form/schemas";
-import { useForm } from "@atoms/form/use-form";
-import Input from "@atoms/input/input";
+import Form, { Field, OnSubmit, nameSchema, useForm } from "@atoms/form";
+import Input from "@atoms/input";
 import { useToast } from "@atoms/toast";
 import { SessionRefetch, updateUser } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";

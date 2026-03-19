@@ -1,8 +1,8 @@
 "use client";
 
+import Button from "@atoms/button";
 import Card from "@atoms/card";
 import { useToast } from "@atoms/toast";
-import Button from "@comps/atoms/button/button";
 import { SessionClient, sendVerificationEmail, useSession } from "@lib/auth-client";
 import { Role } from "@prisma/client/client";
 import { CircleCheck, CircleX, Mail } from "lucide-react";

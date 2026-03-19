@@ -1,8 +1,6 @@
 "use client";
 
-import { Item, List, Popup, Portal, Positioner, Trigger, Value } from "@comps/atoms/select/atoms";
-import { ItemType } from "@comps/atoms/select/atoms";
-import Select from "@comps/atoms/select/select";
+import Select, { Item, ItemType, List, Popup, Portal, Positioner, Trigger, Value } from "@atoms/select";
 import { SetStateAction } from "react";
 import { OrderValue } from "../_lib/query-params";
 import { useQueryParams } from "../_lib/use-query-params";

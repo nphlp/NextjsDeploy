@@ -2,9 +2,7 @@
 
 import { Root as AlertDialogRoot, Backdrop, Close, Description, Popup, Portal, Title } from "@atoms/alert-dialog";
 import Button from "@atoms/button";
-import { Field } from "@atoms/form/field";
-import Form, { OnSubmit } from "@atoms/form/form";
-import { useForm } from "@atoms/form/use-form";
+import Form, { Field, OnSubmit, useForm } from "@atoms/form";
 import InputOtp from "@atoms/input/input-otp";
 import InputPassword from "@atoms/input/input-password";
 import Switch, { Thumb } from "@atoms/switch";

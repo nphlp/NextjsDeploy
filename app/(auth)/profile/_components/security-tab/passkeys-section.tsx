@@ -10,7 +10,7 @@ import AlertDialog, {
 } from "@atoms/alert-dialog";
 import Button from "@atoms/button";
 import Collapsible from "@atoms/collapsible";
-import { Panel, Trigger } from "@atoms/collapsible/atoms";
+import { Panel, Trigger } from "@atoms/collapsible";
 import Dialog, {
     Backdrop as DialogBackdrop,
     Close as DialogClose,
@@ -19,7 +19,7 @@ import Dialog, {
     Portal as DialogPortal,
     Title as DialogTitle,
 } from "@atoms/dialog";
-import Input from "@atoms/input/input";
+import Input from "@atoms/input";
 import { useToast } from "@atoms/toast";
 import { passkey } from "@lib/auth-client";
 import dayjs from "dayjs";

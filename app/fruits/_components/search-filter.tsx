@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@atoms/button";
-import Input from "@atoms/input/input";
+import Input from "@atoms/input";
 import { X } from "lucide-react";
 import { useQueryParams } from "../_lib/use-query-params";
 

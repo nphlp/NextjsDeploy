@@ -1,4 +1,4 @@
-import ToastProvider from "@atoms/toast/toast";
+import ToastProvider from "@atoms/toast";
 import Breakpoints from "@comps/breakpoints";
 import Footer from "@core/Footer";
 import Header from "@core/Header";

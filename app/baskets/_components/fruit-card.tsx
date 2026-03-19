@@ -1,7 +1,7 @@
 "use cache";
 
+import { Link } from "@atoms/button";
 import Skeleton, { SkeletonText } from "@atoms/skeleton";
-import Link from "@comps/atoms/button/link";
 import cn from "@lib/cn";
 import { Route } from "next";
 

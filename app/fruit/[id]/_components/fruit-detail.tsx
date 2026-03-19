@@ -1,6 +1,6 @@
+import { Link } from "@atoms/button";
 import Card from "@atoms/card";
 import { SkeletonText } from "@atoms/skeleton";
-import Link from "@comps/atoms/button/link";
 import oRPC from "@lib/orpc";
 import { formatMediumDate } from "@utils/date-format";
 import { ChevronRight } from "lucide-react";

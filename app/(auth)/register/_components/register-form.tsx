@@ -1,18 +1,18 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import { Field } from "@atoms/form/field";
-import Form, { OnSubmit } from "@atoms/form/form";
-import {
+import Form, {
+    Field,
+    OnSubmit,
     emailSchema,
     emailSchemaProgressive,
     nameSchema,
     passwordSchema,
     passwordSchemaOnBlur,
     passwordSchemaOnChange,
-} from "@atoms/form/schemas";
-import { useForm } from "@atoms/form/use-form";
-import Input from "@atoms/input/input";
+    useForm,
+} from "@atoms/form";
+import Input from "@atoms/input";
 import InputPassword from "@atoms/input/input-password";
 import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";

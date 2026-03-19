@@ -1,5 +1,5 @@
+import { Link } from "@atoms/button";
 import Card from "@atoms/card";
-import Link from "@comps/atoms/button/link";
 import { Session } from "@lib/auth-server";
 import oRPC from "@lib/orpc";
 import { ShoppingBasket } from "lucide-react";

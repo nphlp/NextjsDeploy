@@ -1,4 +1,4 @@
-import Link from "@comps/atoms/button/link";
+import { Link } from "@atoms/button";
 import { ShoppingBasket } from "lucide-react";
 
 export default function BasketButton() {

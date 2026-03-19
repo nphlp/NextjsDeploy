@@ -1,7 +1,7 @@
 "use client";
 
-import AlertDialog, { Backdrop, Close, Description, Popup, Portal, Title } from "@comps/atoms/alert-dialog";
-import Button from "@comps/atoms/button/button";
+import AlertDialog, { Backdrop, Close, Description, Popup, Portal, Title } from "@atoms/alert-dialog";
+import Button from "@atoms/button";
 import { revokeSession } from "@lib/auth-client";
 import { SessionList } from "@lib/auth-server";
 import { formatMediumDate, formatTime } from "@utils/date-format";

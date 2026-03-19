@@ -1,8 +1,8 @@
 "use client";
 
+import { Link } from "@atoms/button";
 import Card from "@atoms/card";
 import { SkeletonText } from "@atoms/skeleton";
-import Link from "@comps/atoms/button/link";
 import { Fruit } from "@prisma/client/client";
 import { formatMediumDate } from "@utils/date-format";
 import { Route } from "next";

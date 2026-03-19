@@ -1,7 +1,7 @@
 "use client";
 
+import Button from "@atoms/button";
 import Card from "@atoms/card";
-import Button from "@comps/atoms/button/button";
 import Main from "@core/Main";
 import { useEffect } from "react";
 

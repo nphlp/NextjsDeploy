@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "@atoms/form/use-form";
+import { useForm } from "@atoms/form";
 import InputOtp from "@atoms/input/input-otp";
 import { useToast } from "@atoms/toast";
 import { twoFactor } from "@lib/auth-client";

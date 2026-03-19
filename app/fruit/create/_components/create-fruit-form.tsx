@@ -1,10 +1,8 @@
 "use client";
 
 import Button from "@atoms/button";
-import { Field } from "@atoms/form/field";
-import Form, { OnSubmit } from "@atoms/form/form";
-import { useForm } from "@atoms/form/use-form";
-import Input from "@atoms/input/input";
+import Form, { Field, OnSubmit, useForm } from "@atoms/form";
+import Input from "@atoms/input";
 import TextArea from "@atoms/input/text-area";
 import { useToast } from "@atoms/toast";
 import oRPC from "@lib/orpc";

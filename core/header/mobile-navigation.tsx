@@ -1,8 +1,7 @@
 "use client";
 
 import { Link } from "@atoms/button";
-import { ButtonItem, Popup, Portal, Positioner, Trigger } from "@comps/atoms/menu/atoms";
-import Menu from "@comps/atoms/menu/menu";
+import Menu, { ButtonItem, Popup, Portal, Positioner, Trigger } from "@atoms/menu";
 import { linksToRender } from "@core/header-links";
 import { useSession } from "@lib/auth-client";
 import cn from "@lib/cn";

@@ -1,7 +1,6 @@
 "use client";
 
-import { ButtonItem, Popup, Portal, Positioner, Trigger } from "@comps/atoms/menu/atoms";
-import Menu from "@comps/atoms/menu/menu";
+import Menu, { ButtonItem, Popup, Portal, Positioner, Trigger } from "@atoms/menu";
 import { signOut, useSession } from "@lib/auth-client";
 import { Loader, LogOut, UserPlus, UserRound } from "lucide-react";
 import Link from "next/link";

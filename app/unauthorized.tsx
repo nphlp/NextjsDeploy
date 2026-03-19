@@ -1,4 +1,4 @@
-import Link from "@comps/atoms/button/link";
+import { Link } from "@atoms/button";
 import Main from "@core/Main";
 
 export default async function Unauthorized() {

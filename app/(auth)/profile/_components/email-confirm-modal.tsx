@@ -1,7 +1,7 @@
 "use client";
 
+import AlertDialog, { Backdrop, Description, Popup, Portal, Title } from "@atoms/alert-dialog";
 import Button from "@atoms/button";
-import AlertDialog, { Backdrop, Description, Popup, Portal, Title } from "@comps/atoms/alert-dialog";
 import { useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
 import { useState } from "react";
