@@ -6,73 +6,88 @@ Detailed typing and pattern for every implemented Base-UI component.
 
 ## Summary
 
-| Component    | Pattern  | Sub-components                                                                                                         | Collision K                        |
-| ------------ | -------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| alert-dialog | Standard | 8 (Root, Trigger, Backdrop, Portal, Popup, Title, Description, Close)                                                  | —                                  |
-| dialog       | Standard | 8 (Root, Trigger, Backdrop, Portal, Popup, Title, Description, Close)                                                  | —                                  |
-| collapsible  | Standard | 3 (Root, Trigger, Panel)                                                                                               | —                                  |
-| tabs         | Standard | 5 (Root, List, Tab, Indicator, Panel)                                                                                  | Root: `defaultValue`, Tab: `value` |
-| switch       | Standard | 2 (Root, Thumb)                                                                                                        | Root: `defaultChecked`             |
-| drawer       | Standard | 9 (Root, Trigger, Portal, Backdrop, Popup, Viewport, Title, Description, Close)                                        | —                                  |
-| tooltip      | Standard | 7 (Provider, Root, Trigger, Portal, Positioner, Popup, Arrow)                                                          | —                                  |
-| slider       | Standard | 6 (Root, Control, Track, Indicator, Thumb, Value)                                                                      | Root: `defaultValue`               |
-| combobox     | Standard | 14 (Root, Input, Trigger, Portal, Positioner, Popup, List, Item, ItemIndicator, Empty, Clear, Chips, Chip, ChipRemove) | —                                  |
-| select       | Custom   | 12                                                                                                                     | —                                  |
-| menu         | Custom   | 17                                                                                                                     | —                                  |
-| toast        | Custom   | 8                                                                                                                      | —                                  |
-| button       | Custom   | 1                                                                                                                      | —                                  |
-| input        | Custom   | 1                                                                                                                      | —                                  |
-| form/field   | Custom   | 5                                                                                                                      | —                                  |
+| Component    | Pattern  | Sub-components                                                                                                      | Derived                                                    | Collision K                        |
+| ------------ | -------- | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------- |
+| alert-dialog | Standard | 8 (Root, Trigger, Backdrop, Portal, Popup, Title, Description, Close)                                               | —                                                          | —                                  |
+| dialog       | Standard | 8 (Root, Trigger, Backdrop, Portal, Popup, Title, Description, Close)                                               | —                                                          | —                                  |
+| collapsible  | Standard | 3 (Root, Trigger, Panel)                                                                                            | —                                                          | —                                  |
+| tabs         | Standard | 5 (Root, List, Tab, Indicator, Panel)                                                                               | tabs-vertical                                              | Root: `defaultValue`, Tab: `value` |
+| switch       | Standard | 2 (Root, Thumb)                                                                                                     | switch-chip                                                | Root: `defaultChecked`             |
+| drawer       | Standard | 9 + variants (Root, Trigger, Portal, Backdrop, Popup, Viewport, Title, Description, Content, Close)                 | drawer-non-modal, drawer-snap-points                       | —                                  |
+| popover      | Standard | 9 (Root, Trigger, Backdrop, Portal, Positioner, Popup, Arrow, Viewport, Title, Description, Close)                  | —                                                          | —                                  |
+| slider       | Standard | 6 (Root, Control, Track, Indicator, Thumb, Value)                                                                   | slider-range                                               | Root: `defaultValue`               |
+| combobox     | Standard | 14 + multiple atoms (Root, Input, Trigger, Portal, Positioner, Popup, List, Item, ItemIndicator, Empty, Clear, ...) | combobox-multiple, combobox-async, combobox-multiple-async | —                                  |
+| accordion    | Standard | 5 (Root, Item, Header, Trigger, Panel)                                                                              | —                                                          | —                                  |
+| checkbox     | Standard | 2 (Root, Indicator)                                                                                                 | checkbox-chip                                              | —                                  |
+| context-menu | Standard | 8 (Root, Trigger, Portal, Positioner, Popup, Item, Separator, SubmenuRoot, SubmenuTrigger)                          | —                                                          | —                                  |
+| select       | Custom   | 12                                                                                                                  | select-multiple                                            | —                                  |
+| menu         | Custom   | 17                                                                                                                  | —                                                          | —                                  |
+| toast        | Custom   | 8                                                                                                                   | —                                                          | —                                  |
+| button       | Custom   | 2 (Button, Link)                                                                                                    | —                                                          | —                                  |
+| input        | Custom   | 1                                                                                                                   | input-password, input-otp, text-area                       | —                                  |
+| form/field   | Custom   | 5                                                                                                                   | —                                                          | —                                  |
+
+### Removed
+
+- ~~tooltip~~ — Removed. Hover-only, doesn't work on mobile. Use popover instead.
 
 ---
 
 ## Typing system (`types.ts`)
 
-| Type                   | Purpose                                                          |
-| ---------------------- | ---------------------------------------------------------------- |
-| `StandardAttributes`   | `HTMLAttributes<HTMLElement>` — div, heading, paragraph          |
-| `ButtonAttributes`     | `ButtonHTMLAttributes<HTMLButtonElement>` — button               |
-| `LegacyProps<T, K>`    | All native props except className, children, and keys in K       |
-| `BaseUiProps<C, T, K>` | ComponentProps minus native HTML — K = keys to keep (collisions) |
+| Type                   | Purpose                                                                                                   |
+| ---------------------- | --------------------------------------------------------------------------------------------------------- |
+| `StandardAttributes`   | `HTMLAttributes<HTMLElement>` — div, heading, paragraph                                                   |
+| `ButtonAttributes`     | `ButtonHTMLAttributes<HTMLButtonElement>` — button                                                        |
+| `LegacyProps<T, K>`    | All native props except className, children, and keys in K                                                |
+| `BaseUiProps<C, T, K>` | ComponentProps minus native HTML — K = keys to keep (collisions)                                          |
+| `ButtonStyleProps`     | Shared styling props for Trigger/Close (`colors`, `rounded`, `padding`, `noFlex`, `noOutline`, `noStyle`) |
 
 ### 3 atom categories
 
-| Category      | Element                | Explicit props                     | Intersection                         |
-| ------------- | ---------------------- | ---------------------------------- | ------------------------------------ |
-| Behavior-only | —                      | `children`                         | `ComponentProps<BaseUi.X>`           |
-| Button        | `<button>`             | `className`, `children`, `onClick` | `BaseUiProps<X, ButtonAttributes>`   |
-| Container     | `<div>`, `<h2>`, `<p>` | `className`, `children`            | `BaseUiProps<X, StandardAttributes>` |
+| Category      | Element                | Explicit props                     | Intersection                                          |
+| ------------- | ---------------------- | ---------------------------------- | ----------------------------------------------------- |
+| Behavior-only | —                      | `children`                         | `ComponentProps<BaseUi.X>`                            |
+| Button        | `<button>`             | `className`, `children`, `onClick` | `ButtonStyleProps & BaseUiProps<X, ButtonAttributes>` |
+| Container     | `<div>`, `<h2>`, `<p>` | `className`, `children`            | `BaseUiProps<X, StandardAttributes>`                  |
 
+Button atoms use `buttonStyle()` for styling and accept `ButtonStyleProps` (`colors`, `rounded`, `padding`, `noFlex`, `noOutline`, `noStyle`).
 Button and container atoms also accept `legacyProps` for native HTML escape hatch.
+
+### Button variant defaults
+
+Default `colors` is `"outline"` for all Triggers/Close. Color variant `"default"` has been renamed to `"solid"`.
+
+Available colors: `solid`, `outline`, `ghost`, `primary`, `destructive`, `link`.
 
 ---
 
-## Standard pattern — `LegacyProps` + `BaseUiProps`
+## Standard pattern — `ButtonStyleProps` + `buttonStyle()`
 
 ### alert-dialog
 
-| Atom          | Category      | Explicit props                     | Legacy                           |
-| ------------- | ------------- | ---------------------------------- | -------------------------------- |
-| `Root`        | Behavior-only | `children`                         | —                                |
-| `Trigger`     | Button        | `className`, `children`, `onClick` | `LegacyProps<Button, "onClick">` |
-| `Backdrop`    | Container     | `className`                        | `LegacyProps<Standard>`          |
-| `Portal`      | Behavior-only | `children`                         | —                                |
-| `Popup`       | Container     | `className`, `children`            | `LegacyProps<Standard>`          |
-| `Title`       | Container     | `className`, `children`            | `LegacyProps<Standard>`          |
-| `Description` | Container     | `className`, `children`            | `LegacyProps<Standard>`          |
-| `Close`       | Button        | `className`, `children`, `onClick` | `LegacyProps<Button, "onClick">` |
+| Atom          | Category      | Explicit props                               | Legacy                           |
+| ------------- | ------------- | -------------------------------------------- | -------------------------------- |
+| `Root`        | Behavior-only | `children`                                   | —                                |
+| `Trigger`     | Button        | `className`, `children`, `onClick` + styling | `LegacyProps<Button, "onClick">` |
+| `Backdrop`    | Container     | `className`                                  | `LegacyProps<Standard>`          |
+| `Portal`      | Behavior-only | `children`                                   | —                                |
+| `Popup`       | Container     | `className`, `children`                      | `LegacyProps<Standard>`          |
+| `Title`       | Container     | `className`, `children`                      | `LegacyProps<Standard>`          |
+| `Description` | Container     | `className`, `children`                      | `LegacyProps<Standard>`          |
+| `Close`       | Button        | `className`, `children`, `onClick` + styling | `LegacyProps<Button, "onClick">` |
 
 ### dialog
 
-Same structure as alert-dialog. Only difference: `Trigger` uses `text-foreground` instead of `text-destructive`.
+Same structure as alert-dialog.
 
 ### collapsible
 
-| Atom      | Category      | Explicit props                     | Legacy                           |
-| --------- | ------------- | ---------------------------------- | -------------------------------- |
-| `Root`    | Behavior-only | `children`                         | —                                |
-| `Trigger` | Button        | `className`, `children`, `onClick` | `LegacyProps<Button, "onClick">` |
-| `Panel`   | Container     | `className`, `children`            | `LegacyProps<Standard>`          |
+| Atom      | Category      | Explicit props                               | Legacy                           |
+| --------- | ------------- | -------------------------------------------- | -------------------------------- |
+| `Root`    | Behavior-only | `children`                                   | —                                |
+| `Trigger` | Button        | `className`, `children`, `onClick` + styling | `LegacyProps<Button, "onClick">` |
+| `Panel`   | Container     | `className`, `children`                      | `LegacyProps<Standard>`          |
 
 ### tabs
 
@@ -84,7 +99,7 @@ Same structure as alert-dialog. Only difference: `Trigger` uses `text-foreground
 | `Indicator` | Container | `className`                                 | `LegacyProps<Standard>`          |
 | `Panel`     | Container | `className`, `children`                     | `LegacyProps<Standard>`          |
 
-Root and Tab use the `K` generic of `BaseUiProps` to keep `defaultValue` and `value` (collide with native HTML attributes).
+Tab uses standard outline focus (no `before:` pseudo-element). Supports `orientation="vertical"` on Root.
 
 ### switch
 
@@ -93,37 +108,41 @@ Root and Tab use the `K` generic of `BaseUiProps` to keep `defaultValue` and `va
 | `Root`  | Container | `className`, `children` | `LegacyProps<Standard>` |
 | `Thumb` | Container | `className`             | `LegacyProps<Standard>` |
 
-Root uses `K = "defaultChecked"` in `BaseUiProps` to keep `defaultChecked` (collides with native HTML). `"use client"` directive.
-
 ### drawer
 
-| Atom          | Category      | Explicit props                     | Legacy                           |
-| ------------- | ------------- | ---------------------------------- | -------------------------------- |
-| `Root`        | Behavior-only | `children`                         | —                                |
-| `Trigger`     | Button        | `className`, `children`, `onClick` | `LegacyProps<Button, "onClick">` |
-| `Backdrop`    | Container     | `className`                        | `LegacyProps<Standard>`          |
-| `Portal`      | Behavior-only | `children`                         | —                                |
-| `Viewport`    | Container     | `className`, `children`            | `LegacyProps<Standard>`          |
-| `Popup`       | Container     | `className`, `children`            | `LegacyProps<Standard>`          |
-| `Title`       | Container     | `className`, `children`            | `LegacyProps<Standard>`          |
-| `Description` | Container     | `className`, `children`            | `LegacyProps<Standard>`          |
-| `Close`       | Button        | `className`, `children`, `onClick` | `LegacyProps<Button, "onClick">` |
+Base atoms (`atoms.tsx`):
 
-Same structure as dialog. Imported as `DrawerPreview` (preview API in Base-UI).
+| Atom          | Category      | Explicit props                               | Legacy                           |
+| ------------- | ------------- | -------------------------------------------- | -------------------------------- |
+| `Root`        | Behavior-only | `children`                                   | —                                |
+| `Trigger`     | Button        | `className`, `children`, `onClick` + styling | `LegacyProps<Button, "onClick">` |
+| `Backdrop`    | Container     | `className`                                  | `LegacyProps<Standard>`          |
+| `Portal`      | Behavior-only | `children`                                   | —                                |
+| `Viewport`    | Container     | `className`, `children`                      | `LegacyProps<Standard>`          |
+| `Popup`       | Container     | `className`, `children`                      | `LegacyProps<Standard>`          |
+| `Title`       | Container     | `className`, `children`                      | `LegacyProps<Standard>`          |
+| `Description` | Container     | `className`, `children`                      | `LegacyProps<Standard>`          |
+| `Content`     | Container     | `className`, `children`                      | `LegacyProps<Standard>`          |
+| `Close`       | Button        | `className`, `children`, `onClick` + styling | `LegacyProps<Button, "onClick">` |
 
-### tooltip
+Variant atoms in `atoms-non-modal.tsx`: `NonModalViewport`, `NonModalPopup`.
+Variant atoms in `atoms-snap.tsx`: `SnapViewport`, `SnapPopup`, `DragHandle`, `SnapContent`.
 
-| Atom         | Category      | Explicit props                     | Legacy                           |
-| ------------ | ------------- | ---------------------------------- | -------------------------------- |
-| `Provider`   | Behavior-only | (spread)                           | —                                |
-| `Root`       | Behavior-only | `children`                         | —                                |
-| `Trigger`    | Button        | `className`, `children`, `onClick` | `LegacyProps<Button, "onClick">` |
-| `Portal`     | Behavior-only | `children`                         | —                                |
-| `Positioner` | Container     | `className`, `children`            | `LegacyProps<Standard>`          |
-| `Popup`      | Container     | `className`, `children`            | `LegacyProps<Standard>`          |
-| `Arrow`      | Container     | `className`, `children`            | `LegacyProps<Standard>`          |
+### popover
 
-Provider wraps everything to coordinate tooltip delays. Arrow includes built-in SVG. `"use client"` directive.
+| Atom          | Category      | Explicit props                               | Legacy                           |
+| ------------- | ------------- | -------------------------------------------- | -------------------------------- |
+| `Root`        | Behavior-only | `children`                                   | —                                |
+| `Trigger`     | Button        | `className`, `children`, `onClick` + styling | `LegacyProps<Button, "onClick">` |
+| `Backdrop`    | Container     | `className`                                  | `LegacyProps<Standard>`          |
+| `Portal`      | Behavior-only | `children`                                   | —                                |
+| `Positioner`  | Container     | `className`, `children`                      | `LegacyProps<Standard>`          |
+| `Popup`       | Container     | `className`, `children`                      | `LegacyProps<Standard>`          |
+| `Arrow`       | Container     | `className`, `children`                      | `LegacyProps<Standard>`          |
+| `Viewport`    | Container     | `className`, `children`                      | `LegacyProps<Standard>`          |
+| `Title`       | Container     | `className`, `children`                      | `LegacyProps<Standard>`          |
+| `Description` | Container     | `className`, `children`                      | `LegacyProps<Standard>`          |
+| `Close`       | Button        | `className`, `children`, `onClick` + styling | `LegacyProps<Button, "onClick">` |
 
 ### slider
 
@@ -136,9 +155,11 @@ Provider wraps everything to coordinate tooltip delays. Arrow includes built-in 
 | `Thumb`     | Container | `className`             | `LegacyProps<Standard>`                 |
 | `Value`     | Container | `className`, `children` | `LegacyProps<Standard>`                 |
 
-Root uses `K = "defaultValue"` in `BaseUiProps`. Value's `children` is a render function `(formattedValues, values) => ReactNode`. `"use client"` directive.
+Value's `children` is a render function `(formattedValues, values) => ReactNode`.
 
 ### combobox
+
+Base atoms (`atoms.tsx`):
 
 | Atom            | Category      | Explicit props                     | Legacy                           |
 | --------------- | ------------- | ---------------------------------- | -------------------------------- |
@@ -157,22 +178,44 @@ Root uses `K = "defaultValue"` in `BaseUiProps`. Value's `children` is a render 
 | `Chip`          | Container     | `className`, `children`            | `LegacyProps<Standard>`          |
 | `ChipRemove`    | Button        | `className`, `children`, `onClick` | `LegacyProps<Button, "onClick">` |
 
-Root uses `ComponentProps` directly (generic `<Value, Multiple>`). Trigger/Clear/ChipRemove include default Lucide icons. `"use client"` directive.
+Multiple atoms (`atoms-multiple.tsx`): `Value`, `ChipsContainer`, `ChipsInput`, `MultipleChip`, `MultipleChipRemove`.
 
-### toast
+### accordion
 
-| Atom          | Props type                               | Pattern             |
-| ------------- | ---------------------------------------- | ------------------- |
-| `Provider`    | `{ children }`                           | Custom              |
-| `Portal`      | `{ children }`                           | Custom              |
-| `Viewport`    | `{ children }`                           | Custom              |
-| `Root`        | `{ children } & ComponentProps<Root>`    | **Spread**          |
-| `Content`     | `{ children } & ComponentProps<Content>` | **Spread**          |
-| `Title`       | `ComponentProps<Title>`                  | **Spread** (direct) |
-| `Description` | `ComponentProps<Description>`            | **Spread** (direct) |
-| `Close`       | `{ children } & ComponentProps<Close>`   | **Spread**          |
+| Atom      | Category      | Explicit props                     | Legacy                           |
+| --------- | ------------- | ---------------------------------- | -------------------------------- |
+| `Root`    | Container     | `className`, `children`            | —                                |
+| `Item`    | Container     | `className`, `children`            | `LegacyProps<Standard>`          |
+| `Header`  | Behavior-only | `children`                         | —                                |
+| `Trigger` | Button        | `className`, `children`, `onClick` | `LegacyProps<Button, "onClick">` |
+| `Panel`   | Container     | `className`, `children`            | `LegacyProps<Standard>`          |
 
-Containers (Provider, Portal, Viewport) are custom. Content atoms are spread.
+Accordion Trigger uses custom full-width layout (not `buttonStyle`).
+
+### checkbox
+
+| Atom        | Category | Explicit props          | Legacy |
+| ----------- | -------- | ----------------------- | ------ |
+| `Root`      | Button   | `className`, `children` | —      |
+| `Indicator` | —        | `className`, `children` | —      |
+
+Root uses `ComponentProps` directly. Indicator includes default `Check` icon from Lucide.
+
+### context-menu
+
+| Atom             | Category      | Explicit props          | Legacy |
+| ---------------- | ------------- | ----------------------- | ------ |
+| `Root`           | Behavior-only | `children`              | —      |
+| `Trigger`        | Container     | `className`, `children` | —      |
+| `Portal`         | Behavior-only | `children`              | —      |
+| `Positioner`     | Container     | `className`, `children` | —      |
+| `Popup`          | Container     | `className`, `children` | —      |
+| `Item`           | Container     | `className`, `children` | —      |
+| `Separator`      | Container     | `className`             | —      |
+| `SubmenuRoot`    | Behavior-only | `children`              | —      |
+| `SubmenuTrigger` | Container     | `className`, `children` | —      |
+
+Uses `ComponentProps` directly. Shared `itemClasses` for Item/SubmenuTrigger highlight styles.
 
 ---
 
@@ -208,7 +251,7 @@ Containers (Provider, Portal, Viewport) are custom. Content atoms are spread.
 | `ButtonItem`    | `{ value; onItemClick?; className? } & ({ label } \| { children })` | Discriminated union                            |
 | `CheckboxItem`  | `{ label; checked?; setCheckedChange?; defaultChecked? }`           | Renames `onCheckedChange`                      |
 | `RadioSet`      | `{ selectedRadio?; setSelectedRadio?; defaultValue?; children }`    | Renames `onValueChange`                        |
-| `RadioItem`     | `{ label; value; displayUnselectedIcon? }`                          | Custom prop                                    |
+| `RadioItem`     | `{ label; value }`                                                  | Uses CheckIcon (same as CheckboxItem)          |
 | `Group`         | `{ label; children }`                                               |                                                |
 | `Separator`     | _(none)_                                                            |                                                |
 | `SubMenu`       | `{ children }`                                                      |                                                |
@@ -226,8 +269,10 @@ Containers (Provider, Portal, Viewport) are custom. Content atoms are spread.
 | Component | Props type                                                                                                                                                                            |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Button`  | `{ type?; label; children?; colors?; rounded?; padding?; noFlex?; noOutline?; noStyle?; className?; loaderColorClass?; loading?; disabled?; legacyProps?; ref?; onClick?; onFocus? }` |
+| `Link`    | `{ href; label; children?; colors?; rounded?; padding?; noFlex?; noOutline?; noStyle?; className?; loaderColorClass?; loading?; disabled?; legacyProps?; ref?; onNavigate? }`         |
 
-Uses `ButtonBaseUi` as render root only. Variant system via `button-variants.ts`.
+Uses `buttonStyle()` from `button-variants.ts`. Default `colors` is `"outline"`.
+Available colors: `solid`, `outline`, `ghost`, `primary`, `destructive`, `link`.
 
 ### input
 

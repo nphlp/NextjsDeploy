@@ -1,3 +1,7 @@
+/**
+ * @see https://base-ui.com/react/components/menu
+ */
+
 "use client";
 
 import { Menu as MenuBaseUi } from "@base-ui/react/menu";

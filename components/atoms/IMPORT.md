@@ -11,7 +11,7 @@ Model component: `alert-dialog/`
 
 Faithful wrappers around Base-UI sub-components. Styles copied from the docs, props split into explicit + legacy + BaseUI-specific.
 
-Components: `alert-dialog`, `dialog`, `collapsible`, `tabs`, `switch`, `drawer`, `tooltip`, `slider`, `combobox`.
+Components: `alert-dialog`, `dialog`, `collapsible`, `tabs`, `switch`, `drawer`, `popover`, `slider`, `combobox`, `accordion`, `checkbox`, `context-menu`.
 
 ### Project-specific overrides (not covered)
 
@@ -27,19 +27,26 @@ See [INVENTORY.md](./INVENTORY.md) for the full per-atom typing breakdown of eve
 
 ```
 components/atoms/
-├── types.ts                   # Shared utility types (LegacyProps, BaseUiProps, etc.)
+├── types.ts                   # Shared utility types (LegacyProps, BaseUiProps, ButtonStyleProps)
 └── [component]/
     ├── atoms.tsx              # Styled Base-UI wrappers (shared across variants)
+    ├── atoms-[variant].tsx    # Variant-specific atoms (optional, e.g. atoms-snap.tsx)
     ├── [component].tsx        # "use client" + conditional children (main variant)
-    ├── [component]-[variant].tsx  # Additional variant (optional, e.g. select-multiple.tsx)
+    ├── [component]-[variant].tsx  # Derived component (optional, e.g. select-multiple.tsx)
     ├── utils.tsx              # Shared helpers (optional, e.g. renderValue for select)
-    └── index.ts               # export { default } + export * from "./atoms" + optional utils
+    └── index.ts               # export { default } + export * from "./atoms" + optional variant atoms
 ```
 
-**Examples of variants:**
+**Examples of derived components:**
 
 - `select/` → `select.tsx` + `select-multiple.tsx` (share `atoms.tsx`)
 - `input/` → `input.tsx` + `input-password.tsx` + `input-otp.tsx` + `text-area.tsx` (share `atoms.tsx`)
+- `drawer/` → `drawer.tsx` + `drawer-non-modal.tsx` + `drawer-snap-points.tsx` (share `atoms.tsx`, variant atoms in `atoms-non-modal.tsx` + `atoms-snap.tsx`)
+- `combobox/` → `combobox.tsx` + `combobox-multiple.tsx` + `combobox-async.tsx` + `combobox-multiple-async.tsx` (share `atoms.tsx`, multiple atoms in `atoms-multiple.tsx`)
+- `tabs/` → `tabs.tsx` + `tabs-vertical.tsx`
+- `switch/` → `switch.tsx` + `switch-chip.tsx`
+- `slider/` → `slider.tsx` + `slider-range.tsx`
+- `checkbox/` → `checkbox.tsx` + `checkbox-chip.tsx`
 
 **Examples of utils:**
 
@@ -50,12 +57,13 @@ components/atoms/
 
 ## Utility types (`types.ts`)
 
-| Type                 | Purpose                                                           |
-| -------------------- | ----------------------------------------------------------------- |
-| `StandardAttributes` | `HTMLAttributes<HTMLElement>` — for div, heading, paragraph atoms |
-| `ButtonAttributes`   | `ButtonHTMLAttributes<HTMLButtonElement>` — for button atoms      |
-| `LegacyProps<T, K>`  | All native props except `className`, `children`, and keys in `K`  |
-| `BaseUiProps<C, T>`  | `ComponentProps<C>` minus `keyof T` — only BaseUI-specific props  |
+| Type                 | Purpose                                                                                                   |
+| -------------------- | --------------------------------------------------------------------------------------------------------- |
+| `StandardAttributes` | `HTMLAttributes<HTMLElement>` — for div, heading, paragraph atoms                                         |
+| `ButtonAttributes`   | `ButtonHTMLAttributes<HTMLButtonElement>` — for button atoms                                              |
+| `LegacyProps<T, K>`  | All native props except `className`, `children`, and keys in `K`                                          |
+| `BaseUiProps<C, T>`  | `ComponentProps<C>` minus `keyof T` — only BaseUI-specific props                                          |
+| `ButtonStyleProps`   | Shared styling props for Trigger/Close (`colors`, `rounded`, `padding`, `noFlex`, `noOutline`, `noStyle`) |
 
 ---
 
@@ -81,7 +89,7 @@ export const Root = (props: AlertDialogProps) => {
 
 ### Button atom (Trigger, Close)
 
-Renders `<button>`. Explicit props for common usage + `LegacyProps` escape hatch + `BaseUiProps` for BaseUI-specific props (e.g. `render`).
+Renders `<button>`. Uses `buttonStyle()` for styling + `ButtonStyleProps` for variant props + `LegacyProps` escape hatch + `BaseUiProps` for BaseUI-specific props.
 
 ```tsx
 type AlertDialogTriggerProps = {
@@ -93,23 +101,41 @@ type AlertDialogTriggerProps = {
 
     // Legacy props
     legacyProps?: LegacyProps<ButtonAttributes, "onClick">;
-} & BaseUiProps<typeof AlertDialogBaseUi.Trigger, ButtonAttributes>;
+} & ButtonStyleProps &
+    BaseUiProps<typeof AlertDialogBaseUi.Trigger, ButtonAttributes>;
 
 export const Trigger = (props: AlertDialogTriggerProps) => {
-    const { className, children, legacyProps, ...otherProps } = props;
+    const {
+        className,
+        children,
+        // Style props
+        colors = "outline",
+        rounded = "md",
+        padding = "md",
+        noFlex = false,
+        noOutline = false,
+        noStyle = false,
+        // Others
+        legacyProps,
+        ...otherProps
+    } = props;
 
     return (
-        <AlertDialogBaseUi.Trigger className={cn("...", className)} {...legacyProps} {...otherProps}>
+        <AlertDialogBaseUi.Trigger
+            className={cn(buttonStyle({ colors, rounded, padding, noFlex, noOutline, noStyle }), className)}
+            {...legacyProps}
+            {...otherProps}
+        >
             {children}
         </AlertDialogBaseUi.Trigger>
     );
 };
 ```
 
-- `className`, `children`, `onClick` → clean autocomplete
-- `onClick` flows through `...otherProps` (no need to destructure separately)
-- `legacyProps` → aria-\*, id, style, tabIndex, disabled, etc.
-- `BaseUiProps` → `render` and other BaseUI-specific props via `...otherProps`
+- `ButtonStyleProps` → `colors`, `rounded`, `padding`, `noFlex`, `noOutline`, `noStyle`
+- `buttonStyle()` → resolves props into `buttonVariants()` className
+- Default `colors` varies per component (usually `"outline"`)
+- `className` override always last (after `buttonStyle`)
 
 ### Container atom (Backdrop, Popup, Title, Description)
 
@@ -145,18 +171,22 @@ Go to `https://base-ui.com/react/components/[component]` and copy the **Tailwind
 
 ### 2. Create `atoms.tsx`
 
-One named export per Base-UI sub-component. Import pattern:
+One named export per Base-UI sub-component. Add JSDoc link at the top:
 
 ```tsx
-import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/types";
+/**
+ * @see https://base-ui.com/react/components/alert-dialog
+ */
+import { BaseUiProps, ButtonAttributes, ButtonStyleProps, LegacyProps, StandardAttributes } from "@atoms/types";
 import { AlertDialog as AlertDialogBaseUi } from "@base-ui/react/alert-dialog";
 import cn from "@lib/cn";
 import { ComponentProps, MouseEventHandler, ReactNode } from "react";
+import { buttonStyle } from "../button/button-variants";
 ```
 
 ### 3. Type each atom
 
-Identify the category (behavior-only / button / container) and apply the corresponding pattern from the section above. Add explicit props for commonly used native attributes (e.g. `onClick` on buttons).
+Identify the category (behavior-only / button / container) and apply the corresponding pattern from the section above. Button atoms use `ButtonStyleProps` + `buttonStyle()`.
 
 ### 4. Organize `cn()` classes
 
@@ -209,7 +239,7 @@ Focus outlines must sit **outside** the border (like `input/atoms.tsx`). Use `ou
 "focus-visible:outline-2 focus-visible:-outline-offset-1";
 ```
 
-This applies to all focus variants (`focus:`, `focus-visible:`, `focus-within:`, `has-[:focus-visible]:`, `before:` pseudo-elements).
+This applies to all focus variants (`focus:`, `focus-visible:`, `focus-within:`, `has-[:focus-visible]:`).
 
 > Note: `dark:-outline-offset-1` on Popup containers is a static border style, not a focus ring — this is fine.
 
@@ -256,7 +286,7 @@ export default function AlertDialog(props: AlertDialogProps) {
     // Composable demo
     return (
         <Root {...otherProps}>
-            <Trigger>Discard draft</Trigger>
+            <Trigger colors="destructive">Discard draft</Trigger>
             <Portal>
                 <Backdrop />
                 <Popup>
@@ -264,7 +294,7 @@ export default function AlertDialog(props: AlertDialogProps) {
                     <Description>You can&apos;t undo this action.</Description>
                     <div className="flex justify-end gap-4">
                         <Close>Cancel</Close>
-                        <Close className="text-destructive">Discard</Close>
+                        <Close colors="destructive">Discard</Close>
                     </div>
                 </Popup>
             </Portal>
@@ -301,7 +331,7 @@ import AlertDialog, { Backdrop, Close, Description, Popup, Portal, Title } from 
             <Description>My description</Description>
             <div className="flex justify-end gap-4">
                 <Close>Cancel</Close>
-                <Close className="text-destructive">Confirm</Close>
+                <Close colors="destructive">Confirm</Close>
             </div>
         </Popup>
     </Portal>

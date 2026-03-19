@@ -1,3 +1,7 @@
+/**
+ * @see https://base-ui.com/react/components/slider
+ */
+
 "use client";
 
 import { BaseUiProps, LegacyProps, StandardAttributes } from "@atoms/types";

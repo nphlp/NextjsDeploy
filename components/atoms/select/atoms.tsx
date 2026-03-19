@@ -1,3 +1,7 @@
+/**
+ * @see https://base-ui.com/react/components/select
+ */
+
 "use client";
 
 import { Select as SelectBaseUi, SelectRootChangeEventDetails } from "@base-ui/react/select";

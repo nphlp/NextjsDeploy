@@ -1,3 +1,7 @@
+/**
+ * @see https://base-ui.com/react/components/tabs
+ */
+
 "use client";
 
 import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/types";
