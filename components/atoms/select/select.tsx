@@ -1,6 +1,5 @@
 "use client";
 
-import { useFormContext } from "@atoms/form/_context/use-form-context";
 import { Separator } from "@base-ui/react";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import {
@@ -23,27 +22,18 @@ type SelectProps = {
     children?: ReactNode;
     selected?: string | null;
     setSelected?: Dispatch<SetStateAction<string | null>>;
-    name?: string;
-    useForm?: boolean;
 };
 
 export default function Select(props: SelectProps) {
-    const { selected, setSelected, name, useForm = false, children } = props;
-
-    // Form and Field context
-    const register = useFormContext();
-    const field = useForm && name ? register(name) : null;
-
-    const resolvedSelected = field ? field.value : selected;
+    const { selected, setSelected, children } = props;
 
     const handleSelect: SetSelectedItemType = (value) => {
-        field?.onChange(value);
         setSelected?.(value as string | null);
     };
 
     if (children)
         return (
-            <Root selected={resolvedSelected} onSelect={handleSelect}>
+            <Root selected={selected} onSelect={handleSelect}>
                 {children}
             </Root>
         );
@@ -63,7 +53,7 @@ export default function Select(props: SelectProps) {
     };
 
     return (
-        <Root selected={resolvedSelected} onSelect={handleSelect}>
+        <Root selected={selected} onSelect={handleSelect}>
             <Trigger>
                 <Value>{(value) => renderValue({ placeholder, value, items })}</Value>
             </Trigger>

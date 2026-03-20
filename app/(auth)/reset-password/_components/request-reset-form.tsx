@@ -1,8 +1,7 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Form, { Field, OnSubmit, emailSchema, emailSchemaProgressive, useForm } from "@atoms/form";
-import Input from "@atoms/input";
+import Form, { Field, FormInput, OnSubmit, emailSchema, emailSchemaProgressive, useForm } from "@atoms/form";
 import { useTurnstile } from "@atoms/use-turnstile";
 import { requestPasswordReset } from "@lib/auth-client";
 import { useState } from "react";
@@ -51,14 +50,7 @@ export default function RequestResetForm() {
         <Form register={register} onSubmit={handleSubmit}>
             {/* Email */}
             <Field name="email" label="Email" description="Entrez votre adresse email" disabled={emailSent} required>
-                <Input
-                    name="email"
-                    type="email"
-                    placeholder="exemple@email.com"
-                    autoComplete="email"
-                    autoFocus
-                    useForm
-                />
+                <FormInput name="email" type="email" placeholder="exemple@email.com" autoComplete="email" autoFocus />
             </Field>
 
             {/* Captcha */}

@@ -1,6 +1,5 @@
 "use client";
 
-import { useFormContext } from "@atoms/form/_context/use-form-context";
 import { Separator } from "@base-ui/react";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import {
@@ -22,27 +21,18 @@ type SelectMultipleProps = {
     children?: ReactNode;
     selected?: string[];
     setSelected?: Dispatch<SetStateAction<string[]>>;
-    name?: string;
-    useForm?: boolean;
 };
 
 export default function SelectMultiple(props: SelectMultipleProps) {
-    const { selected, setSelected, name, useForm = false, children } = props;
-
-    // Form and Field context
-    const register = useFormContext();
-    const field = useForm && name ? register(name) : null;
-
-    const resolvedSelected = field ? field.value : selected;
+    const { selected, setSelected, children } = props;
 
     const handleSelect: SetSelectedItemType = (value) => {
-        field?.onChange(value);
         setSelected?.(value as string[]);
     };
 
     if (children)
         return (
-            <Root selected={resolvedSelected} onSelect={handleSelect} multiple>
+            <Root selected={selected} onSelect={handleSelect} multiple>
                 {children}
             </Root>
         );
@@ -62,7 +52,7 @@ export default function SelectMultiple(props: SelectMultipleProps) {
     };
 
     return (
-        <Root selected={resolvedSelected} onSelect={handleSelect} multiple>
+        <Root selected={selected} onSelect={handleSelect} multiple>
             <Trigger>
                 <Value>{(value) => renderValue({ placeholder, value, items })}</Value>
             </Trigger>

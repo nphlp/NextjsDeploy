@@ -6,8 +6,8 @@ import { useFormContext } from "./_context/use-form-context";
 
 export type RootProps = {
     name: string;
-    label: string;
-    description: string;
+    label?: string;
+    description?: string;
     className?: string;
     children?: ReactNode;
     disabled?: boolean;
@@ -41,7 +41,7 @@ export const Field = (props: RootProps) => {
             data-disabled={disabled ? true : undefined}
             {...legacyProps}
         >
-            <Label label={label} name={name} required={required} />
+            {label && <Label label={label} name={name} required={required} />}
             {children}
             <Indication name={name} description={description} />
         </div>
@@ -89,7 +89,7 @@ export const RequiredNote = (props: RequiredNoteProps) => {
 
 type IndicationProps = {
     name: string;
-    description: string;
+    description?: string;
     className?: string;
 };
 

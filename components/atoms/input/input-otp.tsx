@@ -1,11 +1,10 @@
 "use client";
 
 import Button from "@atoms/button";
-import { useFormContext } from "@atoms/form/_context/use-form-context";
 import { useToast } from "@atoms/toast";
 import cn from "@lib/cn";
 import { ClipboardPaste } from "lucide-react";
-import { ClipboardEvent, FocusEvent, KeyboardEvent, useRef } from "react";
+import { ClipboardEvent, KeyboardEvent, useRef } from "react";
 import { Root } from "./atoms";
 
 type InputOtpProps = {
@@ -14,34 +13,17 @@ type InputOtpProps = {
     disabled?: boolean;
     className?: string;
 
-    // Form context integration
-    name?: string;
-    useForm?: boolean;
-
-    // Controlled mode (when not using form context)
+    // Controlled mode
     value?: string;
     onChange?: (value: string) => void;
 };
 
 export default function InputOtp(props: InputOtpProps) {
-    const {
-        length = 6,
-        onComplete,
-        disabled = false,
-        className,
-        name,
-        useForm: useFormProp = false,
-        value,
-        onChange,
-    } = props;
+    const { length = 6, onComplete, disabled = false, className, value, onChange } = props;
 
     const toast = useToast();
 
-    // Form context
-    const register = useFormContext();
-    const field = useFormProp && name ? register(name) : null;
-
-    const resolvedValue: string = field ? field.value : (value ?? "");
+    const resolvedValue: string = value ?? "";
     const digits = resolvedValue
         .padEnd(length, " ")
         .slice(0, length)
@@ -59,7 +41,6 @@ export default function InputOtp(props: InputOtpProps) {
 
     const updateDigits = (newDigits: string[]) => {
         const newValue = newDigits.join("");
-        field?.onChange(newValue);
         onChange?.(newValue);
         if (newDigits.every((d) => d !== "")) {
             onComplete(newValue);
@@ -137,20 +118,9 @@ export default function InputOtp(props: InputOtpProps) {
         }
     };
 
-    // Container-level focus/blur for form context (avoids flicker between digits)
-    const handleContainerFocus = () => {
-        field?.onFocus();
-    };
-
-    const handleContainerBlur = (e: FocusEvent<HTMLDivElement>) => {
-        if (!containerRef.current?.contains(e.relatedTarget as Node)) {
-            field?.onBlur();
-        }
-    };
-
     return (
         <div className={cn("flex flex-col items-center gap-2", className)}>
-            <div ref={containerRef} className="flex gap-2" onFocus={handleContainerFocus} onBlur={handleContainerBlur}>
+            <div ref={containerRef} className="flex gap-2">
                 {digits.map((digit, index) => (
                     <Root
                         key={index}
@@ -164,7 +134,17 @@ export default function InputOtp(props: InputOtpProps) {
                         autoFocus={index === 0}
                         onFocus={(e) => e.target.select()}
                         onChange={() => {}}
-                        className="size-12 p-0 text-center text-lg font-semibold disabled:bg-gray-50"
+                        className={cn(
+                            // Layout
+                            "size-12 p-0",
+                            // Text
+                            "text-center text-lg font-semibold",
+                            // State
+                            "disabled:bg-gray-50",
+                            // Form Field state
+                            "group-data-disabled/field:bg-gray-50",
+                            "group-data-invalid/field:border-red-800",
+                        )}
                         legacyProps={{
                             inputMode: "numeric",
                             maxLength: 1,

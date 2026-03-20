@@ -1,6 +1,5 @@
 "use client";
 
-import { useFormContext } from "@atoms/form/_context/use-form-context";
 import { Input as InputBaseUi } from "@base-ui/react";
 import cn from "@lib/cn";
 import { ChangeEvent, FocusEvent, HTMLInputAutoCompleteAttribute, InputHTMLAttributes, ReactElement, Ref } from "react";
@@ -32,9 +31,6 @@ export type RootProps = {
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
     onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
 
-    // Form context integration
-    useForm?: boolean;
-
     // Custom render (for textarea, etc.)
     render?: ReactElement;
 
@@ -43,49 +39,17 @@ export type RootProps = {
 };
 
 export const Root = (props: RootProps) => {
-    const {
-        className,
-        name,
-        value,
-        setValue,
-        useForm = false,
-        onFocus,
-        onChange,
-        onBlur,
-        render,
-        legacyProps,
-        ...othersProps
-    } = props;
-
-    // Form and Field context
-    const register = useFormContext();
-    const field = useForm && name ? register(name) : null;
-
-    const resolvedValue = field ? field.value : value;
-
-    const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
-        onFocus?.(e);
-        field?.onFocus();
-    };
+    const { className, value, setValue, onChange, render, legacyProps, ...othersProps } = props;
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        field?.onChange(e.target.value);
         setValue?.(e.target.value);
         onChange?.(e);
     };
 
-    const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
-        field?.onBlur();
-        onBlur?.(e);
-    };
-
     return (
         <InputBaseUi
-            name={name}
-            value={resolvedValue}
-            onFocus={handleFocus}
+            value={value}
             onChange={handleChange}
-            onBlur={handleBlur}
             render={render}
             className={cn(
                 // Layout
@@ -102,6 +66,7 @@ export const Root = (props: RootProps) => {
                 // Form Field state
                 "group-data-disabled/field:bg-gray-50",
                 "group-data-invalid/field:border-red-800",
+                // Overrides
                 className,
             )}
             {...othersProps}

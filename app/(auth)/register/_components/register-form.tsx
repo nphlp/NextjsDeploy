@@ -3,6 +3,8 @@
 import Button, { Link } from "@atoms/button";
 import Form, {
     Field,
+    FormInput,
+    FormInputPassword,
     OnSubmit,
     emailSchema,
     emailSchemaProgressive,
@@ -12,8 +14,6 @@ import Form, {
     passwordSchemaOnChange,
     useForm,
 } from "@atoms/form";
-import Input from "@atoms/input";
-import InputPassword from "@atoms/input/input-password";
 import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";
 import { useTurnstile } from "@atoms/use-turnstile";
@@ -131,17 +131,17 @@ export default function RegisterForm() {
         <Form register={register} onSubmit={handleSubmit}>
             {/* Firstname */}
             <Field name="firstname" label="Prénom" description="Entrez votre prénom" disabled={isSubmitting} required>
-                <Input name="firstname" placeholder="Jean" autoComplete="given-name" autoFocus useForm />
+                <FormInput name="firstname" placeholder="Jean" autoComplete="given-name" autoFocus />
             </Field>
 
             {/* Lastname */}
             <Field name="lastname" label="Nom" description="Entrez votre nom" disabled={isSubmitting} required>
-                <Input name="lastname" placeholder="Dupont" autoComplete="family-name" useForm />
+                <FormInput name="lastname" placeholder="Dupont" autoComplete="family-name" />
             </Field>
 
             {/* Email */}
             <Field name="email" label="Email" description="Entrez votre adresse email" disabled={isSubmitting} required>
-                <Input name="email" type="email" placeholder="exemple@email.com" autoComplete="email" useForm />
+                <FormInput name="email" type="email" placeholder="exemple@email.com" autoComplete="email" />
             </Field>
 
             {/* Password */}
@@ -152,7 +152,7 @@ export default function RegisterForm() {
                 disabled={isSubmitting}
                 required
             >
-                <InputPassword name="password" placeholder="Mot de passe" autoComplete="new-password" useForm />
+                <FormInputPassword name="password" placeholder="Mot de passe" autoComplete="new-password" />
             </Field>
 
             {/* Password strength */}
@@ -166,11 +166,10 @@ export default function RegisterForm() {
                 disabled={isSubmitting}
                 required
             >
-                <InputPassword
+                <FormInputPassword
                     name="confirmPassword"
                     placeholder="Confirmez le mot de passe"
                     autoComplete="new-password"
-                    useForm
                 />
             </Field>
 

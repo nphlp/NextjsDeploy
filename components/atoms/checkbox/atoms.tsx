@@ -28,6 +28,9 @@ export const Root = (props: CheckboxProps) => {
                 "outline-2 outline-transparent",
                 // State
                 "focus-visible:outline-outline focus-visible:outline-offset-2",
+                // Form Field state
+                "group-data-disabled/field:opacity-50",
+                "group-data-invalid/field:border-red-800",
                 // Overrides
                 className,
             )}

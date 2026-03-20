@@ -1,9 +1,15 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Form, { Field, OnSubmit, emailSchema, emailSchemaProgressive, useForm } from "@atoms/form";
-import Input from "@atoms/input";
-import InputPassword from "@atoms/input/input-password";
+import Form, {
+    Field,
+    FormInput,
+    FormInputPassword,
+    OnSubmit,
+    emailSchema,
+    emailSchemaProgressive,
+    useForm,
+} from "@atoms/form";
 import { useToast } from "@atoms/toast";
 import { signIn } from "@lib/auth-client";
 import { useState } from "react";
@@ -86,13 +92,12 @@ export default function LoginForm() {
     return (
         <Form register={register} onSubmit={handleSubmit}>
             <Field name="email" label="Email" description="Entrez votre adresse email" disabled={isSubmitting} required>
-                <Input
+                <FormInput
                     name="email"
                     type="email"
                     placeholder="exemple@email.com"
                     autoComplete="email webauthn"
                     autoFocus
-                    useForm
                 />
             </Field>
 
@@ -103,11 +108,10 @@ export default function LoginForm() {
                 disabled={isSubmitting}
                 required
             >
-                <InputPassword
+                <FormInputPassword
                     name="password"
                     placeholder="Votre mot de passe"
                     autoComplete="current-password webauthn"
-                    useForm
                 />
             </Field>
 

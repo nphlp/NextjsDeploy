@@ -1,8 +1,7 @@
 "use client";
 
 import Button from "@atoms/button";
-import Form, { Field, OnSubmit, nameSchema, useForm } from "@atoms/form";
-import Input from "@atoms/input";
+import Form, { Field, FormInput, OnSubmit, nameSchema, useForm } from "@atoms/form";
 import { useToast } from "@atoms/toast";
 import { SessionRefetch, updateUser } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
@@ -69,11 +68,10 @@ export const UpdateLastnameForm = (props: UpdateLastnameFormProps) => {
                 disabled={isSubmitting}
                 required
             >
-                <Input
+                <FormInput
                     name="lastname"
                     placeholder={session.user.lastname ?? "Votre nom"}
                     autoComplete="family-name"
-                    useForm
                 />
             </Field>
 

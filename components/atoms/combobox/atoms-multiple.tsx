@@ -125,7 +125,7 @@ export const MultipleChipRemove = (props: MultipleChipRemoveProps) => {
             )}
             {...otherProps}
         >
-            {children ?? <X className="size-3" />}
+            {children ?? <X className="size-4" />}
         </ComboboxBaseUi.ChipRemove>
     );
 };

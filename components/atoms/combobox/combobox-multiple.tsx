@@ -12,7 +12,11 @@ export default function ComboboxMultiple(props: ComboboxProps) {
     const containerRef = useRef<HTMLDivElement>(null);
 
     if (children) {
-        return <Root {...otherProps}>{children}</Root>;
+        return (
+            <Root multiple {...otherProps}>
+                {children}
+            </Root>
+        );
     }
 
     return (

@@ -10,3 +10,15 @@ export {
     passwordSchemaOnChange,
 } from "./schemas";
 export type { OnSubmit } from "./form";
+export {
+    FormCheckbox,
+    FormCombobox,
+    FormComboboxMultiple,
+    FormInput,
+    FormInputPassword,
+    FormInputOtp,
+    FormSelect,
+    FormSelectMultiple,
+    FormSwitch,
+    FormTextArea,
+} from "./_adapters";

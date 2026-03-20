@@ -1,8 +1,7 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Form, { Field, OnSubmit, passwordSchema, passwordSchemaOnChange, useForm } from "@atoms/form";
-import InputPassword from "@atoms/input/input-password";
+import Form, { Field, FormInputPassword, OnSubmit, passwordSchema, passwordSchemaOnChange, useForm } from "@atoms/form";
 import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";
 import { resetPassword } from "@lib/auth-client";
@@ -101,12 +100,11 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 disabled={isSubmitting}
                 required
             >
-                <InputPassword
+                <FormInputPassword
                     name="password"
                     placeholder="Nouveau mot de passe"
                     autoComplete="new-password"
                     autoFocus
-                    useForm
                 />
             </Field>
 
@@ -121,11 +119,10 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 disabled={isSubmitting}
                 required
             >
-                <InputPassword
+                <FormInputPassword
                     name="confirmPassword"
                     placeholder="Confirmez le mot de passe"
                     autoComplete="new-password"
-                    useForm
                 />
             </Field>
 

@@ -2,8 +2,7 @@
 
 import { queryUrlSerializer } from "@app/(auth)/register/success/_lib/query-params";
 import Button from "@atoms/button";
-import Form, { Field, OnSubmit, emailSchema, emailSchemaProgressive, useForm } from "@atoms/form";
-import Input from "@atoms/input";
+import Form, { Field, FormInput, OnSubmit, emailSchema, emailSchemaProgressive, useForm } from "@atoms/form";
 import { useToast } from "@atoms/toast";
 import { authClient } from "@lib/auth-client";
 import { useRouter } from "next/navigation";
@@ -77,14 +76,7 @@ export default function MagicLinkForm() {
     return (
         <Form register={register} onSubmit={handleSubmit}>
             <Field name="email" label="Email" description="Entrez votre adresse email" disabled={isSubmitting} required>
-                <Input
-                    name="email"
-                    type="email"
-                    placeholder="exemple@email.com"
-                    autoComplete="email"
-                    autoFocus
-                    useForm
-                />
+                <FormInput name="email" type="email" placeholder="exemple@email.com" autoComplete="email" autoFocus />
             </Field>
 
             <div className="flex justify-center">

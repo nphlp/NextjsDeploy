@@ -1,9 +1,7 @@
 "use client";
 
 import Button from "@atoms/button";
-import Form, { Field, OnSubmit, useForm } from "@atoms/form";
-import Input from "@atoms/input";
-import TextArea from "@atoms/input/text-area";
+import Form, { Field, FormInput, FormTextArea, OnSubmit, useForm } from "@atoms/form";
 import { useToast } from "@atoms/toast";
 import oRPC from "@lib/orpc";
 import { useRouter } from "next/navigation";
@@ -68,7 +66,7 @@ export default function CreateFruitForm() {
                 disabled={isSubmitting}
                 required
             >
-                <Input name="name" placeholder="Mangue" autoComplete="off" autoFocus useForm />
+                <FormInput name="name" placeholder="Mangue" autoComplete="off" autoFocus />
             </Field>
 
             {/* Description */}
@@ -79,7 +77,7 @@ export default function CreateFruitForm() {
                 disabled={isSubmitting}
                 required
             >
-                <TextArea name="description" placeholder="Un fruit tropical sucré et juteux." useForm />
+                <FormTextArea name="description" placeholder="Un fruit tropical sucré et juteux." />
             </Field>
 
             {/* Submit button */}

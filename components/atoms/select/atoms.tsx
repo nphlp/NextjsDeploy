@@ -83,6 +83,7 @@ export const Trigger = (props: { className?: string; children: ReactNode }) => {
                 // Form Field state
                 "group-data-disabled/field:bg-gray-50",
                 "group-data-invalid/field:border-red-800",
+                // Overrides
                 className,
             )}
         >

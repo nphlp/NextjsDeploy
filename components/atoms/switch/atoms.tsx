@@ -40,6 +40,9 @@ export const Root = (props: SwitchProps) => {
                 // Outline (before: pseudo-element)
                 "before:absolute before:rounded-full before:outline-2 before:outline-offset-1 before:outline-transparent",
                 "focus-visible:before:outline-outline focus-visible:before:inset-0",
+                // Form Field state
+                "group-data-disabled/field:opacity-50",
+                "group-data-invalid/field:border-red-800",
                 // Overrides
                 className,
             )}

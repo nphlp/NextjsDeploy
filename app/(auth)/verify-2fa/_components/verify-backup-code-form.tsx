@@ -1,8 +1,7 @@
 "use client";
 
 import Button from "@atoms/button";
-import Form, { Field, OnSubmit, useForm } from "@atoms/form";
-import Input from "@atoms/input";
+import Form, { Field, FormInput, OnSubmit, useForm } from "@atoms/form";
 import { useToast } from "@atoms/toast";
 import { twoFactor } from "@lib/auth-client";
 import { useState } from "react";
@@ -83,7 +82,7 @@ export default function VerifyBackupCodeForm(props: VerifyBackupCodeFormProps) {
                 disabled={isSubmitting}
                 required
             >
-                <Input name="code" placeholder="XXXXXXXXXX" autoComplete="off" autoFocus useForm />
+                <FormInput name="code" placeholder="XXXXXXXXXX" autoComplete="off" autoFocus />
             </Field>
             <div className="flex justify-center">
                 <Button

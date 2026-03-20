@@ -1,8 +1,7 @@
 "use client";
 
 import Button from "@atoms/button";
-import Form, { Field, OnSubmit, passwordSchema, passwordSchemaOnChange, useForm } from "@atoms/form";
-import InputPassword from "@atoms/input/input-password";
+import Form, { Field, FormInputPassword, OnSubmit, passwordSchema, passwordSchemaOnChange, useForm } from "@atoms/form";
 import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";
 import { changePassword } from "@lib/auth-client";
@@ -110,11 +109,10 @@ export const UpdatePasswordForm = () => {
                 disabled={isSubmitting}
                 required
             >
-                <InputPassword
+                <FormInputPassword
                     name="currentPassword"
                     placeholder="Mot de passe actuel"
                     autoComplete="current-password"
-                    useForm
                 />
             </Field>
 
@@ -126,12 +124,7 @@ export const UpdatePasswordForm = () => {
                 disabled={isSubmitting}
                 required
             >
-                <InputPassword
-                    name="newPassword"
-                    placeholder="Nouveau mot de passe"
-                    autoComplete="new-password"
-                    useForm
-                />
+                <FormInputPassword name="newPassword" placeholder="Nouveau mot de passe" autoComplete="new-password" />
             </Field>
 
             {/* Password strength */}
@@ -145,11 +138,10 @@ export const UpdatePasswordForm = () => {
                 disabled={isSubmitting}
                 required
             >
-                <InputPassword
+                <FormInputPassword
                     name="confirmPassword"
                     placeholder="Confirmez le nouveau mot de passe"
                     autoComplete="new-password"
-                    useForm
                 />
             </Field>
 

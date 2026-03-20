@@ -45,6 +45,9 @@ export const Input = (props: ComboboxInputProps) => {
                 "outline-2 outline-transparent",
                 // State
                 "focus:outline-outline",
+                // Form Field state
+                "group-data-disabled/field:bg-gray-50",
+                "group-data-invalid/field:border-red-800",
                 // Overrides
                 className,
             )}
@@ -81,7 +84,7 @@ export const Trigger = (props: ComboboxTriggerProps) => {
             {...legacyProps}
             {...otherProps}
         >
-            {children ?? <ChevronDown className="size-3" />}
+            {children ?? <ChevronDown className="size-4" />}
         </ComboboxBaseUi.Trigger>
     );
 };
@@ -244,7 +247,7 @@ export const ItemIndicator = (props: ComboboxItemIndicatorProps) => {
             {...legacyProps}
             {...otherProps}
         >
-            {children ?? <Check className="size-3" />}
+            {children ?? <Check className="size-4" />}
         </ComboboxBaseUi.ItemIndicator>
     );
 };
@@ -296,7 +299,7 @@ export const Clear = (props: ComboboxClearProps) => {
         <ComboboxBaseUi.Clear
             className={cn(
                 // Layout
-                "flex h-10 w-6 items-center justify-center rounded bg-transparent p-0",
+                "flex h-10 w-6 cursor-pointer items-center justify-center rounded bg-transparent p-0",
                 // Text
                 "text-gray-600",
                 // Overrides
@@ -305,7 +308,7 @@ export const Clear = (props: ComboboxClearProps) => {
             {...legacyProps}
             {...otherProps}
         >
-            {children ?? <X className="size-3" />}
+            {children ?? <X className="size-4" />}
         </ComboboxBaseUi.Clear>
     );
 };
@@ -406,7 +409,7 @@ export const ChipRemove = (props: ComboboxChipRemoveProps) => {
             {...legacyProps}
             {...otherProps}
         >
-            {children ?? <X className="size-3" />}
+            {children ?? <X className="size-4" />}
         </ComboboxBaseUi.ChipRemove>
     );
 };

@@ -2,9 +2,8 @@
 
 import { Root as AlertDialogRoot, Backdrop, Close, Description, Popup, Portal, Title } from "@atoms/alert-dialog";
 import Button from "@atoms/button";
-import Form, { Field, OnSubmit, useForm } from "@atoms/form";
+import Form, { Field, FormInputPassword, OnSubmit, useForm } from "@atoms/form";
 import InputOtp from "@atoms/input/input-otp";
-import InputPassword from "@atoms/input/input-password";
 import Switch, { Thumb } from "@atoms/switch";
 import { useToast } from "@atoms/toast";
 import { twoFactor } from "@lib/auth-client";
@@ -385,12 +384,11 @@ function PasswordForm(props: PasswordFormProps) {
                     disabled={isSubmitting}
                     required
                 >
-                    <InputPassword
+                    <FormInputPassword
                         name="password"
                         placeholder="Votre mot de passe"
                         autoComplete="current-password"
                         autoFocus
-                        useForm
                     />
                 </Field>
                 <div className="flex gap-2">
