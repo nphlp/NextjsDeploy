@@ -7,6 +7,7 @@ import {
     Clear,
     Input as ComboboxInput,
     Item as ComboboxItem,
+    ItemIndicator as ComboboxItemIndicator,
     List as ComboboxList,
     Popup as ComboboxPopup,
     Portal as ComboboxPortal,
@@ -14,7 +15,6 @@ import {
     Trigger as ComboboxTrigger,
     Value as ComboboxValue,
     Empty,
-    ItemIndicator,
     MultipleChip,
     MultipleChipRemove,
 } from "@atoms/combobox";
@@ -31,10 +31,11 @@ import { Field, RequiredNote } from "@atoms/form/field";
 import Form, { OnSubmit } from "@atoms/form/form";
 import { useForm } from "@atoms/form/use-form";
 import {
+    Icon,
     Item,
-    ItemType,
+    ItemIndicator,
+    ItemText,
     List,
-    Placeholder,
     Popup,
     Portal,
     Positioner,
@@ -48,14 +49,10 @@ import { useRef, useState } from "react";
 import { z } from "zod";
 import { phoneSchema, phoneSchemaProgressive } from "./schemas";
 
+const groupItems: Record<string, string> = { family: "Famille", friends: "Amis", work: "Travail" };
+const interestItems: Record<string, string> = { sport: "Sport", music: "Musique", travel: "Voyage" };
 const cities = ["Paris", "Lyon", "Marseille", "Toulouse", "Bordeaux", "Lille", "Nice", "Nantes", "Strasbourg"];
 const skillsList = ["React", "TypeScript", "Node.js", "Python", "Go", "Rust", "SQL", "Docker", "Kubernetes"];
-
-const groupPlaceholder = "Choisir un groupe";
-const groupItems: ItemType = { family: "Famille", friends: "Amis", work: "Travail" };
-
-const interestsPlaceholder = "Choisir des intérêts";
-const interestItems: ItemType = { sport: "Sport", music: "Musique", travel: "Voyage" };
 
 export default function FormContact() {
     const toast = useToast();
@@ -152,17 +149,24 @@ export default function FormContact() {
                 <FormSelect name="group">
                     <Trigger className="w-full max-w-full">
                         <Value>
-                            {(value) => renderValue({ placeholder: groupPlaceholder, value, items: groupItems })}
+                            {(value) => renderValue({ value, items: groupItems, placeholder: "Choisir un groupe" })}
                         </Value>
+                        <Icon />
                     </Trigger>
                     <Portal>
                         <Positioner>
-                            <Popup withScrollArrows>
+                            <Popup>
                                 <List>
-                                    <Placeholder label={groupPlaceholder} />
-                                    <Item label="Famille" itemKey="family" />
-                                    <Item label="Amis" itemKey="friends" />
-                                    <Item label="Travail" itemKey="work" />
+                                    <Item value={null}>
+                                        <ItemIndicator />
+                                        <ItemText>Choisir un groupe</ItemText>
+                                    </Item>
+                                    {Object.entries(groupItems).map(([key, label]) => (
+                                        <Item key={key} value={key}>
+                                            <ItemIndicator />
+                                            <ItemText>{label}</ItemText>
+                                        </Item>
+                                    ))}
                                 </List>
                             </Popup>
                         </Positioner>
@@ -174,16 +178,22 @@ export default function FormContact() {
                 <FormSelectMultiple name="interests">
                     <Trigger className="w-full max-w-full">
                         <Value>
-                            {(value) => renderValue({ placeholder: interestsPlaceholder, value, items: interestItems })}
+                            {(value) =>
+                                renderValue({ value, items: interestItems, placeholder: "Choisir des intérêts" })
+                            }
                         </Value>
+                        <Icon />
                     </Trigger>
                     <Portal>
-                        <Positioner>
-                            <Popup withScrollArrows>
+                        <Positioner alignItemWithTrigger={false}>
+                            <Popup>
                                 <List>
-                                    <Item label="Sport" itemKey="sport" />
-                                    <Item label="Musique" itemKey="music" />
-                                    <Item label="Voyage" itemKey="travel" />
+                                    {Object.entries(interestItems).map(([key, label]) => (
+                                        <Item key={key} value={key}>
+                                            <ItemIndicator />
+                                            <ItemText>{label}</ItemText>
+                                        </Item>
+                                    ))}
                                 </List>
                             </Popup>
                         </Positioner>
@@ -207,7 +217,7 @@ export default function FormContact() {
                                 <ComboboxList>
                                     {(item: string) => (
                                         <ComboboxItem key={item} value={item}>
-                                            <ItemIndicator />
+                                            <ComboboxItemIndicator />
                                             <span className="col-start-2">{item}</span>
                                         </ComboboxItem>
                                     )}
@@ -242,7 +252,7 @@ export default function FormContact() {
                                 <ComboboxList>
                                     {(item: string) => (
                                         <ComboboxItem key={item} value={item}>
-                                            <ItemIndicator />
+                                            <ComboboxItemIndicator />
                                             <span className="col-start-2">{item}</span>
                                         </ComboboxItem>
                                     )}

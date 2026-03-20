@@ -16,7 +16,7 @@ export function FormSelectMultiple(props: FormSelectMultipleProps) {
     const field = register(name);
 
     return (
-        <SelectMultiple selected={field.value} setSelected={(value) => field.onChange(value)}>
+        <SelectMultiple value={field.value} onValueChange={(value) => field.onChange(value)}>
             {children}
         </SelectMultiple>
     );

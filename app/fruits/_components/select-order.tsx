@@ -1,35 +1,47 @@
 "use client";
 
-import Select, { Item, ItemType, List, Popup, Portal, Positioner, Trigger, Value } from "@atoms/select";
-import { SetStateAction } from "react";
+import Select, {
+    Icon,
+    Item,
+    ItemIndicator,
+    ItemText,
+    List,
+    Popup,
+    Portal,
+    Positioner,
+    Trigger,
+    Value,
+    renderValue,
+} from "@atoms/select";
 import { OrderValue } from "../_lib/query-params";
 import { useQueryParams } from "../_lib/use-query-params";
+
+const items: Record<string, string> = {
+    asc: "Ascending (A-Z)",
+    desc: "Descending (Z-A)",
+};
+
+const placeholder = "Select order";
 
 export default function SelectOrder() {
     const { order, setOrder } = useQueryParams();
 
-    const handleChange = (value: SetStateAction<string | null>) => {
-        setOrder(value as OrderValue | null);
-    };
-
-    const placeholder = "Select order";
-
-    const items: ItemType = {
-        asc: "Ascending (A-Z)",
-        desc: "Descending (Z-A)",
-    };
-
     return (
-        <Select selected={order} setSelected={handleChange}>
+        <Select value={order} onValueChange={(value) => setOrder(value as OrderValue | null)}>
             <Trigger className="w-full max-w-full">
-                <Value>{(value) => (value ? items[value as string] : placeholder)}</Value>
+                <Value>{(value) => renderValue({ value, items, placeholder })}</Value>
+                <Icon />
             </Trigger>
             <Portal>
                 <Positioner alignItemWithTrigger>
                     <Popup>
                         <List>
-                            <Item label="Ascending (A-Z)" itemKey="asc" />
-                            <Item label="Descending (Z-A)" itemKey="desc" />
+                            {Object.entries(items).map(([key, label]) => (
+                                <Item key={key} value={key}>
+                                    <ItemIndicator />
+                                    <ItemText>{label}</ItemText>
+                                </Item>
+                            ))}
                         </List>
                     </Popup>
                 </Positioner>

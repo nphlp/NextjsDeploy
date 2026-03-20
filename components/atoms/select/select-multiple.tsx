@@ -1,88 +1,105 @@
 "use client";
 
-import { Separator } from "@base-ui/react";
-import { Dispatch, ReactNode, SetStateAction } from "react";
 import {
     Group,
+    GroupLabel,
+    Icon,
     Item,
-    ItemType,
+    ItemIndicator,
+    ItemText,
     List,
     Popup,
     Portal,
     Positioner,
     Root,
-    SetSelectedItemType,
+    ScrollDownArrow,
+    ScrollUpArrow,
+    SelectProps,
+    Separator,
     Trigger,
     Value,
 } from "./atoms";
 import { renderValue } from "./utils";
 
-type SelectMultipleProps = {
-    children?: ReactNode;
-    selected?: string[];
-    setSelected?: Dispatch<SetStateAction<string[]>>;
+const sansSerif: Record<string, string> = {
+    arial: "Arial",
+    helvetica: "Helvetica",
+    inter: "Inter",
 };
 
-export default function SelectMultiple(props: SelectMultipleProps) {
-    const { selected, setSelected, children } = props;
+const serif: Record<string, string> = {
+    timesNewRoman: "Times New Roman",
+    georgia: "Georgia",
+    garamond: "Garamond",
+};
 
-    const handleSelect: SetSelectedItemType = (value) => {
-        setSelected?.(value as string[]);
-    };
+const monospace: Record<string, string> = {
+    courierNew: "Courier New",
+    firaCode: "Fira Code",
+    jetbrainsMono: "JetBrains Mono",
+};
 
-    if (children)
+const everyItem: Record<string, string> = { ...sansSerif, ...serif, ...monospace };
+
+const placeholder = "Select fonts";
+
+export default function SelectMultiple(props: SelectProps) {
+    const { children, ...otherProps } = props;
+
+    if (children) {
         return (
-            <Root selected={selected} onSelect={handleSelect} multiple>
+            <Root multiple {...otherProps}>
                 {children}
             </Root>
         );
-
-    const placeholder = "Select multiple options";
-
-    const items: ItemType = {
-        arial: "Arial",
-        helvetica: "Helvetica",
-        inter: "Inter",
-        timesNewRoman: "Times New Roman",
-        georgia: "Georgia",
-        garamond: "Garamond",
-        courierNew: "Courier New",
-        firaCode: "Fira Code",
-        jetbrainsMono: "JetBrains Mono",
-    };
+    }
 
     return (
-        <Root selected={selected} onSelect={handleSelect} multiple>
+        <Root multiple {...otherProps}>
             <Trigger>
-                <Value>{(value) => renderValue({ placeholder, value, items })}</Value>
+                <Value>{(value) => renderValue({ value, items: everyItem, placeholder })}</Value>
+                <Icon />
             </Trigger>
-
             <Portal>
                 <Positioner>
-                    <Popup withScrollArrows>
+                    <Popup>
+                        <ScrollUpArrow />
                         <List>
-                            <Group label="Sans-serif">
-                                <Item label="Arial" itemKey="arial" />
-                                <Item label="Helvetica" itemKey="helvetica" />
-                                <Item label="Inter" itemKey="inter" />
+                            <Group>
+                                <GroupLabel>Sans-serif</GroupLabel>
+                                {Object.entries(sansSerif).map(([key, label]) => (
+                                    <Item key={key} value={key}>
+                                        <ItemIndicator />
+                                        <ItemText>{label}</ItemText>
+                                    </Item>
+                                ))}
                             </Group>
 
                             <Separator />
 
-                            <Group label="Serif">
-                                <Item label="Times New Roman" itemKey="timesNewRoman" />
-                                <Item label="Georgia" itemKey="georgia" />
-                                <Item label="Garamond" itemKey="garamond" />
+                            <Group>
+                                <GroupLabel>Serif</GroupLabel>
+                                {Object.entries(serif).map(([key, label]) => (
+                                    <Item key={key} value={key}>
+                                        <ItemIndicator />
+                                        <ItemText>{label}</ItemText>
+                                    </Item>
+                                ))}
                             </Group>
 
                             <Separator />
 
-                            <Group label="Monospace">
-                                <Item label="Courier New" itemKey="courierNew" />
-                                <Item label="Fira Code" itemKey="firaCode" />
-                                <Item label="JetBrains Mono" itemKey="jetbrainsMono" />
+                            <Group>
+                                <GroupLabel>Monospace</GroupLabel>
+                                {Object.entries(monospace).map(([key, label]) => (
+                                    <Item key={key} value={key}>
+                                        <ItemIndicator />
+                                        <ItemText>{label}</ItemText>
+                                    </Item>
+                                ))}
                             </Group>
                         </List>
+                        <ScrollDownArrow />
                     </Popup>
                 </Positioner>
             </Portal>

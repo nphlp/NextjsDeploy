@@ -1,91 +1,96 @@
 "use client";
 
-import { Separator } from "@base-ui/react";
-import { Dispatch, ReactNode, SetStateAction } from "react";
 import {
     Group,
+    GroupLabel,
+    Icon,
     Item,
-    ItemType,
+    ItemIndicator,
+    ItemText,
     List,
-    Placeholder,
     Popup,
     Portal,
     Positioner,
     Root,
-    SetSelectedItemType,
+    ScrollDownArrow,
+    ScrollUpArrow,
+    SelectProps,
+    Separator,
     Trigger,
     Value,
 } from "./atoms";
 import { renderValue } from "./utils";
 
-type SelectProps = {
-    children?: ReactNode;
-    selected?: string | null;
-    setSelected?: Dispatch<SetStateAction<string | null>>;
+const items: Record<string, string> = {
+    arial: "Arial",
+    helvetica: "Helvetica",
+    inter: "Inter",
+    timesNewRoman: "Times New Roman",
+    georgia: "Georgia",
+    garamond: "Garamond",
+    courierNew: "Courier New",
+    firaCode: "Fira Code",
+    jetbrainsMono: "JetBrains Mono",
 };
 
+const itemsArray = Object.entries(items);
+
+const placeholder = "Select a font";
+
 export default function Select(props: SelectProps) {
-    const { selected, setSelected, children } = props;
+    const { children, ...otherProps } = props;
 
-    const handleSelect: SetSelectedItemType = (value) => {
-        setSelected?.(value as string | null);
-    };
-
-    if (children)
-        return (
-            <Root selected={selected} onSelect={handleSelect}>
-                {children}
-            </Root>
-        );
-
-    const placeholder = "Select an option";
-
-    const items: ItemType = {
-        arial: "Arial",
-        helvetica: "Helvetica",
-        inter: "Inter",
-        timesNewRoman: "Times New Roman",
-        georgia: "Georgia",
-        garamond: "Garamond",
-        courierNew: "Courier New",
-        firaCode: "Fira Code",
-        jetbrainsMono: "JetBrains Mono",
-    };
+    if (children) {
+        return <Root {...otherProps}>{children}</Root>;
+    }
 
     return (
-        <Root selected={selected} onSelect={handleSelect}>
+        <Root {...otherProps}>
             <Trigger>
-                <Value>{(value) => renderValue({ placeholder, value, items })}</Value>
+                <Value>{(value) => renderValue({ value, items, placeholder })}</Value>
+                <Icon />
             </Trigger>
-
             <Portal>
-                <Positioner alignItemWithTrigger>
-                    <Popup withScrollArrows>
+                <Positioner>
+                    <Popup>
+                        <ScrollUpArrow />
                         <List>
-                            <Placeholder label={placeholder} />
-
-                            <Group label="Sans-serif">
-                                <Item label="Arial" itemKey="arial" />
-                                <Item label="Helvetica" itemKey="helvetica" />
-                                <Item label="Inter" itemKey="inter" />
-                            </Group>
-
+                            <Item value={null}>
+                                <ItemIndicator />
+                                <ItemText>{placeholder}</ItemText>
+                            </Item>
                             <Separator />
-
-                            <Group label="Serif">
-                                <Item label="Times New Roman" itemKey="timesNewRoman" />
-                                <Item label="Georgia" itemKey="georgia" />
-                                <Item label="Garamond" itemKey="garamond" />
+                            <Group>
+                                <GroupLabel>Sans-serif</GroupLabel>
+                                {itemsArray.slice(0, 3).map(([key, label]) => (
+                                    <Item key={key} value={key}>
+                                        <ItemIndicator />
+                                        <ItemText>{label}</ItemText>
+                                    </Item>
+                                ))}
                             </Group>
-
                             <Separator />
-
-                            <Group label="Monospace">
-                                <Item label="Courier New" itemKey="courierNew" />
-                                <Item label="Fira Code" itemKey="firaCode" />
-                                <Item label="JetBrains Mono" itemKey="jetbrainsMono" />
+                            <Group>
+                                <GroupLabel>Serif</GroupLabel>
+                                {itemsArray.slice(3, 6).map(([key, label]) => (
+                                    <Item key={key} value={key}>
+                                        <ItemIndicator />
+                                        <ItemText>{label}</ItemText>
+                                    </Item>
+                                ))}
+                            </Group>
+                            <Separator />
+                            <Group>
+                                <GroupLabel>Monospace</GroupLabel>
+                                {itemsArray.slice(6, 9).map(([key, label]) => (
+                                    <Item key={key} value={key}>
+                                        <ItemIndicator />
+                                        <ItemText>{label}</ItemText>
+                                    </Item>
+                                ))}
                             </Group>
                         </List>
+                        <ScrollDownArrow />
                     </Popup>
                 </Positioner>
             </Portal>

@@ -16,7 +16,7 @@ export function FormSelect(props: FormSelectProps) {
     const field = register(name);
 
     return (
-        <Select selected={field.value} setSelected={(value) => field.onChange(value)}>
+        <Select value={field.value} onValueChange={(value) => field.onChange(value)}>
             {children}
         </Select>
     );

@@ -3,7 +3,6 @@ import Main from "@core/Main";
 import type { Metadata } from "next";
 import FormContact from "./_components/form-contact";
 import FormLogin from "./_components/form-login";
-import FormOtp from "./_components/form-otp";
 import FormRegister from "./_components/form-register";
 
 export const metadata: Metadata = {
@@ -40,11 +39,11 @@ export default async function Page() {
                 </Card>
 
                 {/* OTP — input OTP */}
-                <Card className="break-inside-avoid">
+                {/* <Card className="break-inside-avoid">
                     <h2 className="text-lg font-semibold">OTP Verification</h2>
                     <p className="text-sm text-gray-500">FormInputOtp</p>
                     <FormOtp />
-                </Card>
+                </Card> */}
             </div>
         </Main>
     );
