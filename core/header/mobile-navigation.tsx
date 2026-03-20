@@ -1,7 +1,7 @@
 "use client";
 
 import { Link } from "@atoms/button";
-import Menu, { ButtonItem, Popup, Portal, Positioner, Trigger } from "@atoms/menu";
+import Menu, { Arrow, Item, Popup, Portal, Positioner, Trigger } from "@atoms/menu";
 import { linksToRender } from "@core/header-links";
 import { useSession } from "@lib/auth-client";
 import cn from "@lib/cn";
@@ -25,12 +25,13 @@ export default function MobileNavigation() {
             <Portal>
                 <Positioner align="start">
                     <Popup className="w-40">
+                        <Arrow />
                         {links.map(({ href, label, icon: Icon }) => (
                             <Link label={label} key={href} href={href} className="w-full" noStyle>
-                                <ButtonItem value={href}>
+                                <Item>
                                     <Icon className="size-4" />
                                     <span className={cn(path === href && "font-bold")}>{label}</span>
-                                </ButtonItem>
+                                </Item>
                             </Link>
                         ))}
                     </Popup>

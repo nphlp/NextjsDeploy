@@ -4,81 +4,108 @@
 
 "use client";
 
+import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/_core/types";
 import { Menu as MenuBaseUi } from "@base-ui/react/menu";
 import cn from "@lib/cn";
-import { CheckIcon, ChevronDown, ChevronRightIcon } from "lucide-react";
-import { ReactNode } from "react";
+import { Check } from "lucide-react";
+import { ComponentProps, MouseEventHandler, ReactNode } from "react";
 
-export const Root = (props: { children: ReactNode }) => {
-    const { children } = props;
+export type MenuProps = {
+    children?: ReactNode;
+} & ComponentProps<typeof MenuBaseUi.Root>;
+
+export const Root = (props: MenuProps) => {
+    const { children, ...otherProps } = props;
 
     return (
-        // This `div` prevents "space-y-*" layout shifting when the menu popup is opened
-        // caused BaseUI creates `span` children elements to listen behaviors
         <div>
-            <MenuBaseUi.Root>{children}</MenuBaseUi.Root>
+            <MenuBaseUi.Root {...otherProps}>{children}</MenuBaseUi.Root>
         </div>
     );
 };
 
-export const Trigger = (
-    props: { className?: string; openOnHover?: boolean } & (
-        | { label: string; children?: undefined }
-        | { label?: undefined; children: ReactNode }
-    ),
-) => {
-    const { label, children, className, openOnHover = false } = props;
+type MenuTriggerProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Event props
+    onClick?: MouseEventHandler<HTMLButtonElement>;
+
+    // Legacy props
+    legacyProps?: LegacyProps<ButtonAttributes, "onClick">;
+} & BaseUiProps<typeof MenuBaseUi.Trigger, ButtonAttributes>;
+
+export const Trigger = (props: MenuTriggerProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <MenuBaseUi.Trigger
-            openOnHover={openOnHover}
             className={cn(
                 // Layout
                 "flex h-10 items-center justify-center gap-1.5 px-3.5",
                 // Border
                 "rounded-md border border-gray-200",
                 // Outline
-                "outline-2 -outline-offset-1 outline-transparent",
+                "outline-2 outline-transparent",
                 "focus-visible:outline-outline",
                 // Background
                 "bg-gray-50 hover:bg-gray-100 active:bg-gray-100 data-popup-open:bg-gray-100",
                 // Text
-                "text-base font-medium text-gray-900 select-none",
+                "text-foreground cursor-default text-base font-medium select-none",
+                // Overrides
                 className,
             )}
+            {...legacyProps}
+            {...otherProps}
         >
             {children}
-            {label && (
-                <>
-                    <span>{label}</span>
-                    <ChevronDown className="-mr-1 size-4" />
-                </>
-            )}
         </MenuBaseUi.Trigger>
     );
 };
 
-export const Portal = (props: { children: ReactNode }) => {
-    const { children } = props;
+type MenuPortalProps = {
+    children?: ReactNode;
+} & ComponentProps<typeof MenuBaseUi.Portal>;
 
-    return <MenuBaseUi.Portal>{children}</MenuBaseUi.Portal>;
+export const Portal = (props: MenuPortalProps) => {
+    const { children, ...otherProps } = props;
+
+    return <MenuBaseUi.Portal {...otherProps}>{children}</MenuBaseUi.Portal>;
 };
 
-type Side = "top" | "right" | "bottom" | "left";
-type Align = "start" | "center" | "end";
+type MenuPositionerProps = {
+    className?: string;
+    children?: ReactNode;
 
-export const Positioner = (props: { children: ReactNode; sideOffset?: number; side?: Side; align?: Align }) => {
-    const { children, sideOffset = 8, side = "bottom", align = "center" } = props;
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof MenuBaseUi.Positioner, StandardAttributes>;
+
+export const Positioner = (props: MenuPositionerProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
-        <MenuBaseUi.Positioner className="z-10 outline-none" sideOffset={sideOffset} side={side} align={align}>
+        <MenuBaseUi.Positioner
+            sideOffset={8}
+            className={cn("z-10 outline-none", className)}
+            {...legacyProps}
+            {...otherProps}
+        >
             {children}
         </MenuBaseUi.Positioner>
     );
 };
 
-export const Popup = (props: { popoverWithoutArrow?: boolean; children: ReactNode; className?: string }) => {
-    const { popoverWithoutArrow = false, children, className } = props;
+type MenuPopupProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof MenuBaseUi.Popup, StandardAttributes>;
+
+export const Popup = (props: MenuPopupProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
 
     return (
         <MenuBaseUi.Popup
@@ -91,39 +118,252 @@ export const Popup = (props: { popoverWithoutArrow?: boolean; children: ReactNod
                 // Background
                 "bg-background",
                 // Text
-                "text-gray-900",
+                "text-foreground",
                 // Shadow
                 "shadow-lg shadow-gray-200 dark:shadow-none",
                 // Animation
                 "transition-[transform,scale,opacity]",
                 "data-ending-style:scale-90 data-ending-style:opacity-0",
                 "data-starting-style:scale-90 data-starting-style:opacity-0",
+                // Overrides
                 className,
             )}
+            {...legacyProps}
+            {...otherProps}
         >
-            {!popoverWithoutArrow && <Arrow />}
             {children}
         </MenuBaseUi.Popup>
     );
 };
 
-export const Arrow = () => {
+type MenuArrowProps = {
+    className?: string;
+    children?: ReactNode;
+} & ComponentProps<typeof MenuBaseUi.Arrow>;
+
+export const Arrow = (props: MenuArrowProps) => {
+    const { className, children, ...otherProps } = props;
+
     return (
         <MenuBaseUi.Arrow
             className={cn(
-                // Position selon le côté
+                // Position
                 "data-[side=bottom]:-top-2",
                 "data-[side=top]:-bottom-2 data-[side=top]:rotate-180",
                 "data-[side=left]:-right-3.25 data-[side=left]:rotate-90",
                 "data-[side=right]:-left-3.25 data-[side=right]:-rotate-90",
+                // Overrides
+                className,
             )}
+            {...otherProps}
         >
-            <ArrowSvg />
+            {children ?? <ArrowSvg />}
         </MenuBaseUi.Arrow>
     );
 };
 
-export const ArrowSvg = (props: React.ComponentProps<"svg">) => {
+const itemClasses = cn(
+    // Layout
+    "flex cursor-default gap-3 py-2 pr-8 pl-4",
+    "data-highlighted:relative data-highlighted:z-0",
+    "data-highlighted:before:absolute data-highlighted:before:inset-x-1 data-highlighted:before:inset-y-0 data-highlighted:before:z-[-1]",
+    // Border
+    "outline-none data-highlighted:before:rounded-sm",
+    // Background
+    "data-highlighted:before:bg-gray-900",
+    // Text
+    "text-sm leading-4 select-none",
+    "data-highlighted:text-gray-50",
+);
+
+type MenuItemProps = {
+    className?: string;
+    children?: ReactNode;
+
+    // Event props
+    onClick?: () => void;
+
+    // Legacy props
+    legacyProps?: LegacyProps<StandardAttributes>;
+} & BaseUiProps<typeof MenuBaseUi.Item, StandardAttributes>;
+
+export const Item = (props: MenuItemProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
+
+    return (
+        <MenuBaseUi.Item className={cn(itemClasses, className)} {...legacyProps} {...otherProps}>
+            {children}
+        </MenuBaseUi.Item>
+    );
+};
+
+type MenuSeparatorProps = {
+    className?: string;
+} & ComponentProps<typeof MenuBaseUi.Separator>;
+
+export const Separator = (props: MenuSeparatorProps) => {
+    const { className, ...otherProps } = props;
+
+    return <MenuBaseUi.Separator className={cn("mx-4 my-1.5 h-px bg-gray-200", className)} {...otherProps} />;
+};
+
+type MenuGroupProps = {
+    className?: string;
+    children?: ReactNode;
+} & ComponentProps<typeof MenuBaseUi.Group>;
+
+export const Group = (props: MenuGroupProps) => {
+    const { className, children, ...otherProps } = props;
+
+    return (
+        <MenuBaseUi.Group className={cn(className)} {...otherProps}>
+            {children}
+        </MenuBaseUi.Group>
+    );
+};
+
+type MenuGroupLabelProps = {
+    className?: string;
+    children?: ReactNode;
+} & ComponentProps<typeof MenuBaseUi.GroupLabel>;
+
+export const GroupLabel = (props: MenuGroupLabelProps) => {
+    const { className, children, ...otherProps } = props;
+
+    return (
+        <MenuBaseUi.GroupLabel
+            className={cn("cursor-default py-2 pr-8 pl-7.5 text-sm leading-4 text-gray-600 select-none", className)}
+            {...otherProps}
+        >
+            {children}
+        </MenuBaseUi.GroupLabel>
+    );
+};
+
+const checkboxItemClasses = cn(
+    // Layout
+    "grid cursor-default grid-cols-[1rem_1fr] items-center gap-2 py-2 pr-8 pl-2.5",
+    "data-highlighted:relative data-highlighted:z-0",
+    "data-highlighted:before:absolute data-highlighted:before:inset-x-1 data-highlighted:before:inset-y-0 data-highlighted:before:z-[-1]",
+    // Border
+    "outline-none data-highlighted:before:rounded-sm",
+    // Background
+    "data-highlighted:before:bg-gray-900",
+    // Text
+    "text-sm leading-4 select-none",
+    "data-highlighted:text-gray-50",
+);
+
+type MenuCheckboxItemProps = {
+    className?: string;
+    children?: ReactNode;
+} & ComponentProps<typeof MenuBaseUi.CheckboxItem>;
+
+export const CheckboxItem = (props: MenuCheckboxItemProps) => {
+    const { className, children, ...otherProps } = props;
+
+    return (
+        <MenuBaseUi.CheckboxItem className={cn(checkboxItemClasses, className)} {...otherProps}>
+            {children}
+        </MenuBaseUi.CheckboxItem>
+    );
+};
+
+type MenuCheckboxItemIndicatorProps = {
+    className?: string;
+    children?: ReactNode;
+} & ComponentProps<typeof MenuBaseUi.CheckboxItemIndicator>;
+
+export const CheckboxItemIndicator = (props: MenuCheckboxItemIndicatorProps) => {
+    const { className, children, ...otherProps } = props;
+
+    return (
+        <MenuBaseUi.CheckboxItemIndicator className={cn("col-start-1", className)} {...otherProps}>
+            {children ?? <Check className="size-4" />}
+        </MenuBaseUi.CheckboxItemIndicator>
+    );
+};
+
+type MenuRadioGroupProps = {
+    children?: ReactNode;
+} & ComponentProps<typeof MenuBaseUi.RadioGroup>;
+
+export const RadioGroup = (props: MenuRadioGroupProps) => {
+    const { children, ...otherProps } = props;
+
+    return <MenuBaseUi.RadioGroup {...otherProps}>{children}</MenuBaseUi.RadioGroup>;
+};
+
+type MenuRadioItemProps = {
+    className?: string;
+    children?: ReactNode;
+} & ComponentProps<typeof MenuBaseUi.RadioItem>;
+
+export const RadioItem = (props: MenuRadioItemProps) => {
+    const { className, children, ...otherProps } = props;
+
+    return (
+        <MenuBaseUi.RadioItem className={cn(checkboxItemClasses, className)} {...otherProps}>
+            {children}
+        </MenuBaseUi.RadioItem>
+    );
+};
+
+type MenuRadioItemIndicatorProps = {
+    className?: string;
+    children?: ReactNode;
+} & ComponentProps<typeof MenuBaseUi.RadioItemIndicator>;
+
+export const RadioItemIndicator = (props: MenuRadioItemIndicatorProps) => {
+    const { className, children, ...otherProps } = props;
+
+    return (
+        <MenuBaseUi.RadioItemIndicator className={cn("col-start-1", className)} {...otherProps}>
+            {children ?? <Check className="size-4" />}
+        </MenuBaseUi.RadioItemIndicator>
+    );
+};
+
+type MenuSubmenuRootProps = {
+    children?: ReactNode;
+} & ComponentProps<typeof MenuBaseUi.SubmenuRoot>;
+
+export const SubmenuRoot = (props: MenuSubmenuRootProps) => {
+    const { children, ...otherProps } = props;
+
+    return <MenuBaseUi.SubmenuRoot {...otherProps}>{children}</MenuBaseUi.SubmenuRoot>;
+};
+
+type MenuSubmenuTriggerProps = {
+    className?: string;
+    children?: ReactNode;
+} & ComponentProps<typeof MenuBaseUi.SubmenuTrigger>;
+
+export const SubmenuTrigger = (props: MenuSubmenuTriggerProps) => {
+    const { className, children, ...otherProps } = props;
+
+    return (
+        <MenuBaseUi.SubmenuTrigger
+            className={cn(
+                itemClasses,
+                // Layout
+                "items-center justify-between gap-4 pr-4",
+                // Submenu open state
+                "data-popup-open:relative data-popup-open:z-0",
+                "data-popup-open:before:absolute data-popup-open:before:inset-x-1 data-popup-open:before:inset-y-0 data-popup-open:before:z-[-1]",
+                "data-popup-open:before:rounded-sm data-popup-open:before:bg-gray-100",
+                "data-highlighted:data-popup-open:before:bg-gray-900",
+                // Overrides
+                className,
+            )}
+            {...otherProps}
+        >
+            {children}
+        </MenuBaseUi.SubmenuTrigger>
+    );
+};
+
+function ArrowSvg(props: React.ComponentProps<"svg">) {
     return (
         <svg width="20" height="10" viewBox="0 0 20 10" fill="none" {...props}>
             <path
@@ -140,221 +380,4 @@ export const ArrowSvg = (props: React.ComponentProps<"svg">) => {
             />
         </svg>
     );
-};
-
-export const ButtonItem = (
-    props: { value: string; onItemClick?: (value: string) => void; className?: string } & (
-        | { label: string; children?: undefined }
-        | { label?: undefined; children: ReactNode }
-    ),
-) => {
-    const { label, value, onItemClick, children, className } = props;
-
-    return (
-        <MenuBaseUi.Item
-            onClick={() => onItemClick?.(value)}
-            className={cn(
-                // Layout
-                "flex gap-3 py-2 pr-8 pl-4",
-                "data-highlighted:relative data-highlighted:z-0",
-                "data-highlighted:before:absolute data-highlighted:before:inset-x-1 data-highlighted:before:inset-y-0 data-highlighted:before:z-[-1]",
-                // Border
-                "outline-none data-highlighted:before:rounded-sm",
-                // Background
-                "data-highlighted:before:bg-gray-900",
-                // Text
-                "cursor-default text-sm leading-4 select-none",
-                "data-highlighted:text-gray-50",
-                className,
-            )}
-        >
-            {children}
-            {label}
-        </MenuBaseUi.Item>
-    );
-};
-
-export const Separator = () => {
-    return <MenuBaseUi.Separator className="mx-4 my-1.5 h-px bg-gray-200" />;
-};
-
-export const CheckboxItem = (props: {
-    label: string;
-    checked?: boolean;
-    setCheckedChange?: (checked: boolean) => void;
-    defaultChecked?: boolean;
-}) => {
-    const { label, checked, setCheckedChange, defaultChecked } = props;
-
-    return (
-        <MenuBaseUi.CheckboxItem
-            checked={checked}
-            onCheckedChange={setCheckedChange}
-            defaultChecked={defaultChecked}
-            className={cn(
-                // Layout
-                "grid grid-cols-[1rem_1fr] items-center gap-2 py-2 pr-8 pl-2.5",
-                "data-highlighted:relative data-highlighted:z-0",
-                "data-highlighted:before:absolute data-highlighted:before:inset-x-1 data-highlighted:before:inset-y-0 data-highlighted:before:z-[-1]",
-                // Border
-                "outline-none data-highlighted:before:rounded-sm",
-                // Background
-                "data-highlighted:before:bg-gray-900",
-                // Text
-                "cursor-default text-sm leading-4 select-none",
-                "data-highlighted:text-gray-50",
-            )}
-        >
-            <MenuBaseUi.CheckboxItemIndicator className="col-start-1">
-                <CheckIcon className="size-4" />
-            </MenuBaseUi.CheckboxItemIndicator>
-            <span className="col-start-2">{label}</span>
-        </MenuBaseUi.CheckboxItem>
-    );
-};
-
-export const RadioSet = (props: {
-    selectedRadio?: string;
-    setSelectedRadio?: (value: string) => void;
-    defaultValue?: string;
-    children: ReactNode;
-}) => {
-    const { selectedRadio, setSelectedRadio, defaultValue, children } = props;
-
-    return (
-        <MenuBaseUi.RadioGroup value={selectedRadio} onValueChange={setSelectedRadio} defaultValue={defaultValue}>
-            {children}
-        </MenuBaseUi.RadioGroup>
-    );
-};
-
-export const RadioItem = (props: { label: string; value: string }) => {
-    const { label, value } = props;
-
-    return (
-        <MenuBaseUi.RadioItem
-            value={value}
-            className={cn(
-                "group",
-                // Layout
-                "grid grid-cols-[1rem_1fr] items-center gap-2 py-2 pr-8 pl-2.5",
-                "data-highlighted:relative data-highlighted:z-0",
-                "data-highlighted:before:absolute data-highlighted:before:inset-x-1 data-highlighted:before:inset-y-0 data-highlighted:before:z-[-1]",
-                // Border
-                "outline-none data-highlighted:before:rounded-sm",
-                // Background
-                "data-highlighted:before:bg-gray-900",
-                // Text
-                "cursor-default text-sm leading-4 select-none",
-                "data-highlighted:text-gray-50",
-            )}
-        >
-            {/* Selected icon */}
-            <MenuBaseUi.RadioItemIndicator className="col-start-1">
-                <CheckIcon className="size-4" />
-            </MenuBaseUi.RadioItemIndicator>
-            <span className="col-start-2">{label}</span>
-        </MenuBaseUi.RadioItem>
-    );
-};
-
-export const Group = (props: { label: string; children: ReactNode }) => {
-    const { label, children } = props;
-
-    return (
-        <MenuBaseUi.Group>
-            <MenuBaseUi.GroupLabel className="cursor-default py-2 pr-8 pl-7.5 text-sm leading-4 text-gray-600 select-none">
-                {label}
-            </MenuBaseUi.GroupLabel>
-            {children}
-        </MenuBaseUi.Group>
-    );
-};
-
-export const SubMenu = (props: { children: ReactNode }) => {
-    const { children } = props;
-
-    return <MenuBaseUi.SubmenuRoot>{children}</MenuBaseUi.SubmenuRoot>;
-};
-
-export const SubTrigger = (props: { label: string; className?: string; openOnHover?: boolean }) => {
-    const { label } = props;
-
-    return (
-        <MenuBaseUi.SubmenuTrigger
-            className={cn(
-                // Layout
-                "flex items-center justify-between gap-4 py-2 pr-4 pl-4",
-                "data-highlighted:relative data-highlighted:z-0",
-                "data-highlighted:before:absolute data-highlighted:before:inset-x-1 data-highlighted:before:inset-y-0 data-highlighted:before:z-[-1]",
-                "data-popup-open:relative data-popup-open:z-0",
-                "data-popup-open:before:absolute data-popup-open:before:inset-x-1 data-popup-open:before:inset-y-0 data-popup-open:before:z-[-1]",
-                // Border
-                "outline-none",
-                "data-highlighted:before:rounded-sm",
-                "data-popup-open:before:rounded-sm",
-                // Background
-                "data-highlighted:before:bg-gray-900",
-                "data-popup-open:before:bg-gray-100",
-                "data-highlighted:data-popup-open:before:bg-gray-900",
-                // Text
-                "cursor-default text-sm leading-4 select-none",
-                "data-highlighted:text-gray-50",
-            )}
-        >
-            {label} <ChevronRightIcon className="size-4" />
-        </MenuBaseUi.SubmenuTrigger>
-    );
-};
-
-export const SubPortal = (props: { children: ReactNode }) => {
-    const { children } = props;
-
-    return <MenuBaseUi.Portal>{children}</MenuBaseUi.Portal>;
-};
-
-export const SubPositioner = (props: { children: ReactNode; sideOffset?: number }) => {
-    const { children, sideOffset = 4 } = props;
-
-    const getSubmenuOffset = ({ side }: { side: MenuBaseUi.Positioner.Props["side"] }) => {
-        return side === "top" || side === "bottom" ? sideOffset : -sideOffset;
-    };
-
-    return (
-        <MenuBaseUi.Positioner
-            className="z-10 outline-none"
-            sideOffset={getSubmenuOffset}
-            alignOffset={getSubmenuOffset}
-        >
-            {children}
-        </MenuBaseUi.Positioner>
-    );
-};
-
-export const SubPopup = (props: { children: ReactNode }) => {
-    const { children } = props;
-
-    return (
-        <MenuBaseUi.Popup
-            className={cn(
-                // Layout
-                "origin-(--transform-origin) py-1",
-                // Border
-                "rounded-md outline-1 outline-gray-200",
-                "dark:-outline-offset-1 dark:outline-gray-300",
-                // Background
-                "bg-background",
-                // Text
-                "text-gray-900",
-                // Shadow
-                "shadow-lg shadow-gray-200 dark:shadow-none",
-                // Animation
-                "transition-[transform,scale,opacity]",
-                "data-ending-style:scale-90 data-ending-style:opacity-0",
-                "data-starting-style:scale-90 data-starting-style:opacity-0",
-            )}
-        >
-            {children}
-        </MenuBaseUi.Popup>
-    );
-};
+}

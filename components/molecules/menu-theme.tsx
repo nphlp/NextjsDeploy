@@ -1,6 +1,6 @@
 "use client";
 
-import Menu, { ButtonItem, Popup, Portal, Positioner, Trigger } from "@atoms/menu";
+import Menu, { Arrow, Item, Popup, Portal, Positioner, Trigger } from "@atoms/menu";
 import useTheme from "@core/theme/_context/use-theme";
 import { Monitor, Moon, Sun, SunMoon } from "lucide-react";
 
@@ -17,18 +17,19 @@ export default function MenuTheme() {
             <Portal>
                 <Positioner align="end">
                     <Popup>
-                        <ButtonItem value="light" onItemClick={() => setTheme("light")}>
+                        <Arrow />
+                        <Item onClick={() => setTheme("light")}>
                             <Sun className="size-4" />
                             <span>Light</span>
-                        </ButtonItem>
-                        <ButtonItem value="dark" onItemClick={() => setTheme("dark")}>
+                        </Item>
+                        <Item onClick={() => setTheme("dark")}>
                             <Moon className="size-4" />
                             <span>Dark</span>
-                        </ButtonItem>
-                        <ButtonItem value="system" onItemClick={() => setTheme("system")}>
+                        </Item>
+                        <Item onClick={() => setTheme("system")}>
                             <Monitor className="size-4" />
                             <span>System</span>
-                        </ButtonItem>
+                        </Item>
                     </Popup>
                 </Positioner>
             </Portal>

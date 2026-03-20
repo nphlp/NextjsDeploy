@@ -1,89 +1,101 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ChevronDown, ChevronRight } from "lucide-react";
+import { useState } from "react";
 import {
-    ButtonItem,
+    Arrow,
     CheckboxItem,
+    CheckboxItemIndicator,
     Group,
+    GroupLabel,
+    Item,
+    MenuProps,
     Popup,
     Portal,
     Positioner,
+    RadioGroup,
     RadioItem,
-    RadioSet,
+    RadioItemIndicator,
     Root,
     Separator,
-    SubMenu,
-    SubPopup,
-    SubPortal,
-    SubPositioner,
-    SubTrigger,
+    SubmenuRoot,
+    SubmenuTrigger,
     Trigger,
 } from "./atoms";
 
-type MenuProps = {
-    children?: ReactNode;
-};
-
 export default function Menu(props: MenuProps) {
-    const { children } = props;
+    const { children, ...otherProps } = props;
 
-    if (children) return <Root>{children}</Root>;
+    if (children) return <Root {...otherProps}>{children}</Root>;
+
+    return <MenuDemo />;
+}
+
+function MenuDemo() {
+    const [sortValue, setSortValue] = useState("date");
+    const [showMinimap, setShowMinimap] = useState(true);
+    const [showSidebar, setShowSidebar] = useState(false);
 
     return (
         <Root>
-            <Trigger label="Menu" />
+            <Trigger>
+                View <ChevronDown className="-mr-1 size-4" />
+            </Trigger>
             <Portal>
                 <Positioner>
                     <Popup>
-                        <ButtonItem label="Play" value="play" />
-                        <ButtonItem label="Pause" value="pause" />
+                        <Arrow />
 
-                        <Separator />
-
-                        <Group label="My lists">
-                            <CheckboxItem label="Like" defaultChecked />
-                            <CheckboxItem label="Favorite" />
+                        <Group>
+                            <GroupLabel>Sort</GroupLabel>
+                            <RadioGroup value={sortValue} onValueChange={setSortValue}>
+                                <RadioItem value="date">
+                                    <RadioItemIndicator />
+                                    <span className="col-start-2">Date</span>
+                                </RadioItem>
+                                <RadioItem value="name">
+                                    <RadioItemIndicator />
+                                    <span className="col-start-2">Name</span>
+                                </RadioItem>
+                                <RadioItem value="type">
+                                    <RadioItemIndicator />
+                                    <span className="col-start-2">Type</span>
+                                </RadioItem>
+                            </RadioGroup>
                         </Group>
 
                         <Separator />
 
-                        <Group label="Repeat mode">
-                            <RadioSet defaultValue="disabled">
-                                <RadioItem label="Disabled" value="disabled" />
-                                <RadioItem label="Random" value="random" />
-                                <RadioItem label="One-time" value="one-time" />
-                            </RadioSet>
+                        <Group>
+                            <GroupLabel>Workspace</GroupLabel>
+                            <CheckboxItem checked={showMinimap} onCheckedChange={setShowMinimap}>
+                                <CheckboxItemIndicator />
+                                <span className="col-start-2">Minimap</span>
+                            </CheckboxItem>
+                            <CheckboxItem checked={showSidebar} onCheckedChange={setShowSidebar}>
+                                <CheckboxItemIndicator />
+                                <span className="col-start-2">Sidebar</span>
+                            </CheckboxItem>
                         </Group>
 
                         <Separator />
 
-                        <Group label="Share">
-                            <SubMenu>
-                                <SubTrigger label="Social" />
-                                <SubPortal>
-                                    <SubPositioner>
-                                        <SubPopup>
-                                            <ButtonItem label="To Facebook" value="to-facebook" />
-                                            <ButtonItem label="To Instagram" value="to-instagram" />
-                                            <ButtonItem label="To Twitter" value="to-twitter" />
+                        <Item>Share</Item>
 
-                                            <SubMenu>
-                                                <SubTrigger label="More" />
-                                                <SubPortal>
-                                                    <SubPositioner>
-                                                        <SubPopup>
-                                                            <ButtonItem label="To Reddit" value="to-reddit" />
-                                                            <ButtonItem label="To LinkedIn" value="to-linkedin" />
-                                                        </SubPopup>
-                                                    </SubPositioner>
-                                                </SubPortal>
-                                            </SubMenu>
-                                        </SubPopup>
-                                    </SubPositioner>
-                                </SubPortal>
-                            </SubMenu>
-                            <ButtonItem label="Copy link" value="copy-link" />
-                        </Group>
+                        <SubmenuRoot>
+                            <SubmenuTrigger>
+                                More <ChevronRight className="size-4" />
+                            </SubmenuTrigger>
+                            <Portal>
+                                <Positioner sideOffset={-4} alignOffset={-4}>
+                                    <Popup>
+                                        <Item>Export</Item>
+                                        <Item>Print</Item>
+                                        <Item>Settings</Item>
+                                    </Popup>
+                                </Positioner>
+                            </Portal>
+                        </SubmenuRoot>
                     </Popup>
                 </Positioner>
             </Portal>
