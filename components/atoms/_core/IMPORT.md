@@ -11,13 +11,13 @@ Model component: `alert-dialog/`
 
 Faithful wrappers around Base-UI sub-components. Styles copied from the docs, props split into explicit + legacy + BaseUI-specific.
 
-Components: `alert-dialog`, `dialog`, `collapsible`, `tabs`, `switch`, `drawer`, `popover`, `slider`, `combobox`, `accordion`, `checkbox`, `context-menu`.
+Components: `alert-dialog`, `dialog`, `collapsible`, `tabs`, `switch`, `drawer`, `popover`, `slider`, `combobox`, `accordion`, `checkbox`, `context-menu`, `select`, `menu`.
 
 ### Project-specific overrides (not covered)
 
 Custom API with transformed props, renamed callbacks, discriminated unions, project logic (FormContext, variant system, etc.). These are case-by-case.
 
-Components: `select`, `menu`, `toast`, `button`, `input`, `form/field`.
+Components: `toast`, `button`, `input`, `form/field`.
 
 See [INVENTORY.md](./INVENTORY.md) for the full per-atom typing breakdown of every component.
 
@@ -27,7 +27,12 @@ See [INVENTORY.md](./INVENTORY.md) for the full per-atom typing breakdown of eve
 
 ```
 components/atoms/
-├── types.ts                   # Shared utility types (LegacyProps, BaseUiProps, ButtonStyleProps)
+├── _core/
+│   ├── types.ts              # Shared utility types (LegacyProps, BaseUiProps)
+│   ├── button-variants.ts    # buttonVariants, buttonStyle, loaderColor, ButtonStyleProps
+│   ├── IMPORT.md
+│   ├── INVENTORY.md
+│   └── TODO.md
 └── [component]/
     ├── atoms.tsx              # Styled Base-UI wrappers (shared across variants)
     ├── atoms-[variant].tsx    # Variant-specific atoms (optional, e.g. atoms-snap.tsx)
@@ -177,11 +182,11 @@ One named export per Base-UI sub-component. Add JSDoc link at the top:
 /**
  * @see https://base-ui.com/react/components/alert-dialog
  */
-import { BaseUiProps, ButtonAttributes, ButtonStyleProps, LegacyProps, StandardAttributes } from "@atoms/types";
+import { BaseUiProps, ButtonAttributes, ButtonStyleProps, LegacyProps, StandardAttributes } from "@atoms/_core/types";
 import { AlertDialog as AlertDialogBaseUi } from "@base-ui/react/alert-dialog";
 import cn from "@lib/cn";
 import { ComponentProps, MouseEventHandler, ReactNode } from "react";
-import { buttonStyle } from "../button/button-variants";
+import { buttonStyle } from "../_core/button-variants";
 ```
 
 ### 3. Type each atom

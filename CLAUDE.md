@@ -124,7 +124,7 @@ pnpm build && pnpm start
     - `2-components.md` — Component structure, props, JSX conventions
     - `3-typescript.md` — TypeScript conventions
     - `4-context.md` — Context structure (3-file pattern)
-    - `5-use-form.md` — Form submission patterns (useForm + Better Auth)
+    - `5-form.md` — Form adapters and useForm patterns
     - `6-nuqs.md` — Query parameters with nuqs
     - `7-zustand-cookie.md` — Store cookie patterns (TBD)
     - `10-theme.md` — Theme system (blocking script, CSS icons, zero flash)

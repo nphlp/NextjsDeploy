@@ -29,6 +29,8 @@ export default function MyComponent(props: MyComponentProps) {
 
 ## Atoms (Base-UI Components)
 
+Shared types and helpers (e.g. `LegacyProps`, `BaseUiProps`, `buttonVariants`) live in `components/atoms/_core/`.
+
 Each Base-UI component lives in `components/atoms/[component]/` with 3 files:
 
 - `atoms.tsx` — Styled wrappers around Base-UI sub-components (named exports)

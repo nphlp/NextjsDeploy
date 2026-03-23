@@ -10,10 +10,11 @@ components/atoms/form/
 ├── form.tsx            # <Form> wrapper — <form> + FormProvider
 ├── field.tsx           # <Field> — label + children + error indication
 ├── schemas.ts          # Centralized Zod schemas
-└── _context/           # FormProvider context (register function)
+├── _context/           # FormProvider context (register function)
+└── _adapters/          # Form-aware wrappers (FormInput, FormSelect, etc.)
 ```
 
-The form system connects through context: `<Form>` passes the `register` function via `FormProvider` → `<Field>` and `<Input useForm>` consume it via `useFormContext()`.
+The form system connects through context: `<Form>` passes the `register` function via `FormProvider` → `<Field>` and form adapters (e.g. `<FormInput>`) consume it via `useFormContext()`.
 
 ## useForm Hook
 
@@ -84,13 +85,13 @@ In the form example, leaving the email field empty shows an error (strict). In t
 
 ### Return Values
 
-| Value       | Type                                                                        | Purpose                                                                        |
-| ----------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| `register`  | `(fieldName) => { name, value, status, errors, onFocus, onChange, onBlur }` | Bind a field — passed to `<Form>`, consumed by `<Field>` and `<Input useForm>` |
-| `states`    | `{ [fieldName]: value }`                                                    | Current values for all fields (read-only access)                               |
-| `setStates` | `{ [fieldName]: (value) => void }`                                          | Set a field value programmatically                                             |
-| `submit`    | `() => validatedData \| undefined`                                          | Validate all fields, return typed data or `undefined` on failure               |
-| `reset`     | `() => void`                                                                | Reset all fields to `defaultValue`                                             |
+| Value       | Type                                                                        | Purpose                                                                    |
+| ----------- | --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `register`  | `(fieldName) => { name, value, status, errors, onFocus, onChange, onBlur }` | Bind a field — passed to `<Form>`, consumed by `<Field>` and form adapters |
+| `states`    | `{ [fieldName]: value }`                                                    | Current values for all fields (read-only access)                           |
+| `setStates` | `{ [fieldName]: (value) => void }`                                          | Set a field value programmatically                                         |
+| `submit`    | `() => validatedData \| undefined`                                          | Validate all fields, return typed data or `undefined` on failure           |
+| `reset`     | `() => void`                                                                | Reset all fields to `defaultValue`                                         |
 
 ## Components
 
@@ -112,17 +113,32 @@ Uses `data-invalid` and `data-disabled` attributes on the wrapper div for child 
 
 ```tsx
 <Field name="email" label="Email" description="Enter your email" disabled={isLoading} required>
-    <Input name="email" placeholder="john@example.com" useForm />
+    <FormInput name="email" placeholder="john@example.com" />
 </Field>
 ```
 
-### `<Input useForm>` — form-aware input
+### Form Adapters (`_adapters/`)
 
-When `useForm={true}`, the input reads value and triggers validation through the form context. The `name` prop must match the field name in `useForm()` config.
+Form adapters are `"use client"` wrappers that connect atoms to `useFormContext()`. Each adapter reads value and triggers validation through the form context. The `name` prop must match the field name in `useForm()` config.
+
+Available adapters:
+
+| Adapter                | Wraps              |
+| ---------------------- | ------------------ |
+| `FormInput`            | `Input`            |
+| `FormInputPassword`    | `InputPassword`    |
+| `FormInputOtp`         | `InputOtp`         |
+| `FormTextArea`         | `TextArea`         |
+| `FormSelect`           | `Select`           |
+| `FormSelectMultiple`   | `SelectMultiple`   |
+| `FormCheckbox`         | `Checkbox`         |
+| `FormSwitch`           | `Switch`           |
+| `FormCombobox`         | `Combobox`         |
+| `FormComboboxMultiple` | `ComboboxMultiple` |
 
 ```tsx
 // With form context (inside <Form> + <Field>)
-<Input name="email" useForm />
+<FormInput name="email" placeholder="john@example.com" />
 
 // Without form context (standalone, local state)
 <Input value={value} onChange={handleChange} />

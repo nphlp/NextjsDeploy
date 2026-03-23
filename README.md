@@ -62,7 +62,7 @@ See [Setup local](./docs/nextjs-deploy/1-setup-local.md) for all options and det
 - [Components](./docs/good-practices/2-components.md)
 - [TypeScript](./docs/good-practices/3-typescript.md)
 - [Context](./docs/good-practices/4-context.md)
-- [useForm](./docs/good-practices/5-use-form.md)
+- [Forms](./docs/good-practices/5-form.md)
 - [Query Parameters (nuqs)](./docs/good-practices/6-nuqs.md)
 - [Theme](./docs/good-practices/10-theme.md)
 

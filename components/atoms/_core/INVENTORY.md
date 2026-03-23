@@ -6,26 +6,26 @@ Detailed typing and pattern for every implemented Base-UI component.
 
 ## Summary
 
-| Component    | Pattern  | Sub-components                                                                                                      | Derived                                                    | Collision K                        |
-| ------------ | -------- | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------- |
-| alert-dialog | Standard | 8 (Root, Trigger, Backdrop, Portal, Popup, Title, Description, Close)                                               | —                                                          | —                                  |
-| dialog       | Standard | 8 (Root, Trigger, Backdrop, Portal, Popup, Title, Description, Close)                                               | —                                                          | —                                  |
-| collapsible  | Standard | 3 (Root, Trigger, Panel)                                                                                            | —                                                          | —                                  |
-| tabs         | Standard | 5 (Root, List, Tab, Indicator, Panel)                                                                               | tabs-vertical                                              | Root: `defaultValue`, Tab: `value` |
-| switch       | Standard | 2 (Root, Thumb)                                                                                                     | switch-chip                                                | Root: `defaultChecked`             |
-| drawer       | Standard | 9 + variants (Root, Trigger, Portal, Backdrop, Popup, Viewport, Title, Description, Content, Close)                 | drawer-non-modal, drawer-snap-points                       | —                                  |
-| popover      | Standard | 9 (Root, Trigger, Backdrop, Portal, Positioner, Popup, Arrow, Viewport, Title, Description, Close)                  | —                                                          | —                                  |
-| slider       | Standard | 6 (Root, Control, Track, Indicator, Thumb, Value)                                                                   | slider-range                                               | Root: `defaultValue`               |
-| combobox     | Standard | 14 + multiple atoms (Root, Input, Trigger, Portal, Positioner, Popup, List, Item, ItemIndicator, Empty, Clear, ...) | combobox-multiple, combobox-async, combobox-multiple-async | —                                  |
-| accordion    | Standard | 5 (Root, Item, Header, Trigger, Panel)                                                                              | —                                                          | —                                  |
-| checkbox     | Standard | 2 (Root, Indicator)                                                                                                 | checkbox-chip                                              | —                                  |
-| context-menu | Standard | 8 (Root, Trigger, Portal, Positioner, Popup, Item, Separator, SubmenuRoot, SubmenuTrigger)                          | —                                                          | —                                  |
-| select       | Custom   | 12                                                                                                                  | select-multiple                                            | —                                  |
-| menu         | Custom   | 17                                                                                                                  | —                                                          | —                                  |
-| toast        | Custom   | 8                                                                                                                   | —                                                          | —                                  |
-| button       | Custom   | 2 (Button, Link)                                                                                                    | —                                                          | —                                  |
-| input        | Custom   | 1                                                                                                                   | input-password, input-otp, text-area                       | —                                  |
-| form/field   | Custom   | 5                                                                                                                   | —                                                          | —                                  |
+| Component    | Pattern  | Sub-components                                                                                                                                                                                        | Derived                                                    | Collision K                        |
+| ------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------- |
+| alert-dialog | Standard | 8 (Root, Trigger, Backdrop, Portal, Popup, Title, Description, Close)                                                                                                                                 | —                                                          | —                                  |
+| dialog       | Standard | 8 (Root, Trigger, Backdrop, Portal, Popup, Title, Description, Close)                                                                                                                                 | —                                                          | —                                  |
+| collapsible  | Standard | 3 (Root, Trigger, Panel)                                                                                                                                                                              | —                                                          | —                                  |
+| tabs         | Standard | 5 (Root, List, Tab, Indicator, Panel)                                                                                                                                                                 | tabs-vertical                                              | Root: `defaultValue`, Tab: `value` |
+| switch       | Standard | 2 (Root, Thumb)                                                                                                                                                                                       | switch-chip                                                | Root: `defaultChecked`             |
+| drawer       | Standard | 9 + variants (Root, Trigger, Portal, Backdrop, Popup, Viewport, Title, Description, Content, Close)                                                                                                   | drawer-non-modal, drawer-snap-points                       | —                                  |
+| popover      | Standard | 9 (Root, Trigger, Backdrop, Portal, Positioner, Popup, Arrow, Viewport, Title, Description, Close)                                                                                                    | —                                                          | —                                  |
+| slider       | Standard | 6 (Root, Control, Track, Indicator, Thumb, Value)                                                                                                                                                     | slider-range                                               | Root: `defaultValue`               |
+| combobox     | Standard | 14 + multiple atoms (Root, Input, Trigger, Portal, Positioner, Popup, List, Item, ItemIndicator, Empty, Clear, ...)                                                                                   | combobox-multiple, combobox-async, combobox-multiple-async | —                                  |
+| accordion    | Standard | 5 (Root, Item, Header, Trigger, Panel)                                                                                                                                                                | —                                                          | —                                  |
+| checkbox     | Standard | 2 (Root, Indicator)                                                                                                                                                                                   | checkbox-chip                                              | —                                  |
+| context-menu | Standard | 8 (Root, Trigger, Portal, Positioner, Popup, Item, Separator, SubmenuRoot, SubmenuTrigger)                                                                                                            | —                                                          | —                                  |
+| select       | Standard | 15 (Root, Trigger, Value, Icon, Portal, Positioner, Popup, ScrollUpArrow, ScrollDownArrow, List, Item, ItemIndicator, ItemText, Group, GroupLabel, Separator)                                         | select-multiple                                            | —                                  |
+| menu         | Standard | 15 (Root, Trigger, Portal, Positioner, Popup, Arrow, Item, CheckboxItem, CheckboxItemIndicator, RadioGroup, RadioItem, RadioItemIndicator, Group, GroupLabel, Separator, SubmenuRoot, SubmenuTrigger) | —                                                          | —                                  |
+| toast        | Custom   | 8                                                                                                                                                                                                     | —                                                          | —                                  |
+| button       | Custom   | 2 (Button, Link)                                                                                                                                                                                      | —                                                          | —                                  |
+| input        | Custom   | 1                                                                                                                                                                                                     | input-password, input-otp, text-area                       | —                                  |
+| form/field   | Custom   | 5                                                                                                                                                                                                     | —                                                          | —                                  |
 
 ### Removed
 
@@ -217,48 +217,52 @@ Root uses `ComponentProps` directly. Indicator includes default `Check` icon fro
 
 Uses `ComponentProps` directly. Shared `itemClasses` for Item/SubmenuTrigger highlight styles.
 
----
-
-## Custom pattern — transformed API
-
 ### select
 
-| Atom          | Props type                                                        | Notes                                                      |
-| ------------- | ----------------------------------------------------------------- | ---------------------------------------------------------- |
-| `Root`        | `{ selected?; onSelect?; multiple?; children }`                   | Renames `value` → `selected`, `onValueChange` → `onSelect` |
-| `Trigger`     | `{ className?; children }`                                        |                                                            |
-| `Value`       | `{ children? }`                                                   |                                                            |
-| `Portal`      | `{ children }`                                                    |                                                            |
-| `Positioner`  | `{ side?; align?; sideOffset?; alignItemWithTrigger?; children }` |                                                            |
-| `Popup`       | `{ withScrollArrows?; children }`                                 | Custom prop `withScrollArrows`                             |
-| `List`        | `{ children }`                                                    |                                                            |
-| `Item`        | `{ label; itemKey; className? }`                                  | Renames `value` → `itemKey`                                |
-| `Placeholder` | `{ label; className? }`                                           |                                                            |
-| `Separator`   | `{ className? }`                                                  |                                                            |
-| `Group`       | `{ label; children; className? }`                                 |                                                            |
-| `ScrollArrow` | `{ visible; direction }`                                          |                                                            |
+| Atom              | Category      | Explicit props          | Legacy                           |
+| ----------------- | ------------- | ----------------------- | -------------------------------- |
+| `Root`            | Behavior-only | `children`              | —                                |
+| `Trigger`         | Container     | `className`, `children` | `LegacyProps<Button, "onClick">` |
+| `Value`           | Container     | `className`             | —                                |
+| `Icon`            | Container     | `className`, `children` | —                                |
+| `Portal`          | Behavior-only | `children`              | —                                |
+| `Positioner`      | Container     | `className`, `children` | `LegacyProps<Standard>`          |
+| `Popup`           | Container     | `className`, `children` | `LegacyProps<Standard>`          |
+| `ScrollUpArrow`   | Container     | `className`, `children` | —                                |
+| `ScrollDownArrow` | Container     | `className`, `children` | —                                |
+| `List`            | Container     | `className`, `children` | `LegacyProps<Standard>`          |
+| `Item`            | Container     | `className`, `children` | `LegacyProps<Standard>`          |
+| `ItemIndicator`   | Container     | `className`, `children` | —                                |
+| `ItemText`        | Container     | `className`, `children` | —                                |
+| `Group`           | Container     | `className`, `children` | —                                |
+| `GroupLabel`      | Container     | `className`, `children` | —                                |
+| `Separator`       | Container     | `className`             | —                                |
+
+Root uses `ComponentProps` spread (no more `selected`/`onSelect` renaming). Trigger uses `ButtonAttributes` + `LegacyProps`. Uses `BaseUiProps` where applicable.
 
 ### menu
 
-| Atom            | Props type                                                          | Notes                                          |
-| --------------- | ------------------------------------------------------------------- | ---------------------------------------------- |
-| `Root`          | `{ children }`                                                      | Wrapped in `<div>` to prevent space-y shifting |
-| `Trigger`       | `{ className?; openOnHover? } & ({ label } \| { children })`        | Discriminated union                            |
-| `Portal`        | `{ children }`                                                      |                                                |
-| `Positioner`    | `{ children; sideOffset?; side?; align? }`                          |                                                |
-| `Popup`         | `{ popoverWithoutArrow?; children; className? }`                    | Custom prop                                    |
-| `Arrow`         | _(none)_                                                            |                                                |
-| `ButtonItem`    | `{ value; onItemClick?; className? } & ({ label } \| { children })` | Discriminated union                            |
-| `CheckboxItem`  | `{ label; checked?; setCheckedChange?; defaultChecked? }`           | Renames `onCheckedChange`                      |
-| `RadioSet`      | `{ selectedRadio?; setSelectedRadio?; defaultValue?; children }`    | Renames `onValueChange`                        |
-| `RadioItem`     | `{ label; value }`                                                  | Uses CheckIcon (same as CheckboxItem)          |
-| `Group`         | `{ label; children }`                                               |                                                |
-| `Separator`     | _(none)_                                                            |                                                |
-| `SubMenu`       | `{ children }`                                                      |                                                |
-| `SubTrigger`    | `{ label; className?; openOnHover? }`                               |                                                |
-| `SubPortal`     | `{ children }`                                                      |                                                |
-| `SubPositioner` | `{ children; sideOffset? }`                                         |                                                |
-| `SubPopup`      | `{ children }`                                                      |                                                |
+| Atom                    | Category      | Explicit props                     | Legacy                           |
+| ----------------------- | ------------- | ---------------------------------- | -------------------------------- |
+| `Root`                  | Behavior-only | `children`                         | —                                |
+| `Trigger`               | Container     | `className`, `children`, `onClick` | `LegacyProps<Button, "onClick">` |
+| `Portal`                | Behavior-only | `children`                         | —                                |
+| `Positioner`            | Container     | `className`, `children`            | `LegacyProps<Standard>`          |
+| `Popup`                 | Container     | `className`, `children`            | `LegacyProps<Standard>`          |
+| `Arrow`                 | Container     | `className`, `children`            | —                                |
+| `Item`                  | Container     | `className`, `children`, `onClick` | `LegacyProps<Standard>`          |
+| `CheckboxItem`          | Container     | `className`, `children`            | —                                |
+| `CheckboxItemIndicator` | Container     | `className`, `children`            | —                                |
+| `RadioGroup`            | Behavior-only | `children`                         | —                                |
+| `RadioItem`             | Container     | `className`, `children`            | —                                |
+| `RadioItemIndicator`    | Container     | `className`, `children`            | —                                |
+| `Group`                 | Container     | `className`, `children`            | —                                |
+| `GroupLabel`            | Container     | `className`, `children`            | —                                |
+| `Separator`             | Container     | `className`                        | —                                |
+| `SubmenuRoot`           | Behavior-only | `children`                         | —                                |
+| `SubmenuTrigger`        | Container     | `className`, `children`            | —                                |
+
+Root still has `<div>` wrapper. Trigger uses `LegacyProps` + `BaseUiProps` (no more discriminated union / `label` prop). `Item` replaces old `ButtonItem`. `RadioGroup` replaces old `RadioSet`. `RadioItem` uses `CheckIcon` (same as `CheckboxItem`). Uses `ComponentProps` directly for most atoms.
 
 ---
 
@@ -276,20 +280,20 @@ Available colors: `solid`, `outline`, `ghost`, `primary`, `destructive`, `link`.
 
 ### input
 
-| Atom   | Props type                                                                                                                                                                            |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Root` | `{ className?; type?; name?; placeholder?; disabled?; required?; autoComplete?; autoFocus?; ref?; setValue?; value?; onFocus?; onChange?; onBlur?; useForm?; render?; legacyProps? }` |
+| Atom   | Props type                                                                                                                                                                  |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Root` | `{ className?; type?; name?; placeholder?; disabled?; required?; autoComplete?; autoFocus?; ref?; setValue?; value?; onFocus?; onChange?; onBlur?; render?; legacyProps? }` |
 
-FormContext integration (`useForm`, `register`), `setValue` for useState compatibility.
+`setValue` for useState compatibility. Form integration is handled through `FormInput` adapter (see `form/_adapters/`).
 
 ### form/field
 
-| Component      | Props type                                                                                |
-| -------------- | ----------------------------------------------------------------------------------------- |
-| `Form`         | `{ onSubmit; register; className?; children?; legacyProps? }`                             |
-| `Field`        | `{ name; label; description; className?; children?; disabled?; required?; legacyProps? }` |
-| `Label`        | `{ label; name; className?; required?; legacyProps? }`                                    |
-| `RequiredNote` | `{ className?; classNameLabel?; classNameText? }`                                         |
-| `Indication`   | `{ name; description; className? }`                                                       |
+| Component      | Props type                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------- |
+| `Form`         | `{ onSubmit; register; className?; children?; legacyProps? }`                               |
+| `Field`        | `{ name; label?; description?; className?; children?; disabled?; required?; legacyProps? }` |
+| `Label`        | `{ label; name; className?; required?; legacyProps? }`                                      |
+| `RequiredNote` | `{ className?; classNameLabel?; classNameText? }`                                           |
+| `Indication`   | `{ name; description; className? }`                                                         |
 
 Native HTML elements with custom `useFormContext`.
