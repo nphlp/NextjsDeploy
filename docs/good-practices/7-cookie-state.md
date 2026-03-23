@@ -1,54 +1,100 @@
 # Cookie State
 
-### CETTE DOCS N'EST PAS à JOUR
+Persist client state in cookies for clean SSR hydration. The state survives refresh, browser close, and is readable server-side before render — **zero layout shift**.
 
-### AJOUTER UN LAYOUT à la RACINE pour auto-hydrater les hooks ? En utilisant un prefix ?
+Zero dependency — just `useState` + `document.cookie` + a synthetic event system for cross-component reactivity.
 
-Persist client state in cookies for clean SSR hydration. The state survives refresh, browser close, and is readable server-side before render. Zero dependency — just `useState` + `document.cookie`.
+Complements [Query State (nuqs)](./6-query-state.md): both provide SSR with state persistence across refresh, but cookies are invisible in the URL (suited for UI preferences), while query params are bookmarkable and shareable (suited for filters, pagination, search).
 
-A single cookie stores a typed object with multiple states. Same pattern as query params: `cookie-params.ts` (server) + `use-cookie-params.ts` (client).
+Reference implementation: `app/dev/cookie-state/`
+
+---
 
 ## Architecture
 
-| File                         | Role                                                      |
-| ---------------------------- | --------------------------------------------------------- |
-| `lib/cookie-state-client.ts` | `useCookieState` hook + `removeCookieState` util          |
-| `lib/cookie-state-server.ts` | Server-side cookie reader with Zod validation             |
-| `_lib/cookie-params.ts`      | Types, Zod schema & defaults (importable server + client) |
-| `_lib/use-cookie-params.ts`  | Client hook exposant values + setters individuels         |
+### Core (shared library)
 
-## 1. Define Type, Schema & Defaults (`cookie-params.ts`)
+| File                         | Role                                                       |
+| ---------------------------- | ---------------------------------------------------------- |
+| `lib/cookie-client.ts`       | Low-level `writeCookie`, `readCookie`, `deleteCookie`      |
+| `lib/cookie-state-client.ts` | `useCookieState` hook + `removeCookieState` + event system |
+| `lib/cookie-state-server.ts` | `getCookieState` — server-side reader with Zod validation  |
 
-No `"use client"` — importable from server components. Define the type with precise values, validate the schema with `satisfies ZodType<T>`.
+### Per-feature (in `_lib/` of each page/feature)
+
+| File                   | Role                                               |
+| ---------------------- | -------------------------------------------------- |
+| `cookie-params.ts`     | Type, Zod schema & defaults (no `"use client"`)    |
+| `use-cookie-params.ts` | Custom hook: exposes individual values and setters |
+
+---
+
+## How it works
+
+### SSR hydration flow (zero layout shift)
+
+```
+Server                                    Client
+──────                                    ──────
+1. page.tsx (Server Component)
+   └─ getCookieState("name", schema)
+      └─ reads cookies() (Next.js)
+      └─ parses + validates with Zod
+      └─ returns T | undefined
+
+2. passes value as prop
+   └─ <MyComponent initialState={value} />
+
+                                          3. useCookieState("name", initialState)
+                                             └─ useState(initialState)  ← matches SSR
+                                             └─ useLayoutEffect: reads document.cookie
+                                             └─ if different → setState (rare)
+
+                                          4. Result: HTML matches → no layout shift
+```
+
+### Cross-component sync
+
+Multiple components using the same cookie name stay in sync via a synthetic event system:
+
+```
+Component A                    Component B                    Component C
+───────────                    ───────────                    ───────────
+setState(newValue)
+  └─ writeCookie("name", val)
+  └─ notify()
+       └─ ─── listener ──→   callback()                     callback()
+                               └─ readCookie("name")          └─ readCookie("name")
+                               └─ setStateInternal(val)       └─ setStateInternal(val)
+```
+
+All components sharing the same cookie name re-render with the new value — no Context or Provider needed.
+
+---
+
+## Step-by-step
+
+### 1. Define type, schema & defaults (`cookie-params.ts`)
+
+No `"use client"` — must be importable from server components.
 
 ```ts
 import { type ZodType, z } from "zod";
 
-export type PauseMs = 0 | 300 | 500 | 800 | 1200;
-
-export type CubeSettings = {
-    playbackSpeed: PlaybackSpeed;
-    easingType: EasingType;
-    splitDoubles: boolean;
-    pauseMs: PauseMs;
+export type CounterState = {
+    count: number;
 };
 
-export const cubeSettingsSchema = z.object({
-    playbackSpeed: z.enum(["verySlow", "slow", "normal", "fast", "veryFast"]),
-    easingType: z.enum(["linear", "easeOut", "easeInOut", "bounce"]),
-    splitDoubles: z.boolean(),
-    pauseMs: z.union([z.literal(0), z.literal(300), z.literal(500), z.literal(800), z.literal(1200)]),
-}) satisfies ZodType<CubeSettings>;
+export const counterSchema = z.object({
+    count: z.number(),
+}) satisfies ZodType<CounterState>;
 
-export const defaultCubeSettings: CubeSettings = {
-    playbackSpeed: "normal",
-    easingType: "easeOut",
-    splitDoubles: true,
-    pauseMs: 500,
+export const defaultCounterState: CounterState = {
+    count: 0,
 };
 ```
 
-## 2. Create a Custom Hook (`use-cookie-params.ts`)
+### 2. Create a custom hook (`use-cookie-params.ts`)
 
 Wrap `useCookieState` in a dedicated hook that exposes individual values and typed setters. One file = one cookie.
 
@@ -56,86 +102,79 @@ Wrap `useCookieState` in a dedicated hook that exposes individual values and typ
 "use client";
 
 import { useCookieState } from "@lib/cookie-state-client";
-import { type CubeSettings, type PauseMs, defaultCubeSettings } from "./cookie-params";
+import { type CounterState, defaultCounterState } from "./cookie-params";
 
-export function useCookieParams(initialSettings: CubeSettings | undefined) {
-    const [settings, setSettings] = useCookieState("cube-settings", initialSettings ?? defaultCubeSettings);
+export default function useCounterCookieParams(initialState: CounterState | undefined) {
+    const [state, setState] = useCookieState("demo-counter", initialState ?? defaultCounterState);
 
-    const setPlaybackSpeed = (speed: PlaybackSpeed) => setSettings((prev) => ({ ...prev, playbackSpeed: speed }));
-    const setEasingType = (easing: EasingType) => setSettings((prev) => ({ ...prev, easingType: easing }));
-    const setSplitDoubles = (split: boolean) => setSettings((prev) => ({ ...prev, splitDoubles: split }));
-    const setPauseMs = (ms: PauseMs) => setSettings((prev) => ({ ...prev, pauseMs: ms }));
+    const count = state.count;
+    const increment = () => setState((prev) => ({ count: prev.count + 1 }));
+    const decrement = () => setState((prev) => ({ count: prev.count - 1 }));
 
-    return {
-        playbackSpeed: settings.playbackSpeed,
-        easingType: settings.easingType,
-        splitDoubles: settings.splitDoubles,
-        pauseMs: settings.pauseMs,
-        setPlaybackSpeed,
-        setEasingType,
-        setSplitDoubles,
-        setPauseMs,
-    };
+    return { count, increment, decrement };
 }
 ```
 
-## 3. Read Cookie Server-Side
+### 3. Read cookie server-side
 
 In `page.tsx`, read the cookie once and pass the raw value as prop (`T | undefined`). Wrap in `<Suspense>` because `cookies()` is async.
 
 ```tsx
 import { getCookieState } from "@lib/cookie-state-server";
 import { Suspense } from "react";
-import { cubeSettingsSchema } from "./_lib/cookie-params";
+import { counterSchema } from "./_lib/cookie-params";
 
 export default function Page() {
     return (
         <Suspense>
-            <SuspendedPage />
+            <SuspendedContent />
         </Suspense>
     );
 }
 
-async function SuspendedPage() {
-    const settings = await getCookieState("cube-settings", cubeSettingsSchema);
-
-    return <CubeEditor initialSettings={settings} />;
-}
-```
-
-## 4. Consume in Client Component
-
-Call the custom hook with the server-read value. Use the returned values and setters directly.
-
-```tsx
-"use client";
-
-import { useCookieParams } from "./_lib/use-cookie-params";
-
-type CubeEditorProps = {
-    initialSettings: CubeSettings | undefined;
-};
-
-export default function CubeEditor(props: CubeEditorProps) {
-    const { initialSettings } = props;
-    const { playbackSpeed, setPlaybackSpeed, pauseMs, setPauseMs } = useCookieParams(initialSettings);
+async function SuspendedContent() {
+    const initialState = await getCookieState("demo-counter", counterSchema);
 
     return (
-        <section>
-            <SpeedSelector value={playbackSpeed} onChange={setPlaybackSpeed} />
-            <PauseSelector value={pauseMs} onChange={setPauseMs} />
-        </section>
+        <div className="flex items-center gap-6">
+            <ButtonDown initialState={initialState} />
+            <Counter initialState={initialState} />
+            <ButtonUp initialState={initialState} />
+        </div>
     );
 }
 ```
 
-## 5. Remove a Cookie (optional)
+### 4. Consume in client components
+
+Each component receives `initialState` and calls the same custom hook. They share the cookie as source of truth.
+
+```tsx
+"use client";
+
+import { CounterState } from "../_lib/cookie-params";
+import useCounterCookieParams from "../_lib/use-cookie-params";
+
+type CounterProps = {
+    initialState: CounterState | undefined;
+};
+
+export default function Counter(props: CounterProps) {
+    const { count } = useCounterCookieParams(props.initialState);
+
+    return <span className="text-4xl font-bold">{count}</span>;
+}
+```
+
+### 5. Remove a cookie (optional)
 
 ```ts
 import { removeCookieState } from "@lib/cookie-state-client";
 
-removeCookieState("cube-settings");
+removeCookieState("demo-counter");
 ```
+
+---
 
 ## Rules
 
@@ -143,7 +182,8 @@ removeCookieState("cube-settings");
 2. **Schema in `cookie-params.ts` (no `"use client"`)** — must be importable from server components
 3. **One hook per cookie** — `use-cookie-params.ts` wraps `useCookieState`, exposes individual values and typed setters
 4. **Cookie name must match** — same string in `getCookieState(name)` and `useCookieState(name)`
-5. **Fallback with `??` dans le hook** — cookie may not exist (first visit), appliquer le default dans le hook custom
+5. **Fallback with `??` in the hook** — cookie may not exist (first visit), apply defaults in the custom hook
 6. **`<Suspense>` for async cookies** — `cookies()` is async in Next.js, requires Suspense boundary
-7. **Cookie expires in 30 days** — auto-renewed on every state change
-8. **Cookie size limit ~4KB** — ne pas stocker de donnees volumineuses, uniquement des preferences UI
+7. **Cookie expires in 30 days** — auto-renewed on every write
+8. **Cookie size limit ~4KB** — only store UI preferences, not bulk data
+9. **Referential stability** — `readCookie` caches parsed values to avoid new references on each read
