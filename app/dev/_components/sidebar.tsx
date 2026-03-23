@@ -12,6 +12,7 @@ import Drawer, {
     Viewport,
 } from "@atoms/drawer";
 import DrawerSnapPoints from "@atoms/drawer/drawer-snap-points";
+import { HEADER_HEIGHT } from "@core/config";
 import useDevSidebar from "@core/header/use-dev-sidebar";
 import cn from "@lib/cn";
 import useBreakpoint, { Breakpoint } from "@utils/use-breakpoint";
@@ -34,8 +35,11 @@ export default function Sidebar() {
 
     return (
         <>
-            {/* Desktop: static sidebar */}
-            <aside className={cn("hidden lg:block", "w-60 flex-none py-7 pl-7")}>
+            {/* Desktop: sticky sidebar with independent scroll */}
+            <aside
+                style={{ top: `${HEADER_HEIGHT}rem`, height: `calc(100dvh - ${HEADER_HEIGHT}rem)` }}
+                className={cn("hidden lg:block", "sticky w-60 flex-none overflow-y-auto py-7 pl-7")}
+            >
                 <SidebarNav />
             </aside>
 

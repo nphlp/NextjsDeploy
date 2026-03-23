@@ -42,8 +42,8 @@ export const devLinks: DevLink[] = [
     },
     {
         label: "Layout",
-        description: "Layout structure and grid showcase",
-        href: "/dev/layout-demo",
+        description: "Main layout centering and scroll behavior",
+        href: "/dev/layout",
         icon: LayoutDashboard,
     },
     {
