@@ -12,10 +12,7 @@ ARG DATABASE_URL
 ARG POSTGRES_HOST
 ARG NEXT_PUBLIC_BASE_URL
 
-RUN apk add --no-cache postgresql-client curl nodejs
-
-# Recommended by NextJS
-RUN apk add --no-cache libc6-compat
+RUN apt-get update && apt-get install -y --no-install-recommends postgresql-client curl && rm -rf /var/lib/apt/lists/*
 
 ########################
 #   Dev Dependencies   #
@@ -52,8 +49,8 @@ RUN bun run build
 FROM prod-deps AS runner
 
 # Create non-root user BEFORE copying files with --chown
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN groupadd --system --gid 1001 nodejs
+RUN useradd --system --uid 1001 --gid nodejs nextjs
 
 # Build files
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./

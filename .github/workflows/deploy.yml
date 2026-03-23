@@ -11,14 +11,14 @@ jobs:
         name: Commit Check
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
             - uses: wagoid/commitlint-github-action@v6
 
     setup-base:
         name: Setup dependencies
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
             - uses: ./.github/actions/setup-base
 
     lint:
@@ -26,7 +26,7 @@ jobs:
         runs-on: ubuntu-latest
         needs: [commit, setup-base]
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
             - uses: ./.github/actions/setup-base
             - uses: ./.github/actions/quality-check
               with:
@@ -36,7 +36,7 @@ jobs:
         runs-on: ubuntu-latest
         needs: [commit, setup-base]
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
             - uses: ./.github/actions/setup-base
             - uses: ./.github/actions/quality-check
               with:
@@ -46,7 +46,7 @@ jobs:
         runs-on: ubuntu-latest
         needs: [commit, setup-base]
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
             - uses: ./.github/actions/setup-base
             - uses: ./.github/actions/quality-check
               with:
@@ -57,7 +57,7 @@ jobs:
         runs-on: ubuntu-latest
         needs: [commit, setup-base]
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
             - uses: ./.github/actions/setup-base
             - uses: ./.github/actions/quality-check
               with:
@@ -90,7 +90,7 @@ jobs:
     #     environment: production
     #     steps:
     #         # # Setup
-    #         # - uses: actions/checkout@v4
+    #         # - uses: actions/checkout@v5
     #         # - uses: ./.github/actions/setup-base
 
     #         # # Release avec semantic-release
