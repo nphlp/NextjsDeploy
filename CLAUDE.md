@@ -11,7 +11,7 @@ Next.js 16 boilerplate with Docker, Dokploy deployment, and VPS infrastructure.
 - **API**: oRPC (with Zod validation + OpenAPI via Scalar)
 - **UI**: Tailwind CSS 4 + Base-UI + Motion
 - **State**: Zustand, Nuqs (query params)
-- **Forms**: React Hook Form
+- **Forms**: Custom useForm hook (Zod validation, progressive schemas)
 - **Email**: Nodemailer + React Email
 - **DevOps**: Docker, Dokploy, Traefik, Tailscale VPN
 - **Analytics**: Umami (self-hosted)
@@ -126,11 +126,11 @@ pnpm build && pnpm start
     - `4-context.md` — Context structure (3-file pattern)
     - `5-form.md` — Form adapters, useForm hook, validation patterns
     - `6-query-state.md` — Query parameters with nuqs
-    - `7-cookie-state.md` — Store cookie patterns
-    - `7-cross-state.md` — Cross-component state patterns
-    - `8-orpc.md` — oRPC API patterns
-    - `9-base-ui.md` — Base UI component system (patterns, typing, inventory)
-    - `10-theme.md` — Theme system (blocking script, CSS icons, zero flash)
+    - `7-cookie-state.md` — Cookie state with useCookieState
+    - `8-cross-state.md` — Reactive cross-component state
+    - `9-orpc.md` — oRPC API patterns (server-side + client useFetch)
+    - `10-base-ui.md` — Base UI component system (patterns, typing, inventory)
+    - `11-theme.md` — Theme system (blocking script, CSS icons, zero flash)
 - `docs/testing/` — Test suites documentation
     - `e2e.md` — Playwright E2E tests (57 tests / 10 specs)
     - `unit.md` — Vitest unit tests (13 tests)
@@ -164,7 +164,7 @@ pnpm build && pnpm start
 ### Atoms (Base-UI components)
 
 - **Import pattern**: Always import atoms via `index.ts` — default export for the composable component, named exports for sub-components: `import Popover, { Arrow, Popup, Portal, Trigger } from "@atoms/popover"`.
-- **Guide**: Follow `docs/good-practices/9-base-ui.md` (patterns, typing, step-by-step, component inventory) when creating or modifying atoms. Use the `context7` MCP server for up-to-date Base UI documentation.
+- **Guide**: Follow `docs/good-practices/10-base-ui.md` (patterns, typing, step-by-step, component inventory) when creating or modifying atoms. Use the `context7` MCP server for up-to-date Base UI documentation.
 
 ### Forms
 

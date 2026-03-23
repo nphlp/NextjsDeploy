@@ -63,8 +63,12 @@ See [Setup local](./docs/nextjs-deploy/1-setup-local.md) for all options and det
 - [TypeScript](./docs/good-practices/3-typescript.md)
 - [Context](./docs/good-practices/4-context.md)
 - [Forms](./docs/good-practices/5-form.md)
-- [Query Parameters (nuqs)](./docs/good-practices/6-nuqs.md)
-- [Theme](./docs/good-practices/10-theme.md)
+- [Query State (nuqs)](./docs/good-practices/6-query-state.md)
+- [Cookie State](./docs/good-practices/7-cookie-state.md)
+- [Cross-Component State](./docs/good-practices/8-cross-state.md)
+- [oRPC](./docs/good-practices/9-orpc.md)
+- [Base UI](./docs/good-practices/10-base-ui.md)
+- [Theme](./docs/good-practices/11-theme.md)
 
 ### Infrastructure — `docs/vps-infra/`
 
