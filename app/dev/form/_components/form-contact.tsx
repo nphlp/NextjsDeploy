@@ -286,7 +286,7 @@ export default function FormContact() {
                 placeholder="Quelques mots..."
             />
 
-            <FormSwitch name="notifications" disabled={isLoading} label="Activer les notifications" />
+            <FormSwitch name="notifications" disabled={isLoading} text="Activer les notifications" />
 
             <RequiredNote />
 

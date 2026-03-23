@@ -78,7 +78,7 @@ export default async function ComponentsPage() {
                 </div>
                 <div>
                     <p className="mb-2 text-sm text-gray-500">Chip</p>
-                    <SwitchChip label="Dark mode" />
+                    <SwitchChip text="Dark mode" />
                 </div>
             </Section>
 
@@ -165,7 +165,7 @@ export default async function ComponentsPage() {
                 </div>
                 <div>
                     <p className="mb-2 text-sm text-gray-500">Chip</p>
-                    <CheckboxChip label="Dark mode" />
+                    <CheckboxChip text="Dark mode" />
                 </div>
             </Section>
 

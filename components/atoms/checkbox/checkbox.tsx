@@ -14,7 +14,7 @@ export default function Checkbox(props: CheckboxProps) {
             <Root defaultChecked {...otherProps}>
                 <Indicator />
             </Root>
-            Enable notifications
+            <span className="text-sm font-medium select-none">Enable notifications</span>
         </label>
     );
 }

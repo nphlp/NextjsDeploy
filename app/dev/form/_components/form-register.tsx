@@ -128,7 +128,7 @@ export default function FormRegister() {
                 description="Cocher pour accepter les CGU"
                 disabled={isLoading}
                 required
-                label="J'accepte les conditions générales d'utilisation"
+                text="J'accepte les conditions générales d'utilisation"
             />
 
             <RequiredNote />

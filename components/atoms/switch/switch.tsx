@@ -10,8 +10,11 @@ export default function Switch(props: SwitchProps) {
     }
 
     return (
-        <Root defaultChecked {...otherProps}>
-            <Thumb />
-        </Root>
+        <label className="text-foreground flex items-center gap-2 text-base">
+            <Root defaultChecked {...otherProps}>
+                <Thumb />
+            </Root>
+            <span className="text-sm font-medium select-none">Enable notifications</span>
+        </label>
     );
 }

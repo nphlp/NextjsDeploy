@@ -5,11 +5,11 @@ import { Check } from "lucide-react";
 import { CheckboxProps, Indicator, Root } from "./atoms";
 
 type CheckboxChipProps = {
-    label: string;
+    text: string;
 } & CheckboxProps;
 
 export default function CheckboxChip(props: CheckboxChipProps) {
-    const { label, className, children, ...otherProps } = props;
+    const { text, className, children, ...otherProps } = props;
 
     if (children) {
         return <Root {...otherProps}>{children}</Root>;
@@ -49,7 +49,7 @@ export default function CheckboxChip(props: CheckboxChipProps) {
                     <Check className="size-2.5" />
                 </Indicator>
             </Root>
-            <span className="text-foreground text-sm font-medium select-none">{label}</span>
+            <span className="text-foreground text-sm font-medium select-none">{text}</span>
         </label>
     );
 }

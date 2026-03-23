@@ -97,7 +97,7 @@ export default function FormLogin() {
                 autoComplete="current-password"
             />
 
-            <FormCheckbox name="rememberMe" disabled={isLoading} label="Se souvenir de moi" />
+            <FormCheckbox name="rememberMe" disabled={isLoading} text="Se souvenir de moi" />
 
             <div className="flex justify-center">
                 <Button type="submit" label="Connexion" colors="solid" loading={isLoading} className="w-full" />

@@ -4,12 +4,12 @@ import cn from "@lib/cn";
 import { Root, SwitchProps, Thumb } from "./atoms";
 
 type SwitchChipProps = {
-    label: string;
+    text: string;
     className?: string;
 } & Omit<SwitchProps, "className" | "children">;
 
 export default function SwitchChip(props: SwitchChipProps) {
-    const { label, className, ...otherProps } = props;
+    const { text, className, ...otherProps } = props;
 
     return (
         <label
@@ -31,7 +31,7 @@ export default function SwitchChip(props: SwitchChipProps) {
                 className,
             )}
         >
-            <span className="text-foreground text-sm font-medium select-none">{label}</span>
+            <span className="text-foreground text-sm font-medium select-none">{text}</span>
             <Root {...otherProps}>
                 <Thumb />
             </Root>

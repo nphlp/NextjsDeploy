@@ -8,7 +8,7 @@ import { FieldWrapper } from "../atom";
 
 type FormCheckboxProps = {
     name: string;
-    label?: string;
+    text?: string;
     description?: string;
     disabled?: boolean;
     required?: boolean;
@@ -17,7 +17,7 @@ type FormCheckboxProps = {
 };
 
 export function FormCheckbox(props: FormCheckboxProps) {
-    const { name, label, description, disabled = false, required, children, className } = props;
+    const { name, text, description, disabled = false, required, children, className } = props;
 
     const register = useFormContext();
     const field = register(name);
@@ -50,7 +50,7 @@ export function FormCheckbox(props: FormCheckboxProps) {
                 >
                     {children ?? <Indicator />}
                 </Checkbox>
-                {label && (
+                {text && (
                     <span
                         className={cn(
                             // Text
@@ -59,7 +59,7 @@ export function FormCheckbox(props: FormCheckboxProps) {
                             "group-data-invalid/field:text-red-800",
                         )}
                     >
-                        {label}
+                        {text}
                     </span>
                 )}
             </label>
