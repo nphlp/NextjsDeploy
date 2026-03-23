@@ -33,7 +33,7 @@ export default {
             },
             postgres: {
                 comment: "PostgreSQL database",
-                variables: ["POSTGRES_HOST", "POSTGRES_PORT", "POSTGRES_DB", "POSTGRES_USER", "POSTGRES_PASSWORD"],
+                variables: ["POSTGRES_HOST", "POSTGRES_BUILD_HOST", "POSTGRES_PORT", "POSTGRES_DB", "POSTGRES_USER", "POSTGRES_PASSWORD"],
             },
             prisma: {
                 comment: "Prisma database connection",
@@ -77,6 +77,7 @@ export default {
             POSTGRES_PORT: 5432,
             POSTGRES_DB: "nextjs-deploy-db",
             POSTGRES_USER: "postgres",
+            POSTGRES_BUILD_HOST: "localhost",
         },
         smtp: {
             // TO UPDATE: Get SMTP configuration from your email provider
