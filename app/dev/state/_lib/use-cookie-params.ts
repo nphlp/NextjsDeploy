@@ -1,10 +1,10 @@
 "use client";
 
 import { useCookieState } from "@lib/cookie-state-client";
-import { type CounterState, defaultCounterState } from "./cookie-params";
+import { type CounterCookie, defaultCounterCookie } from "./cookie-params";
 
-export default function useCounterCookieParams(initialState: CounterState | undefined) {
-    const [state, setState] = useCookieState("demo-counter", initialState ?? defaultCounterState);
+export default function useCookieCounter(initialState: CounterCookie | undefined) {
+    const [state, setState] = useCookieState("demo-state-cookie", initialState ?? defaultCounterCookie);
 
     const count = state.count;
     const increment = () => setState((prev) => ({ count: prev.count + 1 }));

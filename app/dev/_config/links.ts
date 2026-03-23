@@ -1,4 +1,4 @@
-import { Code, Code2, Combine, Cookie, Copy, FormInput, LayoutDashboard, Palette, Puzzle } from "lucide-react";
+import { Code, Code2, Combine, Copy, FormInput, Layers, LayoutDashboard, Palette, Puzzle } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 import { Route } from "next";
 
@@ -53,10 +53,10 @@ export const devLinks: DevLink[] = [
         icon: Puzzle,
     },
     {
-        label: "Cookie State",
-        description: "Cookie-based state management demo",
-        href: "/dev/cookie-state",
-        icon: Cookie,
+        label: "State",
+        description: "State management patterns comparison",
+        href: "/dev/state",
+        icon: Layers,
     },
     {
         label: "API Docs",

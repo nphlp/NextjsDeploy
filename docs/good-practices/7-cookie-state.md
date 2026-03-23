@@ -6,7 +6,7 @@ Zero dependency — just `useState` + `document.cookie` + a synthetic event syst
 
 Complements [Query State (nuqs)](./6-query-state.md): both provide SSR with state persistence across refresh, but cookies are invisible in the URL (suited for UI preferences), while query params are bookmarkable and shareable (suited for filters, pagination, search).
 
-Reference implementation: `app/dev/cookie-state/`
+Reference implementation: `app/dev/state/` (Cookie State section)
 
 ---
 
