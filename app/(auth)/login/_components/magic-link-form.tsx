@@ -1,8 +1,8 @@
 "use client";
 
 import { queryUrlSerializer } from "@app/(auth)/register/success/_lib/query-params";
+import Form, { FormInput, OnSubmit, emailSchema, emailSchemaProgressive, useForm } from "@atoms/_form";
 import Button from "@atoms/button";
-import Form, { FormInput, OnSubmit, emailSchema, emailSchemaProgressive, useForm } from "@atoms/form";
 import { useToast } from "@atoms/toast";
 import { authClient } from "@lib/auth-client";
 import { useRouter } from "next/navigation";

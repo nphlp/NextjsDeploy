@@ -1,6 +1,6 @@
 import z from "zod";
 
-export { emailSchema, emailSchemaProgressive } from "@atoms/form/schemas";
+export { emailSchema, emailSchemaProgressive } from "@atoms/_form/schemas";
 
 export const phoneSchema = z
     .string()

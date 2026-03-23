@@ -1,8 +1,8 @@
 "use client";
 
-import { FormInputOtp } from "@atoms/form/_adapters";
-import Form from "@atoms/form/form";
-import { useForm } from "@atoms/form/use-form";
+import { FormInputOtp } from "@atoms/_form/_adapters";
+import Form from "@atoms/_form/form";
+import { useForm } from "@atoms/_form/use-form";
 import { useToast } from "@atoms/toast";
 import { timeout } from "@utils/timout";
 import { useState } from "react";

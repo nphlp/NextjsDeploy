@@ -1,10 +1,10 @@
 "use client";
 
+import { FormCheckbox, FormInput, FormInputPassword } from "@atoms/_form/_adapters";
+import Form, { OnSubmit } from "@atoms/_form/form";
+import { emailSchema, emailSchemaProgressive } from "@atoms/_form/schemas";
+import { useForm } from "@atoms/_form/use-form";
 import Button from "@atoms/button";
-import { FormCheckbox, FormInput, FormInputPassword } from "@atoms/form/_adapters";
-import Form, { OnSubmit } from "@atoms/form/form";
-import { emailSchema, emailSchemaProgressive } from "@atoms/form/schemas";
-import { useForm } from "@atoms/form/use-form";
 import { useToast } from "@atoms/toast";
 import { timeout } from "@utils/timout";
 import { useState } from "react";

@@ -1,7 +1,7 @@
 "use client";
 
+import Form, { FormInput, OnSubmit, emailSchema, emailSchemaProgressive, useForm } from "@atoms/_form";
 import Button, { Link } from "@atoms/button";
-import Form, { FormInput, OnSubmit, emailSchema, emailSchemaProgressive, useForm } from "@atoms/form";
 import { useTurnstile } from "@atoms/use-turnstile";
 import { requestPasswordReset } from "@lib/auth-client";
 import { useState } from "react";

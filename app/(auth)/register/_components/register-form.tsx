@@ -1,6 +1,5 @@
 "use client";
 
-import Button, { Link } from "@atoms/button";
 import Form, {
     FormInput,
     FormInputPassword,
@@ -12,7 +11,8 @@ import Form, {
     passwordSchemaOnBlur,
     passwordSchemaOnChange,
     useForm,
-} from "@atoms/form";
+} from "@atoms/_form";
+import Button, { Link } from "@atoms/button";
 import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";
 import { useTurnstile } from "@atoms/use-turnstile";

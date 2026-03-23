@@ -1,11 +1,11 @@
 "use client";
 
+import { RequiredNote } from "@atoms/_form";
+import { FormCheckbox, FormInput, FormInputPassword } from "@atoms/_form/_adapters";
+import Form, { OnSubmit } from "@atoms/_form/form";
+import { passwordSchema, passwordSchemaOnChange } from "@atoms/_form/schemas";
+import { useForm } from "@atoms/_form/use-form";
 import Button from "@atoms/button";
-import { RequiredNote } from "@atoms/form";
-import { FormCheckbox, FormInput, FormInputPassword } from "@atoms/form/_adapters";
-import Form, { OnSubmit } from "@atoms/form/form";
-import { passwordSchema, passwordSchemaOnChange } from "@atoms/form/schemas";
-import { useForm } from "@atoms/form/use-form";
 import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";
 import { timeout } from "@utils/timout";

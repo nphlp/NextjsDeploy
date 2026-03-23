@@ -1,7 +1,7 @@
 "use client";
 
+import Form, { FormInputPassword, OnSubmit, passwordSchema, passwordSchemaOnChange, useForm } from "@atoms/_form";
 import Button, { Link } from "@atoms/button";
-import Form, { FormInputPassword, OnSubmit, passwordSchema, passwordSchemaOnChange, useForm } from "@atoms/form";
 import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";
 import { resetPassword } from "@lib/auth-client";

@@ -1,7 +1,7 @@
 "use client";
 
+import Form, { FormInput, OnSubmit, useForm } from "@atoms/_form";
 import Button from "@atoms/button";
-import Form, { FormInput, OnSubmit, useForm } from "@atoms/form";
 import { useToast } from "@atoms/toast";
 import { twoFactor } from "@lib/auth-client";
 import { useState } from "react";

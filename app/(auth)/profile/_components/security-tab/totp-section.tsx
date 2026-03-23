@@ -1,8 +1,8 @@
 "use client";
 
+import Form, { FormInputPassword, OnSubmit, useForm } from "@atoms/_form";
 import { Root as AlertDialogRoot, Backdrop, Close, Description, Popup, Portal, Title } from "@atoms/alert-dialog";
 import Button from "@atoms/button";
-import Form, { FormInputPassword, OnSubmit, useForm } from "@atoms/form";
 import InputOtp from "@atoms/input/input-otp";
 import Switch, { Thumb } from "@atoms/switch";
 import { useToast } from "@atoms/toast";

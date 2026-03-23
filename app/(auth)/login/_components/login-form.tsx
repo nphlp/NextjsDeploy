@@ -1,6 +1,5 @@
 "use client";
 
-import Button, { Link } from "@atoms/button";
 import Form, {
     FormInput,
     FormInputPassword,
@@ -8,7 +7,8 @@ import Form, {
     emailSchema,
     emailSchemaProgressive,
     useForm,
-} from "@atoms/form";
+} from "@atoms/_form";
+import Button, { Link } from "@atoms/button";
 import { useToast } from "@atoms/toast";
 import { signIn } from "@lib/auth-client";
 import { useState } from "react";

@@ -1,5 +1,17 @@
 "use client";
 
+import { RequiredNote } from "@atoms/_form";
+import {
+    FormCombobox,
+    FormComboboxMultiple,
+    FormInput,
+    FormSelect,
+    FormSelectMultiple,
+    FormSwitch,
+    FormTextArea,
+} from "@atoms/_form/_adapters";
+import Form, { OnSubmit } from "@atoms/_form/form";
+import { useForm } from "@atoms/_form/use-form";
 import Button from "@atoms/button";
 import {
     ChipsContainer,
@@ -18,18 +30,6 @@ import {
     MultipleChip,
     MultipleChipRemove,
 } from "@atoms/combobox";
-import { RequiredNote } from "@atoms/form";
-import {
-    FormCombobox,
-    FormComboboxMultiple,
-    FormInput,
-    FormSelect,
-    FormSelectMultiple,
-    FormSwitch,
-    FormTextArea,
-} from "@atoms/form/_adapters";
-import Form, { OnSubmit } from "@atoms/form/form";
-import { useForm } from "@atoms/form/use-form";
 import {
     Icon,
     Item,
