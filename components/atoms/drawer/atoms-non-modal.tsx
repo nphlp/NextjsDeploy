@@ -1,4 +1,4 @@
-import { DrawerPreview as DrawerBaseUi } from "@base-ui/react/drawer";
+import { Drawer as DrawerBaseUi } from "@base-ui/react/drawer";
 import cn from "@lib/cn";
 import { DrawerPopupProps, DrawerViewportProps } from "./atoms";
 

@@ -3,7 +3,8 @@
 import Button from "@atoms/button";
 import Card from "@atoms/card";
 import { useToast } from "@atoms/toast";
-import { SessionClient, sendVerificationEmail, useSession } from "@lib/auth-client";
+import { sendVerificationEmail, useSession } from "@lib/auth-client";
+import { Session } from "@lib/auth-server";
 import { Role } from "@prisma/client/client";
 import { CircleCheck, CircleX, Mail } from "lucide-react";
 import { useState } from "react";
@@ -18,7 +19,7 @@ const formatRole = (role: Role) => {
 };
 
 type ProfileInfoProps = {
-    serverSession: NonNullable<SessionClient>;
+    serverSession: NonNullable<Session>;
 };
 
 export default function ProfileInfo(props: ProfileInfoProps) {

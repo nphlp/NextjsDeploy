@@ -195,6 +195,7 @@ pnpm build && pnpm start
 
 ### Commands
 
+- **Always use `pnpm`, never `npm` or `npx`.** Use `pnpm dlx` instead of `npx` when needed.
 - Always use pre-authorized commands to avoid prompting the user. Use `git status` not `git -C /path status`, use `pnpm type` not `tsc --noEmit`, use `pnpm lint:fix` not `eslint . --fix`, etc.
 - Do not run servers to avoid port conflicts. Developer handles these manually.
 

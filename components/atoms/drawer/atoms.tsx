@@ -2,7 +2,7 @@
  * @see https://base-ui.com/react/components/drawer
  */
 import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/_core/types";
-import { DrawerPreview as DrawerBaseUi } from "@base-ui/react/drawer";
+import { Drawer as DrawerBaseUi } from "@base-ui/react/drawer";
 import cn from "@lib/cn";
 import { ComponentProps, MouseEventHandler, ReactNode } from "react";
 import { ButtonStyleProps, buttonStyle } from "../_core/button-variants";

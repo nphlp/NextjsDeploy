@@ -2,14 +2,16 @@ import { cookies, headers } from "next/headers";
 import "server-only";
 import { auth } from "./auth";
 
-export const getSession = async () => {
+type InferredSession = typeof auth.$Infer.Session;
+
+export const getSession = async (): Promise<InferredSession | null> => {
     const session = await auth.api.getSession({
         headers: await headers(),
     });
-    return session;
+    return session as InferredSession | null;
 };
 
-export type Session = Awaited<ReturnType<typeof getSession>>;
+export type Session = InferredSession | null;
 
 export const getSessionList = async () => {
     const sessionList = await auth.api.listSessions({

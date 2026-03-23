@@ -3,7 +3,7 @@
 import MenuProfile from "@comps/molecules/menu-profile";
 import MenuTheme from "@comps/molecules/menu-theme";
 import cn from "@lib/cn";
-import { useSyncExternalStore } from "react";
+import { Suspense, useSyncExternalStore } from "react";
 import { HEADER_HEIGHT } from "./config";
 import DesktopNavigation from "./header/desktop-navigation";
 import DevSidebarTrigger from "./header/dev-sidebar-trigger";
@@ -20,6 +20,14 @@ const scrollStore = (() => {
 })();
 
 export default function Header() {
+    return (
+        <Suspense>
+            <SuspendedHeader />
+        </Suspense>
+    );
+}
+
+function SuspendedHeader() {
     const scrolled = useSyncExternalStore(
         scrollStore.subscribe,
         scrollStore.getSnapshot,
