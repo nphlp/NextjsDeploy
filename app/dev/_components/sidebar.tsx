@@ -54,14 +54,22 @@ export default function Sidebar() {
 
             {/* Mobile (< sm): drawer from bottom */}
             {!isSm && !isLg && (
-                <Drawer open={open} onOpenChange={setOpen}>
+                <Drawer open={open} onOpenChange={setOpen} swipeDirection="down">
                     <Portal>
                         <Backdrop />
-                        <Viewport className="items-end justify-center">
+                        <Viewport className="items-end justify-center supports-[-webkit-touch-callout:none]:p-0">
                             <Popup
                                 className={cn(
                                     "h-auto w-full max-w-full rounded-t-2xl p-6",
                                     "mr-0 pr-6",
+                                    // iOS overrides
+                                    "supports-[-webkit-touch-callout:none]:w-full",
+                                    "supports-[-webkit-touch-callout:none]:max-w-full",
+                                    "supports-[-webkit-touch-callout:none]:rounded-none",
+                                    "supports-[-webkit-touch-callout:none]:rounded-t-2xl",
+                                    "supports-[-webkit-touch-callout:none]:mr-0",
+                                    "supports-[-webkit-touch-callout:none]:pr-6",
+                                    // Animation
                                     "transform-[translateY(var(--drawer-swipe-movement-y))]",
                                     "data-starting-style:transform-[translateY(100%)]",
                                     "data-ending-style:transform-[translateY(100%)]",

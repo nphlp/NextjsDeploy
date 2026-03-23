@@ -4,7 +4,7 @@ import { Link } from "@atoms/button";
 import { Root as Collapsible, Trigger as CollapsibleTrigger, Panel } from "@atoms/collapsible";
 import cn from "@lib/cn";
 import { ChevronDown, LucideIcon } from "lucide-react";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 
 // ─── NavItem ────────────────────────────────────────────────
 
@@ -53,9 +53,10 @@ type NavSectionProps = {
 export function NavSection(props: NavSectionProps) {
     const { href, label, icon: Icon, active, pathname, onNavigate, children } = props;
     const isExact = pathname === href;
+    const [open, setOpen] = useState(active);
 
     return (
-        <Collapsible defaultOpen={active}>
+        <Collapsible open={open} onOpenChange={setOpen}>
             <div
                 className={cn(
                     "group/row flex items-center rounded-md",

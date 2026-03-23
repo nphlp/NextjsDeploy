@@ -7,6 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const isStandalone = process.env.NEXTJS_STANDALONE === "true";
 const isDev = process.env.NODE_ENV === "development";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "";
 
 // Scalar API reference CDN (dev only, for /api/auth/reference)
 const scalarDomains = isDev ? "https://cdn.jsdelivr.net https://proxy.scalar.com https://fonts.scalar.com" : "";
@@ -60,6 +61,9 @@ const nextConfig: NextConfig = {
 
     // Transpile Scalar packages to handle Vue-style CSS
     transpilePackages: ["@scalar/api-reference-react", "@scalar/api-reference", "@scalar/agent-chat"],
+
+    // Allow external origins for dev HMR (ngrok, etc.)
+    allowedDevOrigins: [baseUrl.replace(/^https?:\/\//, "")],
 
     // Security headers
     headers: async () => [{ source: "/(.*)", headers: securityHeaders }],

@@ -33,17 +33,25 @@ export default function MobileNavigation() {
             <Drawer open={open} onOpenChange={setOpen}>
                 <Portal>
                     <Backdrop />
-                    <Viewport className="items-end justify-center">
+                    <Viewport className="items-end justify-center supports-[-webkit-touch-callout:none]:[--viewport-padding:0px]">
                         <Popup
                             className={cn(
-                                "h-auto w-full max-w-full rounded-t-2xl p-6",
-                                "mr-0 pr-6",
+                                "h-auto max-h-[calc(100dvh-5rem)] w-full max-w-full rounded-t-2xl",
+                                "mr-0 flex flex-col p-0",
+                                // iOS overrides (same variant to beat specificity)
+                                "supports-[-webkit-touch-callout:none]:w-full",
+                                "supports-[-webkit-touch-callout:none]:max-w-full",
+                                "supports-[-webkit-touch-callout:none]:rounded-none",
+                                "supports-[-webkit-touch-callout:none]:rounded-t-2xl",
+                                "supports-[-webkit-touch-callout:none]:mr-0",
+                                "supports-[-webkit-touch-callout:none]:p-0",
+                                // Animation
                                 "transform-[translateY(var(--drawer-swipe-movement-y))]",
                                 "data-starting-style:transform-[translateY(100%)]",
                                 "data-ending-style:transform-[translateY(100%)]",
                             )}
                         >
-                            <Content>
+                            <Content className="max-w-full overflow-y-auto overscroll-contain p-6">
                                 <nav className="flex flex-col gap-1">
                                     {links.map(({ href, label, icon }) => {
                                         // Docs: collapsible with sub-links

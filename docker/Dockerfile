@@ -49,8 +49,8 @@ RUN bun run build
 FROM prod-deps AS runner
 
 # Create non-root user BEFORE copying files with --chown
-RUN groupadd --system --gid 1001 nodejs
-RUN useradd --system --uid 1001 --gid nodejs nextjs
+RUN groupadd --gid 1001 nodejs
+RUN useradd --uid 1001 --gid nodejs nextjs
 
 # Build files
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
