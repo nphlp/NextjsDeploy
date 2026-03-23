@@ -1,7 +1,7 @@
 ####################
 #       Base       #
 ####################
-FROM node:24-alpine AS base
+FROM oven/bun:1 AS base
 
 WORKDIR /app
 
@@ -12,8 +12,7 @@ ARG DATABASE_URL
 ARG POSTGRES_HOST
 ARG NEXT_PUBLIC_BASE_URL
 
-RUN npm install -g pnpm
-RUN apk add --no-cache postgresql-client curl
+RUN apk add --no-cache postgresql-client curl nodejs
 
 # Recommended by NextJS
 RUN apk add --no-cache libc6-compat
@@ -23,16 +22,16 @@ RUN apk add --no-cache libc6-compat
 ########################
 FROM base AS dev-deps
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN pnpm install --frozen-lockfile
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
 
 #########################
 #   Prod Dependencies   #
 #########################
 FROM base AS prod-deps
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN pnpm install --prod --frozen-lockfile
+COPY package.json bun.lock ./
+RUN bun install --production --frozen-lockfile
 
 ####################
 #     Builder      #
@@ -44,8 +43,8 @@ COPY . .
 # Important to set "NEXT_PUBLIC_*" ENVs before nextjs build
 ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
 
-RUN pnpm prisma:generate
-RUN pnpm build
+RUN bun run prisma:generate
+RUN bun run build
 
 ####################
 #     Runner       #
@@ -77,7 +76,7 @@ ENV HOSTNAME=0.0.0.0
 
 CMD ["/bin/sh", "-c", "\
     echo '🚀 Starting Next.js application...' && \
-    pnpm prisma:deploy && \
-    pnpm fixtures:setup && \
+    bunx prisma migrate deploy && \
+    bun run fixtures:setup && \
     node server.js \
 "]

@@ -6,7 +6,7 @@ Vitest unit test suite for oRPC API routes — **13 tests**.
 
 ## Setup
 
-- **Runner:** `pnpm test:run`
+- **Runner:** `bun run test:run`
 - **Config:** `vitest.config.mjs`
 - **Structure:** `test/unit/`
 

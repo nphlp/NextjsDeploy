@@ -95,7 +95,7 @@ jobs:
 
     #         # # Release avec semantic-release
     #         # - name: Create release
-    #         #   run: pnpm dlx semantic-release
+    #         #   run: bunx semantic-release
     #         #   env:
     #         #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

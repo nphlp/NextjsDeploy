@@ -8,8 +8,7 @@
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/fr/download)
-- [PNPM](https://pnpm.io/installation)
+- [Bun](https://bun.sh/docs/installation)
 - [OrbStack](https://orbstack.dev/) (macOS) or [Docker](https://docs.docker.com/get-started/get-docker/) (Linux)
 - [Make](https://www.gnu.org/software/make/)
 - [PostgreSQL](https://www.postgresql.org/download/) — provides `psql` and `pg_dump` for `scripts/db.sh` and `make dump`
@@ -17,7 +16,8 @@
 On macOS:
 
 ```bash
-brew install node pnpm postgresql@17
+brew install postgresql@17
+curl -fsSL https://bun.sh/install | bash
 brew install --cask orbstack # Docker Desktop alternative for macOS
 ```
 
@@ -28,8 +28,8 @@ On Linux (Ubuntu/Debian):
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt install -y nodejs make postgresql-client
 
-# PNPM
-corepack enable && corepack prepare pnpm@latest --activate
+# Bun
+curl -fsSL https://bun.sh/install | bash
 
 # Docker
 sudo apt install -y docker.io docker-compose-plugin
@@ -75,7 +75,7 @@ make basic-clear   # Stop + delete volumes
 
 ## `make postgres` — Postgres Only
 
-Keep Postgres running independently and restart Next.js freely without the overhead of `make dev` / `make start` (no reinstall, no DB reset, no fixtures reload). Ideal when you need to run `pnpm dev` or `pnpm build` frequently.
+Keep Postgres running independently and restart Next.js freely without the overhead of `make dev` / `make start` (no reinstall, no DB reset, no fixtures reload). Ideal when you need to run `bun run dev` or `bun run build` frequently.
 
 ```bash
 make postgres        # Start Postgres only (port 5433)
@@ -85,12 +85,12 @@ Then start Next.js in another terminal, with one of the following commands:
 
 ```bash
 # Dev mode
-pnpm dev             # Start Next.js dev server
-pnpm auto            # Install deps, setup DB, load fixtures and start Next.js
+bun run dev             # Start Next.js dev server
+bun run auto            # Install deps, setup DB, load fixtures and start Next.js
 
 # Build mode
-pnpm build && pnpm start  # Test production build
-pnpm auto:start           # Install deps, setup DB, load fixtures and start production build
+bun run build && bun run start  # Test production build
+bun run auto:start              # Install deps, setup DB, load fixtures and start production build
 ```
 
 `Ctrl+C` only stops Next.js — Postgres keeps running. Stop it when done:

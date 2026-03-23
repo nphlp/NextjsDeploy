@@ -6,7 +6,7 @@ Playwright E2E test suite for all authentication flows — **57 tests across 10 
 
 ## Setup
 
-- **Runner:** `make test` + `pnpm test:e2e` (in another terminal)
+- **Runner:** `make test` + `bun run test:e2e` (in another terminal)
 - **Server:** `localhost:3000` (production build, rate limiting disabled via `NODE_ENV=test`)
 - **Workers:** 10 (fully parallel — each spec creates its own users)
 - **Email:** Mailpit at `localhost:8025` (cleared once via globalSetup)

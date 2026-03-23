@@ -14,8 +14,7 @@ Full-stack Next.js 16 template with complete local development setup and Dokploy
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/fr/download)
-- [PNPM](https://pnpm.io/installation)
+- [Bun](https://bun.sh/docs/installation)
 - [Docker](https://docs.docker.com/get-started/get-docker/)
 - [Make](https://www.gnu.org/software/make/)
 

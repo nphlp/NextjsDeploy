@@ -1,21 +1,19 @@
 ####################
 #   Prisma Studio  #
 ####################
-FROM node:24-alpine
+FROM oven/bun:1
 
 WORKDIR /app
 
 ARG DATABASE_URL
 
-RUN npm install -g pnpm
-
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY package.json bun.lock ./
 COPY prisma ./prisma
 COPY prisma.config.mts ./prisma.config.mts
 
-RUN pnpm install --frozen-lockfile
-RUN pnpm prisma:generate
+RUN bun install --frozen-lockfile
+RUN bun run prisma:generate
 
 EXPOSE 5555
 
-CMD ["pnpm", "prisma:studio", "--port", "5555", "--browser", "none"]
+CMD ["bun", "run", "prisma:studio", "--port", "5555", "--browser", "none"]

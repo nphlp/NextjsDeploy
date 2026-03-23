@@ -118,7 +118,7 @@ docker exec postgres-production pg_dump \
 ```bash
 docker exec nextjs sh -c " \
     cd /app && \
-    pnpm tsx prisma/manual_migrations/0001_migrate_user_to_employee.ts \
+    bunx tsx prisma/manual_migrations/0001_migrate_user_to_employee.ts \
 "
 ```
 

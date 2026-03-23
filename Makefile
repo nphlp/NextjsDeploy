@@ -68,15 +68,15 @@ postgres-clear:
 .PHONY: app-setup
 
 app-setup:
-	@if [ ! -f node_modules/.modules.yaml ] || [ pnpm-lock.yaml -nt node_modules/.modules.yaml ]; then \
-		pnpm install; \
+	@if [ ! -f node_modules/.package-lock.json ] || [ bun.lock -nt node_modules/.package-lock.json ]; then \
+		bun install; \
 	fi
-	@pnpm db:setup
+	@bun run db:setup
 	@if [ ! -d prisma/client ] || [ prisma/schema.prisma -nt prisma/client ]; then \
-		pnpm prisma:generate; \
+		bun run prisma:generate; \
 	fi
-	@pnpm prisma:deploy
-	@pnpm fixtures:setup
+	@bun run prisma:deploy
+	@bun run fixtures:setup
 
 ################
 #  Dev / Start #
@@ -90,34 +90,34 @@ dev: postgres app-setup
 	@echo "🚀 Nextjs Server: http://localhost:3000 ✅"
 	@echo "📚 Prisma Studio: http://localhost:5555 🔥"
 	@echo "📬 Mailpit: http://localhost:8025 📤"
-	@pnpm dev; make postgres-stop
+	@bun run dev; make postgres-stop
 
 # Local build server for testing -> http://localhost:3000
 start: postgres app-setup
-	@pnpm build
+	@bun run build
 	@echo ""
 	@echo "🚀 Nextjs Server: http://localhost:3000 ✅"
 	@echo "📚 Prisma Studio: http://localhost:5555 🔥"
 	@echo "📬 Mailpit: http://localhost:8025 📤"
-	@pnpm start; make postgres-stop
+	@bun run start; make postgres-stop
 
 ################
 #   E2E Test   #
 ################
 
 # Production server with test mode (rate limiting disabled)
-# -> Run `pnpm test:e2e` in a separate terminal
+# -> Run `bun run test:e2e` in a separate terminal
 .PHONY: test
 
 test: postgres app-setup
-	@pnpm fixtures:reload
-	@pnpm build
+	@bun run fixtures:reload
+	@bun run build
 	@echo ""
 	@echo "🚀 Nextjs Server: http://localhost:3000 ✅"
 	@echo "📚 Prisma Studio: http://localhost:5555 🔥"
 	@echo "📬 Mailpit: http://localhost:8025"
-	@echo "👉 Run 'pnpm test:e2e' in another terminal"
-	@NODE_ENV=test pnpm start; make postgres-stop
+	@echo "👉 Run 'bun run test:e2e' in another terminal"
+	@NODE_ENV=test bun run start; make postgres-stop
 
 ################
 #  Make Basic  #

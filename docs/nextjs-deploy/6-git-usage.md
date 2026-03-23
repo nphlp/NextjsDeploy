@@ -13,7 +13,7 @@ Best practices for team collaboration with Git.
 Husky runs `lint-staged` on every commit: ESLint fix + Prettier fix on staged files.
 
 ```
-.husky/pre-commit → pnpm lint-staged
+.husky/pre-commit → bun run lint-staged
 ```
 
 What lint-staged does:

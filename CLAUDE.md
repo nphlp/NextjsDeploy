@@ -57,11 +57,11 @@ make basic        # Full containerized environment
 ### Code Quality & Tests
 
 ```bash
-pnpm checks       # All checks (type + lint:fix + format:fix)
-pnpm type         # TypeScript checking
-pnpm lint:fix     # ESLint check/fix
-pnpm format:fix   # Prettier check/fix
-pnpm test:run     # Unit tests
+bun run checks       # All checks (type + lint:fix + format:fix)
+bun run type         # TypeScript checking
+bun run lint:fix     # ESLint check/fix
+bun run format:fix   # Prettier check/fix
+bun run test:run     # Unit tests
 ```
 
 ### Node, Database & Fixtures
@@ -70,26 +70,26 @@ Do not run these commands without developer authorization.
 
 ```bash
 # Auto install, setup and run server
-pnpm auto
-pnpm auto:start
+bun run auto
+bun run auto:start
 
 # Database setup
-pnpm db:setup          # Setup database
-pnpm db:reset          # Reset database
-pnpm db:execute        # Execute SQL query
+bun run db:setup          # Setup database
+bun run db:reset          # Reset database
+bun run db:execute        # Execute SQL query
 
 # Prisma client and migrations
-pnpm prisma:generate   # Generate Prisma client
-pnpm prisma:migrate    # Run migrations
-pnpm prisma:deploy     # Deploy migrations
+bun run prisma:generate   # Generate Prisma client
+bun run prisma:migrate    # Run migrations
+bun run prisma:deploy     # Deploy migrations
 
 # Fixtures management
-pnpm fixtures:setup    # Load fixtures
-pnpm fixtures:reset    # Reset fixtures
+bun run fixtures:setup    # Load fixtures
+bun run fixtures:reset    # Reset fixtures
 
 # Nextjs Server
-pnpm dev
-pnpm build && pnpm start
+bun run dev
+bun run build && bun run start
 ```
 
 ## MCP Servers (`.mcp.json`)
@@ -195,8 +195,8 @@ pnpm build && pnpm start
 
 ### Commands
 
-- **Always use `pnpm`, never `npm` or `npx`.** Use `pnpm dlx` instead of `npx` when needed.
-- Always use pre-authorized commands to avoid prompting the user. Use `git status` not `git -C /path status`, use `pnpm type` not `tsc --noEmit`, use `pnpm lint:fix` not `eslint . --fix`, etc.
+- **Always use `bun`, never `npm`, `npx`, or `pnpm`.** Use `bunx` instead of `npx` when needed.
+- Always use pre-authorized commands to avoid prompting the user. Use `git status` not `git -C /path status`, use `bun run type` not `tsc --noEmit`, use `bun run lint:fix` not `eslint . --fix`, etc.
 - Do not run servers to avoid port conflicts. Developer handles these manually.
 
 ### Git
@@ -214,4 +214,4 @@ pnpm build && pnpm start
 - **context7**: Use autonomously to look up documentation for recent/unfamiliar topics (e.g. "use cache", Claude Code skills, Dokploy, Base-UI, oRPC, etc.).
 - **next-devtools**: Use to debug server-side logs and errors when the dev server is running.
 - **chrome-devtools**: Only use with explicit developer approval. Opens a new Chrome window which may be disruptive.
-- **ide** (`getDiagnostics`): Use autonomously after code changes alongside `pnpm checks`. Catches things other tools miss (e.g. Tailwind v4 class migrations like `w-[300px]` → `w-75`).
+- **ide** (`getDiagnostics`): Use autonomously after code changes alongside `bun run checks`. Catches things other tools miss (e.g. Tailwind v4 class migrations like `w-[300px]` → `w-75`).

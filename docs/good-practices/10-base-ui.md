@@ -288,7 +288,7 @@ export * from "./atoms";
 ### 11. Verify
 
 ```bash
-pnpm checks
+bun run checks
 ```
 
 ---

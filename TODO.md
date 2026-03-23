@@ -14,7 +14,6 @@
 
 ## Implement
 
-- Migration de PNPM à BUN
 - Migration de Makefile à Just
 
 - Passer de Compose à Swarm (objectif: zero-downtime deploy)

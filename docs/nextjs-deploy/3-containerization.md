@@ -75,8 +75,8 @@ Traefik labels handle:
 
 Multi-stage build for optimized production images:
 
-1. **base** — Node 24 Alpine, installs pnpm, postgresql-client, libc6-compat
-2. **dev-deps** — Installs all dependencies (`pnpm install --frozen-lockfile`)
+1. **base** — Bun Alpine, installs Node.js, postgresql-client, libc6-compat
+2. **dev-deps** — Installs all dependencies (`bun install --frozen-lockfile`)
 3. **builder** — Copies source, generates Prisma client, builds Next.js
 4. **runner** — Production stage with non-root user, copies only standalone output, runs migrations + fixtures on startup
 

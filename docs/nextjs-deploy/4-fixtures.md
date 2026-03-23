@@ -11,9 +11,9 @@ Test data for development and testing. Fixtures are loaded automatically by `mak
 ## Commands
 
 ```bash
-pnpm fixtures:setup    # Load fixtures (skips if data already exists)
-pnpm fixtures:reset    # Delete all data
-pnpm fixtures:reload   # Reset + setup (full reload)
+bun run fixtures:setup    # Load fixtures (skips if data already exists)
+bun run fixtures:reset    # Delete all data
+bun run fixtures:reload   # Reset + setup (full reload)
 ```
 
 > Requires an active database. Use `make postgres` or `make dev` first.

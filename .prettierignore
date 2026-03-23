@@ -3,4 +3,4 @@
 solid/templates/
 prisma/client/
 node_modules/
-pnpm-lock.yaml
+bun.lock
