@@ -1,28 +1,18 @@
 # TODO
 
-## Idées Cookie Hook
-
-- AJOUTER UN LAYOUT à la RACINE pour auto-hydrater les hooks ? En utilisant un prefix "cookie-hook-{name}" pour identifier les cookies ?
-- Finir les docs : 7-cookie-state, 7-cross-state, etc
-
-## Retour d'Alexis
-
-- Changement de mdp (depuis Chrome)
-  Le gestionnaire de mpd Google enregistre uniquement le mdp sans proposer de nom d'utilisateur, ce qui implique qu'on doit réécrime manuellement notre email.
-  Peut-être faire en sorte que l'email soit aussi inscrit ? Ca se fait peut-être avec un champ email caché ?
-
-## Design
-
-- Finir l'import de base ui
-- Gérer les outline proprement
-
 ## Bugs
 
-- First admin en prod ?
+- **Chrome password manager** — Le gestionnaire de mdp Google enregistre uniquement le mdp sans proposer de nom d'utilisateur, ce qui implique qu'on doit réécrire manuellement notre email. Peut-être faire en sorte que l'email soit aussi inscrit (champ email caché ?).
+- **First admin en prod** — Comment créer le premier admin en production ?
 
-- Provider OAuth (Google, Apple, Microsoft, GitHub, etc)`
+## Features
 
-## Inplement
+- OAuth providers (Google, Apple, Microsoft, GitHub, etc.)
+- useOptimistic et mutations
+- Changement d'email (API native Better Auth `changeEmail`)
+- Last login method (plugin Better Auth `lastLoginMethod`)
+
+## Implement
 
 - Migration de PNPM à BUN
 - Migration de Makefile à Just
@@ -40,19 +30,11 @@
 - Gestion variables d'environnements
     - Infisical
 
-- Analytics & Performance tracking
-    - Umami
-    - Plausible
-
 - Logs & Error tracking
     - Glitchtip
     - SigNoz
 
-- useOtimistic et mutations
-
-- Mettre en place un système de logging (Sentry, Glitchtip, etc)
-
-## Tests automatissé
+## Tests automatisés
 
 - Unitaires
   -> Tester une fonction isolée
@@ -67,7 +49,7 @@
   -> Mockings des **API externes** uniquement
 
 - E2E
-  -> Tester une fonctionnalité dans un envrionnement navigateur
+  -> Tester une fonctionnalité dans un environnement navigateur
   -> Pas de mockings, clics réels, etc.
 
 - Coverage

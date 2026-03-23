@@ -16,7 +16,7 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 - [x] Lire les recommandations ANSSI pour la sécurité des applications web
 - [x] Vérifier ce que Better Auth supporte nativement (plugins disponibles)
 - [x] Définir les solutions techniques pour chaque point
-- [x] Rédiger `docs/security-reference.md` — synthèse OWASP, RGPD/CNIL, ANSSI
+- [x] Rédiger `SECURITY.md` — synthèse OWASP, RGPD/CNIL, ANSSI
 
 ---
 

@@ -104,10 +104,10 @@ pnpm build && pnpm start
 - `README.md` — Project overview, quick start, documentation index
 - `TODO.md` — Feature backlog and technical debt
 - `PLAN.md` — Security & legal audit plan (OWASP, RGPD, CNIL, ANSSI)
+- `SECURITY.md` — OWASP, RGPD/CNIL, ANSSI reference for developers
 
 ## Documentation
 
-- `docs/security-reference.md` — OWASP, RGPD/CNIL, ANSSI reference for developers
 - `docs/nextjs-deploy/` — Project setup, environment, containerization, deployment
     - `1-setup-local.md` — Prerequisites, make dev/start/basic/postgres, ngrok
     - `2-environment-variables.md` — Env generation system, variables reference
