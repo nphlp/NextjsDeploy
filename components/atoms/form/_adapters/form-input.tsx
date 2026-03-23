@@ -4,13 +4,26 @@ import Input from "@atoms/input";
 import { RootProps } from "@atoms/input/atoms";
 import { ChangeEvent, FocusEvent } from "react";
 import { useFormContext } from "../_context/use-form-context";
+import { FieldProps, FieldWrapper } from "../atom";
 
-type FormInputProps = {
+type FormInputProps = FieldProps & {
     name: string;
 } & Omit<RootProps, "value">;
 
 export function FormInput(props: FormInputProps) {
-    const { name, className, setValue, onFocus, onChange, onBlur, ...otherProps } = props;
+    const {
+        name,
+        label,
+        description,
+        disabled,
+        required,
+        className,
+        setValue,
+        onFocus,
+        onChange,
+        onBlur,
+        ...otherProps
+    } = props;
 
     const register = useFormContext();
     const field = register(name);
@@ -32,14 +45,25 @@ export function FormInput(props: FormInputProps) {
     };
 
     return (
-        <Input
+        <FieldWrapper
             name={name}
-            value={field.value}
-            onFocus={handleFocus}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            className={className}
-            {...otherProps}
-        />
+            label={label}
+            description={description}
+            disabled={disabled}
+            required={required}
+            status={field.status}
+            errors={field.errors}
+        >
+            <Input
+                name={name}
+                value={field.value}
+                disabled={disabled}
+                onFocus={handleFocus}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={className}
+                {...otherProps}
+            />
+        </FieldWrapper>
     );
 }

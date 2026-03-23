@@ -3,11 +3,11 @@
 import InputPassword from "@atoms/input/input-password";
 import { ChangeEvent, FocusEvent, HTMLInputAutoCompleteAttribute, Ref } from "react";
 import { useFormContext } from "../_context/use-form-context";
+import { FieldProps, FieldWrapper } from "../atom";
 
-type FormInputPasswordProps = {
+type FormInputPasswordProps = FieldProps & {
     name: string;
     placeholder?: string;
-    disabled?: boolean;
     autoComplete?: HTMLInputAutoCompleteAttribute;
     autoFocus?: boolean;
     className?: string;
@@ -20,7 +20,7 @@ type FormInputPasswordProps = {
 };
 
 export function FormInputPassword(props: FormInputPasswordProps) {
-    const { name, className, onFocus, onChange, onBlur, ...otherProps } = props;
+    const { name, label, description, disabled, required, className, onFocus, onChange, onBlur, ...otherProps } = props;
 
     const register = useFormContext();
     const field = register(name);
@@ -41,14 +41,25 @@ export function FormInputPassword(props: FormInputPasswordProps) {
     };
 
     return (
-        <InputPassword
+        <FieldWrapper
             name={name}
-            value={field.value}
-            onFocus={handleFocus}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            className={className}
-            {...otherProps}
-        />
+            label={label}
+            description={description}
+            disabled={disabled}
+            required={required}
+            status={field.status}
+            errors={field.errors}
+        >
+            <InputPassword
+                name={name}
+                value={field.value}
+                disabled={disabled}
+                onFocus={handleFocus}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={className}
+                {...otherProps}
+            />
+        </FieldWrapper>
     );
 }

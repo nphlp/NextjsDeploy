@@ -18,6 +18,7 @@ import {
     MultipleChip,
     MultipleChipRemove,
 } from "@atoms/combobox";
+import { RequiredNote } from "@atoms/form";
 import {
     FormCombobox,
     FormComboboxMultiple,
@@ -27,7 +28,6 @@ import {
     FormSwitch,
     FormTextArea,
 } from "@atoms/form/_adapters";
-import { Field, RequiredNote } from "@atoms/form/field";
 import Form, { OnSubmit } from "@atoms/form/form";
 import { useForm } from "@atoms/form/use-form";
 import {
@@ -141,135 +141,152 @@ export default function FormContact() {
 
     return (
         <Form register={register} onSubmit={handleSubmit}>
-            <Field name="phone" label="Téléphone" description="Validation progressive" disabled={isLoading} required>
-                <FormInput name="phone" placeholder="06 12 34 56 78" />
-            </Field>
+            <FormInput
+                name="phone"
+                label="Téléphone"
+                description="Validation progressive"
+                disabled={isLoading}
+                required
+                placeholder="06 12 34 56 78"
+            />
 
-            <Field name="group" label="Groupe" description="Select simple" disabled={isLoading} required>
-                <FormSelect name="group">
-                    <Trigger className="w-full max-w-full">
-                        <Value>
-                            {(value) => renderValue({ value, items: groupItems, placeholder: "Choisir un groupe" })}
-                        </Value>
-                        <Icon />
-                    </Trigger>
-                    <Portal>
-                        <Positioner>
-                            <Popup>
-                                <List>
-                                    <Item value={null}>
+            <FormSelect name="group" label="Groupe" description="Select simple" disabled={isLoading} required>
+                <Trigger className="w-full max-w-full">
+                    <Value>
+                        {(value) => renderValue({ value, items: groupItems, placeholder: "Choisir un groupe" })}
+                    </Value>
+                    <Icon />
+                </Trigger>
+                <Portal>
+                    <Positioner>
+                        <Popup>
+                            <List>
+                                <Item value={null}>
+                                    <ItemIndicator />
+                                    <ItemText>Choisir un groupe</ItemText>
+                                </Item>
+                                {Object.entries(groupItems).map(([key, label]) => (
+                                    <Item key={key} value={key}>
                                         <ItemIndicator />
-                                        <ItemText>Choisir un groupe</ItemText>
+                                        <ItemText>{label}</ItemText>
                                     </Item>
-                                    {Object.entries(groupItems).map(([key, label]) => (
-                                        <Item key={key} value={key}>
-                                            <ItemIndicator />
-                                            <ItemText>{label}</ItemText>
-                                        </Item>
-                                    ))}
-                                </List>
-                            </Popup>
-                        </Positioner>
-                    </Portal>
-                </FormSelect>
-            </Field>
+                                ))}
+                            </List>
+                        </Popup>
+                    </Positioner>
+                </Portal>
+            </FormSelect>
 
-            <Field name="interests" label="Intérêts" description="Select multiple" disabled={isLoading} required>
-                <FormSelectMultiple name="interests">
-                    <Trigger className="w-full max-w-full">
-                        <Value>
-                            {(value) =>
-                                renderValue({ value, items: interestItems, placeholder: "Choisir des intérêts" })
-                            }
-                        </Value>
-                        <Icon />
-                    </Trigger>
-                    <Portal>
-                        <Positioner alignItemWithTrigger={false}>
-                            <Popup>
-                                <List>
-                                    {Object.entries(interestItems).map(([key, label]) => (
-                                        <Item key={key} value={key}>
-                                            <ItemIndicator />
-                                            <ItemText>{label}</ItemText>
-                                        </Item>
-                                    ))}
-                                </List>
-                            </Popup>
-                        </Positioner>
-                    </Portal>
-                </FormSelectMultiple>
-            </Field>
+            <FormSelectMultiple
+                name="interests"
+                label="Intérêts"
+                description="Select multiple"
+                disabled={isLoading}
+                required
+            >
+                <Trigger className="w-full max-w-full">
+                    <Value>
+                        {(value) => renderValue({ value, items: interestItems, placeholder: "Choisir des intérêts" })}
+                    </Value>
+                    <Icon />
+                </Trigger>
+                <Portal>
+                    <Positioner alignItemWithTrigger={false}>
+                        <Popup>
+                            <List>
+                                {Object.entries(interestItems).map(([key, label]) => (
+                                    <Item key={key} value={key}>
+                                        <ItemIndicator />
+                                        <ItemText>{label}</ItemText>
+                                    </Item>
+                                ))}
+                            </List>
+                        </Popup>
+                    </Positioner>
+                </Portal>
+            </FormSelectMultiple>
 
-            <Field name="city" label="Ville" description="Combobox simple" disabled={isLoading} required>
-                <FormCombobox name="city" items={cities}>
-                    <div className="relative w-full">
-                        <ComboboxInput placeholder="Rechercher une ville..." className="w-full" />
-                        <div className="absolute right-2 bottom-0 flex h-10 items-center">
-                            <Clear />
-                            <ComboboxTrigger />
-                        </div>
+            <FormCombobox
+                name="city"
+                label="Ville"
+                description="Combobox simple"
+                disabled={isLoading}
+                required
+                items={cities}
+            >
+                <div className="relative w-full">
+                    <ComboboxInput placeholder="Rechercher une ville..." className="w-full" />
+                    <div className="absolute right-2 bottom-0 flex h-10 items-center">
+                        <Clear />
+                        <ComboboxTrigger />
                     </div>
-                    <ComboboxPortal>
-                        <ComboboxPositioner>
-                            <ComboboxPopup>
-                                <Empty />
-                                <ComboboxList>
-                                    {(item: string) => (
-                                        <ComboboxItem key={item} value={item}>
-                                            <ComboboxItemIndicator />
-                                            <span className="col-start-2">{item}</span>
-                                        </ComboboxItem>
-                                    )}
-                                </ComboboxList>
-                            </ComboboxPopup>
-                        </ComboboxPositioner>
-                    </ComboboxPortal>
-                </FormCombobox>
-            </Field>
+                </div>
+                <ComboboxPortal>
+                    <ComboboxPositioner>
+                        <ComboboxPopup>
+                            <Empty />
+                            <ComboboxList>
+                                {(item: string) => (
+                                    <ComboboxItem key={item} value={item}>
+                                        <ComboboxItemIndicator />
+                                        <span className="col-start-2">{item}</span>
+                                    </ComboboxItem>
+                                )}
+                            </ComboboxList>
+                        </ComboboxPopup>
+                    </ComboboxPositioner>
+                </ComboboxPortal>
+            </FormCombobox>
 
-            <Field name="skills" label="Compétences" description="Combobox multiple" disabled={isLoading} required>
-                <FormComboboxMultiple name="skills" items={skillsList}>
-                    <ChipsContainer className="w-full" ref={skillsChipsRef}>
-                        <ComboboxValue>
-                            {(value: string[]) => (
-                                <>
-                                    {value.map((skill) => (
-                                        <MultipleChip key={skill}>
-                                            {skill}
-                                            <MultipleChipRemove />
-                                        </MultipleChip>
-                                    ))}
-                                    <ChipsInput placeholder={value.length > 0 ? "" : "Rechercher..."} />
-                                </>
-                            )}
-                        </ComboboxValue>
-                    </ChipsContainer>
-                    <ComboboxPortal>
-                        <ComboboxPositioner anchor={skillsChipsRef}>
-                            <ComboboxPopup>
-                                <Empty />
-                                <ComboboxList>
-                                    {(item: string) => (
-                                        <ComboboxItem key={item} value={item}>
-                                            <ComboboxItemIndicator />
-                                            <span className="col-start-2">{item}</span>
-                                        </ComboboxItem>
-                                    )}
-                                </ComboboxList>
-                            </ComboboxPopup>
-                        </ComboboxPositioner>
-                    </ComboboxPortal>
-                </FormComboboxMultiple>
-            </Field>
+            <FormComboboxMultiple
+                name="skills"
+                label="Compétences"
+                description="Combobox multiple"
+                disabled={isLoading}
+                required
+                items={skillsList}
+            >
+                <ChipsContainer className="w-full" ref={skillsChipsRef}>
+                    <ComboboxValue>
+                        {(value: string[]) => (
+                            <>
+                                {value.map((skill) => (
+                                    <MultipleChip key={skill}>
+                                        {skill}
+                                        <MultipleChipRemove />
+                                    </MultipleChip>
+                                ))}
+                                <ChipsInput placeholder={value.length > 0 ? "" : "Rechercher..."} />
+                            </>
+                        )}
+                    </ComboboxValue>
+                </ChipsContainer>
+                <ComboboxPortal>
+                    <ComboboxPositioner anchor={skillsChipsRef}>
+                        <ComboboxPopup>
+                            <Empty />
+                            <ComboboxList>
+                                {(item: string) => (
+                                    <ComboboxItem key={item} value={item}>
+                                        <ComboboxItemIndicator />
+                                        <span className="col-start-2">{item}</span>
+                                    </ComboboxItem>
+                                )}
+                            </ComboboxList>
+                        </ComboboxPopup>
+                    </ComboboxPositioner>
+                </ComboboxPortal>
+            </FormComboboxMultiple>
 
-            <Field name="bio" label="Bio" description="Textarea (max 500)" disabled={isLoading}>
-                <FormTextArea name="bio" placeholder="Quelques mots..." />
-            </Field>
+            <FormTextArea
+                name="bio"
+                label="Bio"
+                description="Textarea (max 500)"
+                disabled={isLoading}
+                placeholder="Quelques mots..."
+            />
 
-            <Field name="notifications" disabled={isLoading}>
-                <FormSwitch name="notifications" label="Activer les notifications" />
-            </Field>
+            <FormSwitch name="notifications" disabled={isLoading} label="Activer les notifications" />
 
             <RequiredNote />
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Button, { Link } from "@atoms/button";
-import Form, { Field, FormInputPassword, OnSubmit, passwordSchema, passwordSchemaOnChange, useForm } from "@atoms/form";
+import Form, { FormInputPassword, OnSubmit, passwordSchema, passwordSchemaOnChange, useForm } from "@atoms/form";
 import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";
 import { resetPassword } from "@lib/auth-client";
@@ -93,38 +93,30 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     return (
         <Form register={register} onSubmit={handleSubmit}>
             {/* Password */}
-            <Field
+            <FormInputPassword
                 name="password"
                 label="Nouveau mot de passe"
                 description="Veillez remplir tous les critères de sécurité"
                 disabled={isSubmitting}
                 required
-            >
-                <FormInputPassword
-                    name="password"
-                    placeholder="Nouveau mot de passe"
-                    autoComplete="new-password"
-                    autoFocus
-                />
-            </Field>
+                placeholder="Nouveau mot de passe"
+                autoComplete="new-password"
+                autoFocus
+            />
 
             {/* Password strength */}
             <PasswordStrength password={states.password} />
 
             {/* Confirm password */}
-            <Field
+            <FormInputPassword
                 name="confirmPassword"
                 label="Confirmation"
                 description="Confirmez le mot de passe"
                 disabled={isSubmitting}
                 required
-            >
-                <FormInputPassword
-                    name="confirmPassword"
-                    placeholder="Confirmez le mot de passe"
-                    autoComplete="new-password"
-                />
-            </Field>
+                placeholder="Confirmez le mot de passe"
+                autoComplete="new-password"
+            />
 
             {/* Login link */}
             <div className="space-x-2 text-center text-sm text-gray-500">

@@ -1,8 +1,8 @@
 "use client";
 
 import Button from "@atoms/button";
+import { RequiredNote } from "@atoms/form";
 import { FormCheckbox, FormInput, FormInputPassword } from "@atoms/form/_adapters";
-import { Field, RequiredNote } from "@atoms/form/field";
 import Form, { OnSubmit } from "@atoms/form/form";
 import { passwordSchema, passwordSchemaOnChange } from "@atoms/form/schemas";
 import { useForm } from "@atoms/form/use-form";
@@ -91,39 +91,45 @@ export default function FormRegister() {
 
     return (
         <Form register={register} onSubmit={handleSubmit}>
-            <Field name="pseudo" label="Pseudo" description="Min. 3 caractères" disabled={isLoading} required>
-                <FormInput name="pseudo" placeholder="jean_dupont" autoComplete="username" />
-            </Field>
+            <FormInput
+                name="pseudo"
+                label="Pseudo"
+                description="Min. 3 caractères"
+                disabled={isLoading}
+                required
+                placeholder="jean_dupont"
+                autoComplete="username"
+            />
 
-            <Field
+            <FormInputPassword
                 name="password"
                 label="Mot de passe"
                 description="Min. 8 caractères, majuscule, chiffre"
                 disabled={isLoading}
                 required
-            >
-                <FormInputPassword name="password" placeholder="Votre mot de passe" autoComplete="new-password" />
-            </Field>
+                placeholder="Votre mot de passe"
+                autoComplete="new-password"
+            />
 
             <PasswordStrength password={states.password} />
 
-            <Field
+            <FormInputPassword
                 name="confirmPassword"
                 label="Confirmer"
                 description="Doit correspondre au mot de passe"
                 disabled={isLoading}
                 required
-            >
-                <FormInputPassword
-                    name="confirmPassword"
-                    placeholder="Confirmez le mot de passe"
-                    autoComplete="new-password"
-                />
-            </Field>
+                placeholder="Confirmez le mot de passe"
+                autoComplete="new-password"
+            />
 
-            <Field name="cgv" description="Cocher pour accepter les CGU" disabled={isLoading} required>
-                <FormCheckbox name="cgv" label="J'accepte les conditions générales d'utilisation" />
-            </Field>
+            <FormCheckbox
+                name="cgv"
+                description="Cocher pour accepter les CGU"
+                disabled={isLoading}
+                required
+                label="J'accepte les conditions générales d'utilisation"
+            />
 
             <RequiredNote />
 

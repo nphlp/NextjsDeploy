@@ -2,20 +2,32 @@
 
 import InputOtp from "@atoms/input/input-otp";
 import { useFormContext } from "../_context/use-form-context";
+import { FieldProps, FieldWrapper } from "../atom";
 
-type FormInputOtpProps = {
+type FormInputOtpProps = FieldProps & {
     name: string;
     length?: number;
     onComplete: (code: string) => void;
-    disabled?: boolean;
     className?: string;
 };
 
 export function FormInputOtp(props: FormInputOtpProps) {
-    const { name, ...otherProps } = props;
+    const { name, label, description, disabled, required, ...otherProps } = props;
 
     const register = useFormContext();
     const field = register(name);
 
-    return <InputOtp value={field.value} onChange={field.onChange} {...otherProps} />;
+    return (
+        <FieldWrapper
+            name={name}
+            label={label}
+            description={description}
+            disabled={disabled}
+            required={required}
+            status={field.status}
+            errors={field.errors}
+        >
+            <InputOtp value={field.value} onChange={field.onChange} disabled={disabled} {...otherProps} />
+        </FieldWrapper>
+    );
 }

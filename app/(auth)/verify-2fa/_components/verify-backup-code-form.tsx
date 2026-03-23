@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@atoms/button";
-import Form, { Field, FormInput, OnSubmit, useForm } from "@atoms/form";
+import Form, { FormInput, OnSubmit, useForm } from "@atoms/form";
 import { useToast } from "@atoms/toast";
 import { twoFactor } from "@lib/auth-client";
 import { useState } from "react";
@@ -75,15 +75,16 @@ export default function VerifyBackupCodeForm(props: VerifyBackupCodeFormProps) {
     return (
         <Form register={register} onSubmit={handleSubmit}>
             <p className="text-sm text-gray-600">Entrez l&apos;un de vos codes de secours.</p>
-            <Field
+            <FormInput
                 name="code"
                 label="Code de secours"
                 description="Code à usage unique"
                 disabled={isSubmitting}
                 required
-            >
-                <FormInput name="code" placeholder="XXXXXXXXXX" autoComplete="off" autoFocus />
-            </Field>
+                placeholder="XXXXXXXXXX"
+                autoComplete="off"
+                autoFocus
+            />
             <div className="flex justify-center">
                 <Button
                     type="submit"

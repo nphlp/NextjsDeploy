@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@atoms/button";
-import Form, { Field, FormInputPassword, OnSubmit, passwordSchema, passwordSchemaOnChange, useForm } from "@atoms/form";
+import Form, { FormInputPassword, OnSubmit, passwordSchema, passwordSchemaOnChange, useForm } from "@atoms/form";
 import PasswordStrength from "@atoms/input/password-strength";
 import { useToast } from "@atoms/toast";
 import { changePassword } from "@lib/auth-client";
@@ -102,48 +102,40 @@ export const UpdatePasswordForm = () => {
             </div>
 
             {/* Current password */}
-            <Field
+            <FormInputPassword
                 name="currentPassword"
                 label="Mot de passe actuel"
                 description="Entrez votre mot de passe actuel"
                 disabled={isSubmitting}
                 required
-            >
-                <FormInputPassword
-                    name="currentPassword"
-                    placeholder="Mot de passe actuel"
-                    autoComplete="current-password"
-                />
-            </Field>
+                placeholder="Mot de passe actuel"
+                autoComplete="current-password"
+            />
 
             {/* New password */}
-            <Field
+            <FormInputPassword
                 name="newPassword"
                 label="Nouveau mot de passe"
                 description="Veillez remplir tous les critères de sécurité"
                 disabled={isSubmitting}
                 required
-            >
-                <FormInputPassword name="newPassword" placeholder="Nouveau mot de passe" autoComplete="new-password" />
-            </Field>
+                placeholder="Nouveau mot de passe"
+                autoComplete="new-password"
+            />
 
             {/* Password strength */}
             <PasswordStrength password={states.newPassword} />
 
             {/* Confirm password */}
-            <Field
+            <FormInputPassword
                 name="confirmPassword"
                 label="Confirmation"
                 description="Confirmez le nouveau mot de passe"
                 disabled={isSubmitting}
                 required
-            >
-                <FormInputPassword
-                    name="confirmPassword"
-                    placeholder="Confirmez le nouveau mot de passe"
-                    autoComplete="new-password"
-                />
-            </Field>
+                placeholder="Confirmez le nouveau mot de passe"
+                autoComplete="new-password"
+            />
 
             <div className="flex justify-center">
                 <Button

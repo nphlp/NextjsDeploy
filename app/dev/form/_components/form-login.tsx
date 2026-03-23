@@ -2,7 +2,6 @@
 
 import Button from "@atoms/button";
 import { FormCheckbox, FormInput, FormInputPassword } from "@atoms/form/_adapters";
-import { Field } from "@atoms/form/field";
 import Form, { OnSubmit } from "@atoms/form/form";
 import { emailSchema, emailSchemaProgressive } from "@atoms/form/schemas";
 import { useForm } from "@atoms/form/use-form";
@@ -77,17 +76,28 @@ export default function FormLogin() {
 
     return (
         <Form register={register} onSubmit={handleSubmit}>
-            <Field name="email" label="Email" description="Validation progressive" disabled={isLoading} required>
-                <FormInput name="email" type="email" placeholder="john@example.com" autoComplete="email" />
-            </Field>
+            <FormInput
+                name="email"
+                label="Email"
+                description="Validation progressive"
+                disabled={isLoading}
+                required
+                type="email"
+                placeholder="john@example.com"
+                autoComplete="email"
+            />
 
-            <Field name="password" label="Mot de passe" description="Requis" disabled={isLoading} required>
-                <FormInputPassword name="password" placeholder="Votre mot de passe" autoComplete="current-password" />
-            </Field>
+            <FormInputPassword
+                name="password"
+                label="Mot de passe"
+                description="Requis"
+                disabled={isLoading}
+                required
+                placeholder="Votre mot de passe"
+                autoComplete="current-password"
+            />
 
-            <Field name="rememberMe" disabled={isLoading}>
-                <FormCheckbox name="rememberMe" label="Se souvenir de moi" />
-            </Field>
+            <FormCheckbox name="rememberMe" disabled={isLoading} label="Se souvenir de moi" />
 
             <div className="flex justify-center">
                 <Button type="submit" label="Connexion" colors="solid" loading={isLoading} className="w-full" />

@@ -3,21 +3,32 @@
 import SelectMultiple from "@atoms/select/select-multiple";
 import { ReactNode } from "react";
 import { useFormContext } from "../_context/use-form-context";
+import { FieldProps, FieldWrapper } from "../atom";
 
-type FormSelectMultipleProps = {
+type FormSelectMultipleProps = FieldProps & {
     name: string;
     children: ReactNode;
 };
 
 export function FormSelectMultiple(props: FormSelectMultipleProps) {
-    const { name, children } = props;
+    const { name, label, description, disabled, required, children } = props;
 
     const register = useFormContext();
     const field = register(name);
 
     return (
-        <SelectMultiple value={field.value} onValueChange={(value) => field.onChange(value)}>
-            {children}
-        </SelectMultiple>
+        <FieldWrapper
+            name={name}
+            label={label}
+            description={description}
+            disabled={disabled}
+            required={required}
+            status={field.status}
+            errors={field.errors}
+        >
+            <SelectMultiple value={field.value} onValueChange={(value) => field.onChange(value)}>
+                {children}
+            </SelectMultiple>
+        </FieldWrapper>
     );
 }

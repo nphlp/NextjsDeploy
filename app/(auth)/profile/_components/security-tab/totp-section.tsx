@@ -2,7 +2,7 @@
 
 import { Root as AlertDialogRoot, Backdrop, Close, Description, Popup, Portal, Title } from "@atoms/alert-dialog";
 import Button from "@atoms/button";
-import Form, { Field, FormInputPassword, OnSubmit, useForm } from "@atoms/form";
+import Form, { FormInputPassword, OnSubmit, useForm } from "@atoms/form";
 import InputOtp from "@atoms/input/input-otp";
 import Switch, { Thumb } from "@atoms/switch";
 import { useToast } from "@atoms/toast";
@@ -377,20 +377,16 @@ function PasswordForm(props: PasswordFormProps) {
         <div className="space-y-3">
             <p className="text-sm text-gray-600">{title}</p>
             <Form register={register} onSubmit={handleSubmit}>
-                <Field
+                <FormInputPassword
                     name="password"
                     label="Mot de passe"
                     description="Votre mot de passe actuel"
                     disabled={isSubmitting}
                     required
-                >
-                    <FormInputPassword
-                        name="password"
-                        placeholder="Votre mot de passe"
-                        autoComplete="current-password"
-                        autoFocus
-                    />
-                </Field>
+                    placeholder="Votre mot de passe"
+                    autoComplete="current-password"
+                    autoFocus
+                />
                 <div className="flex gap-2">
                     <Button label="Annuler" onClick={onCancel} colors="ghost" />
                     <Button type="submit" label={submitLabel} loading={isSubmitting} colors={submitColors} />

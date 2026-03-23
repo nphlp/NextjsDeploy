@@ -1,5 +1,5 @@
 export { default } from "./form";
-export { Field, Label, RequiredNote, Indication } from "./field";
+export { Label, RequiredNote } from "./atom";
 export { useForm } from "./use-form";
 export {
     emailSchema,

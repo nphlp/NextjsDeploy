@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@atoms/button";
-import Form, { Field, FormInput, OnSubmit, nameSchema, useForm } from "@atoms/form";
+import Form, { FormInput, OnSubmit, nameSchema, useForm } from "@atoms/form";
 import { useToast } from "@atoms/toast";
 import { SessionRefetch, updateUser } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
@@ -61,9 +61,15 @@ export const UpdateFirstnameForm = (props: UpdateFirstnameFormProps) => {
                 <p className="text-sm text-gray-600">Entrer votre nouveau prénom</p>
             </div>
 
-            <Field name="name" label="Prénom" description="Le champ est requis" disabled={isSubmitting} required>
-                <FormInput name="name" placeholder={session.user.name} autoComplete="given-name" />
-            </Field>
+            <FormInput
+                name="name"
+                label="Prénom"
+                description="Le champ est requis"
+                disabled={isSubmitting}
+                required
+                placeholder={session.user.name}
+                autoComplete="given-name"
+            />
 
             <div className="flex justify-center">
                 <Button

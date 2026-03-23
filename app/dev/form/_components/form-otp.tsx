@@ -1,7 +1,6 @@
 "use client";
 
 import { FormInputOtp } from "@atoms/form/_adapters";
-import { Field } from "@atoms/form/field";
 import Form from "@atoms/form/form";
 import { useForm } from "@atoms/form/use-form";
 import { useToast } from "@atoms/toast";
@@ -32,9 +31,7 @@ export default function FormOtp() {
 
     return (
         <Form register={register} onSubmit={(e) => e.preventDefault()}>
-            <Field name="code" label="Code OTP" disabled={isLoading}>
-                <FormInputOtp name="code" onComplete={handleComplete} disabled={isLoading} />
-            </Field>
+            <FormInputOtp name="code" label="Code OTP" disabled={isLoading} onComplete={handleComplete} />
         </Form>
     );
 }

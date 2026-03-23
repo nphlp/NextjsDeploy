@@ -2,7 +2,6 @@
 
 import Button, { Link } from "@atoms/button";
 import Form, {
-    Field,
     FormInput,
     FormInputPassword,
     OnSubmit,
@@ -91,29 +90,27 @@ export default function LoginForm() {
 
     return (
         <Form register={register} onSubmit={handleSubmit}>
-            <Field name="email" label="Email" description="Entrez votre adresse email" disabled={isSubmitting} required>
-                <FormInput
-                    name="email"
-                    type="email"
-                    placeholder="exemple@email.com"
-                    autoComplete="email webauthn"
-                    autoFocus
-                />
-            </Field>
+            <FormInput
+                name="email"
+                label="Email"
+                description="Entrez votre adresse email"
+                disabled={isSubmitting}
+                required
+                type="email"
+                placeholder="exemple@email.com"
+                autoComplete="email webauthn"
+                autoFocus
+            />
 
-            <Field
+            <FormInputPassword
                 name="password"
                 label="Mot de passe"
                 description="Entrez votre mot de passe"
                 disabled={isSubmitting}
                 required
-            >
-                <FormInputPassword
-                    name="password"
-                    placeholder="Votre mot de passe"
-                    autoComplete="current-password webauthn"
-                />
-            </Field>
+                placeholder="Votre mot de passe"
+                autoComplete="current-password webauthn"
+            />
 
             <div className="flex w-full justify-end">
                 <Link

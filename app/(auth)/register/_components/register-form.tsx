@@ -2,7 +2,6 @@
 
 import Button, { Link } from "@atoms/button";
 import Form, {
-    Field,
     FormInput,
     FormInputPassword,
     OnSubmit,
@@ -130,48 +129,64 @@ export default function RegisterForm() {
     return (
         <Form register={register} onSubmit={handleSubmit}>
             {/* Firstname */}
-            <Field name="firstname" label="Prénom" description="Entrez votre prénom" disabled={isSubmitting} required>
-                <FormInput name="firstname" placeholder="Jean" autoComplete="given-name" autoFocus />
-            </Field>
+            <FormInput
+                name="firstname"
+                label="Prénom"
+                description="Entrez votre prénom"
+                disabled={isSubmitting}
+                required
+                placeholder="Jean"
+                autoComplete="given-name"
+                autoFocus
+            />
 
             {/* Lastname */}
-            <Field name="lastname" label="Nom" description="Entrez votre nom" disabled={isSubmitting} required>
-                <FormInput name="lastname" placeholder="Dupont" autoComplete="family-name" />
-            </Field>
+            <FormInput
+                name="lastname"
+                label="Nom"
+                description="Entrez votre nom"
+                disabled={isSubmitting}
+                required
+                placeholder="Dupont"
+                autoComplete="family-name"
+            />
 
             {/* Email */}
-            <Field name="email" label="Email" description="Entrez votre adresse email" disabled={isSubmitting} required>
-                <FormInput name="email" type="email" placeholder="exemple@email.com" autoComplete="email" />
-            </Field>
+            <FormInput
+                name="email"
+                label="Email"
+                description="Entrez votre adresse email"
+                disabled={isSubmitting}
+                required
+                type="email"
+                placeholder="exemple@email.com"
+                autoComplete="email"
+            />
 
             {/* Password */}
-            <Field
+            <FormInputPassword
                 name="password"
                 label="Mot de passe"
                 description="Veillez remplir tous les critères de sécurité"
                 disabled={isSubmitting}
                 required
-            >
-                <FormInputPassword name="password" placeholder="Mot de passe" autoComplete="new-password" />
-            </Field>
+                placeholder="Mot de passe"
+                autoComplete="new-password"
+            />
 
             {/* Password strength */}
             <PasswordStrength password={states.password} />
 
             {/* Confirm password */}
-            <Field
+            <FormInputPassword
                 name="confirmPassword"
                 label="Confirmation"
                 description="Confirmez le mot de passe"
                 disabled={isSubmitting}
                 required
-            >
-                <FormInputPassword
-                    name="confirmPassword"
-                    placeholder="Confirmez le mot de passe"
-                    autoComplete="new-password"
-                />
-            </Field>
+                placeholder="Confirmez le mot de passe"
+                autoComplete="new-password"
+            />
 
             {/* Captcha */}
             {captchaWidget}
