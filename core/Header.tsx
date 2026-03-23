@@ -1,26 +1,30 @@
+"use client";
+
 import MenuProfile from "@comps/molecules/menu-profile";
 import MenuTheme from "@comps/molecules/menu-theme";
 import cn from "@lib/cn";
-import { Suspense } from "react";
+import { useSyncExternalStore } from "react";
 import { HEADER_HEIGHT } from "./config";
 import DesktopNavigation from "./header/desktop-navigation";
 import DevSidebarTrigger from "./header/dev-sidebar-trigger";
 import MobileNavigation from "./header/mobile-navigation";
 
-type HeaderProps = {
-    className?: string;
-};
+const scrollStore = (() => {
+    const subscribe = (cb: () => void) => {
+        window.addEventListener("scroll", cb, { passive: true });
+        return () => window.removeEventListener("scroll", cb);
+    };
+    const getSnapshot = () => window.scrollY > 0;
+    const getServerSnapshot = () => false;
+    return { subscribe, getSnapshot, getServerSnapshot };
+})();
 
-export default async function Header(props: HeaderProps) {
-    return (
-        <Suspense>
-            <SuspendedFooter {...props} />
-        </Suspense>
+export default function Header() {
+    const scrolled = useSyncExternalStore(
+        scrollStore.subscribe,
+        scrollStore.getSnapshot,
+        scrollStore.getServerSnapshot,
     );
-}
-
-function SuspendedFooter(props: HeaderProps) {
-    const { className } = props;
 
     return (
         <header
@@ -30,13 +34,13 @@ function SuspendedFooter(props: HeaderProps) {
                 "sticky inset-x-0 top-0 z-10",
                 "flex items-center justify-end gap-4",
                 "px-4 py-3 md:px-7",
-                className,
+                "border-b transition-colors duration-200",
+                scrolled ? "border-gray-200" : "border-transparent",
             )}
         >
             {/* Mobile */}
             <div className="xs:hidden flex w-full gap-4">
                 <MobileNavigation />
-                <DevSidebarTrigger />
             </div>
 
             {/* Tablette & Desktop */}

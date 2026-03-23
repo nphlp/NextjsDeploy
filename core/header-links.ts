@@ -32,7 +32,7 @@ export type LinkType = {
 export const links: LinkType[] = [
     { label: "Home", href: "/", icon: Home },
     { label: "Fruits", href: "/fruits", icon: Apple },
-    { label: "Dev", href: "/dev", icon: Wrench, devOrAdmin: true },
+    { label: "Docs", href: "/dev", icon: Wrench, devOrAdmin: true },
 ];
 
 export const linksToRender = (props: { session: Session; isDev: boolean; isAdmin: boolean }) => {

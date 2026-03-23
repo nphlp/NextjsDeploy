@@ -1,25 +1,11 @@
 "use client";
 
-import Drawer, {
-    Backdrop,
-    Content,
-    DragHandle,
-    Popup,
-    Portal,
-    SnapContent,
-    SnapPopup,
-    SnapViewport,
-    Viewport,
-} from "@atoms/drawer";
-import DrawerSnapPoints from "@atoms/drawer/drawer-snap-points";
+import Drawer, { Backdrop, Content, Popup, Portal, Viewport } from "@atoms/drawer";
 import { HEADER_HEIGHT } from "@core/config";
 import useDevSidebar from "@core/header/use-dev-sidebar";
 import cn from "@lib/cn";
 import useBreakpoint, { Breakpoint } from "@utils/use-breakpoint";
-import { CSSProperties } from "react";
 import SidebarNav from "./sidebar-nav";
-
-const TOP_MARGIN_REM = 1;
 
 const lgBreakpoints = new Set<Breakpoint>(["lg", "xl", "2xl", "3xl"]);
 const smBreakpoints = new Set<Breakpoint>(["sm", "md"]);
@@ -43,7 +29,7 @@ export default function Sidebar() {
                 <SidebarNav />
             </aside>
 
-            {/* Tablet (sm–lg): modal drawer from left */}
+            {/* Tablet (sm–lg): drawer from left */}
             {isSm && (
                 <Drawer open={open} onOpenChange={setOpen} swipeDirection="left">
                     <Portal>
@@ -66,23 +52,28 @@ export default function Sidebar() {
                 </Drawer>
             )}
 
-            {/* Mobile (< sm): snap-points drawer */}
+            {/* Mobile (< sm): drawer from bottom */}
             {!isSm && !isLg && (
-                <DrawerSnapPoints open={open} onOpenChange={setOpen}>
+                <Drawer open={open} onOpenChange={setOpen}>
                     <Portal>
                         <Backdrop />
-                        <SnapViewport>
-                            <SnapPopup
-                                legacyProps={{ style: { "--top-margin": `${TOP_MARGIN_REM}rem` } as CSSProperties }}
+                        <Viewport className="items-end justify-center">
+                            <Popup
+                                className={cn(
+                                    "h-auto w-full max-w-full rounded-t-2xl p-6",
+                                    "mr-0 pr-6",
+                                    "transform-[translateY(var(--drawer-swipe-movement-y))]",
+                                    "data-starting-style:transform-[translateY(100%)]",
+                                    "data-ending-style:transform-[translateY(100%)]",
+                                )}
                             >
-                                <DragHandle />
-                                <SnapContent>
+                                <Content>
                                     <SidebarNav onLinkClick={close} />
-                                </SnapContent>
-                            </SnapPopup>
-                        </SnapViewport>
+                                </Content>
+                            </Popup>
+                        </Viewport>
                     </Portal>
-                </DrawerSnapPoints>
+                </Drawer>
             )}
         </>
     );

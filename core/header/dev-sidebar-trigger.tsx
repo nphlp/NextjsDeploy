@@ -16,7 +16,7 @@ export default function DevSidebarTrigger() {
         <Button
             label="Toggle dev sidebar"
             onClick={toggle}
-            className="mr-auto rounded-md border-none bg-transparent px-2 hover:bg-gray-100 lg:hidden"
+            className="max-xs:hidden mr-auto rounded-md border-none bg-transparent px-2 hover:bg-gray-100 lg:hidden"
             noStyle
         >
             <PanelBottom className="size-6 sm:hidden" />
