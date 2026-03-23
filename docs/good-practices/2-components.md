@@ -44,7 +44,7 @@ Each Base-UI component lives in `components/atoms/[component]/` with 3 files:
 import Popover, { Arrow, Popup, Portal, Positioner, Title, Trigger } from "@atoms/popover";
 ```
 
-See `components/atoms/IMPORT.md` for the full guide and `components/atoms/INVENTORY.md` for the per-component breakdown.
+See `docs/good-practices/9-base-ui.md` for the full guide (patterns, typing, step-by-step, component inventory).
 
 ## JSX — Avoid Complex Conditions
 

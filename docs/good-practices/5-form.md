@@ -1,38 +1,29 @@
 # Forms
 
-Reference implementation: `app/dev/form/_components/form-example.tsx`
+Reference implementation: `app/dev/form/`
 
 ## Architecture
 
 ```
-components/atoms/form/
+components/atoms/_form/
 ├── use-form.ts         # useForm hook — state, validation, register
 ├── form.tsx            # <Form> wrapper — <form> + FormProvider
-├── field.tsx           # <Field> — label + children + error indication
+├── atom.tsx            # FieldWrapper, Label, RequiredNote, Indication (internal)
 ├── schemas.ts          # Centralized Zod schemas
+├── index.ts            # Public exports
 ├── _context/           # FormProvider context (register function)
 └── _adapters/          # Form-aware wrappers (FormInput, FormSelect, etc.)
 ```
 
-The form system connects through context: `<Form>` passes the `register` function via `FormProvider` → `<Field>` and form adapters (e.g. `<FormInput>`) consume it via `useFormContext()`.
+The form system connects through context: `<Form>` passes the `register` function via `FormProvider` → adapters consume it via `useFormContext()`.
+
+**Key design:** Each adapter internally wraps its content with `FieldWrapper` (label, description, error indication, `data-invalid`/`data-disabled` attributes). There is no external `<Field>` wrapper — adapters handle everything.
 
 ## useForm Hook
 
 ### Config
 
 Each field is defined with:
-
-```ts
-const { register, states, setStates, submit, reset } = useForm({
-    email: {
-        schema: emailSchema, // Submit validation (strict)
-        onChangeSchema: emailSchemaProgressive, // While typing (lenient)
-        onBlurSchema: z.string(), // On field leave
-        setter: (value: string) => value, // Transform before storing
-        defaultValue: "", // Initial value
-    },
-});
-```
 
 | Property         | Required | Purpose                                                                |
 | ---------------- | -------- | ---------------------------------------------------------------------- |
@@ -46,7 +37,7 @@ const { register, states, setStates, submit, reset } = useForm({
 
 The problem: an email field validated with `emailSchema` shows errors while the user is still typing (`"john"` → invalid). The field appears red before the user has finished — frustrating UX.
 
-The solution: `onChangeSchema` and `onBlurSchema` provide progressive validation levels.
+The solution: 3 validation levels that apply at different moments:
 
 ```
 onChange → onChangeSchema ?? schema    (while typing)
@@ -54,44 +45,43 @@ onBlur  → onBlurSchema   ?? schema    (when leaving the field)
 submit  → schema                      (always strict)
 ```
 
-**`schema`** — strict validation, used on submit. An email must be fully valid (`john@example.com`).
-
-**`onChangeSchema`** — lenient validation while typing. Accepts partial progress: `"john"` → `"john@"` → `"john@ex"` → `"john@example.com"`. The user only sees an error if they type something truly invalid (e.g. `"..john"`), not because they haven't finished.
-
-**`onBlurSchema`** — validation when the user leaves the field. Can be `z.string()` (accepts anything) to avoid showing errors when the user just clicked in and out without typing. Or omit it to fall back to `schema` for strict blur validation.
-
-**Example — form-example.tsx vs login-form.tsx:**
+### Example: email field (login form)
 
 ```ts
-// form-example.tsx — strict on blur (no onBlurSchema → falls back to schema)
-email: {
-    schema: emailSchema,
-    onChangeSchema: emailSchemaProgressive,
-    setter: (value: string) => value,
-    defaultValue: "",
-},
+import { emailSchema, emailSchemaProgressive } from "@atoms/_form";
 
-// login-form.tsx — lenient on blur (onBlurSchema: z.string() → no error on click-out)
-email: {
-    schema: emailSchema,
-    onChangeSchema: emailSchemaProgressive,
-    onBlurSchema: z.string(),
-    setter: (value: string) => value,
-    defaultValue: "",
-},
+const { register, submit, reset } = useForm({
+    email: {
+        // Submit — strict: must be a fully valid email
+        schema: emailSchema,
+        // onChange — lenient: accepts partial progress while typing
+        // "john" → ok, "john@" → ok, "john@ex" → ok, "..john" → error
+        onChangeSchema: emailSchemaProgressive,
+        // onBlur — permissive: no error if the user just clicked in and out
+        onBlurSchema: z.string(),
+        setter: (value: string) => value,
+        defaultValue: "",
+    },
+});
 ```
 
-In the form example, leaving the email field empty shows an error (strict). In the login form, it doesn't (lenient) — better UX for a login where the user might tab through fields.
+**`schema` (emailSchema)** — the user clicks "Submit". The email must be fully valid (`john@example.com`). If not, the field shows an error.
+
+**`onChangeSchema` (emailSchemaProgressive)** — the user is typing. `"john"` is accepted (partial progress), `"..john"` is rejected (structurally invalid). The user only sees errors for input that can never become a valid email.
+
+**`onBlurSchema` (z.string())** — the user clicks into the field then tabs away without typing. No error is shown — they just passed through. Without `onBlurSchema`, it would fall back to `schema` and show "email is required".
+
+When `onChangeSchema` or `onBlurSchema` are omitted, they fall back to `schema` (strict at every step). This is useful for registration forms where stricter feedback is desired.
 
 ### Return Values
 
-| Value       | Type                                                                        | Purpose                                                                    |
-| ----------- | --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `register`  | `(fieldName) => { name, value, status, errors, onFocus, onChange, onBlur }` | Bind a field — passed to `<Form>`, consumed by `<Field>` and form adapters |
-| `states`    | `{ [fieldName]: value }`                                                    | Current values for all fields (read-only access)                           |
-| `setStates` | `{ [fieldName]: (value) => void }`                                          | Set a field value programmatically                                         |
-| `submit`    | `() => validatedData \| undefined`                                          | Validate all fields, return typed data or `undefined` on failure           |
-| `reset`     | `() => void`                                                                | Reset all fields to `defaultValue`                                         |
+| Value       | Type                                                                        | Purpose                                                          |
+| ----------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `register`  | `(fieldName) => { name, value, status, errors, onFocus, onChange, onBlur }` | Bind a field — passed to `<Form>`, consumed by adapters          |
+| `states`    | `{ [fieldName]: value }`                                                    | Current values for all fields (read-only access)                 |
+| `setStates` | `{ [fieldName]: (value) => void }`                                          | Set a field value programmatically                               |
+| `submit`    | `() => validatedData \| undefined`                                          | Validate all fields, return typed data or `undefined` on failure |
+| `reset`     | `() => void`                                                                | Reset all fields to `defaultValue`                               |
 
 ## Components
 
@@ -105,48 +95,44 @@ Wraps `<form>` and provides the `register` function to children via context.
 </Form>
 ```
 
-### `<Field>` — label + input + indication
-
-Coordinates label, children (input), and validation feedback. Shows description OR error based on field status.
-
-Uses `data-invalid` and `data-disabled` attributes on the wrapper div for child styling.
-
-```tsx
-<Field name="email" label="Email" description="Enter your email" disabled={isLoading} required>
-    <FormInput name="email" placeholder="john@example.com" />
-</Field>
-```
-
 ### Form Adapters (`_adapters/`)
 
-Form adapters are `"use client"` wrappers that connect atoms to `useFormContext()`. Each adapter reads value and triggers validation through the form context. The `name` prop must match the field name in `useForm()` config.
+Form adapters are `"use client"` wrappers that connect atoms to `useFormContext()`. Each adapter:
+
+1. Reads value and triggers validation through the form context
+2. Accepts `FieldProps` (`label`, `description`, `disabled`, `required`) directly
+3. Wraps its content with `FieldWrapper` internally (label + error indication + `data-invalid`/`data-disabled`)
+
+The `name` prop must match the field name in `useForm()` config.
 
 Available adapters:
 
-| Adapter                | Wraps              |
-| ---------------------- | ------------------ |
-| `FormInput`            | `Input`            |
-| `FormInputPassword`    | `InputPassword`    |
-| `FormInputOtp`         | `InputOtp`         |
-| `FormTextArea`         | `TextArea`         |
-| `FormSelect`           | `Select`           |
-| `FormSelectMultiple`   | `SelectMultiple`   |
-| `FormCheckbox`         | `Checkbox`         |
-| `FormSwitch`           | `Switch`           |
-| `FormCombobox`         | `Combobox`         |
-| `FormComboboxMultiple` | `ComboboxMultiple` |
+| Adapter                | Wraps              | Notes                          |
+| ---------------------- | ------------------ | ------------------------------ |
+| `FormInput`            | `Input`            |                                |
+| `FormInputPassword`    | `InputPassword`    |                                |
+| `FormInputOtp`         | `InputOtp`         |                                |
+| `FormTextArea`         | `TextArea`         |                                |
+| `FormSelect`           | `Select`           | Composable children (atoms)    |
+| `FormSelectMultiple`   | `SelectMultiple`   | Composable children (atoms)    |
+| `FormCheckbox`         | `Checkbox`         | Uses `text` prop (not `label`) |
+| `FormSwitch`           | `Switch`           | Uses `text` prop (not `label`) |
+| `FormCombobox`         | `Combobox`         | Composable children (atoms)    |
+| `FormComboboxMultiple` | `ComboboxMultiple` | Composable children (atoms)    |
+
+**`label` vs `text`:** For most adapters, `label` is the field title displayed above the input (via FieldWrapper). For `FormCheckbox` and `FormSwitch`, `text` is the inline text next to the control — `label` is not used because these components have no field title above them.
 
 ```tsx
-// With form context (inside <Form> + <Field>)
-<FormInput name="email" placeholder="john@example.com" />
+// Input-type adapter — label is the field title above
+<FormInput name="email" label="Email" description="Enter your email" required />
 
-// Without form context (standalone, local state)
-<Input value={value} onChange={handleChange} />
+// Checkbox/Switch adapter — text is the inline label
+<FormCheckbox name="cgv" text="I accept the terms" required />
 ```
 
 ### Tailwind `group-data-*/field:` Classes
 
-`<Field>` sets `data-invalid` and `data-disabled` on its wrapper div with `group/field`. Input atoms use these for conditional styling:
+`FieldWrapper` sets `data-invalid` and `data-disabled` on its wrapper div with `group/field`. Input atoms use these for conditional styling:
 
 ```tsx
 className={cn(
@@ -158,7 +144,7 @@ className={cn(
 
 ## Schemas
 
-Centralized in `components/atoms/form/schemas.ts`. Progressive validation pattern:
+Centralized in `components/atoms/_form/schemas.ts`. Progressive validation pattern:
 
 ```ts
 // Submit (strict) — full email validation
@@ -185,7 +171,6 @@ const { register, states, submit, reset } = useForm({
     password: {
         schema: passwordSchema,
         onChangeSchema: passwordSchemaOnChange,
-        onBlurSchema: passwordSchemaOnBlur,
         setter: (value: string) => {
             setPassword(value);
             return value;
@@ -202,8 +187,6 @@ const { register, states, submit, reset } = useForm({
     },
 });
 ```
-
-The `setter` of `password` stores the value in parent state. The `confirmPassword` schema's `.refine()` captures `password` from the closure.
 
 `states.password` can be used for additional UI (e.g. password strength indicator).
 
