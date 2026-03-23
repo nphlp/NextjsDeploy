@@ -7,10 +7,10 @@ import { Suspense } from "react";
 import FruitDetail, { FruitDetailSkeleton } from "./_components/fruit-detail";
 import FruitsRecommendations, { FruitsRecommendationsSkeleton } from "./_components/fruits-recommendations";
 
-// export async function generateStaticParams() {
-//     const fruits = await oRPC.fruit.findMany();
-//     return fruits.map((fruit) => ({ id: fruit.id }));
-// }
+export async function generateStaticParams() {
+    const fruits = await oRPC.fruit.findMany();
+    return fruits.map((fruit) => ({ id: fruit.id }));
+}
 
 type PageProps = {
     params: Promise<{ id: string }>;

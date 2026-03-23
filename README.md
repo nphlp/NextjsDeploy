@@ -32,10 +32,10 @@ Next.js in terminal + Postgres in Docker. Installs dependencies, generates env f
 make start
 ```
 
-### Full containerized environment
+### Docker build (test production image locally)
 
 ```bash
-make basic
+make docker
 ```
 
 See [Setup local](./docs/nextjs-deploy/1-setup-local.md) for all options and details.

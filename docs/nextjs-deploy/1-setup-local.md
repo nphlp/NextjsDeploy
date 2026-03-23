@@ -60,17 +60,17 @@ make start
 
 Stop with `Ctrl+C` — shuts down both Next.js and Postgres.
 
-## `make basic` — Full Containerized
+## `make docker` — Docker Build
 
-Everything in Docker (Next.js + Postgres). Mirrors the production environment.
+Builds the Next.js Docker image with database access (for `generateStaticParams`), then runs it. Postgres runs separately via `compose.postgres.yml` — the build accesses it through the host network.
 
 ```bash
-make basic
+make docker
 ```
 
 ```bash
-make basic-stop    # Stop containers
-make basic-clear   # Stop + delete volumes
+make docker-stop    # Stop Next.js container + Postgres
+make docker-clear   # Stop all + delete volumes
 ```
 
 ## `make postgres` — Postgres Only
@@ -153,7 +153,7 @@ Remove all generated files and folders:
 make clear
 ```
 
-Deletes: `.husky/_`, `.next`, `node_modules`, `prisma/client`, `next-env.d.ts`, `tsconfig.tsbuildinfo`, `.env`, `env/.env.basic`, `env/.env.experiment`, `env/.env.preview`, `env/.env.production`.
+Deletes: `.husky/_`, `.next`, `node_modules`, `prisma/client`, `next-env.d.ts`, `tsconfig.tsbuildinfo`, `.env`, `env/.env.docker`, `env/.env.experiment`, `env/.env.preview`, `env/.env.production`.
 
 ---
 

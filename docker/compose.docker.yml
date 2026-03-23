@@ -1,0 +1,33 @@
+name: nextjs
+
+services:
+    nextjs:
+        container_name: nextjs-${ENV_LABEL}
+        env_file:
+            - ../.env
+        build:
+            context: ../
+            dockerfile: docker/Dockerfile.nextjs
+            target: runner
+            network: host
+            args:
+                NODE_ENV: production
+                NEXTJS_STANDALONE: "true"
+                # Build time: access postgres via host network (exposed by compose.postgres)
+                DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+                NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
+        environment:
+            # Runtime: access postgres via Docker network
+            - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-${ENV_LABEL}:5432/${POSTGRES_DB}
+            - NODE_ENV=production
+            - NEXTJS_STANDALONE=true
+        ports:
+            - "3000:3000"
+        restart: unless-stopped
+        networks:
+            - app-network
+
+networks:
+    app-network:
+        name: app-network-${ENV_LABEL}
+        external: true
