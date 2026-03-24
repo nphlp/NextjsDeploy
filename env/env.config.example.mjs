@@ -179,9 +179,25 @@ export default {
                 ],
             },
             smtp: {
+                // Mailpit (local email testing — http://localhost:8025)
+                SMTP_HOST: "mailpit-{{ENV_LABEL}}",
+                SMTP_PORT: 1025,
+                SMTP_USER: "mailpit",
+                SMTP_PASSWORD: "mailpit",
+                // Hostinger (real email sending)
+                "#SMTP_HOST": "smtp.hostinger.com",
+                "#SMTP_PORT": 465,
+                "#SMTP_USER": "hello@domain.com",
+                "#SMTP_PASSWORD": "",
                 SMTP_FROM_NAME: "Nextjs Deploy ({{ENV}})",
             },
-            EXCLUDE: ["VPS_NEXTJS_DOMAIN", "VPS_PRISMA_STUDIO_DOMAIN", "UMAMI_URL", "UMAMI_WEBSITE_ID"],
+            EXCLUDE: [
+                "VPS_NEXTJS_DOMAIN",
+                "VPS_PRISMA_STUDIO_DOMAIN",
+                "PRISMA_STUDIO_AUTH",
+                "UMAMI_URL",
+                "UMAMI_WEBSITE_ID",
+            ],
         },
 
         experiment: {
