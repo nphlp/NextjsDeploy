@@ -18,7 +18,7 @@ export default function ProfileTabs(props: ProfileTabsProps) {
     const handleTabChange = (value: TabValue) => setTab(value);
 
     return (
-        <Tabs value={tab} onValueChange={handleTabChange} className="w-full border-none">
+        <Tabs value={tab} onValueChange={handleTabChange} className="w-full space-y-6 border-none">
             <List className="px-0 shadow-none">
                 <Tab className="h-auto cursor-pointer px-4 py-1.5" value="profile">
                     Profil
@@ -31,7 +31,6 @@ export default function ProfileTabs(props: ProfileTabsProps) {
                 </Tab>
                 <Indicator className="h-8" />
             </List>
-            <hr className="mt-2 mb-4 h-px border-gray-200" />
             <Panel value="profile">{profilePanel}</Panel>
             <Panel value="edition">{editionPanel}</Panel>
             <Panel value="security">{securityPanel}</Panel>
