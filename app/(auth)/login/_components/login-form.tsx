@@ -98,7 +98,7 @@ export default function LoginForm() {
                 required
                 type="email"
                 placeholder="exemple@email.com"
-                autoComplete="email webauthn"
+                autoComplete="username webauthn"
                 autoFocus
             />
 

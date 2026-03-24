@@ -131,6 +131,7 @@ bun run build && bun run start
     - `9-orpc.md` — oRPC API patterns (server-side + client useFetch)
     - `10-base-ui.md` — Base UI component system (patterns, typing, inventory)
     - `11-theme.md` — Theme system (blocking script, CSS icons, zero flash)
+    - `12-password-managers.md` — Autocomplete attributes for password manager compatibility
 - `docs/testing/` — Test suites documentation
     - `e2e.md` — Playwright E2E tests (57 tests / 10 specs)
     - `unit.md` — Vitest unit tests (13 tests)

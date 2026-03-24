@@ -68,6 +68,7 @@ See [Setup local](./docs/nextjs-deploy/1-setup-local.md) for all options and det
 - [oRPC](./docs/good-practices/9-orpc.md)
 - [Base UI](./docs/good-practices/10-base-ui.md)
 - [Theme](./docs/good-practices/11-theme.md)
+- [Password Managers](./docs/good-practices/12-password-managers.md)
 
 ### Infrastructure — `docs/vps-infra/`
 
