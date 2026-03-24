@@ -2,33 +2,6 @@
 
 ## Bugs
 
-- Bug en navigation vers la page /profile
-
-```
-## Error Type
-Console Error
-
-## Error Message
-Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template).
-
-
-    at script (<anonymous>:null:null)
-    at Indicator (components/atoms/tabs/atoms.tsx:117:9)
-    at ProfileTabs (app/(auth)/profile/_components/profile-tabs.tsx:32:17)
-    at Page (app/(auth)/profile/page.tsx:25:13)
-
-## Code Frame
-  115 |
-  116 |     return (
-> 117 |         <TabsBaseUI.Indicator
-      |         ^
-  118 |             renderBeforeHydration
-  119 |             className={cn(
-  120 |                 // Layout
-
-Next.js version: 16.2.1-canary.5 (Turbopack)
-```
-
 - @better-auth/passkey en dev deps ?
 - Retirer le handler email enumeration, puisque ma PR de fix a été mergé dans Better Auth
     - Voir app/api/auth/[...all]/route.ts

@@ -115,7 +115,6 @@ export const Indicator = (props: TabsIndicatorProps) => {
 
     return (
         <TabsBaseUI.Indicator
-            renderBeforeHydration
             className={cn(
                 // Layout
                 "absolute top-1/2 left-0 z-[-1] h-6",
