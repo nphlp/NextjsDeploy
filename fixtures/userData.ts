@@ -1,16 +1,27 @@
 import PrismaInstance from "@lib/prisma";
 import { Prisma } from "@prisma/client/client";
-import { hashPassword } from "better-auth/crypto";
-import { randomBytes } from "node:crypto";
+import { randomBytes, scryptSync } from "node:crypto";
 
 const isProd = process.env.NODE_ENV === "production";
+
+// Hash password using same algorithm as Better Auth (scrypt, N=16384, r=16, p=1, dkLen=64)
+const hashPassword = (password: string): string => {
+    const salt = randomBytes(16).toString("hex");
+    const hash = scryptSync(password.normalize("NFKC"), salt, 64, {
+        N: 16384,
+        r: 16,
+        p: 1,
+        maxmem: 128 * 16384 * 16 * 2,
+    }).toString("hex");
+    return `${salt}:${hash}`;
+};
 
 export const insertUsers = async () => {
     try {
         // Production: generate a random password (shown only once in logs)
         // Development: use default password "Password1234!"
         const password = isProd ? randomBytes(16).toString("base64url") : null;
-        const hashedPassword = password ? await hashPassword(password) : defaultPasswordHash;
+        const hashedPassword = password ? hashPassword(password) : defaultPasswordHash;
 
         for (const user of userData) {
             await PrismaInstance.user.create({
