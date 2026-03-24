@@ -180,6 +180,16 @@ export const auth = betterAuth({
         sendResetPassword, // Email function for sending reset password emails
         resetPasswordTokenExpiresIn: 3600, // Reset password token expiration time in seconds (default 3600 = 1 hour)
         /**
+         * Build synthetic user for email enumeration protection.
+         * Key order must match the real database output to be indistinguishable.
+         */
+        customSyntheticUser: ({ coreFields, additionalFields, id }) => ({
+            ...coreFields,
+            twoFactorEnabled: false,
+            ...additionalFields,
+            id,
+        }),
+        /**
          * If user hasn't verified their email yet and he resets his password
          * Automatically verify email on password reset
          */

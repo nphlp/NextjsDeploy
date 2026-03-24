@@ -113,29 +113,47 @@ test.describe("Register", () => {
 
     test("register existing email (anti-enum)", async ({ page }) => {
         const email = `test-antienum-${timestamp}@gmail.com`;
+        const isSignUpResponse = (r: { url: () => string }) => r.url().includes("/sign-up/email");
 
-        // Register and verify user
-        await register(page, email, credentials.password);
+        // 1st sign-up (real): capture response keys during UI flow
+        const realResponsePromise = page.waitForResponse(isSignUpResponse);
+        await page.goto("/register");
+        await page.fill('input[name="firstname"]', credentials.firstname);
+        await page.fill('input[name="lastname"]', credentials.lastname);
+        await page.fill('input[name="email"]', email);
+        await page.fill('input[name="password"]', credentials.password);
+        await page.fill('input[name="confirmPassword"]', credentials.password);
+        await expect(page.getByRole("button", { name: "S'inscrire" })).toBeEnabled({ timeout: 20_000 });
+        await page.getByRole("button", { name: "S'inscrire" }).click();
+        const realResponse = await realResponsePromise;
+        const realBody = await realResponse.json();
+        const realKeys = Object.keys(realBody.user);
+        await page.waitForURL(/\/register\/success/);
         await page.context().clearCookies();
 
-        // Re-navigate to register with the SAME email
+        // 2nd sign-up (synthetic): capture response keys during UI flow
+        const fakeResponsePromise = page.waitForResponse(isSignUpResponse);
         await page.goto("/register");
         await page.fill('input[name="firstname"]', "Another");
         await page.fill('input[name="lastname"]', "User");
         await page.fill('input[name="email"]', email);
         await page.fill('input[name="password"]', credentials.password);
         await page.fill('input[name="confirmPassword"]', credentials.password);
-
-        // Wait for captcha and submit
         await expect(page.getByRole("button", { name: "S'inscrire" })).toBeEnabled({ timeout: 20_000 });
         await page.getByRole("button", { name: "S'inscrire" }).click();
+        const fakeResponse = await fakeResponsePromise;
+        const fakeBody = await fakeResponse.json();
+        const fakeKeys = Object.keys(fakeBody.user);
 
-        // Assert redirect to success page (identical to normal case — anti-enum)
+        // Assert redirect to success page (identical to normal case)
         await page.waitForURL(/\/register\/success/);
         await expect(page).toHaveURL(/\/register\/success\?email=/);
         await expect(page.getByRole("heading", { name: "Inscription réussie" })).toBeVisible();
-
-        // Assert NO error toast visible
         await expect(page.getByText("Erreur")).not.toBeVisible();
+
+        // Both must return 200 with same JSON key order (anti-fingerprinting)
+        expect(realResponse.status()).toBe(200);
+        expect(fakeResponse.status()).toBe(200);
+        expect(fakeKeys).toEqual(realKeys);
     });
 });

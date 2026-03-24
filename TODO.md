@@ -2,10 +2,6 @@
 
 ## Bugs
 
-- Retirer le handler email enumeration, puisque ma PR de fix a été mergé dans Better Auth
-    - Voir app/api/auth/[...all]/route.ts
-    - Voir lib/auth.ts
-
 ## Features
 
 - Changement d'email (API native Better Auth `changeEmail`)
