@@ -47,6 +47,24 @@ CLI script logic in `scripts/fixtures/`:
 - `scripts/fixtures/index.ts` — exports all insert functions
 - `scripts/fixtures/commands.ts` — implements setup, reset and reload logic
 
+## First Admin in Production
+
+Fixtures are loaded on first deployment (when the database is empty). In production, a **random password** is generated and displayed in the deployment logs:
+
+```
+🔑 Generated credentials (shown only once):
+   ADMIN | admin@example.com | <random-password>
+   USER  | user@example.com  | <random-password>
+```
+
+> [!WARNING]
+> The password is shown **only once** in the deployment logs. If you miss it, you can either:
+>
+> - Change the password via Prisma Studio (`prisma-studio.your-domain.com`)
+> - Redeploy from scratch (reset the database volume)
+
+Once you are admin, you can promote other users via the API (`PUT /users/{id}` with `role: "ADMIN"`).
+
 ## Add a New Fixture
 
 **1. Create the data file**
