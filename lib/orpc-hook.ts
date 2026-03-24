@@ -135,8 +135,6 @@ export const useFetch = <T, TArgs = unknown>(props: UseFetchProps<T, TArgs>): Us
         }
 
         const fetchData = async () => {
-            setIsLoading(true);
-
             try {
                 // Execute client with signal automatically injected
                 const response = await client(argsRef.current, { signal });
@@ -148,6 +146,9 @@ export const useFetch = <T, TArgs = unknown>(props: UseFetchProps<T, TArgs>): Us
                 if (!signal.aborted) setIsLoading(false);
             }
         };
+
+        // Set loading immediately (before debounce) to show skeleton right away
+        if (firstRenderRef.current) setIsLoading(true);
 
         const debounceTimeout = setTimeout(() => {
             // Skip fetch on first render
