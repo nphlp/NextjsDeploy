@@ -8,8 +8,6 @@ WORKDIR /app
 # Import ENV variables for build time
 ARG NODE_ENV
 ARG NEXTJS_STANDALONE
-ARG DATABASE_URL
-ARG POSTGRES_HOST
 ARG NEXT_PUBLIC_BASE_URL
 
 RUN apt-get update && apt-get install -y --no-install-recommends postgresql-client curl && rm -rf /var/lib/apt/lists/*
@@ -51,6 +49,9 @@ FROM prod-deps AS runner
 # Create non-root user BEFORE copying files with --chown
 RUN groupadd --gid 1001 nodejs
 RUN useradd --uid 1001 --gid nodejs nextjs
+
+# Grant Prisma engines write access for migrations at runtime
+RUN chown -R nextjs:nodejs /app/node_modules/@prisma
 
 # Build files
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./

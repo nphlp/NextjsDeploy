@@ -6,7 +6,7 @@
 
 # Environment Variables
 
-This project runs across multiple environments: `dev` (local), `basic` (containerized), `experiment` (vps), `preview` (vps) and `production` (vps). **Each environment has its own set of environment variables.**
+This project runs across multiple environments: `dev` (local), `docker` (containerized), `experiment` (vps), `preview` (vps) and `production` (vps). **Each environment has its own set of environment variables.**
 
 To simplify management and avoid errors, an **`.env` generation system** has been created.
 
@@ -17,7 +17,7 @@ To simplify management and avoid errors, an **`.env` generation system** has bee
 Generated `.env` files:
 
 - `.env` — at root, used for local development and build testing (`make dev`, `make start`)
-- `env/.env.basic` — used for local containerized environment (`make basic`)
+- `env/.env.docker` — used for local containerized environment (`make docker`)
 - `env/.env.experiment` — used for VPS experiment environment (Dokploy)
 - `env/.env.preview` — used for VPS preview environment (Dokploy)
 - `env/.env.production` — used for VPS production environment (Dokploy)
@@ -48,7 +48,7 @@ make setup-env
 4. You're ready to develop!
 
 > [!NOTE]
-> `make dev`, `make start` and `make basic` all run `make setup-env` automatically before starting.
+> `make dev`, `make start` and `make docker` all run `make setup-env` automatically before starting.
 
 ### Update an existing variable
 
@@ -126,7 +126,7 @@ envConfig: {
     - `false` in dev
     - `true` in containerized envs
 - **`NEXT_PUBLIC_BASE_URL`** — Public base URL of the app
-    - `http://localhost:3000` in dev and basic
+    - `http://localhost:3000` in dev and docker
     - template `https://{{VPS_NEXTJS_DOMAIN}}` in VPS envs
 - **`REACT_EDITOR`** — IDE used by Next.js error overlay links
     - `code` in dev only
@@ -136,7 +136,7 @@ envConfig: {
 
 - **`ENV_LABEL`** — Identifies the environment, used in templates
     - `dev-nextjs-deploy` in dev
-    - `basic-nextjs-deploy` in basic
+    - `docker-nextjs-deploy` in docker
     - `experiment-nextjs-deploy` in experiment
     - `preview-nextjs-deploy` in preview
     - `nextjs-deploy` in prod
@@ -147,32 +147,32 @@ envConfig: {
     - `experiment.your-domain.com` in experiment
     - `preview.your-domain.com` in preview
     - `your-domain.com` in production
-    - excluded in dev and basic envs
+    - excluded in dev and docker envs
 - **`VPS_PRISMA_STUDIO_DOMAIN`** — Prisma Studio subdomain
     - template `prisma-studio.{{VPS_NEXTJS_DOMAIN}}` in all VPS envs
-    - excluded in dev and basic envs
+    - excluded in dev and docker envs
 
 ### PostgreSQL
 
 - **`POSTGRES_HOST`** — Database host
     - `localhost` in dev
-    - `postgres` in basic
-    - template from `ENV_LABEL` in VPS envs
+    - `postgres-{ENV_LABEL}` in docker
+    - from Dokploy standalone database "Internal Host" in VPS envs
 - **`POSTGRES_PORT`** — Database port
     - `5433` in dev
     - `5432` in all others envs
 - **`POSTGRES_DB`** — Database name
     - `nextjs-deploy-db` in all envs
 - **`POSTGRES_PASSWORD`** — Database password
-    - `nextjs-deploy-password` in dev and basic
+    - `nextjs-deploy-password` in dev and docker
     - generate for VPS with `openssl rand -base64 32`
 - **`DATABASE_URL`** — Prisma connection string
-    - template `postgres://postgres:{{POSTGRES_PASSWORD}}@{{POSTGRES_HOST}}:{{POSTGRES_PORT}}/{{POSTGRES_DB}}` in all envs
+    - template `postgres://{{POSTGRES_USER}}:{{POSTGRES_PASSWORD}}@{{POSTGRES_HOST}}:{{POSTGRES_PORT}}/{{POSTGRES_DB}}` in all envs
 
 ### Authentication
 
 - **`BETTER_AUTH_SECRET`** — Session encryption key for Better Auth
-    - `better-auth-session-encryption-key` in dev and basic
+    - `better-auth-session-encryption-key` in dev and docker
     - generate for VPS with `openssl rand -base64 32`
 - **`PRISMA_STUDIO_AUTH`** — Basic auth for Prisma Studio (Traefik middleware)
     - generate with `htpasswd -nbB admin your-password`, then double the `$` signs
@@ -182,10 +182,10 @@ envConfig: {
 ### Captcha (Cloudflare Turnstile)
 
 - **`TURNSTILE_SECRET_KEY`** — Server-side secret key for Turnstile verification
-    - Cloudflare test key `1x0000000000000000000000000000000AA` in dev and basic (always passes)
+    - Cloudflare test key `1x0000000000000000000000000000000AA` in dev and docker (always passes)
     - Real key from Cloudflare Dashboard for VPS envs (see setup below)
 - **`NEXT_PUBLIC_TURNSTILE_SITE_KEY`** — Client-side site key for Turnstile widget
-    - Cloudflare test key `1x00000000000000000000AA` in dev and basic (always passes)
+    - Cloudflare test key `1x00000000000000000000AA` in dev and docker (always passes)
     - Real key from Cloudflare Dashboard for VPS envs (see setup below)
 
 > Test keys reference: [Cloudflare Turnstile Testing](https://developers.cloudflare.com/turnstile/troubleshooting/testing/)

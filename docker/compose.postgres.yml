@@ -1,3 +1,5 @@
+name: postgres
+
 services:
     postgres:
         image: postgres:16-alpine
@@ -7,7 +9,7 @@ services:
             - POSTGRES_DB=${POSTGRES_DB}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
         ports:
-            - "5433:5432"
+            - "${POSTGRES_PORT}:5432"
         volumes:
             - postgres-volume:/var/lib/postgresql/data
         healthcheck:
@@ -37,8 +39,8 @@ services:
             args:
                 - DATABASE_URL=${DATABASE_URL}
         environment:
-            # Override: localhost dans Docker != hôte
-            - DATABASE_URL=postgres://postgres:${POSTGRES_PASSWORD}@postgres-${ENV_LABEL}:5432/${POSTGRES_DB}
+            # Override: Prisma Studio connects via Docker network (internal port 5432)
+            - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-${ENV_LABEL}:5432/${POSTGRES_DB}
         ports:
             - "5555:5555"
         restart: unless-stopped

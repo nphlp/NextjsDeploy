@@ -19,7 +19,7 @@ clear:
 	rm -rf node_modules
 	rm -rf prisma/client
 	rm -f next-env.d.ts tsconfig.tsbuildinfo
-	rm -rf .env env/.env.basic env/.env.experiment env/.env.preview env/.env.production
+	rm -rf .env env/.env.docker env/.env.experiment env/.env.preview env/.env.production
 
 ##############
 #  Variables #
@@ -28,7 +28,7 @@ clear:
 DC = BUILDKIT_PROGRESS=plain COMPOSE_BAKE=true docker compose
 
 POSTGRES = docker/compose.postgres.yml
-BASIC = docker/compose.basic.yml
+DOCKER = docker/compose.docker.yml
 
 #################
 #   Setup Env   #
@@ -119,23 +119,29 @@ test: postgres app-setup
 	@echo "👉 Run 'bun run test:e2e' in another terminal"
 	@NODE_ENV=test bun run start; make postgres-stop
 
-################
-#  Make Basic  #
-################
+##################
+#  Make Docker   #
+##################
 
-# Fully containerized environment for local testing
-.PHONY: basic basic-stop basic-clear
+# Build and run Next.js Docker image with DB access (for generateStaticParams)
+# Requires: make postgres (auto-started as dependency)
+.PHONY: docker docker-stop docker-clear
 
-basic: setup-env
-	@$(DC) --env-file env/.env.basic -f $(BASIC) up -d --build && \
+docker: setup-env
+	@$(DC) --env-file env/.env.docker -f $(POSTGRES) up -d --build --wait
+	@$(DC) --env-file env/.env.docker -f $(DOCKER) up -d --build && \
+	echo "" && \
 	echo "🚀 Nextjs Server: http://localhost:3000 ✅" && \
-	echo "📚 Prisma Studio: http://localhost:5555 🔥"
+	echo "📚 Prisma Studio: http://localhost:5555 🔥" && \
+	echo "📬 Mailpit: http://localhost:8025 📤"
 
-basic-stop:
-	@$(DC) --env-file env/.env.basic -f $(BASIC) down
+docker-stop:
+	@$(DC) --env-file env/.env.docker -f $(DOCKER) down
+	@$(DC) --env-file env/.env.docker -f $(POSTGRES) down
 
-basic-clear:
-	@$(DC) --env-file env/.env.basic -f $(BASIC) down -v
+docker-clear:
+	@$(DC) --env-file env/.env.docker -f $(DOCKER) down
+	@$(DC) --env-file env/.env.docker -f $(POSTGRES) down -v
 
 #####################
 #    Ngrok Tunnel   #

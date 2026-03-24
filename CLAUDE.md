@@ -51,7 +51,7 @@ make postgres
 # -> Install deps, generate envs, setup db, insert fixtures and run server
 make dev          # Dev server (Next.js local + Postgres Docker)
 make start        # Test production build locally
-make basic        # Full containerized environment
+make docker       # Build and run Next.js Docker image
 ```
 
 ### Code Quality & Tests
@@ -109,7 +109,7 @@ bun run build && bun run start
 ## Documentation
 
 - `docs/nextjs-deploy/` — Project setup, environment, containerization, deployment
-    - `1-setup-local.md` — Prerequisites, make dev/start/basic/postgres, ngrok
+    - `1-setup-local.md` — Prerequisites, make dev/start/docker/postgres, ngrok
     - `2-environment-variables.md` — Env generation system, variables reference
     - `3-containerization.md` — Compose files, Dockerfiles, volumes
     - `4-fixtures.md` — Commands, test credentials, seed data

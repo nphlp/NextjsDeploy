@@ -1,0 +1,25 @@
+name: nextjs
+
+services:
+    nextjs:
+        container_name: nextjs-${ENV_LABEL}
+        env_file:
+            - ../env/.env.docker
+        build:
+            context: ../
+            dockerfile: docker/Dockerfile.nextjs
+            target: runner
+            args:
+                NODE_ENV: ${NODE_ENV}
+                NEXTJS_STANDALONE: ${NEXTJS_STANDALONE}
+                NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
+        ports:
+            - "3000:3000"
+        restart: unless-stopped
+        networks:
+            - app-network
+
+networks:
+    app-network:
+        name: app-network-${ENV_LABEL}
+        external: true

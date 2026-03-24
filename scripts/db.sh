@@ -15,6 +15,7 @@
 # Environment Variables:
 # - POSTGRES_HOST     : PostgreSQL host (default: localhost)
 # - POSTGRES_PORT     : PostgreSQL port (default: 5432)
+# - POSTGRES_USER     : PostgreSQL user (default: postgres)
 # - POSTGRES_PASSWORD : PostgreSQL password (required)
 # - POSTGRES_DB       : Database name (required)
 #
@@ -100,7 +101,7 @@ build_psql_args() {
     local database=$2
 
     # Build arguments as space-separated string
-    local args="-h ${POSTGRES_HOST:-localhost} -p ${POSTGRES_PORT:-5432} -U postgres -d $database"
+    local args="-h ${POSTGRES_HOST:-localhost} -p ${POSTGRES_PORT:-5432} -U ${POSTGRES_USER:-postgres} -d $database"
 
     # SSL configuration
     if [ "$SSL_MODE" = true ]; then

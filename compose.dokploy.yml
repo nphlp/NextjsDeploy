@@ -1,22 +1,4 @@
 services:
-    postgres:
-        image: postgres:16-alpine
-        container_name: postgres-${ENV_LABEL}
-        restart: unless-stopped
-        environment:
-            - POSTGRES_DB=${POSTGRES_DB}
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-        volumes:
-            - ../files/postgres:/var/lib/postgresql/data
-        healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
-            interval: 2s
-            timeout: 1s
-            retries: 30
-            start_period: 10s
-        networks:
-            - app-network
-
     prisma-studio:
         container_name: prisma-studio-${ENV_LABEL}
         build:
@@ -27,11 +9,7 @@ services:
         environment:
             - DATABASE_URL=${DATABASE_URL}
         restart: unless-stopped
-        depends_on:
-            postgres:
-                condition: service_healthy
         networks:
-            - app-network
             - dokploy-network
         labels:
             - traefik.enable=true
@@ -48,20 +26,13 @@ services:
             - ./.env
         build:
             context: ./
-            args:
-                - NODE_ENV=${NODE_ENV}
-                - NEXTJS_STANDALONE=${NEXTJS_STANDALONE}
-                - DATABASE_URL=${DATABASE_URL}
-                - POSTGRES_HOST=${POSTGRES_HOST}
-                - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-                - POSTGRES_DB=${POSTGRES_DB}
-                - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
-            dockerfile: docker/Dockerfile
+            dockerfile: docker/Dockerfile.nextjs
             target: runner
+            args:
+                NODE_ENV: ${NODE_ENV}
+                NEXTJS_STANDALONE: ${NEXTJS_STANDALONE}
+                NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
         restart: unless-stopped
-        depends_on:
-            postgres:
-                condition: service_healthy
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
             interval: 30s
@@ -69,7 +40,6 @@ services:
             retries: 3
             start_period: 40s
         networks:
-            - app-network
             - dokploy-network
         labels:
             - traefik.enable=true
@@ -79,8 +49,5 @@ services:
             - traefik.http.services.nextjs-${ENV_LABEL}.loadbalancer.server.port=3000
 
 networks:
-    app-network:
-        name: app-network-${ENV_LABEL}
-        driver: bridge
     dokploy-network:
         external: true
