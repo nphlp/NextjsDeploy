@@ -82,6 +82,7 @@ See [Setup local](./docs/nextjs-deploy/1-setup-local.md) for all options and det
 - [Traefik DNS challenge](./docs/vps-infra/9-traefik-dns-challenge.md)
 - [Tailscale VPN](./docs/vps-infra/10-tailscale-vpn.md)
 - [Umami analytics](./docs/vps-infra/11-umami.md)
+- [Cloudflare R2](./docs/vps-infra/12-cloudflare-r2.md)
 
 ## Fixtures
 

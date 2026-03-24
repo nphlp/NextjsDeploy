@@ -148,6 +148,7 @@ bun run build && bun run start
     - `9-traefik-dns-challenge.md` — Traefik SSL with DNS challenge
     - `10-tailscale-vpn.md` — Tailscale VPN setup
     - `11-umami.md` — Umami analytics
+    - `12-cloudflare-r2.md` — Cloudflare R2 database backups
 
 ## Rules
 

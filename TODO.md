@@ -2,8 +2,6 @@
 
 ## Bugs
 
-- Ajouter la doc "Cloudflare R2" dans la section "Cloudflare R2" du README
-
 - **Chrome password manager** — Le gestionnaire de mdp Google enregistre uniquement le mdp sans proposer de nom d'utilisateur, ce qui implique qu'on doit réécrire manuellement notre email. Peut-être faire en sorte que l'email soit aussi inscrit (champ email caché ?).
 - **First admin en prod** — Comment créer le premier admin en production ?
 
@@ -25,8 +23,6 @@
     - Deploy to Dokploy
 
 - Redis cache
-
-- Cloudflare R2 (stockage images + backup VPS + backup DATABASES)
 
 - Gestion variables d'environnements
     - Infisical
