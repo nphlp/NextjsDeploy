@@ -49,7 +49,15 @@ export default {
             },
             smtp: {
                 comment: "SMTP configuration",
-                variables: ["SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASSWORD", "SMTP_FROM", "SMTP_FROM_NAME"],
+                variables: [
+                    "SMTP_HOST",
+                    "SMTP_PORT",
+                    "SMTP_USER",
+                    "SMTP_PASSWORD",
+                    "SMTP_FROM",
+                    "SMTP_FROM_NAME",
+                    "SUPPORT_EMAIL",
+                ],
             },
             prismaStudio: {
                 comment: "Prisma Studio authentication",
@@ -87,6 +95,8 @@ export default {
             SMTP_USER: "hello@domain.com",
             // TO UPDATE
             SMTP_PASSWORD: "",
+            // TO UPDATE: Create an alias in your email provider
+            SUPPORT_EMAIL: "support@domain.com",
         },
         prismaStudio: {
             // TO UPDATE: Generate credentials for basic auth (docs: ./docs/prisma-studio/2-environment-variables.md)

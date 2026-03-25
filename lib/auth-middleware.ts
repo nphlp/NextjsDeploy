@@ -213,7 +213,7 @@ type AuthMiddlewareContext = Parameters<typeof createAuthMiddleware>[0];
 export const authBeforeMiddleware: AuthMiddlewareContext = async (ctx) => {
     // Validate email domain on sign-up and change-email
     if (ctx.path === "/sign-up/email" || ctx.path === "/change-email") {
-        const email = ctx.body?.email;
+        const email = ctx.path === "/change-email" ? ctx.body?.newEmail : ctx.body?.email;
 
         if (email) {
             const isValid = await isEmailDomainValid(email);

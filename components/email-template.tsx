@@ -1,3 +1,4 @@
+import { SMTP_FROM_NAME } from "@lib/env";
 import {
     Body,
     Button,
@@ -13,14 +14,21 @@ import {
     Text,
 } from "@react-email/components";
 
-type EmailType = "verification" | "change" | "reset" | "magic-link" | "magic-link-no-account";
+type EmailType =
+    | "verification"
+    | "reset"
+    | "magic-link"
+    | "magic-link-no-account"
+    | "change-verification"
+    | "change-requested"
+    | "change-canceled"
+    | "change-completed"
+    | "change-success";
 
 type EmailTemplateProps = {
     buttonUrl: string;
     emailType: EmailType;
 };
-
-const APP_NAME = "Nextjs Deploy";
 
 const content: Record<
     EmailType,
@@ -38,13 +46,6 @@ const content: Record<
         description: "Veuillez vérifier votre adresse email en cliquant sur le bouton ci-dessous.",
         buttonText: "Vérifier mon email",
         buttonColor: "#000000",
-    },
-    change: {
-        preview: "Confirmez votre nouvelle adresse email",
-        title: "Changement d\u2019email",
-        description: "Veuillez confirmer votre nouvelle adresse email.",
-        buttonText: "Confirmer mon email",
-        buttonColor: "#dc2626",
     },
     reset: {
         preview: "Réinitialisez votre mot de passe",
@@ -69,6 +70,45 @@ const content: Record<
         buttonText: "S\u2019inscrire",
         buttonColor: "#1f2937",
     },
+    "change-verification": {
+        preview: "Confirmez votre nouvelle adresse email",
+        title: "Changement d\u2019email",
+        description: "Veuillez confirmer votre nouvelle adresse email.",
+        buttonText: "Confirmer mon email",
+        buttonColor: "#dc2626",
+    },
+    "change-requested": {
+        preview: "Un changement d\u2019email a été demandé",
+        title: "Changement d\u2019email en cours",
+        description:
+            "Un changement d\u2019adresse email a été demandé sur votre compte. Si vous n\u2019êtes pas à l\u2019origine de cette demande, contactez le support immédiatement.",
+        buttonText: "Contacter le support",
+        buttonColor: "#dc2626",
+    },
+    "change-completed": {
+        preview: "Votre adresse email a été modifiée",
+        title: "Email modifié",
+        description:
+            "L\u2019adresse email de votre compte a été modifiée avec succès. Si vous n\u2019êtes pas à l\u2019origine de ce changement, contactez le support immédiatement.",
+        buttonText: "Contacter le support",
+        buttonColor: "#dc2626",
+    },
+    "change-canceled": {
+        preview: "Le changement d\u2019email a été annulé",
+        title: "Changement annulé",
+        description:
+            "La demande de changement d\u2019adresse email sur votre compte a été annulée. Aucune modification n\u2019a été effectuée. Si vous n\u2019êtes pas à l\u2019origine de cette annulation, contactez le support.",
+        buttonText: "Contacter le support",
+        buttonColor: "#dc2626",
+    },
+    "change-success": {
+        preview: "Votre nouvelle adresse email est confirmée",
+        title: "Bienvenue !",
+        description:
+            "Votre nouvelle adresse email a été confirmée avec succès. Vous pouvez désormais l\u2019utiliser pour vous connecter.",
+        buttonText: "Accéder au profil",
+        buttonColor: "#000000",
+    },
 };
 
 export default function EmailTemplate(props: EmailTemplateProps) {
@@ -84,7 +124,7 @@ export default function EmailTemplate(props: EmailTemplateProps) {
                     <Container className="mx-auto my-10 max-w-120 rounded-lg bg-white shadow-sm">
                         {/* Header */}
                         <Section className="rounded-t-lg bg-gray-900 px-8 py-6 text-center">
-                            <Text className="m-0 text-lg font-bold text-white">{APP_NAME}</Text>
+                            <Text className="m-0 text-lg font-bold text-white">{SMTP_FROM_NAME}</Text>
                         </Section>
 
                         {/* Content */}
@@ -127,7 +167,7 @@ export default function EmailTemplate(props: EmailTemplateProps) {
                                 </Link>
                             </Text>
                             <Text className="m-0 text-center text-xs text-gray-400">
-                                © {new Date().getFullYear()} {APP_NAME}. Tous droits réservés.
+                                © {new Date().getFullYear()} {SMTP_FROM_NAME}. Tous droits réservés.
                             </Text>
                         </Section>
                     </Container>

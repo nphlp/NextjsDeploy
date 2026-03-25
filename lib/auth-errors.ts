@@ -11,6 +11,9 @@ const authErrors: Record<string, string> = {
     PASSWORD_INVALID: "Le mot de passe ne respecte pas les critères de sécurité.",
     // Have I Been Pwned plugin (lib/auth.ts)
     PASSWORD_COMPROMISED: "Ce mot de passe a été compromis dans une fuite de données. Choisissez-en un autre.",
+    // Change email (Better Auth core + auth-middleware.ts)
+    "New email is the same as the old email": "L'adresse email est identique à l'actuelle.",
+    EMAIL_CHANGE_CANCELED: "Ce changement d'email a été annulé.",
 };
 
 const DEFAULT_ERROR = "Une erreur est survenue. Veuillez réessayer.";

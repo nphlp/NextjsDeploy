@@ -17,6 +17,7 @@ model User {
     image            String? @db.Text
     role             Role    @default(USER)
     twoFactorEnabled Boolean @default(false)
+    pendingEmail     String?
 
     Fruits  Fruit[]
     Baskets Basket[]

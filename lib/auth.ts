@@ -1,13 +1,14 @@
 import SendEmailAction from "@actions/SendEmailAction";
 import { passkey } from "@better-auth/passkey";
-import EmailTemplate from "@comps/email";
+import EmailTemplate from "@comps/email-template";
 import PrismaInstance from "@lib/prisma";
 import { betterAuth } from "better-auth";
 import { BetterAuthOptions } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { createAuthMiddleware } from "better-auth/api";
+import { APIError, createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { captcha, customSession, haveIBeenPwned, magicLink, openAPI, twoFactor } from "better-auth/plugins";
+import { jwtVerify } from "jose";
 import { nanoid } from "nanoid";
 import { authBeforeMiddleware } from "./auth-middleware";
 import { BETTER_AUTH_SECRET, IS_DEV, IS_TEST, NEXT_PUBLIC_BASE_URL, TURNSTILE_SECRET_KEY } from "./env";
@@ -71,6 +72,63 @@ const sendMagicLink = async (data: { email: string; url: string; token: string }
     }
 };
 
+type AfterEmailVerificationProps = NonNullable<
+    NonNullable<BetterAuthOptions["emailVerification"]>["afterEmailVerification"]
+>;
+
+/**
+ * After email verification callback
+ * -> Detects change-email verifications by decoding the JWT from the request URL
+ * -> Clears pendingEmail and sends notification emails to old and new email
+ */
+const afterEmailVerification: AfterEmailVerificationProps = async (user, request) => {
+    if (!request) return;
+
+    const url = new URL(request.url);
+    const token = url.searchParams.get("token");
+    if (!token) return;
+
+    try {
+        const secret = new TextEncoder().encode(BETTER_AUTH_SECRET);
+        const { payload } = await jwtVerify(token, secret);
+
+        // Only process change-email verifications (JWT has updateTo field)
+        if (!payload.updateTo || typeof payload.email !== "string") return;
+
+        const oldEmail = payload.email as string;
+        const newEmail = payload.updateTo as string;
+
+        // Clear pendingEmail
+        await PrismaInstance.user.update({
+            where: { id: user.id },
+            data: { pendingEmail: null },
+        });
+
+        // Notify old email: "your email has been changed"
+        void SendEmailAction({
+            subject: "Votre adresse email a été modifiée",
+            email: oldEmail,
+            body: EmailTemplate({
+                buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
+                emailType: "change-completed",
+            }),
+        });
+
+        // Notify new email: "change successful"
+        void SendEmailAction({
+            subject: "Changement d\u2019email confirmé",
+            email: newEmail,
+            body: EmailTemplate({
+                buttonUrl: `${NEXT_PUBLIC_BASE_URL}/profile`,
+                emailType: "change-success",
+            }),
+        });
+    } catch (error) {
+        if (error instanceof APIError) throw error;
+        console.error("afterEmailVerification error:", error);
+    }
+};
+
 /**
  * Prisma instance with workarounds for Better Auth + Prisma 7 compatibility.
  *
@@ -123,11 +181,16 @@ const extendedSession: ExtendedSession = async (data) => {
     const userData = await PrismaInstance.user.findUnique({ where: { id: user.id } });
     if (!userData) throw new Error("User not found");
 
+    // Only expose pendingEmail if it differs from the current email
+    const pendingEmail =
+        userData.pendingEmail && userData.pendingEmail !== userData.email ? userData.pendingEmail : null;
+
     const extendedSession = {
         user: {
             ...user,
             lastname: userData.lastname, // Add lastname to session
             role: userData.role, // Add role to session (e.g. "user", "admin", etc)
+            pendingEmail, // Pending email change (null if none)
         },
         session,
     };
@@ -161,6 +224,9 @@ export const auth = betterAuth({
      * Extend user schema with custom fields
      */
     user: {
+        changeEmail: {
+            enabled: true,
+        },
         additionalFields: {
             lastname: {
                 type: "string",
@@ -209,6 +275,7 @@ export const auth = betterAuth({
         autoSignInAfterVerification: true, // Automatically sign in user after email verification
         sendVerificationEmail, // Email function for sending verification emails
         expiresIn: 3600, // Verification token expiration time in seconds (default 3600 = 1 hour)
+        afterEmailVerification, // Clear pendingEmail and send notification emails after change-email
     },
     /**
      * Social providers (OAuth)
@@ -340,9 +407,8 @@ export const auth = betterAuth({
      */
     hooks: {
         /**
-         * Auth middleware
-         * -> Enforce email domain restrictions on sign-up or change email
-         * -> Validate password strength on sign-up, reset-password and change-password
+         * Before: validate email domain, password strength, block canceled changes,
+         * send notification emails on change-email verification
          */
         before: createAuthMiddleware(authBeforeMiddleware),
     },

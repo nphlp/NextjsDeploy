@@ -9,6 +9,7 @@ type FormTextAreaProps = FieldProps & {
     name: string;
     placeholder?: string;
     className?: string;
+    rows?: number;
 };
 
 export function FormTextArea(props: FormTextAreaProps) {

@@ -19,6 +19,7 @@ vi.mock("@lib/prisma", () => {
             image: null,
             role: "ADMIN",
             twoFactorEnabled: false,
+            pendingEmail: null,
             createdAt: new Date(),
             updatedAt: new Date(),
         },
@@ -31,6 +32,7 @@ vi.mock("@lib/prisma", () => {
             image: null,
             role: "USER",
             twoFactorEnabled: false,
+            pendingEmail: null,
             createdAt: new Date(),
             updatedAt: new Date(),
         },
@@ -56,6 +58,7 @@ vi.mock("@lib/prisma", () => {
             image: input.image ?? null,
             role: (input.role ?? "USER") as Role,
             twoFactorEnabled: false,
+            pendingEmail: null,
             createdAt: new Date(),
             updatedAt: new Date(),
         };

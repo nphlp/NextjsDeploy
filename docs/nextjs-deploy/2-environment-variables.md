@@ -231,6 +231,10 @@ envConfig: {
 - **`SMTP_FROM_NAME`** — Sender display name
     - `Nextjs Deploy` in production
     - template `Nextjs Deploy ({{ENV}})` in all others envs
+- **`SUPPORT_EMAIL`** — Email address for support/contact form
+    - `support@domain.com` in all envs
+    - Create an alias in your email provider (e.g. Hostinger: hPanel > Emails > Alias)
+    - The main mailbox (e.g. `hello@domain.com`) sends emails, the alias (e.g. `support@domain.com`) receives contact form messages
 
 > In dev, emails are caught by [Mailpit](https://mailpit.axllent.org/) instead of being sent to real inboxes.
 > Web UI: `http://localhost:8025` — SMTP: `localhost:1025`.

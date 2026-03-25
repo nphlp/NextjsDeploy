@@ -1,12 +1,22 @@
 "use server";
 
+import SendEmailAction from "@actions/SendEmailAction";
+import EmailTemplate from "@comps/email-template";
+import { NEXT_PUBLIC_BASE_URL } from "@lib/env";
 import PrismaInstance from "@lib/prisma";
 import { os } from "@orpc/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { notFound, unauthorized } from "next/navigation";
 import { tag } from "@/api/cache";
 import { requiresSession } from "../permission";
-import { userCreateInputSchema, userDeleteInputSchema, userOutputSchema, userUpdateInputSchema } from "./user-schema";
+import {
+    userCancelPendingEmailInputSchema,
+    userCreateInputSchema,
+    userDeleteInputSchema,
+    userOutputSchema,
+    userSetPendingEmailInputSchema,
+    userUpdateInputSchema,
+} from "./user-schema";
 
 export const userCreate = os
     .input(userCreateInputSchema)
@@ -124,6 +134,58 @@ export const userDeleting = os
         input.revalidateTags?.map((t) => revalidateTag(t, "max"));
         // Provided path refresh
         input.revalidatePaths?.map((p) => revalidatePath(p));
+
+        return user;
+    })
+    .actionable();
+
+export const userSetPendingEmail = os
+    .input(userSetPendingEmailInputSchema)
+    .output(userOutputSchema)
+    .use(requiresSession)
+    .handler(async ({ input, context }) => {
+        const { session } = context;
+
+        const user = await PrismaInstance.user.update({
+            where: { id: session.user.id },
+            data: { pendingEmail: input.newEmail },
+        });
+
+        // Notify old email that a change was requested
+        void SendEmailAction({
+            subject: "Changement d\u2019email en cours",
+            email: session.user.email,
+            body: EmailTemplate({
+                buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
+                emailType: "change-requested",
+            }),
+        });
+
+        return user;
+    })
+    .actionable();
+
+export const userCancelPendingEmail = os
+    .input(userCancelPendingEmailInputSchema)
+    .output(userOutputSchema)
+    .use(requiresSession)
+    .handler(async ({ context }) => {
+        const { session } = context;
+
+        const user = await PrismaInstance.user.update({
+            where: { id: session.user.id },
+            data: { pendingEmail: null },
+        });
+
+        // Notify user that the change was canceled
+        void SendEmailAction({
+            subject: "Changement d\u2019email annulé",
+            email: session.user.email,
+            body: EmailTemplate({
+                buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
+                emailType: "change-canceled",
+            }),
+        });
 
         return user;
     })

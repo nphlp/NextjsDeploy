@@ -26,6 +26,7 @@ export const SMTP_USER = required("SMTP_USER");
 export const SMTP_PASSWORD = required("SMTP_PASSWORD");
 export const SMTP_FROM = required("SMTP_FROM");
 export const SMTP_FROM_NAME = required("SMTP_FROM_NAME");
+export const SUPPORT_EMAIL = required("SUPPORT_EMAIL");
 
 // Derived
 export const IS_DEV = NODE_ENV === "development";
