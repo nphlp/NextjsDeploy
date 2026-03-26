@@ -72,4 +72,46 @@ describe("Session management — integration", () => {
         expect(Array.isArray(data)).toBe(true);
         expect(data.length).toBeGreaterThanOrEqual(1);
     });
+
+    it("revokeSession removes a specific session", async () => {
+        // Create a second session
+        const { response: loginRes } = await loginUser(TEST_EMAIL, TEST_PASSWORD);
+        const secondCookie = extractSessionCookie(loginRes);
+
+        // Get the session token from the second session
+        const getSessionReq = new Request(`${BASE_URL}/api/auth/get-session`, {
+            headers: { Cookie: secondCookie },
+        });
+        const sessionData = await (await auth.handler(getSessionReq)).json();
+        const sessionToken = sessionData?.session?.token;
+
+        // Revoke the second session using the first session
+        const revokeReq = new Request(`${BASE_URL}/api/auth/revoke-session`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Cookie: sessionCookie },
+            body: JSON.stringify({ token: sessionToken }),
+        });
+        const revokeRes = await auth.handler(revokeReq);
+        expect(revokeRes.status).toBe(200);
+    });
+
+    it("revokeOtherSessions removes all except current", async () => {
+        // Create extra sessions
+        await loginUser(TEST_EMAIL, TEST_PASSWORD);
+        await loginUser(TEST_EMAIL, TEST_PASSWORD);
+
+        const revokeReq = new Request(`${BASE_URL}/api/auth/revoke-other-sessions`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Cookie: sessionCookie },
+        });
+        const revokeRes = await auth.handler(revokeReq);
+        expect(revokeRes.status).toBe(200);
+
+        // List sessions — should be only the current one
+        const listReq = new Request(`${BASE_URL}/api/auth/list-sessions`, {
+            headers: { Cookie: sessionCookie },
+        });
+        const sessions = await (await auth.handler(listReq)).json();
+        expect(sessions.length).toBe(1);
+    });
 });

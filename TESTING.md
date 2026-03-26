@@ -140,9 +140,9 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Intégration
 
-- [ ] Magic link avec user existant -> crée une session
-- [ ] Magic link avec user inexistant -> envoie un email vers `/register` (anti-enum)
-- [ ] Magic link avec token expiré -> erreur
+- [x] Magic link avec user existant -> crée une session
+- [x] Magic link avec user inexistant -> envoie un email vers `/register` (anti-enum)
+- [x] Magic link avec token expiré -> erreur
 
 ### E2E
 
@@ -231,12 +231,12 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Intégration
 
-- [ ] `twoFactor.enable` -> crée un enregistrement TwoFactor en DB
-- [ ] `twoFactor.verifyTotp` avec bon code -> active 2FA (`twoFactorEnabled: true`)
-- [ ] `twoFactor.verifyTotp` avec mauvais code -> erreur
-- [ ] `twoFactor.disable` -> supprime le TwoFactor et met `twoFactorEnabled: false`
+- [x] `twoFactor.enable` -> crée un enregistrement TwoFactor en DB
+- [x] `twoFactor.verifyTotp` avec bon code -> active 2FA (`twoFactorEnabled: true`)
+- [x] `twoFactor.verifyTotp` avec mauvais code -> erreur
+- [x] `twoFactor.disable` -> supprime le TwoFactor et met `twoFactorEnabled: false`
 - [ ] `twoFactor.generateBackupCodes` -> retourne des codes valides
-- [ ] Login avec 2FA activé -> redirige vers `/verify-2fa`
+- [x] Login avec 2FA activé -> redirige vers `/verify-2fa`
 - [ ] Vérification TOTP -> crée la session
 - [ ] Login avec backup code -> crée la session
 - [ ] Backup code utilisé -> ne peut pas être réutilisé
@@ -311,8 +311,8 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 - [x] `getSession` -> retourne la session courante
 - [x] `getSessionList` -> retourne toutes les sessions du user
-- [ ] `revokeSession` -> supprime une session spécifique
-- [ ] `revokeOtherSessions` -> supprime toutes les sessions sauf la courante
+- [x] `revokeSession` -> supprime une session spécifique
+- [x] `revokeOtherSessions` -> supprime toutes les sessions sauf la courante
 - [x] Extended session -> inclut `lastname`, `role`, `pendingEmail`
 
 ### E2E
@@ -416,6 +416,6 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 | Type        | Objectif                                      | Actuel    |
 | ----------- | --------------------------------------------- | --------- |
 | Unitaire    | Toutes les fonctions auth, middleware, emails | 223 tests |
-| Intégration | Tous les flows auth avec DB réelle + Mailpit  | 34 tests  |
+| Intégration | Tous les flows auth avec DB réelle + Mailpit  | 45 tests  |
 | Fonctionnel | API externes (HIBP, Disify, Turnstile, MX)    | Aucun     |
 | E2E         | Flows critiques (happy path + sécurité)       | 74 tests  |
