@@ -53,7 +53,7 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 - [ ] Register avec domaine jetable, Disify en panne -> fallback MailCheck (API mockée) -> erreur
 - [ ] Register avec domaine jetable, toutes les API en panne -> fallback MX records
 - [ ] Register avec mot de passe compromis (HIBP API mockée) -> erreur `PASSWORD_COMPROMISED`
-- [ ] Register complet -> register + vérification email + session créée (sans navigateur)
+- [x] Register complet -> register + vérification email + session créée (sans navigateur)
 
 ### E2E
 
@@ -167,12 +167,12 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 - [x] `changeEmail` -> crée un token JWT avec `updateTo`
 - [x] `changeEmail` -> envoie un email de vérification au nouvel email (Mailpit)
 - [x] `userSetPendingEmail` -> met à jour `pendingEmail` en DB
-- [ ] `userSetPendingEmail` -> envoie un email de notification à l'ancien email (Mailpit)
+- [x] `userSetPendingEmail` -> envoie un email de notification à l'ancien email (Mailpit)
 - [x] `userCancelPendingEmail` -> clear `pendingEmail` en DB
-- [ ] `userCancelPendingEmail` -> envoie un email de notification d'annulation (Mailpit)
+- [x] `userCancelPendingEmail` -> envoie un email de notification d'annulation (Mailpit)
 - [x] Vérification du nouvel email -> met à jour `email` en DB
 - [x] Vérification du nouvel email -> clear `pendingEmail` en DB
-- [ ] Vérification du nouvel email -> envoie email "modifié" à l'ancien + "confirmé" au nouveau (Mailpit)
+- [x] Vérification du nouvel email -> envoie email "modifié" à l'ancien + "confirmé" au nouveau (Mailpit)
 - [x] Vérification après annulation -> rejeté (pendingEmail null)
 - [x] `changeEmail` avec email déjà utilisé -> réponse identique (anti-enum)
 - [x] `changeEmail` avec même email -> erreur "identique à l'actuelle"
@@ -240,10 +240,10 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 - [x] Vérification TOTP -> crée la session
 - [x] Login avec backup code -> crée la session
 - [x] Backup code utilisé -> ne peut pas être réutilisé
-- [ ] Régénération des backup codes -> invalide les anciens
+- [x] Régénération des backup codes -> invalide les anciens
 - [ ] Trust device _(E2E only — cookies)_ -> skip 2FA pendant 30 jours
-- [ ] Enable TOTP -> envoie un email de notification (Mailpit)
-- [ ] Disable TOTP -> envoie un email de notification (Mailpit)
+- [x] Enable TOTP -> envoie un email de notification (Mailpit)
+- [x] Disable TOTP -> envoie un email de notification (Mailpit)
 
 ### E2E
 
@@ -416,6 +416,6 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 | Type        | Objectif                                      | Actuel    |
 | ----------- | --------------------------------------------- | --------- |
 | Unitaire    | Toutes les fonctions auth, middleware, emails | 223 tests |
-| Intégration | Tous les flows auth avec DB réelle + Mailpit  | 55 tests  |
+| Intégration | Tous les flows auth avec DB réelle + Mailpit  | 63 tests  |
 | Fonctionnel | API externes (HIBP, Disify, Turnstile, MX)    | Aucun     |
 | E2E         | Flows critiques (happy path + sécurité)       | 74 tests  |

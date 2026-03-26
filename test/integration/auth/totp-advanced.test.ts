@@ -169,4 +169,33 @@ describe("TOTP advanced — integration", () => {
         );
         expect(reuse.status).not.toBe(200);
     });
+
+    it("regenerated backup codes invalidate old codes", async () => {
+        const cookie = await login2FA(TEST_EMAIL, TEST_PASSWORD, totpSecret);
+
+        // Generate first set
+        const gen1 = await callWithSession("/two-factor/generate-backup-codes", { password: TEST_PASSWORD }, cookie);
+        const { backupCodes: oldCodes } = await gen1.json();
+
+        // Generate second set (should invalidate old)
+        const gen2 = await callWithSession("/two-factor/generate-backup-codes", { password: TEST_PASSWORD }, cookie);
+        const { backupCodes: newCodes } = await gen2.json();
+        expect(newCodes).not.toEqual(oldCodes);
+
+        // Try to use an old code
+        const { response: loginRes } = await loginUser(TEST_EMAIL, TEST_PASSWORD);
+        const tfCookie =
+            loginRes.headers
+                .getSetCookie?.()
+                .find((c) => c.includes("two_factor"))
+                ?.split(";")[0] ?? "";
+        const result = await auth.handler(
+            new Request(`${BASE_URL}/api/auth/two-factor/verify-backup-code`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", Cookie: tfCookie },
+                body: JSON.stringify({ code: oldCodes[0] }),
+            }),
+        );
+        expect(result.status).not.toBe(200);
+    });
 });
