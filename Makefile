@@ -127,6 +127,10 @@ test-unit-contact:
 test-integration: postgres
 	@bun run test:integration; make postgres-stop
 
+# Functional tests (requires Docker + mocks external APIs via MSW)
+test-functional: postgres
+	@bun run test:functional; make postgres-stop
+
 # E2E tests (requires Docker + build + server)
 test: postgres app-setup
 	@bun run fixtures:reload
@@ -139,7 +143,7 @@ test: postgres app-setup
 	@NODE_ENV=test bun run start; make postgres-stop
 
 # All tests
-test-all: test-unit test-integration test
+test-all: test-unit test-integration test-functional test
 
 ##################
 #  Make Docker   #

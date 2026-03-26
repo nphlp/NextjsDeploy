@@ -49,10 +49,10 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Fonctionnel
 
-- [ ] Register avec domaine jetable détecté par Disify (API mockée) -> erreur `EMAIL_INVALID`
-- [ ] Register avec domaine jetable, Disify en panne -> fallback MailCheck (API mockée) -> erreur
-- [ ] Register avec domaine jetable, toutes les API en panne -> fallback MX records
-- [ ] Register avec mot de passe compromis (HIBP API mockée) -> erreur `PASSWORD_COMPROMISED`
+- [x] Register avec domaine jetable détecté par Disify (API mockée) -> erreur `EMAIL_INVALID`
+- [x] Register avec domaine jetable, Disify en panne -> fallback MailCheck (API mockée) -> erreur
+- [x] Register avec domaine jetable, toutes les API en panne -> fallback MX records
+- [x] Register avec mot de passe compromis (HIBP API mockée) -> erreur `PASSWORD_COMPROMISED`
 - [x] Register complet -> register + vérification email + session créée (sans navigateur)
 
 ### E2E
@@ -120,7 +120,7 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Fonctionnel
 
-- [ ] Reset avec mot de passe compromis (HIBP API mockée) -> erreur `PASSWORD_COMPROMISED`
+- [x] Reset avec mot de passe compromis (HIBP API mockée) -> erreur `PASSWORD_COMPROMISED`
 
 ### E2E
 
@@ -179,7 +179,7 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Fonctionnel
 
-- [ ] Change email avec domaine jetable détecté par Disify (API mockée) -> erreur `EMAIL_INVALID`
+- [x] Change email avec domaine jetable détecté par Disify (API mockée) -> erreur `EMAIL_INVALID`
 
 ### E2E
 
@@ -211,7 +211,7 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Fonctionnel
 
-- [ ] `changePassword` avec mot de passe compromis (HIBP API mockée) -> erreur `PASSWORD_COMPROMISED`
+- [x] `changePassword` avec mot de passe compromis (HIBP API mockée) -> erreur `PASSWORD_COMPROMISED`
 
 ### E2E
 
@@ -241,7 +241,7 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 - [x] Login avec backup code -> crée la session
 - [x] Backup code utilisé -> ne peut pas être réutilisé
 - [x] Régénération des backup codes -> invalide les anciens
-- [ ] Trust device _(E2E only — cookies)_ -> skip 2FA pendant 30 jours
+- [x] Trust device _(E2E only — cookies)_ -> skip 2FA pendant 30 jours
 - [x] Enable TOTP -> envoie un email de notification (Mailpit)
 - [x] Disable TOTP -> envoie un email de notification (Mailpit)
 
@@ -276,11 +276,11 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Intégration
 
-- [ ] `passkey.addPasskey` _(E2E only — WebAuthn)_ -> crée un Passkey en DB
-- [ ] `passkey.deletePasskey` _(E2E only — WebAuthn)_ -> supprime le Passkey de la DB
-- [ ] `passkey.listUserPasskeys` _(E2E only — WebAuthn)_ -> retourne les passkeys du user
-- [ ] Add passkey -> envoie _(E2E only)_ un email de notification (Mailpit)
-- [ ] Delete passkey -> envoie _(E2E only)_ un email de notification (Mailpit)
+- [x] `passkey.addPasskey` _(E2E only — WebAuthn)_ -> crée un Passkey en DB
+- [x] `passkey.deletePasskey` _(E2E only — WebAuthn)_ -> supprime le Passkey de la DB
+- [x] `passkey.listUserPasskeys` _(E2E only — WebAuthn)_ -> retourne les passkeys du user
+- [x] Add passkey -> envoie _(E2E only)_ un email de notification (Mailpit)
+- [x] Delete passkey -> envoie _(E2E only)_ un email de notification (Mailpit)
 
 ### E2E
 
@@ -371,9 +371,9 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Fonctionnel
 
-- [ ] Domaine inconnu -> vérifie via API Disify (mock HTTP) puis fallback MailCheck
-- [ ] Domaine sans MX records -> rejeté
-- [ ] Toutes les API en panne -> fallback MX records uniquement
+- [x] Domaine inconnu -> vérifie via API Disify (mock HTTP) puis fallback MailCheck
+- [x] Domaine sans MX records -> rejeté
+- [x] Toutes les API en panne -> fallback MX records uniquement
 
 ---
 
@@ -417,5 +417,5 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 | ----------- | --------------------------------------------- | --------- |
 | Unitaire    | Toutes les fonctions auth, middleware, emails | 223 tests |
 | Intégration | Tous les flows auth avec DB réelle + Mailpit  | 63 tests  |
-| Fonctionnel | API externes (HIBP, Disify, Turnstile, MX)    | Aucun     |
+| Fonctionnel | API externes (HIBP, Disify, Turnstile, MX)    | 8 tests   |
 | E2E         | Flows critiques (happy path + sécurité)       | 74 tests  |
