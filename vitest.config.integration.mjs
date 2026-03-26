@@ -21,6 +21,7 @@ export default defineConfig({
         env: { NEXT_PUBLIC_BASE_URL },
         testTimeout: 30_000,
         hookTimeout: 30_000,
+        fileParallelism: false, // Run sequentially to avoid Mailpit conflicts
     },
     resolve: { alias: { "server-only": new URL("./test/mocks/modules/server-only.ts", import.meta.url).pathname } },
     plugins: [tsconfigPaths()],

@@ -26,7 +26,7 @@ if (existsSync(CONFIG_PATH)) {
     process.exit(0);
 }
 
-// Copy example → env/env.config.json
+// Copy example → env/env.config.mjs
 copyFileSync(EXAMPLE_PATH, CONFIG_PATH);
 
 console.log(green("\n✅ Created env/env.config.mjs from example"));

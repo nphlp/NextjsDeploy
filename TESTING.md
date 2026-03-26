@@ -43,8 +43,8 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 - [x] Register un utilisateur -> envoie un email de vérification (Mailpit)
 - [x] Register un email déjà existant -> retourne un synthetic user (anti-enum)
 - [x] Register un email déjà existant -> la réponse JSON a les mêmes clés dans le même ordre qu'un vrai user
-- [ ] Vérification email -> met à jour `emailVerified: true` en DB
-- [ ] Vérification email avec token expiré -> erreur
+- [x] Vérification email -> met à jour `emailVerified: true` en DB
+- [x] Vérification email avec token expiré -> erreur
 - [x] Register avec un domaine jetable (liste locale) -> erreur `EMAIL_INVALID`
 
 ### Fonctionnel
@@ -75,7 +75,7 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 - [x] Login avec identifiants valides -> retourne une session
 - [x] Login avec mauvais mot de passe -> erreur
-- [ ] Login avec email non-vérifié -> envoie un email de vérification
+- [x] Login avec email non-vérifié -> envoie un email de vérification
 - [x] Login avec email inexistant -> erreur
 
 ### E2E
@@ -93,8 +93,8 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Intégration
 
-- [ ] Logout -> supprime la session en DB
-- [ ] Logout -> supprime le cookie de session
+- [x] Logout -> supprime la session en DB
+- [x] Logout -> supprime le cookie de session
 
 ### E2E
 
@@ -111,12 +111,12 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Intégration
 
-- [ ] Demande de reset -> envoie un email avec un lien (Mailpit)
-- [ ] Demande de reset pour email inexistant -> même comportement (anti-enum)
-- [ ] Reset avec token valide -> met à jour le mot de passe en DB
-- [ ] Reset avec token expiré -> erreur
-- [ ] Reset avec mot de passe faible -> erreur `PASSWORD_INVALID`
-- [ ] Après reset -> `emailVerified: true` (callback `onPasswordReset`)
+- [x] Demande de reset -> envoie un email avec un lien (Mailpit)
+- [x] Demande de reset pour email inexistant -> même comportement (anti-enum)
+- [x] Reset avec token valide -> met à jour le mot de passe en DB
+- [x] Reset avec token expiré -> erreur
+- [x] Reset avec mot de passe faible -> erreur `PASSWORD_INVALID`
+- [x] Après reset -> `emailVerified: true` (callback `onPasswordReset`)
 
 ### Fonctionnel
 
@@ -164,18 +164,18 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Intégration
 
-- [ ] `changeEmail` -> crée un token JWT avec `updateTo`
-- [ ] `changeEmail` -> envoie un email de vérification au nouvel email (Mailpit)
-- [ ] `userSetPendingEmail` -> met à jour `pendingEmail` en DB
+- [x] `changeEmail` -> crée un token JWT avec `updateTo`
+- [x] `changeEmail` -> envoie un email de vérification au nouvel email (Mailpit)
+- [x] `userSetPendingEmail` -> met à jour `pendingEmail` en DB
 - [ ] `userSetPendingEmail` -> envoie un email de notification à l'ancien email (Mailpit)
-- [ ] `userCancelPendingEmail` -> clear `pendingEmail` en DB
+- [x] `userCancelPendingEmail` -> clear `pendingEmail` en DB
 - [ ] `userCancelPendingEmail` -> envoie un email de notification d'annulation (Mailpit)
 - [ ] Vérification du nouvel email -> met à jour `email` en DB
 - [ ] Vérification du nouvel email -> clear `pendingEmail` en DB
 - [ ] Vérification du nouvel email -> envoie email "modifié" à l'ancien + "confirmé" au nouveau (Mailpit)
 - [ ] Vérification après annulation -> rejeté (pendingEmail null)
-- [ ] `changeEmail` avec email déjà utilisé -> réponse identique (anti-enum)
-- [ ] `changeEmail` avec même email -> erreur "identique à l'actuelle"
+- [x] `changeEmail` avec email déjà utilisé -> réponse identique (anti-enum)
+- [x] `changeEmail` avec même email -> erreur "identique à l'actuelle"
 
 ### Fonctionnel
 
@@ -205,8 +205,8 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 - [x] `changePassword` avec bon mot de passe actuel -> met à jour en DB
 - [x] `changePassword` avec mauvais mot de passe actuel -> erreur
-- [ ] `changePassword` -> révoque les autres sessions (`revokeOtherSessions: true`)
-- [ ] `changePassword` -> envoie un email de notification (Mailpit)
+- [x] `changePassword` -> révoque les autres sessions (`revokeOtherSessions: true`)
+- [x] `changePassword` -> envoie un email de notification (Mailpit)
 - [x] `changePassword` avec mot de passe faible -> erreur `PASSWORD_INVALID`
 
 ### Fonctionnel
@@ -309,11 +309,11 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Intégration
 
-- [ ] `getSession` -> retourne la session courante
-- [ ] `getSessionList` -> retourne toutes les sessions du user
+- [x] `getSession` -> retourne la session courante
+- [x] `getSessionList` -> retourne toutes les sessions du user
 - [ ] `revokeSession` -> supprime une session spécifique
 - [ ] `revokeOtherSessions` -> supprime toutes les sessions sauf la courante
-- [ ] Extended session -> inclut `lastname`, `role`, `pendingEmail`
+- [x] Extended session -> inclut `lastname`, `role`, `pendingEmail`
 
 ### E2E
 
@@ -342,8 +342,8 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Intégration
 
-- [ ] Soumission du formulaire -> email reçu dans Mailpit avec sujet `[Contact]`
-- [ ] Soumission du formulaire -> email de confirmation reçu par l'expéditeur (Mailpit)
+- [x] Soumission du formulaire -> email reçu dans Mailpit avec sujet `[Contact]`
+- [x] Soumission du formulaire -> email de confirmation reçu par l'expéditeur (Mailpit)
 
 ### E2E
 
@@ -416,6 +416,6 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 | Type        | Objectif                                      | Actuel    |
 | ----------- | --------------------------------------------- | --------- |
 | Unitaire    | Toutes les fonctions auth, middleware, emails | 223 tests |
-| Intégration | Tous les flows auth avec DB réelle + Mailpit  | 16 tests  |
+| Intégration | Tous les flows auth avec DB réelle + Mailpit  | 34 tests  |
 | Fonctionnel | API externes (HIBP, Disify, Turnstile, MX)    | Aucun     |
 | E2E         | Flows critiques (happy path + sécurité)       | 74 tests  |

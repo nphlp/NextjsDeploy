@@ -57,8 +57,18 @@ export async function verifyEmail(token: string) {
  * Request password reset via Better Auth API
  */
 export async function requestPasswordReset(email: string) {
-    const response = await callAuth("/forget-password", {
+    const response = await callAuth("/request-password-reset", {
         body: { email, redirectTo: "/reset-password" },
+    });
+    return { response, data: await response.json().catch(() => null) };
+}
+
+/**
+ * Reset password with token via Better Auth API
+ */
+export async function resetPassword(token: string, newPassword: string) {
+    const response = await callAuth("/reset-password", {
+        body: { token, newPassword },
     });
     return { response, data: await response.json().catch(() => null) };
 }
