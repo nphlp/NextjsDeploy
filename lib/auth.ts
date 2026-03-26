@@ -52,7 +52,7 @@ export const sendVerificationEmail: SendVerificationEmailProps = async (data) =>
  * -> If user exists: send real magic link
  * -> If user doesn't exist: send "please register" email with link to register page
  */
-const sendMagicLink = async (data: { email: string; url: string; token: string }) => {
+export const sendMagicLink = async (data: { email: string; url: string; token: string }) => {
     const { email, url } = data;
 
     const user = await PrismaInstance.user.findUnique({ where: { email } });
@@ -81,7 +81,7 @@ type AfterEmailVerificationProps = NonNullable<
  * -> Detects change-email verifications by decoding the JWT from the request URL
  * -> Clears pendingEmail and sends notification emails to old and new email
  */
-const afterEmailVerification: AfterEmailVerificationProps = async (user, request) => {
+export const afterEmailVerification: AfterEmailVerificationProps = async (user, request) => {
     if (!request) return;
 
     const url = new URL(request.url);
@@ -128,6 +128,25 @@ const afterEmailVerification: AfterEmailVerificationProps = async (user, request
         console.error("afterEmailVerification error:", error);
     }
 };
+
+/**
+ * Build synthetic user for email enumeration protection.
+ * Key order must match the real database output to be indistinguishable.
+ */
+export const customSyntheticUser = ({
+    coreFields,
+    additionalFields,
+    id,
+}: {
+    coreFields: Record<string, unknown>;
+    additionalFields: Record<string, unknown>;
+    id: string;
+}) => ({
+    ...coreFields,
+    twoFactorEnabled: false,
+    ...additionalFields,
+    id,
+});
 
 /**
  * Prisma instance with workarounds for Better Auth + Prisma 7 compatibility.
@@ -245,16 +264,7 @@ export const auth = betterAuth({
         autoSignIn: false, // Disabled because we require email verification
         sendResetPassword, // Email function for sending reset password emails
         resetPasswordTokenExpiresIn: 3600, // Reset password token expiration time in seconds (default 3600 = 1 hour)
-        /**
-         * Build synthetic user for email enumeration protection.
-         * Key order must match the real database output to be indistinguishable.
-         */
-        customSyntheticUser: ({ coreFields, additionalFields, id }) => ({
-            ...coreFields,
-            twoFactorEnabled: false,
-            ...additionalFields,
-            id,
-        }),
+        customSyntheticUser,
         /**
          * If user hasn't verified their email yet and he resets his password
          * Automatically verify email on password reset
