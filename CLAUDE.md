@@ -61,7 +61,7 @@ bun run checks       # All checks (type + lint:fix + format:fix)
 bun run type         # TypeScript checking
 bun run lint:fix     # ESLint check/fix
 bun run format:fix   # Prettier check/fix
-bun run test:run     # Unit tests
+bun run test:unit    # Unit tests
 ```
 
 ### Node, Database & Fixtures

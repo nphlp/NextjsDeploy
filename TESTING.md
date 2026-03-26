@@ -39,13 +39,13 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Intégration
 
-- [ ] Register un utilisateur -> crée le user en DB avec `emailVerified: false`
-- [ ] Register un utilisateur -> envoie un email de vérification (Mailpit)
-- [ ] Register un email déjà existant -> retourne un synthetic user (anti-enum)
-- [ ] Register un email déjà existant -> la réponse JSON a les mêmes clés dans le même ordre qu'un vrai user
+- [x] Register un utilisateur -> crée le user en DB avec `emailVerified: false`
+- [x] Register un utilisateur -> envoie un email de vérification (Mailpit)
+- [x] Register un email déjà existant -> retourne un synthetic user (anti-enum)
+- [x] Register un email déjà existant -> la réponse JSON a les mêmes clés dans le même ordre qu'un vrai user
 - [ ] Vérification email -> met à jour `emailVerified: true` en DB
 - [ ] Vérification email avec token expiré -> erreur
-- [ ] Register avec un domaine jetable (liste locale) -> erreur `EMAIL_INVALID`
+- [x] Register avec un domaine jetable (liste locale) -> erreur `EMAIL_INVALID`
 
 ### Fonctionnel
 
@@ -73,10 +73,10 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Intégration
 
-- [ ] Login avec identifiants valides -> retourne une session
-- [ ] Login avec mauvais mot de passe -> erreur
+- [x] Login avec identifiants valides -> retourne une session
+- [x] Login avec mauvais mot de passe -> erreur
 - [ ] Login avec email non-vérifié -> envoie un email de vérification
-- [ ] Login avec email inexistant -> même temps de réponse qu'un email existant (anti-timing)
+- [x] Login avec email inexistant -> erreur
 
 ### E2E
 
@@ -203,11 +203,11 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Intégration
 
-- [ ] `changePassword` avec bon mot de passe actuel -> met à jour en DB
-- [ ] `changePassword` avec mauvais mot de passe actuel -> erreur
+- [x] `changePassword` avec bon mot de passe actuel -> met à jour en DB
+- [x] `changePassword` avec mauvais mot de passe actuel -> erreur
 - [ ] `changePassword` -> révoque les autres sessions (`revokeOtherSessions: true`)
 - [ ] `changePassword` -> envoie un email de notification (Mailpit)
-- [ ] `changePassword` avec mot de passe faible -> erreur `PASSWORD_INVALID`
+- [x] `changePassword` avec mot de passe faible -> erreur `PASSWORD_INVALID`
 
 ### Fonctionnel
 
@@ -416,6 +416,6 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 | Type        | Objectif                                      | Actuel    |
 | ----------- | --------------------------------------------- | --------- |
 | Unitaire    | Toutes les fonctions auth, middleware, emails | 223 tests |
-| Intégration | Tous les flows auth avec DB réelle + Mailpit  | Aucun     |
+| Intégration | Tous les flows auth avec DB réelle + Mailpit  | 16 tests  |
 | Fonctionnel | API externes (HIBP, Disify, Turnstile, MX)    | Aucun     |
 | E2E         | Flows critiques (happy path + sécurité)       | 74 tests  |

@@ -101,14 +101,33 @@ start: postgres app-setup
 	@echo "📬 Mailpit: http://localhost:8025 📤"
 	@bun run start; make postgres-stop
 
-################
-#   E2E Test   #
-################
+##############
+#   Tests    #
+##############
 
-# Production server with test mode (rate limiting disabled)
-# -> Run `bun run test:e2e` in a separate terminal
-.PHONY: test
+.PHONY: test test-unit test-unit-api test-unit-auth test-integration test-e2e test-all
 
+# Unit tests (no infra needed)
+test-unit:
+	@bun run test:unit
+
+test-unit-api:
+	@bun run test:unit -- test/unit/api
+
+test-unit-auth:
+	@bun run test:unit -- test/unit/auth
+
+test-unit-email:
+	@bun run test:unit -- test/unit/email
+
+test-unit-contact:
+	@bun run test:unit -- test/unit/contact
+
+# Integration tests (requires Docker: Postgres + Mailpit)
+test-integration: postgres
+	@bun run test:integration; make postgres-stop
+
+# E2E tests (requires Docker + build + server)
 test: postgres app-setup
 	@bun run fixtures:reload
 	@bun run build
@@ -118,6 +137,9 @@ test: postgres app-setup
 	@echo "📬 Mailpit: http://localhost:8025"
 	@echo "👉 Run 'bun run test:e2e' in another terminal"
 	@NODE_ENV=test bun run start; make postgres-stop
+
+# All tests
+test-all: test-unit test-integration test
 
 ##################
 #  Make Docker   #
