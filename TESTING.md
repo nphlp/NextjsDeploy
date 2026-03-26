@@ -170,10 +170,10 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 - [ ] `userSetPendingEmail` -> envoie un email de notification à l'ancien email (Mailpit)
 - [x] `userCancelPendingEmail` -> clear `pendingEmail` en DB
 - [ ] `userCancelPendingEmail` -> envoie un email de notification d'annulation (Mailpit)
-- [ ] Vérification du nouvel email -> met à jour `email` en DB
-- [ ] Vérification du nouvel email -> clear `pendingEmail` en DB
+- [x] Vérification du nouvel email -> met à jour `email` en DB
+- [x] Vérification du nouvel email -> clear `pendingEmail` en DB
 - [ ] Vérification du nouvel email -> envoie email "modifié" à l'ancien + "confirmé" au nouveau (Mailpit)
-- [ ] Vérification après annulation -> rejeté (pendingEmail null)
+- [x] Vérification après annulation -> rejeté (pendingEmail null)
 - [x] `changeEmail` avec email déjà utilisé -> réponse identique (anti-enum)
 - [x] `changeEmail` avec même email -> erreur "identique à l'actuelle"
 
@@ -235,13 +235,13 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 - [x] `twoFactor.verifyTotp` avec bon code -> active 2FA (`twoFactorEnabled: true`)
 - [x] `twoFactor.verifyTotp` avec mauvais code -> erreur
 - [x] `twoFactor.disable` -> supprime le TwoFactor et met `twoFactorEnabled: false`
-- [ ] `twoFactor.generateBackupCodes` -> retourne des codes valides
+- [x] `twoFactor.generateBackupCodes` -> retourne des codes valides
 - [x] Login avec 2FA activé -> redirige vers `/verify-2fa`
-- [ ] Vérification TOTP -> crée la session
-- [ ] Login avec backup code -> crée la session
-- [ ] Backup code utilisé -> ne peut pas être réutilisé
+- [x] Vérification TOTP -> crée la session
+- [x] Login avec backup code -> crée la session
+- [x] Backup code utilisé -> ne peut pas être réutilisé
 - [ ] Régénération des backup codes -> invalide les anciens
-- [ ] Trust device -> skip 2FA pendant 30 jours
+- [ ] Trust device _(E2E only — cookies)_ -> skip 2FA pendant 30 jours
 - [ ] Enable TOTP -> envoie un email de notification (Mailpit)
 - [ ] Disable TOTP -> envoie un email de notification (Mailpit)
 
@@ -276,11 +276,11 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 
 ### Intégration
 
-- [ ] `passkey.addPasskey` -> crée un Passkey en DB
-- [ ] `passkey.deletePasskey` -> supprime le Passkey de la DB
-- [ ] `passkey.listUserPasskeys` -> retourne les passkeys du user
-- [ ] Add passkey -> envoie un email de notification (Mailpit)
-- [ ] Delete passkey -> envoie un email de notification (Mailpit)
+- [ ] `passkey.addPasskey` _(E2E only — WebAuthn)_ -> crée un Passkey en DB
+- [ ] `passkey.deletePasskey` _(E2E only — WebAuthn)_ -> supprime le Passkey de la DB
+- [ ] `passkey.listUserPasskeys` _(E2E only — WebAuthn)_ -> retourne les passkeys du user
+- [ ] Add passkey -> envoie _(E2E only)_ un email de notification (Mailpit)
+- [ ] Delete passkey -> envoie _(E2E only)_ un email de notification (Mailpit)
 
 ### E2E
 
@@ -416,6 +416,6 @@ Réservé aux **happy paths critiques** et aux interactions UI complexes.
 | Type        | Objectif                                      | Actuel    |
 | ----------- | --------------------------------------------- | --------- |
 | Unitaire    | Toutes les fonctions auth, middleware, emails | 223 tests |
-| Intégration | Tous les flows auth avec DB réelle + Mailpit  | 45 tests  |
+| Intégration | Tous les flows auth avec DB réelle + Mailpit  | 55 tests  |
 | Fonctionnel | API externes (HIBP, Disify, Turnstile, MX)    | Aucun     |
 | E2E         | Flows critiques (happy path + sécurité)       | 74 tests  |
