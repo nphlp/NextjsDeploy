@@ -1,5 +1,6 @@
 import { Page, expect, test } from "@playwright/test";
 import { login, register } from "./helpers/auth";
+import { getLatestEmailBySubject } from "./helpers/mailpit";
 import { generateTOTP } from "./helpers/totp";
 
 const timestamp = Date.now();
@@ -51,6 +52,10 @@ test.describe.serial("TOTP", () => {
         await page.getByRole("button", { name: "Confirmer" }).click();
 
         await expect(page.getByRole("tabpanel").getByText("Activé")).toBeVisible();
+
+        // Check security notification email
+        const notif = await getLatestEmailBySubject(credentials.email, "deux facteurs");
+        expect(notif.Subject).toContain("deux facteurs");
     });
 
     test("login with TOTP → /verify-2fa → code → redirect /", async ({ page }) => {
@@ -125,6 +130,10 @@ test.describe.serial("TOTP", () => {
         await page.getByRole("button", { name: "Désactiver" }).click();
 
         await expect(page.getByRole("tabpanel").getByText("Inactif")).toBeVisible();
+
+        // Check security notification email
+        const notif = await getLatestEmailBySubject(credentials.email, "deux facteurs");
+        expect(notif.Subject).toContain("deux facteurs");
 
         await page.context().clearCookies();
 

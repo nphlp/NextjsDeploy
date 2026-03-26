@@ -1,5 +1,6 @@
 import { type CDPSession, type Page, expect, test } from "@playwright/test";
 import { login, register } from "./helpers/auth";
+import { getLatestEmailBySubject } from "./helpers/mailpit";
 
 const timestamp = Date.now();
 const credentials = {
@@ -67,6 +68,10 @@ test("add passkey from profile → list updated", async () => {
     const passkeyItems = page.getByRole("button", { name: "Supprimer la clé d'accès" });
     await expect(passkeyItems.first()).toBeVisible();
     expect(await passkeyItems.count()).toBeGreaterThanOrEqual(1);
+
+    // Check security notification email
+    const notif = await getLatestEmailBySubject(credentials.email, "accès");
+    expect(notif.Subject).toContain("accès");
 });
 
 test("login with passkey → redirect /", async () => {
@@ -92,6 +97,10 @@ test("delete passkey from profile → list updated", async () => {
 
     await expect(page.getByText("Clé d'accès supprimée")).toBeVisible();
     await expect(deleteButtons).toHaveCount(initialCount - 1);
+
+    // Check security notification email
+    const notif = await getLatestEmailBySubject(credentials.email, "accès");
+    expect(notif.Subject).toContain("accès");
 });
 
 test("login with deleted passkey → error", async () => {

@@ -1,5 +1,6 @@
 "use client";
 
+import SendSecurityNotificationAction from "@actions/SendSecurityNotificationAction";
 import Form, { FormInputPassword, OnSubmit, useForm } from "@atoms/_form";
 import { Root as AlertDialogRoot, Backdrop, Close, Description, Popup, Portal, Title } from "@atoms/alert-dialog";
 import Button from "@atoms/button";
@@ -90,6 +91,7 @@ export default function TotpSection(props: TotpSectionProps) {
             return;
         }
         toast.add({ title: "2FA activé", type: "success" });
+        void SendSecurityNotificationAction("totp-enabled");
         setStep("backup-codes");
         setIsSubmitting(false);
         onStatusChange();
@@ -104,6 +106,7 @@ export default function TotpSection(props: TotpSectionProps) {
             return;
         }
         toast.add({ title: "2FA désactivé", type: "success" });
+        void SendSecurityNotificationAction("totp-disabled");
         resetState();
         onStatusChange();
     };

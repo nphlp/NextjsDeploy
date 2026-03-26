@@ -1,6 +1,6 @@
 "use server";
 
-import { IS_DEV, SMTP_FROM, SMTP_FROM_NAME } from "@lib/env";
+import { SMTP_FROM, SMTP_FROM_NAME } from "@lib/env";
 import NodemailerInstance from "@lib/nodemailer";
 import { render } from "@react-email/render";
 import { JSX } from "react";
@@ -11,32 +11,27 @@ type SendEmailActionProps = {
     body: JSX.Element;
 };
 
+/**
+ * Low-level email sender (Nodemailer + React Email)
+ * -> Used server-side only (auth callbacks, other server actions)
+ * -> Not called directly from client components
+ */
 export default async function SendEmailAction(props: SendEmailActionProps) {
     const { subject, email, body } = props;
 
     try {
-        const html = await render(body, {
-            pretty: true,
-        });
-
-        if (IS_DEV) {
-            console.log("📨 Sending email...");
-        }
+        const html = await render(body, { pretty: true });
 
         const success = await NodemailerInstance.sendMail({
             from: `"${SMTP_FROM_NAME}" <${SMTP_FROM}>`,
             to: email,
-            subject: subject,
+            subject,
             html,
         });
 
-        if (IS_DEV) {
-            console.log(`✅ Email sent successfully to ${email}`);
-        }
-
         return success;
     } catch (error) {
-        console.error(`❌ Failed to send email to ${email}:`, error);
+        console.error(`Failed to send email to ${email}:`, error);
         throw new Error("Unable to send email -> " + (error as Error).message);
     }
 }

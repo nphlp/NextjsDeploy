@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { login, register } from "./helpers/auth";
+import { getLatestEmailBySubject } from "./helpers/mailpit";
 
 const timestamp = Date.now();
 const credentials = {
@@ -93,6 +94,10 @@ test.describe.serial("Profile", () => {
         // Submit (third button — .nth(2))
         await page.getByRole("button", { name: "Valider" }).nth(2).click();
         await expect(page.getByText("Mot de passe modifié", { exact: true })).toBeVisible();
+
+        // Check security notification email
+        const notif = await getLatestEmailBySubject(credentials.email, "mot de passe");
+        expect(notif.Subject).toContain("mot de passe");
 
         // Clear cookies (logout)
         await page.context().clearCookies();

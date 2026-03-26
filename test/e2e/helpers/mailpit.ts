@@ -38,6 +38,29 @@ export async function getLatestEmail(to: string, retries = 10, delay = 500): Pro
     throw new Error(`No email found for ${to} after ${retries} retries`);
 }
 
+/** Fetch the latest email matching a subject substring (with retries for fire-and-forget delivery) */
+export async function getLatestEmailBySubject(
+    to: string,
+    subjectContains: string,
+    retries = 30,
+    delay = 500,
+): Promise<MailpitMessageDetail> {
+    for (let i = 0; i < retries; i++) {
+        const res = await fetch(`${MAILPIT_API}/search?query=to:${encodeURIComponent(to)}&limit=10`);
+        const data: MailpitSearchResponse = await res.json();
+
+        const match = data.messages.find((m) => m.Subject.includes(subjectContains));
+        if (match) {
+            const detail = await fetch(`${MAILPIT_API}/message/${match.ID}`);
+            return detail.json();
+        }
+
+        await new Promise((r) => setTimeout(r, delay));
+    }
+
+    throw new Error(`No email with subject containing "${subjectContains}" for ${to} after ${retries} retries`);
+}
+
 /** Extract a URL matching a pattern from an email body */
 export async function extractLink(to: string, pattern: RegExp): Promise<string> {
     const email = await getLatestEmail(to);

@@ -25,7 +25,7 @@
     - Nettoyage hebdomadaire des entrées "périmées" de la table "User Security History"
     - Gérer avec Dokploy directement ? Ou service self-hosted comme Inngest ou Trigger.dev ?
 
-- [ ] "Email de notification" + "Lien contact support" pour les changements sensibles :
+- [x] "Email de notification" + "Lien contact support" pour les changements sensibles :
     - [x] Changement d'email demandé
         - [x] Ancien email : "Notif de process en cours" + "Lien contact support"
         - [x] Nouvel email : "Lien de confirmation"
@@ -34,9 +34,9 @@
         - [x] Nouvel email : "Notif email modifié avec succès"
     - [x] Changement d'email annulé
         - [x] Ancien email : "Notif email annulé" + "Lien contact support"
-    - [ ] Changement de mot de passe
-    - [ ] Activer T-OTP
-    - [ ] Activer Passkey
+    - [x] Changement de mot de passe
+    - [x] Activer/Désactiver T-OTP
+    - [x] Ajouter/Supprimer Passkey
 
 - Déconnexion des sessions de tous les autres appareils après un :
     - Changement d'email (+ session courante)
@@ -45,13 +45,14 @@
 - [x] Page support (dispo dans le footer)
     - [x] Formulaire de contact
     - [x] Select avec sujet (query params pour pré-sélectionner le sujet) :
-        - Proposer une amélioration
-        - Signaler un bug
-        - Problème de sécurité (email, mdp, etc.)
-        - Autre
+        - [x] Proposer une amélioration
+        - [x] Signaler un bug
+        - [x] Problème de sécurité (email, mdp, etc.)
+        - [x] Autre
     - [x] Text area pour expliquer
     - [x] Bouton "Envoyer"
     - [x] Envoi d'un email au email de support du site
+    - [x] Envoi d'un email de confirmation à l'expéditeur
 
 ## Features
 

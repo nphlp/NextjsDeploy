@@ -23,7 +23,13 @@ type EmailType =
     | "change-requested"
     | "change-canceled"
     | "change-completed"
-    | "change-success";
+    | "change-success"
+    | "password-changed"
+    | "totp-enabled"
+    | "totp-disabled"
+    | "passkey-added"
+    | "passkey-deleted"
+    | "contact-confirmation";
 
 type EmailTemplateProps = {
     buttonUrl: string;
@@ -83,7 +89,7 @@ const content: Record<
         description:
             "Un changement d\u2019adresse email a été demandé sur votre compte. Si vous n\u2019êtes pas à l\u2019origine de cette demande, contactez le support immédiatement.",
         buttonText: "Contacter le support",
-        buttonColor: "#dc2626",
+        buttonColor: "#000000",
     },
     "change-completed": {
         preview: "Votre adresse email a été modifiée",
@@ -91,7 +97,7 @@ const content: Record<
         description:
             "L\u2019adresse email de votre compte a été modifiée avec succès. Si vous n\u2019êtes pas à l\u2019origine de ce changement, contactez le support immédiatement.",
         buttonText: "Contacter le support",
-        buttonColor: "#dc2626",
+        buttonColor: "#000000",
     },
     "change-canceled": {
         preview: "Le changement d\u2019email a été annulé",
@@ -99,7 +105,7 @@ const content: Record<
         description:
             "La demande de changement d\u2019adresse email sur votre compte a été annulée. Aucune modification n\u2019a été effectuée. Si vous n\u2019êtes pas à l\u2019origine de cette annulation, contactez le support.",
         buttonText: "Contacter le support",
-        buttonColor: "#dc2626",
+        buttonColor: "#000000",
     },
     "change-success": {
         preview: "Votre nouvelle adresse email est confirmée",
@@ -107,6 +113,54 @@ const content: Record<
         description:
             "Votre nouvelle adresse email a été confirmée avec succès. Vous pouvez désormais l\u2019utiliser pour vous connecter.",
         buttonText: "Accéder au profil",
+        buttonColor: "#000000",
+    },
+    "password-changed": {
+        preview: "Votre mot de passe a été modifié",
+        title: "Mot de passe modifié",
+        description:
+            "Le mot de passe de votre compte a été modifié avec succès. Si vous n\u2019êtes pas à l\u2019origine de ce changement, contactez le support immédiatement.",
+        buttonText: "Contacter le support",
+        buttonColor: "#000000",
+    },
+    "totp-enabled": {
+        preview: "L\u2019authentification à deux facteurs a été activée",
+        title: "2FA activée",
+        description:
+            "L\u2019authentification à deux facteurs (TOTP) a été activée sur votre compte. Si vous n\u2019êtes pas à l\u2019origine de cette action, contactez le support immédiatement.",
+        buttonText: "Contacter le support",
+        buttonColor: "#000000",
+    },
+    "totp-disabled": {
+        preview: "L\u2019authentification à deux facteurs a été désactivée",
+        title: "2FA désactivée",
+        description:
+            "L\u2019authentification à deux facteurs (TOTP) a été désactivée sur votre compte. Si vous n\u2019êtes pas à l\u2019origine de cette action, contactez le support immédiatement.",
+        buttonText: "Contacter le support",
+        buttonColor: "#000000",
+    },
+    "passkey-added": {
+        preview: "Une nouvelle clé d\u2019accès a été ajoutée",
+        title: "Clé d\u2019accès ajoutée",
+        description:
+            "Une nouvelle clé d\u2019accès (passkey) a été ajoutée à votre compte. Si vous n\u2019êtes pas à l\u2019origine de cette action, contactez le support immédiatement.",
+        buttonText: "Contacter le support",
+        buttonColor: "#000000",
+    },
+    "passkey-deleted": {
+        preview: "Une clé d\u2019accès a été supprimée",
+        title: "Clé d\u2019accès supprimée",
+        description:
+            "Une clé d\u2019accès (passkey) a été supprimée de votre compte. Si vous n\u2019êtes pas à l\u2019origine de cette action, contactez le support immédiatement.",
+        buttonText: "Contacter le support",
+        buttonColor: "#000000",
+    },
+    "contact-confirmation": {
+        preview: "Votre message a bien été envoyé",
+        title: "Message envoyé",
+        description:
+            "Nous avons bien reçu votre message et reviendrons vers vous dès que possible. Merci de nous avoir contactés.",
+        buttonText: "Retour au site",
         buttonColor: "#000000",
     },
 };

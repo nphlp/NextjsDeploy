@@ -1,5 +1,6 @@
 "use client";
 
+import SendSecurityNotificationAction from "@actions/SendSecurityNotificationAction";
 import Form, { FormInputPassword, OnSubmit, passwordSchema, passwordSchemaOnChange, useForm } from "@atoms/_form";
 import Button from "@atoms/button";
 import PasswordStrength from "@atoms/input/password-strength";
@@ -80,6 +81,9 @@ export const UpdatePasswordForm = () => {
                 description: "Vos modifications ont été enregistrées.",
                 type: "success",
             });
+
+            // Security notification email
+            void SendSecurityNotificationAction("password-changed");
 
             // Reset form
             reset();
