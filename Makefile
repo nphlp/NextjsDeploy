@@ -105,7 +105,7 @@ start: postgres app-setup
 #   Tests    #
 ##############
 
-.PHONY: test test-unit test-unit-api test-unit-auth test-integration test-e2e test-all
+.PHONY: test test-unit test-unit-auth test-unit-email test-unit-contact test-integration test-functional test-e2e test-all
 
 # Unit tests (no infra needed)
 test-unit:
@@ -123,15 +123,20 @@ test-unit-email:
 test-unit-contact:
 	@bun run test:unit -- test/unit/contact
 
+# Unit test coverage
+test-coverage:
+	@bun run test:unit:coverage
+
 # Integration tests (requires Docker: Postgres + Mailpit)
+# -> trap ensures Docker stops even on Ctrl+C
 test-integration: postgres
-	@bun run test:integration; make postgres-stop
+	@bash -c 'trap "make postgres-stop" EXIT; bun run test:integration'
 
 # Functional tests (requires Docker + mocks external APIs via MSW)
 test-functional: postgres
-	@bun run test:functional; make postgres-stop
+	@bash -c 'trap "make postgres-stop" EXIT; bun run test:functional'
 
-# E2E tests (requires Docker + build + server)
+# E2E server (interactive: starts server, run tests manually in another terminal)
 test: postgres app-setup
 	@bun run fixtures:reload
 	@bun run build
@@ -142,8 +147,38 @@ test: postgres app-setup
 	@echo "👉 Run 'bun run test:e2e' in another terminal"
 	@NODE_ENV=test bun run start; make postgres-stop
 
-# All tests
-test-all: test-unit test-integration test-functional test
+# Kill Next.js server on port 3000 (used by test-e2e and test-all cleanup)
+kill-server:
+	@kill $$(lsof -ti :3000) 2>/dev/null || true
+
+# E2E tests (automated: build, start server, run tests, stop everything)
+# -> trap ensures server + Docker stop even on Ctrl+C or test failure
+test-e2e: postgres app-setup
+	@bun run fixtures:reload
+	@bun run build
+	@bash -c '\
+		trap "make kill-server; make postgres-stop" EXIT; \
+		NODE_ENV=test bun run start & \
+		sleep 3; \
+		bun run test:e2e'
+
+# All tests (automated: unit → integration → functional → e2e)
+# -> Docker stays up between integration/functional/e2e, stops at the end
+test-all: postgres app-setup
+	@bash -c '\
+		trap "make kill-server; make postgres-stop" EXIT; \
+		echo "━━━ Unit tests ━━━" && \
+		bun run test:unit && \
+		echo "" && echo "━━━ Integration tests ━━━" && \
+		bun run test:integration && \
+		echo "" && echo "━━━ Functional tests ━━━" && \
+		bun run test:functional && \
+		echo "" && echo "━━━ E2E tests ━━━" && \
+		bun run fixtures:reload && \
+		bun run build && \
+		NODE_ENV=test bun run start & \
+		sleep 3; \
+		bun run test:e2e'
 
 ##################
 #  Make Docker   #

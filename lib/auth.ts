@@ -1,4 +1,4 @@
-import SendEmailAction from "@actions/SendEmailAction";
+import SendEmailAction from "@actions/send-email";
 import { passkey } from "@better-auth/passkey";
 import EmailTemplate from "@comps/email-template";
 import PrismaInstance from "@lib/prisma";

@@ -1,4 +1,4 @@
-import SendContactAction from "@actions/SendContactAction";
+import SendContactAction from "@actions/send-contact";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock env
@@ -18,7 +18,7 @@ vi.mock("@lib/nodemailer", () => ({
 
 // Mock SendEmailAction (for confirmation email)
 const mockSendEmailAction = vi.fn();
-vi.mock("@actions/SendEmailAction", () => ({
+vi.mock("@actions/send-email", () => ({
     default: (...args: unknown[]) => mockSendEmailAction(...args),
 }));
 

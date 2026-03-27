@@ -1,6 +1,6 @@
 "use client";
 
-import SendSecurityNotificationAction from "@actions/SendSecurityNotificationAction";
+import SendSecurityNotificationAction from "@actions/send-security-notification";
 import Form, { FormInputPassword, OnSubmit, useForm } from "@atoms/_form";
 import { Root as AlertDialogRoot, Backdrop, Close, Description, Popup, Portal, Title } from "@atoms/alert-dialog";
 import Button from "@atoms/button";

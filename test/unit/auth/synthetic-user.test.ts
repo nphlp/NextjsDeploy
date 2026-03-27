@@ -9,7 +9,7 @@ vi.mock("@lib/env", () => ({
     NEXT_PUBLIC_BASE_URL: "http://localhost:3000",
     TURNSTILE_SECRET_KEY: "test",
 }));
-vi.mock("@actions/SendEmailAction", () => ({ default: vi.fn() }));
+vi.mock("@actions/send-email", () => ({ default: vi.fn() }));
 vi.mock("@comps/email-template", () => ({ default: vi.fn() }));
 vi.mock("@lib/prisma", () => ({
     default: { $extends: () => ({}) },

@@ -1,6 +1,6 @@
 "use client";
 
-import SendSecurityNotificationAction from "@actions/SendSecurityNotificationAction";
+import SendSecurityNotificationAction from "@actions/send-security-notification";
 import Form, { FormInputPassword, OnSubmit, passwordSchema, passwordSchemaOnChange, useForm } from "@atoms/_form";
 import Button from "@atoms/button";
 import PasswordStrength from "@atoms/input/password-strength";

@@ -1,6 +1,6 @@
 "use client";
 
-import CancelTwoFactorAction from "@actions/CancelTwoFactorAction";
+import CancelTwoFactorAction from "@actions/cancel-two-factor";
 import Button from "@atoms/button";
 import { useState } from "react";
 import { queryUrlSerializer } from "../../_lib/query-params";

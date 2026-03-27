@@ -1,4 +1,4 @@
-import SendSecurityNotificationAction from "@actions/SendSecurityNotificationAction";
+import SendSecurityNotificationAction from "@actions/send-security-notification";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock env
@@ -14,7 +14,7 @@ vi.mock("@lib/auth-server", () => ({
 
 // Mock SendEmailAction
 const mockSendEmail = vi.fn();
-vi.mock("@actions/SendEmailAction", () => ({
+vi.mock("@actions/send-email", () => ({
     default: (...args: unknown[]) => mockSendEmail(...args),
 }));
 

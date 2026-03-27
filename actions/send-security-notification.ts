@@ -1,6 +1,6 @@
 "use server";
 
-import SendEmailAction from "@actions/SendEmailAction";
+import SendEmailAction from "@actions/send-email";
 import EmailTemplate from "@comps/email-template";
 import { getSession } from "@lib/auth-server";
 import { NEXT_PUBLIC_BASE_URL } from "@lib/env";

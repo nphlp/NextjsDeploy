@@ -1,6 +1,6 @@
 "use server";
 
-import SendEmailAction from "@actions/SendEmailAction";
+import SendEmailAction from "@actions/send-email";
 import EmailTemplate from "@comps/email-template";
 import { NEXT_PUBLIC_BASE_URL, SMTP_FROM, SMTP_FROM_NAME, SUPPORT_EMAIL } from "@lib/env";
 import NodemailerInstance from "@lib/nodemailer";

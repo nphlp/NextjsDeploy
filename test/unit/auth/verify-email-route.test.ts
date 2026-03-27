@@ -108,6 +108,18 @@ describe("GET /api/auth/verify-email — token invalidation", () => {
         expect(mockDefaultGET).toHaveBeenCalled();
     });
 
+    it("passes through when JWT verification throws (logs error)", async () => {
+        mockJwtPayload.mockImplementation(() => {
+            throw new Error("Invalid JWT");
+        });
+
+        const request = new Request("http://localhost:3000/api/auth/verify-email?token=bad-token");
+        await GET(request as never);
+
+        // Should fall through to Better Auth (not crash)
+        expect(mockDefaultGET).toHaveBeenCalled();
+    });
+
     it("uses & separator when callbackURL already has query params", async () => {
         mockJwtPayload.mockReturnValue({ email: "old@test.com", updateTo: "new@test.com" });
         mockFindFirst.mockResolvedValue({ id: "1", email: "old@test.com", pendingEmail: null });

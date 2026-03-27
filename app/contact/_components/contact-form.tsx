@@ -1,6 +1,6 @@
 "use client";
 
-import SendContactAction from "@actions/SendContactAction";
+import SendContactAction from "@actions/send-contact";
 import Form, {
     FormInput,
     FormSelect,

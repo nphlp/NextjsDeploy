@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock SendEmailAction
 const mockSendEmail = vi.fn();
-vi.mock("@actions/SendEmailAction", () => ({
+vi.mock("@actions/send-email", () => ({
     default: (...args: unknown[]) => mockSendEmail(...args),
 }));
 

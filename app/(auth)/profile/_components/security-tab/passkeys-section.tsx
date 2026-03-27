@@ -1,6 +1,6 @@
 "use client";
 
-import SendSecurityNotificationAction from "@actions/SendSecurityNotificationAction";
+import SendSecurityNotificationAction from "@actions/send-security-notification";
 import AlertDialog, {
     Backdrop as AlertBackdrop,
     Close as AlertClose,

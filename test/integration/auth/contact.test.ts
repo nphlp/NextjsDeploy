@@ -16,7 +16,7 @@ describe("Contact form — integration", () => {
 
     it("sends contact email to SUPPORT_EMAIL via Mailpit", async () => {
         // Import server action directly
-        const { default: SendContactAction } = await import("@actions/SendContactAction");
+        const { default: SendContactAction } = await import("@actions/send-contact");
 
         await SendContactAction({
             subject: "Signaler un bug",

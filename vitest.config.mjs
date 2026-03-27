@@ -16,11 +16,15 @@ export default defineConfig({
         coverage: {
             provider: "v8",
             // Files to include in coverage
-            include: ["api/**/*.ts"],
+            include: ["api/**/*.ts", "actions/**/*.ts"],
             // Files to exclude from coverage
             exclude: [
-                // `*-action.ts` files are tested through `*-mutation.ts` files tests
+                // oRPC actions tested through mutations
                 "api/**/*-action.ts",
+                // Need Next.js runtime (cookies)
+                "actions/cancel-two-factor.ts",
+                // Infra (Nodemailer transport, tested via integration)
+                "actions/send-email.ts",
             ],
             reporter: ["text", "html"],
             reportsDirectory: "./test/coverage",
