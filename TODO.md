@@ -38,9 +38,9 @@
     - [x] Activer/Désactiver T-OTP
     - [x] Ajouter/Supprimer Passkey
 
-- Déconnexion des sessions de tous les autres appareils après un :
-    - Changement d'email (+ session courante)
-    - Changement de mot de passe
+- [ ] Déconnexion des sessions de tous les autres appareils (sauf session courante) après un :
+    - [ ] Changement d'email - `revokeOtherSessions` n'existe pas dans `changeEmail`
+    - [x] Changement de mot de passe — `revokeOtherSessions: true` dans `changePassword`
 
 - [x] Page support (dispo dans le footer)
     - [x] Formulaire de contact
@@ -74,6 +74,11 @@
     - Autre ?
 
 - useOptimistic et mutations
+
+## PR Better Auth
+
+- [ ] Ajouter une option `revokeOtherSessions` dans `changeEmail`
+- [ ] Le hook `before` ne se déclenche pas pour les endpoints GET (`/verify-email`) — les hooks devraient couvrir tous les endpoints
 
 ## Implement
 
