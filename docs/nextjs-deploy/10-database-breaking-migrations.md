@@ -1,6 +1,6 @@
 [README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **Database Breaking Migrations**
 
-[← Dokploy Env Setup](./9-dokploy-env-setup.md)
+[← Dokploy Env Setup](./9-dokploy-env-setup.md) | [Scheduled Tasks →](./11-scheduled-tasks.md)
 
 ---
 
@@ -104,14 +104,19 @@ Deploy the intermediate migration to test, then production.
 
 2. Backup the database:
 
+> [!NOTE]
+> The database is a **standalone Dokploy service** (`production-db`), not part of the compose file. Find the container name in Dokploy > your database service > General tab, or use `docker ps | grep postgres`.
+
 ```bash
 mkdir -p /backups
-docker exec postgres-production pg_dump \
+docker exec <postgres-container-name> pg_dump \
     -U postgres \
     -d your-database \
     --format=custom \
     > /backups/backup_$(date +%Y%m%d_%H%M%S).dump
 ```
+
+Alternatively, use Dokploy's built-in backup (database service > **Backups** tab) — see [Cloudflare R2](../vps-infra/12-cloudflare-r2.md).
 
 3. Run the mutation script:
 
@@ -133,7 +138,7 @@ The script should:
 
 ```bash
 cat /backups/backup_YYYYMMDD_HHMMSS.dump | \
-docker exec -i postgres-production pg_restore \
+docker exec -i <postgres-container-name> pg_restore \
     -U postgres \
     -d your-database \
     --clean \
@@ -156,6 +161,6 @@ Deploy the final migration. Disable maintenance mode.
 
 ---
 
-[← Dokploy Env Setup](./9-dokploy-env-setup.md)
+[← Dokploy Env Setup](./9-dokploy-env-setup.md) | [Scheduled Tasks →](./11-scheduled-tasks.md)
 
 [README](../../README.md) > [NextJS Deploy](./1-setup-local.md) > **Database Breaking Migrations**

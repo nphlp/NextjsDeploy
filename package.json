@@ -35,7 +35,8 @@
         "prisma:studio": "bunx prisma studio",
         "fixtures:setup": "bun scripts/fixtures.ts setup",
         "fixtures:reset": "bun scripts/fixtures.ts reset",
-        "fixtures:reload": "bun scripts/fixtures.ts reload"
+        "fixtures:reload": "bun scripts/fixtures.ts reload",
+        "cron:cleanup-activities": "bun scripts/cron.ts cleanup-activities"
     },
     "dependencies": {
         "@prisma/adapter-pg": "^7.5.0",
