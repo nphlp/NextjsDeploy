@@ -1,5 +1,7 @@
+import { getActivities } from "@lib/activity";
 import { Session, getSessionList } from "@lib/auth-server";
 import { Provider } from "./profile-tab/_context/provider";
+import ActivityHistory from "./profile-tab/activity-history";
 import CurrentSession from "./profile-tab/current-session";
 import ProfileInfo from "./profile-tab/profile-info";
 import RevokeSessions from "./profile-tab/revoke-sessions";
@@ -13,7 +15,7 @@ export default async function ProfileTab(props: ProfileTabProps) {
     const { serverSession } = props;
 
     const userAgent = serverSession.session.userAgent ?? "";
-    const sessionList = await getSessionList();
+    const [sessionList, activities] = await Promise.all([getSessionList(), getActivities(serverSession.user.id)]);
 
     return (
         <div className="space-y-6">
@@ -48,6 +50,9 @@ export default async function ProfileTab(props: ProfileTabProps) {
                     <SessionList />
                 </section>
             </Provider>
+
+            {/* Historique d'activité */}
+            <ActivityHistory activities={activities} />
         </div>
     );
 }

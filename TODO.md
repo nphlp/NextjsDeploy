@@ -4,6 +4,8 @@
 
 ## Enhancements
 
+- [ ] Les pages de success avec bouton pour ouvrir le emails pourrait ouvrir l'application sur mobile ? Comme le fait Google, avec un deep link vers Gmail, Outlook, etc. (ex: `googlegmail://`, `ms-outlook://`, etc.)
+
 - [x] Changement d'email, gérer les emails :
     - [x] Envoyer un mail à l'ancien email "Notif de process en cours" + "Lien contact support"
     - [x] Envoyer un mail au nouvel email "Lien de confirmation"
@@ -11,15 +13,15 @@
     - [x] Après confirmation, envoyer un mail au nouvel email "Notif email modifié avec succès"
     - [x] Envoyer un mail de notification si l'utilisateur annule le changement d'email dans son profil
 
-- Nouvelle table "Activity History" :
-    - Champs :
-        - Type d'activité (connexion, email, mot de passe, 2FA, etc.)
-        - Date de l'activité
-        - Date de suppression programmée" (90 jours)
-    - Garder un historique des changements :
-        - Email "ancien -> nouveau email"
-        - Mot de passe
-        - 2 facteurs (T-OTP, Passkey, etc.)
+- [x] Nouvelle table "Activity History" :
+    - [x] Champs :
+        - [x] Type d'activité (connexion, email, mot de passe, 2FA, etc.)
+        - [x] Date de l'activité
+        - [x] Date de suppression programmée (90 jours)
+    - [x] Garder un historique des changements :
+        - [x] Email "ancien -> nouveau email"
+        - [x] Mot de passe
+        - [x] 2 facteurs (T-OTP, Passkey, etc.)
 
 - Système de CRON / JOBS
     - Nettoyage hebdomadaire des entrées "périmées" de la table "User Security History"
@@ -74,11 +76,6 @@
     - Autre ?
 
 - useOptimistic et mutations
-
-## PR Better Auth
-
-- [ ] Ajouter une option `revokeOtherSessions` dans `changeEmail`
-- [ ] Le hook `before` ne se déclenche pas pour les endpoints GET (`/verify-email`) — les hooks devraient couvrir tous les endpoints
 
 ## Implement
 

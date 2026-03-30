@@ -26,6 +26,7 @@ model User {
     Accounts   Account[]
     TwoFactors TwoFactor[]
     Passkeys   Passkey[]
+    Activities ActivityHistory[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -125,6 +126,33 @@ model Passkey {
     // Indexes
     @@index([userId])
     @@index([credentialID])
+}
+
+model ActivityHistory {
+    id   String       @id @default(nanoid())
+    type ActivityType
+
+    metadata String? @db.Text
+
+    userId String
+    User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    expiresAt DateTime
+
+    // Indexes
+    @@index([userId])
+    @@index([expiresAt])
+}
+
+enum ActivityType {
+    LOGIN
+    EMAIL_CHANGED
+    PASSWORD_CHANGED
+    TOTP_ENABLED
+    TOTP_DISABLED
+    PASSKEY_ADDED
+    PASSKEY_DELETED
 }
 
 enum Role {

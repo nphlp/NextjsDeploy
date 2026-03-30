@@ -10,6 +10,7 @@ import { nextCookies } from "better-auth/next-js";
 import { captcha, customSession, haveIBeenPwned, magicLink, openAPI, twoFactor } from "better-auth/plugins";
 import { jwtVerify } from "jose";
 import { nanoid } from "nanoid";
+import { logActivity } from "./activity";
 import { authBeforeMiddleware } from "./auth-middleware";
 import { BETTER_AUTH_SECRET, IS_DEV, IS_TEST, NEXT_PUBLIC_BASE_URL, TURNSTILE_SECRET_KEY } from "./env";
 
@@ -103,6 +104,9 @@ export const afterEmailVerification: AfterEmailVerificationProps = async (user, 
             where: { id: user.id },
             data: { pendingEmail: null },
         });
+
+        // Log activity
+        void logActivity(user.id, "EMAIL_CHANGED", `${oldEmail} → ${newEmail}`);
 
         // Notify old email: "your email has been changed"
         void SendEmailAction({
@@ -274,6 +278,7 @@ export const auth = betterAuth({
                 where: { id: user.id },
                 data: { emailVerified: true },
             });
+            void logActivity(user.id, "PASSWORD_CHANGED");
         },
     },
     /**
@@ -421,6 +426,18 @@ export const auth = betterAuth({
          * send notification emails on change-email verification
          */
         before: createAuthMiddleware(authBeforeMiddleware),
+    },
+    /**
+     * Database hooks for activity logging
+     */
+    databaseHooks: {
+        session: {
+            create: {
+                after: async (session) => {
+                    void logActivity(session.userId, "LOGIN");
+                },
+            },
+        },
     },
     /**
      * Advanced configuration options (optional)

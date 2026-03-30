@@ -36,6 +36,11 @@ vi.mock("@comps/email-template", () => ({
     default: (props: { emailType: string }) => props.emailType,
 }));
 
+// Mock activity logging
+vi.mock("@lib/activity", () => ({
+    logActivity: vi.fn(),
+}));
+
 // Mock better-auth/api (for APIError)
 vi.mock("better-auth/api", () => {
     class APIError extends Error {
