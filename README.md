@@ -44,6 +44,7 @@ See [Setup local](./docs/nextjs-deploy/1-setup-local.md) for all options and det
 
 ### Project — `docs/nextjs-deploy/`
 
+- [Quick Deploy](./docs/nextjs-deploy/0-quick-deploy.md) — Deploy on existing Dokploy infra
 - [Setup local](./docs/nextjs-deploy/1-setup-local.md)
 - [Environment variables](./docs/nextjs-deploy/2-environment-variables.md)
 - [Containerization](./docs/nextjs-deploy/3-containerization.md)
@@ -54,6 +55,7 @@ See [Setup local](./docs/nextjs-deploy/1-setup-local.md) for all options and det
 - [GitHub Env Setup](./docs/nextjs-deploy/8-github-env-setup.md)
 - [Dokploy Env Setup](./docs/nextjs-deploy/9-dokploy-env-setup.md)
 - [Database Breaking Migrations](./docs/nextjs-deploy/10-database-breaking-migrations.md)
+- [Scheduled Tasks](./docs/nextjs-deploy/11-scheduled-tasks.md)
 
 ### Good Practices — `docs/good-practices/`
 
@@ -70,8 +72,22 @@ See [Setup local](./docs/nextjs-deploy/1-setup-local.md) for all options and det
 - [Theme](./docs/good-practices/11-theme.md)
 - [Password Managers](./docs/good-practices/12-password-managers.md)
 
+### Security — `docs/security/`
+
+- [Audit Plan](./docs/security/audit-plan.md) — Security & legal implementation status
+- [Standards](./docs/security/standards.md) — OWASP, RGPD/CNIL, ANSSI reference
+
+### Testing — `docs/testing/`
+
+- [Overview](./docs/testing/0-overview.md) — Full test inventory (373 tests)
+- [E2E](./docs/testing/e2e.md)
+- [Unit](./docs/testing/unit.md)
+- [Integration](./docs/testing/integration.md)
+- [Functional](./docs/testing/functional.md)
+
 ### Infrastructure — `docs/vps-infra/`
 
+- [Quick Install](./docs/vps-infra/0-quick-install.md) — VPS setup from scratch
 - [Setup VPS](./docs/vps-infra/1-setup-vps.md)
 - [Firewall config](./docs/vps-infra/2-firewall-config.md)
 - [DNS config](./docs/vps-infra/3-dns-config.md)

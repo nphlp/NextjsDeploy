@@ -18,6 +18,8 @@ const turnstileDomain = "https://challenges.cloudflare.com";
 
 // Security headers config
 const securityHeaders = [
+    // Force HTTPS for 1 year (defense in depth, Traefik also redirects HTTP → HTTPS)
+    { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
     // Prevent clickjacking attacks
     { key: "X-Frame-Options", value: "DENY" },
     // Prevent MIME type sniffing

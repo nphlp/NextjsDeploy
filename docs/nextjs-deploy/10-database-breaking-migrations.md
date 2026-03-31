@@ -16,13 +16,13 @@ Use a lock file to toggle maintenance mode instantly via the Next.js middleware.
 /app
 ├── maintenance
 │   └── enabled.lock
-└── middleware.ts
+└── proxy.ts
 ```
 
 The middleware checks for the lock file and returns a 503 response if it exists:
 
 ```typescript
-// middleware.ts
+// proxy.ts
 import { existsSync } from "fs";
 import path from "path";
 

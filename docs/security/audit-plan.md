@@ -16,7 +16,7 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 - [x] Lire les recommandations ANSSI pour la sécurité des applications web
 - [x] Vérifier ce que Better Auth supporte nativement (plugins disponibles)
 - [x] Définir les solutions techniques pour chaque point
-- [x] Rédiger `SECURITY.md` — synthèse OWASP, RGPD/CNIL, ANSSI
+- [x] Rédiger `docs/security/standards.md` — synthèse OWASP, RGPD/CNIL, ANSSI
 
 ---
 
@@ -36,12 +36,12 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 - [x] **Vérification email améliorée** — bloquer l'accès tant que non vérifié
 - [x] **Hashing sécurisé** — scrypt (natif Better Auth) + salt 16 bytes par mot de passe
 - [x] **Have I Been Pwned** — blocage des mots de passe compromis (plugin Better Auth, k-anonymity)
-- [x] **Anti-énumération email** — proxy route masque USER_ALREADY_EXISTS en fake 200 (OWASP)
-    - Test E2E "register with existing email" implémenté
+- [x] **Anti-énumération email** — empêche de savoir si un email est déjà utilisé
+    - Inscription classique : proxy retourne fake 200 si l'email existe déjà (pas d'email envoyé)
+    - Magic link : envoie "Créez votre compte" si l'email n'existe pas, sinon lien de connexion
 - [ ] **Email contextuel à l'inscription** — envoyer un email "vous avez déjà un compte" si l'email existe déjà
-    - Actuellement le proxy retourne un fake 200 mais aucun email n'est envoyé à l'utilisateur existant
-    - Idéalement corrigé upstream par Better Auth ([#7972](https://github.com/better-auth/better-auth/issues/7972))
-    - Sinon, envoyer l'email côté app dans le proxy route
+    - Actuellement aucun email n'est envoyé lors de l'inscription avec un email existant
+    - Amélioration possible upstream par Better Auth ([#7972](https://github.com/better-auth/better-auth/issues/7972))
 - [x] **Codes d'erreur standardisés** — auth-middleware → auth-errors.ts (traduction FR côté client)
 - [x] **IDs nanoid** — Better Auth utilise nanoid (cohérent avec Prisma @default(nanoid()))
 
@@ -67,17 +67,27 @@ Références : OWASP, CNIL, RGPD, ANSSI.
     - Anti-énumération : si l'email n'existe pas, envoie un email "Créez votre compte" avec lien vers `/register` (même page de succès dans les deux cas)
 - [ ] **OAuth providers** — Google, GitHub (minimum)
     - Plugin Better Auth `socialProviders`
-- [ ] **Changement d'email** — permettre à l'utilisateur de changer son email
-    - API native Better Auth `changeEmail` ([docs](https://www.better-auth.com/docs/concepts/users-accounts#change-email))
-    - Envoi d'un email de vérification à la nouvelle adresse avant application
+- [x] **Changement d'email** — permettre à l'utilisateur de changer son email
+    - API native Better Auth `changeEmail`
+    - Emails de notification (ancien + nouveau, avant + après confirmation + annulation)
+    - Indicateur "En attente" dans le profil avec annulation
+    - Invalidation du token si changement annulé (custom GET handler)
+- [ ] **Session revocation après changement d'email** — `revokeOtherSessions` n'existe pas dans `changeEmail`
+    - Bloqué par Better Auth — voir `BETTER-AUTH.md`
+    - L'implémenter côté app serait trop bricolé (token stale dans `afterEmailVerification`, race conditions avec `refreshUserSessions`)
 - [ ] **Last login method** — tracer la dernière méthode de connexion utilisée
     - Plugin Better Auth `lastLoginMethod` ([docs](https://www.better-auth.com/docs/plugins/last-login-method))
 
 ### 2.3 Sécurité générale
 
-- [ ] **Middleware Next.js** — protection automatique des routes privées
-- [ ] **CSP strict** — retirer `unsafe-eval` si possible en production
-- [ ] **Logging sécurité** — log des tentatives échouées
+- [x] **Protection des routes privées** — `unauthorized()` par route (Next.js 16 `authInterrupts`) + `proxy.ts`
+- [x] **CSP strict** — `unsafe-eval` et Scalar uniquement en dev (`isDev` check dans `next.config.mts`)
+- [x] **Logging sécurité** — table `ActivityHistory` (login, email, password, TOTP, passkey)
+    - 7 types d'événements, rétention 90 jours, CRON de nettoyage
+    - Affichage dans l'onglet Profil avec popover explicatif
+    - À ajouter : `ACCOUNT_DELETED`, `DATA_DOWNLOADED` quand ces features seront implémentées
+- [x] **Notifications de sécurité** — emails fire-and-forget pour toutes les opérations sensibles
+    - Changement d'email (5 emails), mot de passe, TOTP, passkeys
 
 ---
 
@@ -136,28 +146,32 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 
 ### Auth — État actuel
 
-| Fonctionnalité             | Statut                                                          |
-| -------------------------- | --------------------------------------------------------------- |
-| Email/Password             | ✅ OK                                                           |
-| Vérification email         | ✅ OK (envoi à l'inscription + blocage si non vérifié)          |
-| Reset password             | ✅ OK (email + token)                                           |
-| Sessions multi-devices     | ✅ OK (visible sur /profile)                                    |
-| Règles mot de passe        | ✅ 14+ chars, maj/min/chiffre/spécial (client Zod + server)     |
-| Confirmation mot de passe  | ✅ OK                                                           |
-| CAPTCHA                    | ✅ Turnstile (inscription + reset password)                     |
-| Rate limiting              | ✅ 20/10s global, 3/10s endpoints sensibles                     |
-| Hashing                    | ✅ scrypt + salt 16 bytes (natif Better Auth)                   |
-| Protection emails jetables | ✅ Liste locale + Disify + MailCheck + DNS MX                   |
-| Have I Been Pwned          | ✅ Plugin Better Auth (k-anonymity)                             |
-| Anti-énumération email     | ⚠️ Proxy fake 200 OK, mais pas d'email à l'utilisateur existant |
-| Codes d'erreur             | ✅ Standardisés + traduction FR côté client                     |
-| IDs nanoid                 | ✅ Better Auth + Prisma cohérents                               |
-| 2FA / MFA                  | ✅ TOTP + backup codes (Email OTP non implémenté)               |
-| Passkeys (WebAuthn)        | ✅ Ajout/suppression/connexion                                  |
-| Connexion par email        | ✅ Connexion sans mot de passe                                  |
-| Tests E2E                  | ✅ 57 tests (10 specs) — voir `docs/testing/e2e.md`             |
-| OAuth providers            | ❌ À faire                                                      |
-| Middleware de routes       | ❌ À faire                                                      |
+| Fonctionnalité             | Statut                                                         |
+| -------------------------- | -------------------------------------------------------------- |
+| Email/Password             | ✅ OK                                                          |
+| Vérification email         | ✅ OK (envoi à l'inscription + blocage si non vérifié)         |
+| Reset password             | ✅ OK (email + token)                                          |
+| Sessions multi-devices     | ✅ OK (visible sur /profile)                                   |
+| Règles mot de passe        | ✅ 14+ chars, maj/min/chiffre/spécial (client Zod + server)    |
+| Confirmation mot de passe  | ✅ OK                                                          |
+| CAPTCHA                    | ✅ Turnstile (inscription + reset password)                    |
+| Rate limiting              | ✅ 20/10s global, 3/10s endpoints sensibles                    |
+| Hashing                    | ✅ scrypt + salt 16 bytes (natif Better Auth)                  |
+| Protection emails jetables | ✅ Liste locale + Disify + MailCheck + DNS MX                  |
+| Have I Been Pwned          | ✅ Plugin Better Auth (k-anonymity)                            |
+| Anti-énumération email     | ✅ Proxy fake 200 + magic link contextuel                      |
+| Codes d'erreur             | ✅ Standardisés + traduction FR côté client                    |
+| IDs nanoid                 | ✅ Better Auth + Prisma cohérents                              |
+| 2FA / MFA                  | ✅ TOTP + backup codes (Email OTP non implémenté)              |
+| Passkeys (WebAuthn)        | ✅ Ajout/suppression/connexion                                 |
+| Connexion par email        | ✅ Connexion sans mot de passe                                 |
+| Changement d'email         | ✅ OK (notifications, annulation, invalidation token)          |
+| Session revocation (email) | ❌ Bloqué par Better Auth — voir `BETTER-AUTH.md`              |
+| Notifications sécurité     | ✅ Emails fire-and-forget (email, mdp, TOTP, passkey)          |
+| Activity History           | ✅ 7 événements, rétention 90j, CRON cleanup, affichage profil |
+| Tests                      | ✅ 373 tests (228 unit, 63 integ, 8 func, 74 E2E)              |
+| OAuth providers            | ❌ À faire                                                     |
+| Protection des routes      | ✅ `unauthorized()` par route + `proxy.ts` (Next.js 16)        |
 
 ### Légal — État actuel
 
@@ -173,13 +187,14 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 
 ### Sécurité — État actuel
 
-| Mesure                 | Statut                                |
-| ---------------------- | ------------------------------------- |
-| Headers CSP            | ✅ OK (mais `unsafe-eval`)            |
-| X-Frame-Options        | ✅ DENY                               |
-| X-Content-Type-Options | ✅ nosniff                            |
-| Referrer-Policy        | ✅ strict-origin-when-cross-origin    |
-| Permissions-Policy     | ✅ camera/micro/geo désactivés        |
-| CSRF                   | ✅ Via Better Auth (sameSite cookies) |
-| Rate limiting          | ✅ Natif Better Auth                  |
-| Logging sécurité       | ❌ À faire                            |
+| Mesure                 | Statut                                         |
+| ---------------------- | ---------------------------------------------- |
+| HSTS                   | ✅ `max-age=31536000; includeSubDomains`       |
+| Headers CSP            | ✅ OK (strict en prod, `unsafe-eval` dev only) |
+| X-Frame-Options        | ✅ DENY                                        |
+| X-Content-Type-Options | ✅ nosniff                                     |
+| Referrer-Policy        | ✅ strict-origin-when-cross-origin             |
+| Permissions-Policy     | ✅ camera/micro/geo désactivés                 |
+| CSRF                   | ✅ Via Better Auth (sameSite cookies)          |
+| Rate limiting          | ✅ Natif Better Auth                           |
+| Logging sécurité       | ✅ ActivityHistory (7 events, 90j)             |

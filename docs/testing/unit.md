@@ -2,31 +2,21 @@
 
 # Unit Tests
 
-Vitest unit test suite for oRPC API routes — **13 tests**.
+Vitest unit test suite — **228 tests**.
 
 ## Setup
 
-- **Runner:** `bun run test:run`
+- **Runner:** `bun run test:unit`
 - **Config:** `vitest.config.mjs`
 - **Structure:** `test/unit/`
 
-## Test Files
+## Categories
 
-| File                               | Tests | Description          |
-| ---------------------------------- | ----- | -------------------- |
-| `user/create.test.ts`              | 1     | Create user          |
-| `user/delete.test.ts`              | 1     | Delete user          |
-| `user/find-first.test.ts`          | 1     | Find first user      |
-| `user/find-many.test.ts`           | 1     | Find many users      |
-| `user/find-unique.test.ts`         | 1     | Find unique user     |
-| `user/update.test.ts`              | 1     | Update user          |
-| `fruit/count.test.ts`              | 1     | Count fruits         |
-| `fruit/create.test.ts`             | 1     | Create fruit         |
-| `fruit/find-many.test.ts`          | 1     | Find many fruits     |
-| `fruit/find-unique.test.ts`        | 1     | Find unique fruit    |
-| `basket/find-many-by-user.test.ts` | 1     | Find baskets by user |
-| `csrf.test.ts`                     | 1     | CSRF protection      |
-| `cache.test.ts`                    | 1     | Cache behavior       |
+| Directory            | Description                                                         |
+| -------------------- | ------------------------------------------------------------------- |
+| `test/unit/api/`     | oRPC API routes (user, fruit, basket CRUD, CSRF, cache)             |
+| `test/unit/auth/`    | Auth callbacks, middleware, email templates, security notifications |
+| `test/unit/actions/` | Server actions (contact, email sending)                             |
 
 ## Pattern
 
@@ -34,12 +24,11 @@ Tests mock Prisma client and auth context:
 
 - `vi.mock("@lib/prisma")` — mock database calls
 - `vi.mock("@lib/auth")` — mock authenticated session
-- Each test calls the oRPC procedure directly and asserts the response
+- `vi.mock("@lib/activity")` — mock activity logging
+- Each test calls the function directly and asserts the response
 
-## Gaps
+## Coverage
 
-- No unit tests for auth logic (server-side validation, middleware)
-- No unit tests for Zod schemas
-- No unit tests for utility functions/hooks
+100% coverage on `api/**/*.ts` and `actions/**/*.ts` (excludes lib/, client files, infra).
 
 [< docs](../README.md)

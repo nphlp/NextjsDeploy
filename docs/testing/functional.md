@@ -2,21 +2,29 @@
 
 # Functional Tests
 
-Component and hook tests in isolation.
+Full feature tests with real DB, Mailpit, and MSW for external APIs — **8 tests**.
 
-## Status
+## Setup
 
-Not yet implemented.
+- **Runner:** `make test-functional`
+- **Config:** `vitest.config.functional.mjs`
+- **Structure:** `test/functional/`
+- **Requirements:** PostgreSQL + Mailpit running
 
-## Scope
+## MSW (Mock Service Worker)
 
-- React components (render, interaction, state)
-- Custom hooks (useForm, useTurnstile, etc.)
-- Form validation behavior
+External API calls are intercepted at HTTP level:
 
-## Potential Tools
+- **Disify** — disposable email detection
+- **MailCheck.ai** — disposable email fallback
+- **HIBP** — Have I Been Pwned password check
 
-- Vitest + React Testing Library
-- `@testing-library/user-event` for interactions
+Internal services (DB, Mailpit) pass through.
+
+## Categories
+
+| File                                    | Description                                                       |
+| --------------------------------------- | ----------------------------------------------------------------- |
+| `test/functional/auth/register.test.ts` | Registration with disposable email detection, HIBP, DNS MX checks |
 
 [< docs](../README.md)

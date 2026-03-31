@@ -22,6 +22,8 @@
     - `sendVerificationEmail` → `onEmailVerificationRequested`
     - `sendMagicLink` -> `onMagicLinkRequested`
 
+- [ ] `revokeOtherSessions` pour `changeEmail` (comme pour `changePassword`)
+
 ## Enhancement (low impact)
 
 - [ ] `afterEmailVerification` devrait recevoir le JWT décodé dans ses paramètres (pas seulement `user` et `request`)

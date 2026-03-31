@@ -103,12 +103,12 @@ bun run build && bun run start
 
 - `README.md` — Project overview, quick start, documentation index
 - `TODO.md` — Feature backlog and technical debt
-- `PLAN.md` — Security & legal audit plan (OWASP, RGPD, CNIL, ANSSI)
-- `SECURITY.md` — OWASP, RGPD/CNIL, ANSSI reference for developers
+- `BETTER-AUTH.md` — Better Auth upstream PRs/issues tracking (temporary)
 
 ## Documentation
 
 - `docs/nextjs-deploy/` — Project setup, environment, containerization, deployment
+    - `0-quick-deploy.md` — Deploy new stack on existing Dokploy infra (checklist)
     - `1-setup-local.md` — Prerequisites, make dev/start/docker/postgres, ngrok
     - `2-environment-variables.md` — Env generation system, variables reference
     - `3-containerization.md` — Compose files, Dockerfiles, volumes
@@ -119,6 +119,7 @@ bun run build && bun run start
     - `8-github-env-setup.md` — GitHub environment variables
     - `9-dokploy-env-setup.md` — Dokploy environment setup
     - `10-database-breaking-migrations.md` — Safe migration strategies
+    - `11-scheduled-tasks.md` — CRON tasks setup (Dokploy Schedules)
 - `docs/good-practices/` — Code conventions and patterns
     - `1-nextjs.md` — Page architecture, file structure per page
     - `2-components.md` — Component structure, props, JSX conventions
@@ -132,12 +133,17 @@ bun run build && bun run start
     - `10-base-ui.md` — Base UI component system (patterns, typing, inventory)
     - `11-theme.md` — Theme system (blocking script, CSS icons, zero flash)
     - `12-password-managers.md` — Autocomplete attributes for password manager compatibility
+- `docs/security/` — Security audit and compliance reference
+    - `audit-plan.md` — Security & legal audit plan (phases, status, inventory)
+    - `standards.md` — OWASP, RGPD/CNIL, ANSSI reference for developers
 - `docs/testing/` — Test suites documentation
-    - `e2e.md` — Playwright E2E tests (57 tests / 10 specs)
-    - `unit.md` — Vitest unit tests (13 tests)
-    - `functional.md` — Functional tests (placeholder)
-    - `integration.md` — Integration tests (placeholder)
+    - `0-overview.md` — Full test inventory (373 tests, all categories)
+    - `e2e.md` — Playwright E2E tests
+    - `unit.md` — Vitest unit tests
+    - `functional.md` — Functional tests
+    - `integration.md` — Integration tests
 - `docs/vps-infra/` — VPS setup, DNS, firewall, Dokploy, Tailscale, analytics
+    - `0-quick-install.md` — VPS setup from scratch (checklist)
     - `1-setup-vps.md` — VPS initial setup
     - `2-firewall-config.md` — UFW firewall rules
     - `3-dns-config.md` — DNS configuration
