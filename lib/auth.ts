@@ -24,7 +24,7 @@ type SendResetPasswordProps = NonNullable<NonNullable<BetterAuthOptions["emailAn
 export const sendResetPassword: SendResetPasswordProps = async (data) => {
     const { user, url } = data;
 
-    await SendEmailAction({
+    void SendEmailAction({
         subject: "Réinitialisez votre mot de passe",
         email: user.email,
         body: EmailTemplate({ buttonUrl: url, emailType: "reset" }),
@@ -41,7 +41,7 @@ type SendVerificationEmailProps = NonNullable<
 export const sendVerificationEmail: SendVerificationEmailProps = async (data) => {
     const { user, url } = data;
 
-    await SendEmailAction({
+    void SendEmailAction({
         subject: "Vérifiez votre adresse email",
         email: user.email,
         body: EmailTemplate({ buttonUrl: url, emailType: "verification" }),
@@ -59,13 +59,13 @@ export const sendMagicLink = async (data: { email: string; url: string; token: s
     const user = await PrismaInstance.user.findUnique({ where: { email } });
 
     if (user) {
-        await SendEmailAction({
+        void SendEmailAction({
             subject: "Votre lien de connexion",
             email,
             body: EmailTemplate({ buttonUrl: url, emailType: "magic-link" }),
         });
     } else {
-        await SendEmailAction({
+        void SendEmailAction({
             subject: "Créez votre compte",
             email,
             body: EmailTemplate({ buttonUrl: `${NEXT_PUBLIC_BASE_URL}/register`, emailType: "magic-link-no-account" }),
@@ -240,6 +240,12 @@ export const auth = betterAuth({
      */
     secret: BETTER_AUTH_SECRET,
     /**
+     * Lifecycle event: triggered on successful sign-in
+     */
+    onLogin: async ({ user }) => {
+        void logActivity(user.id, "LOGIN");
+    },
+    /**
      * Database adapter using Prisma
      */
     database: prismaAdapter(prismaInstanceWithWorkarounds, { provider: "postgresql" }),
@@ -279,6 +285,20 @@ export const auth = betterAuth({
                 data: { emailVerified: true },
             });
             void logActivity(user.id, "PASSWORD_CHANGED");
+        },
+        /**
+         * Lifecycle event: triggered when user changes password from profile
+         */
+        onPasswordChanged: async ({ user }) => {
+            void logActivity(user.id, "PASSWORD_CHANGED");
+            void SendEmailAction({
+                subject: "Votre mot de passe a été modifié",
+                email: user.email,
+                body: EmailTemplate({
+                    buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
+                    emailType: "password-changed",
+                }),
+            });
         },
     },
     /**
@@ -393,13 +413,64 @@ export const auth = betterAuth({
          */
         twoFactor({
             issuer: "Nextjs Deploy",
+            onTotpEnabled: async ({ user }) => {
+                void logActivity(user.id, "TOTP_ENABLED");
+                void SendEmailAction({
+                    subject: "Authentification à deux facteurs activée",
+                    email: user.email,
+                    body: EmailTemplate({
+                        buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
+                        emailType: "totp-enabled",
+                    }),
+                });
+            },
+            onTotpDisabled: async ({ user }) => {
+                void logActivity(user.id, "TOTP_DISABLED");
+                void SendEmailAction({
+                    subject: "Authentification à deux facteurs désactivée",
+                    email: user.email,
+                    body: EmailTemplate({
+                        buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
+                        emailType: "totp-disabled",
+                    }),
+                });
+            },
         }),
         /**
          * Passkey authentication (WebAuthn)
          * -> Touch ID, Windows Hello, FIDO keys
          * -> Passwordless login + 2FA
          */
-        passkey(),
+        passkey({
+            onPasskeyAdded: async ({ userId }) => {
+                void logActivity(userId, "PASSKEY_ADDED");
+                const user = await PrismaInstance.user.findUnique({ where: { id: userId } });
+                if (user) {
+                    void SendEmailAction({
+                        subject: "Nouvelle clé d\u2019accès ajoutée",
+                        email: user.email,
+                        body: EmailTemplate({
+                            buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
+                            emailType: "passkey-added",
+                        }),
+                    });
+                }
+            },
+            onPasskeyDeleted: async ({ userId }) => {
+                void logActivity(userId, "PASSKEY_DELETED");
+                const user = await PrismaInstance.user.findUnique({ where: { id: userId } });
+                if (user) {
+                    void SendEmailAction({
+                        subject: "Clé d\u2019accès supprimée",
+                        email: user.email,
+                        body: EmailTemplate({
+                            buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
+                            emailType: "passkey-deleted",
+                        }),
+                    });
+                }
+            },
+        }),
         /**
          * Magic Link authentication
          * -> Passwordless login via email link
@@ -426,18 +497,6 @@ export const auth = betterAuth({
          * send notification emails on change-email verification
          */
         before: createAuthMiddleware(authBeforeMiddleware),
-    },
-    /**
-     * Database hooks for activity logging
-     */
-    databaseHooks: {
-        session: {
-            create: {
-                after: async (session) => {
-                    void logActivity(session.userId, "LOGIN");
-                },
-            },
-        },
     },
     /**
      * Advanced configuration options (optional)

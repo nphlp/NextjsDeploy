@@ -1,6 +1,5 @@
 "use client";
 
-import SendSecurityNotificationAction from "@actions/send-security-notification";
 import AlertDialog, {
     Backdrop as AlertBackdrop,
     Close as AlertClose,
@@ -81,7 +80,6 @@ export default function PasskeysSection() {
         }
 
         toast.add({ title: "Clé d'accès ajoutée", type: "success" });
-        void SendSecurityNotificationAction("passkey-added");
         setIsAdding(false);
         setIsOpen(false);
         setRefreshKey((k) => k + 1);
@@ -99,7 +97,6 @@ export default function PasskeysSection() {
         }
 
         toast.add({ title: "Clé d'accès supprimée", type: "success" });
-        void SendSecurityNotificationAction("passkey-deleted");
         setDeleteId(null);
         setRefreshKey((k) => k + 1);
     };

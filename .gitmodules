@@ -1,3 +1,4 @@
 [submodule "vendor/better-auth"]
 	path = vendor/better-auth
 	url = https://github.com/nphlp/better-auth.git
+	branch = feat/lifecycle-hooks

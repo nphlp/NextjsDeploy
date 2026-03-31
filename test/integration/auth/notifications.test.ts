@@ -71,11 +71,6 @@ describe("Security notification emails — integration", () => {
     it("changePassword notification email arrives in Mailpit", async () => {
         await deleteAllEmails();
 
-        // Import the notification action
-        const { default: SendSecurityNotificationAction } = await import("@actions/send-security-notification");
-
-        // Call directly with mocked session concept — the action reads session from headers
-        // Since we can't easily pass a session, we test SendEmailAction directly
         const { default: SendEmailAction } = await import("@actions/send-email");
         const { default: EmailTemplate } = await import("@comps/email-template");
 

@@ -32,11 +32,15 @@
 
 ## Feature
 
-- [ ] Lifecycle events (hooks)
-    - [ ] onLogin
-    - [ ] onEmailVerificationRequested / onEmailVerificationCompleted
+- [ ] Lifecycle events (hooks) — restants
     - [ ] onChangeEmailRequested / onChangeEmailCancelled / onChangeEmailCompleted
-    - [ ] onPasswordChanged (depuis le profil, distinct de onPasswordReset)
-    - [ ] onResetPasswordRequested / onResetPasswordCompleted
-    - [ ] onTotpEnabled / onTotpDisabled
-    - [ ] onPasskeyAdded / onPasskeyDeleted
+
+## Done
+
+### Branch `feat/lifecycle-hooks`
+
+- [x] Lifecycle events (hooks)
+    - [x] onLogin — core options, triggered after session creation
+    - [x] onPasswordChanged — emailAndPassword options, triggered after password change from profile
+    - [x] onTotpEnabled / onTotpDisabled — TwoFactorOptions
+    - [x] onPasskeyAdded / onPasskeyDeleted — PasskeyOptions
