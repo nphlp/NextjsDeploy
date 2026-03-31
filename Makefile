@@ -244,6 +244,34 @@ ngrok:
 		fi \
 	fi
 
+##########################
+#   Better Auth (fork)   #
+##########################
+
+.PHONY: better-auth-install better-auth-build better-auth-dev better-auth-link
+
+BA_DIR = vendor/better-auth
+
+# Install fork dependencies (pnpm monorepo)
+better-auth-install:
+	@cd $(BA_DIR) && pnpm install
+
+# Build fork packages (core + telemetry + better-auth + passkey)
+better-auth-build:
+	@cd $(BA_DIR) && pnpm --filter @better-auth/core build && pnpm --filter @better-auth/telemetry build && pnpm --filter better-auth build && pnpm --filter @better-auth/passkey build
+
+# Watch mode (rebuild on changes)
+better-auth-dev:
+	@cd $(BA_DIR) && pnpm --filter @better-auth/core build && pnpm --filter @better-auth/telemetry build && pnpm --filter better-auth dev & pnpm --filter @better-auth/passkey dev
+
+# Link fork packages to this project (run after build)
+better-auth-link:
+	@cd $(BA_DIR)/packages/core && bun link
+	@cd $(BA_DIR)/packages/telemetry && bun link
+	@cd $(BA_DIR)/packages/better-auth && bun link
+	@cd $(BA_DIR)/packages/passkey && bun link
+	@bun link better-auth @better-auth/passkey @better-auth/core @better-auth/telemetry
+
 #####################
 #   Dump Database   #
 #####################

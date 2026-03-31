@@ -56,6 +56,7 @@ See [Setup local](./docs/nextjs-deploy/1-setup-local.md) for all options and det
 - [Dokploy Env Setup](./docs/nextjs-deploy/9-dokploy-env-setup.md)
 - [Database Breaking Migrations](./docs/nextjs-deploy/10-database-breaking-migrations.md)
 - [Scheduled Tasks](./docs/nextjs-deploy/11-scheduled-tasks.md)
+- [Better Auth Fork](./docs/nextjs-deploy/12-better-auth-fork.md)
 
 ### Good Practices — `docs/good-practices/`
 

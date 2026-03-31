@@ -15,6 +15,7 @@ const eslintConfig = defineConfig([
     globalIgnores([
         ".next/**",
         ".github/**",
+        "vendor/**",
         "coverage/**",
         "components/SHADCN/**",
         "env/**",

@@ -42,7 +42,8 @@ vi.mock("@lib/activity", () => ({
 }));
 
 // Mock better-auth/api (for APIError)
-vi.mock("better-auth/api", () => {
+vi.mock("better-auth/api", async (importOriginal) => {
+    const original = await importOriginal<Record<string, unknown>>();
     class APIError extends Error {
         constructor(
             public status: string,
@@ -51,7 +52,7 @@ vi.mock("better-auth/api", () => {
             super(options.message);
         }
     }
-    return { APIError, createAuthMiddleware: (fn: unknown) => fn };
+    return { ...original, APIError, createAuthMiddleware: (fn: unknown) => fn };
 });
 
 describe("afterEmailVerification", () => {

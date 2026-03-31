@@ -3,4 +3,5 @@
 solid/templates/
 prisma/client/
 node_modules/
+vendor/
 bun.lock

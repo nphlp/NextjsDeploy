@@ -2,7 +2,8 @@ import { authBeforeMiddleware } from "@lib/auth-middleware";
 import { describe, expect, it, vi } from "vitest";
 
 // Mock better-auth/api
-vi.mock("better-auth/api", () => {
+vi.mock("better-auth/api", async (importOriginal) => {
+    const original = await importOriginal<Record<string, unknown>>();
     class APIError extends Error {
         constructor(
             public status: string,
@@ -11,7 +12,7 @@ vi.mock("better-auth/api", () => {
             super(options.message);
         }
     }
-    return { APIError, createAuthMiddleware: (fn: unknown) => fn };
+    return { ...original, APIError, createAuthMiddleware: (fn: unknown) => fn };
 });
 
 // Mock fetch (for API calls) — return non-disposable by default

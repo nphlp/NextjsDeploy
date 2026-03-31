@@ -120,6 +120,7 @@ bun run build && bun run start
     - `9-dokploy-env-setup.md` — Dokploy environment setup
     - `10-database-breaking-migrations.md` — Safe migration strategies
     - `11-scheduled-tasks.md` — CRON tasks setup (Dokploy Schedules)
+    - `12-better-auth-fork.md` — Better Auth fork submodule setup
 - `docs/good-practices/` — Code conventions and patterns
     - `1-nextjs.md` — Page architecture, file structure per page
     - `2-components.md` — Component structure, props, JSX conventions

@@ -12,7 +12,14 @@ export default defineConfig({
     test: {
         environment: "jsdom",
         env: { NEXT_PUBLIC_BASE_URL },
-        exclude: ["**/.next/**", "**/node_modules/**", "test/e2e/**", "test/integration/**", "test/functional/**"],
+        exclude: [
+            "**/.next/**",
+            "**/node_modules/**",
+            "vendor/**",
+            "test/e2e/**",
+            "test/integration/**",
+            "test/functional/**",
+        ],
         coverage: {
             provider: "v8",
             // Files to include in coverage
