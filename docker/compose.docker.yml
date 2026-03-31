@@ -7,7 +7,7 @@ services:
             - ../env/.env.docker
         build:
             context: ../
-            dockerfile: docker/Dockerfile.nextjs
+            dockerfile: docker/Dockerfile.nextjs.submodules
             target: runner
             args:
                 NODE_ENV: ${NODE_ENV}

@@ -17,16 +17,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends postgresql-clie
 ################################
 FROM base AS better-auth-builder
 
-# Install pnpm
-RUN npm install -g pnpm@10
-
 # Copy only the fork (cached unless vendor/better-auth changes)
 COPY vendor/better-auth ./vendor/better-auth
 
-# Install and build fork packages
+# Install deps with bun (lighter than pnpm, no postinstall scripts)
 WORKDIR /app/vendor/better-auth
-RUN pnpm install --frozen-lockfile
-RUN pnpm build
+RUN bun install --ignore-scripts
+
+# Build packages in dependency order
+RUN cd packages/core && bunx tsdown && \
+    cd ../telemetry && bunx tsdown && \
+    cd ../better-auth && bunx tsdown && \
+    cd ../passkey && bunx tsdown && \
+    cd ../kysely-adapter && bunx tsdown && \
+    cd ../prisma-adapter && bunx tsdown && \
+    cd ../drizzle-adapter && bunx tsdown && \
+    cd ../memory-adapter && bunx tsdown && \
+    cd ../mongo-adapter && bunx tsdown
 
 ########################
 #   Dev Dependencies   #
@@ -36,17 +43,18 @@ FROM base AS dev-deps
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
-# Override npm packages with fork symlinks
-COPY --from=better-auth-builder /app/vendor/better-auth/packages /app/vendor/better-auth/packages
-RUN rm -rf node_modules/better-auth && ln -s /app/vendor/better-auth/packages/better-auth node_modules/better-auth
-RUN rm -rf node_modules/@better-auth/passkey && ln -s /app/vendor/better-auth/packages/passkey node_modules/@better-auth/passkey
-RUN rm -rf node_modules/@better-auth/core && ln -s /app/vendor/better-auth/packages/core node_modules/@better-auth/core
-RUN rm -rf node_modules/@better-auth/telemetry && ln -s /app/vendor/better-auth/packages/telemetry node_modules/@better-auth/telemetry
-RUN rm -rf node_modules/@better-auth/kysely-adapter && ln -s /app/vendor/better-auth/packages/kysely-adapter node_modules/@better-auth/kysely-adapter
-RUN rm -rf node_modules/@better-auth/prisma-adapter && ln -s /app/vendor/better-auth/packages/prisma-adapter node_modules/@better-auth/prisma-adapter
-RUN rm -rf node_modules/@better-auth/drizzle-adapter && ln -s /app/vendor/better-auth/packages/drizzle-adapter node_modules/@better-auth/drizzle-adapter
-RUN rm -rf node_modules/@better-auth/memory-adapter && ln -s /app/vendor/better-auth/packages/memory-adapter node_modules/@better-auth/memory-adapter
-RUN rm -rf node_modules/@better-auth/mongo-adapter && ln -s /app/vendor/better-auth/packages/mongo-adapter node_modules/@better-auth/mongo-adapter
+# Copy built fork and override npm packages with symlinks
+COPY --from=better-auth-builder /app/vendor/better-auth /app/vendor/better-auth
+RUN mkdir -p node_modules/@better-auth && \
+    rm -rf node_modules/better-auth && ln -s /app/vendor/better-auth/packages/better-auth node_modules/better-auth && \
+    rm -rf node_modules/@better-auth/passkey && ln -s /app/vendor/better-auth/packages/passkey node_modules/@better-auth/passkey && \
+    rm -rf node_modules/@better-auth/core && ln -s /app/vendor/better-auth/packages/core node_modules/@better-auth/core && \
+    rm -rf node_modules/@better-auth/telemetry && ln -s /app/vendor/better-auth/packages/telemetry node_modules/@better-auth/telemetry && \
+    rm -rf node_modules/@better-auth/kysely-adapter && ln -s /app/vendor/better-auth/packages/kysely-adapter node_modules/@better-auth/kysely-adapter && \
+    rm -rf node_modules/@better-auth/prisma-adapter && ln -s /app/vendor/better-auth/packages/prisma-adapter node_modules/@better-auth/prisma-adapter && \
+    rm -rf node_modules/@better-auth/drizzle-adapter && ln -s /app/vendor/better-auth/packages/drizzle-adapter node_modules/@better-auth/drizzle-adapter && \
+    rm -rf node_modules/@better-auth/memory-adapter && ln -s /app/vendor/better-auth/packages/memory-adapter node_modules/@better-auth/memory-adapter && \
+    rm -rf node_modules/@better-auth/mongo-adapter && ln -s /app/vendor/better-auth/packages/mongo-adapter node_modules/@better-auth/mongo-adapter
 
 #########################
 #   Prod Dependencies   #
@@ -56,24 +64,26 @@ FROM base AS prod-deps
 COPY package.json bun.lock ./
 RUN bun install --production --frozen-lockfile
 
-# Override npm packages with fork symlinks
-COPY --from=better-auth-builder /app/vendor/better-auth/packages /app/vendor/better-auth/packages
-RUN rm -rf node_modules/better-auth && ln -s /app/vendor/better-auth/packages/better-auth node_modules/better-auth
-RUN rm -rf node_modules/@better-auth/passkey && ln -s /app/vendor/better-auth/packages/passkey node_modules/@better-auth/passkey
-RUN rm -rf node_modules/@better-auth/core && ln -s /app/vendor/better-auth/packages/core node_modules/@better-auth/core
-RUN rm -rf node_modules/@better-auth/telemetry && ln -s /app/vendor/better-auth/packages/telemetry node_modules/@better-auth/telemetry
-RUN rm -rf node_modules/@better-auth/kysely-adapter && ln -s /app/vendor/better-auth/packages/kysely-adapter node_modules/@better-auth/kysely-adapter
-RUN rm -rf node_modules/@better-auth/prisma-adapter && ln -s /app/vendor/better-auth/packages/prisma-adapter node_modules/@better-auth/prisma-adapter
-RUN rm -rf node_modules/@better-auth/drizzle-adapter && ln -s /app/vendor/better-auth/packages/drizzle-adapter node_modules/@better-auth/drizzle-adapter
-RUN rm -rf node_modules/@better-auth/memory-adapter && ln -s /app/vendor/better-auth/packages/memory-adapter node_modules/@better-auth/memory-adapter
-RUN rm -rf node_modules/@better-auth/mongo-adapter && ln -s /app/vendor/better-auth/packages/mongo-adapter node_modules/@better-auth/mongo-adapter
+# Copy built fork and override npm packages with symlinks
+COPY --from=better-auth-builder /app/vendor/better-auth /app/vendor/better-auth
+RUN mkdir -p node_modules/@better-auth && \
+    rm -rf node_modules/better-auth && ln -s /app/vendor/better-auth/packages/better-auth node_modules/better-auth && \
+    rm -rf node_modules/@better-auth/passkey && ln -s /app/vendor/better-auth/packages/passkey node_modules/@better-auth/passkey && \
+    rm -rf node_modules/@better-auth/core && ln -s /app/vendor/better-auth/packages/core node_modules/@better-auth/core && \
+    rm -rf node_modules/@better-auth/telemetry && ln -s /app/vendor/better-auth/packages/telemetry node_modules/@better-auth/telemetry && \
+    rm -rf node_modules/@better-auth/kysely-adapter && ln -s /app/vendor/better-auth/packages/kysely-adapter node_modules/@better-auth/kysely-adapter && \
+    rm -rf node_modules/@better-auth/prisma-adapter && ln -s /app/vendor/better-auth/packages/prisma-adapter node_modules/@better-auth/prisma-adapter && \
+    rm -rf node_modules/@better-auth/drizzle-adapter && ln -s /app/vendor/better-auth/packages/drizzle-adapter node_modules/@better-auth/drizzle-adapter && \
+    rm -rf node_modules/@better-auth/memory-adapter && ln -s /app/vendor/better-auth/packages/memory-adapter node_modules/@better-auth/memory-adapter && \
+    rm -rf node_modules/@better-auth/mongo-adapter && ln -s /app/vendor/better-auth/packages/mongo-adapter node_modules/@better-auth/mongo-adapter
 
 ####################
 #     Builder      #
 ####################
 FROM dev-deps AS builder
 
-COPY . .
+# Copy source code WITHOUT vendor/ (already in node_modules via symlinks)
+COPY --exclude=vendor . .
 
 # Important to set "NEXT_PUBLIC_*" ENVs before nextjs build
 ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL

@@ -13,15 +13,10 @@ type ProviderProps = {
 export function Provider(props: ProviderProps) {
     const { serverSession, sessionList, children } = props;
 
-    // Remove current session from the list
-    const sessionListWithoutCurrent = sessionList.filter(
-        (sessionFromList) => sessionFromList.id !== serverSession.session.id,
-    );
-
-    // Order sessions by expiration date (most recent first)
-    const orderedSessionList = sessionListWithoutCurrent.sort(
-        (a, b) => new Date(b.expiresAt).getTime() - new Date(a.expiresAt).getTime(),
-    );
+    // Remove current session from the list, order by expiration date (most recent first)
+    const orderedSessionList = sessionList
+        .filter((s) => s.id !== serverSession.session.id)
+        .sort((a, b) => new Date(b.expiresAt).getTime() - new Date(a.expiresAt).getTime());
 
     const [sessions, setSessions] = useState<SessionList>(orderedSessionList);
     const [isRevokeAllOpen, setIsRevokeAllOpen] = useState(false);
