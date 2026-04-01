@@ -1,19 +1,11 @@
 # Better Auth PR
 
-## Bug
-
-- [ ] Le hook `before` ne se déclenche pas pour les endpoints GET (`/verify-email`) — les hooks devraient couvrir tous les endpoints
-- [ ] Prisma adapter : erreur P2025 sur `Verification.delete` (race condition passkey/OTP) — [#7129](https://github.com/better-auth/better-auth/issues/7129), [#6267](https://github.com/better-auth/better-auth/issues/6267)
-- [ ] Prisma adapter : `TwoFactor.delete({ where: { userId } })` non-unique — [#5929](https://github.com/better-auth/better-auth/issues/5929) (fix PR #7096)
-
-## Enhancement (high impact)
+## Enhancement
 
 - [ ] Renommer les callbacks d'email ?
     - `sendResetPassword` → `onResetPasswordRequested`
     - `sendVerificationEmail` → `onEmailVerificationRequested`
     - `sendMagicLink` -> `onMagicLinkRequested`
-
-## Enhancement (low impact)
 
 - [ ] Exporter les noms de cookies en constantes (`better-auth.two_factor`, `better-auth.session_token`, etc.)
 

@@ -154,8 +154,9 @@ test-e2e: postgres app-setup
 	@bun run fixtures:reload
 	@bun run build
 	@bash -c '\
-		trap "kill $$(lsof -ti :3000) 2>/dev/null; make postgres-stop" EXIT; \
-		NODE_ENV=test bun run start & \
+		cleanup() { kill $$(lsof -ti :3000) 2>/dev/null; sleep 1; kill $$(lsof -ti :3000) 2>/dev/null; make postgres-stop; }; \
+		trap cleanup EXIT; \
+		NODE_ENV=test bun run start 2>/dev/null & \
 		sleep 3; \
 		bun run test:e2e'
 

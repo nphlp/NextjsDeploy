@@ -21,13 +21,10 @@ vi.mock("@lib/env", () => ({
     TURNSTILE_SECRET_KEY: "test-key",
 }));
 
-// Mock Prisma (with $extends for Better Auth workaround in auth.ts)
+// Mock Prisma
 const mockFindUnique = vi.fn();
 vi.mock("@lib/prisma", () => ({
     default: {
-        $extends: () => ({
-            user: { findUnique: (...args: unknown[]) => mockFindUnique(...args) },
-        }),
         user: { findUnique: (...args: unknown[]) => mockFindUnique(...args) },
     },
 }));

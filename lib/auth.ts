@@ -259,46 +259,6 @@ export const customSyntheticUser = ({
     id,
 });
 
-/**
- * Prisma instance with workarounds for Better Auth + Prisma 7 compatibility.
- *
- * 1. Verification.delete — P2025 suppression: Better Auth tries to delete the
- *    Verification record after it's already gone (race condition in passkey/OTP flows).
- *    @see https://github.com/better-auth/better-auth/issues/7129
- *    @see https://github.com/better-auth/better-auth/issues/6267
- *
- * 2. TwoFactor.delete — non-unique where: Better Auth calls delete({ where: { userId } })
- *    but Prisma 7 requires a unique field for delete(). Workaround: findFirst then delete by id.
- *    @see https://github.com/better-auth/better-auth/issues/5929
- *    @todo Remove when upgrading to better-auth 1.5+ (fix merged in PR #7096)
- */
-const prismaInstanceWithWorkarounds = PrismaInstance.$extends({
-    query: {
-        verification: {
-            async delete({ args, query }) {
-                try {
-                    return await query(args);
-                } catch (error) {
-                    if (error instanceof Error && "code" in error && error.code === "P2025") {
-                        return null as never;
-                    }
-                    throw error;
-                }
-            },
-        },
-        twoFactor: {
-            async delete({ args, query }) {
-                if (!("id" in args.where) || !args.where.id) {
-                    const record = await PrismaInstance.twoFactor.findFirst({ where: args.where as never });
-                    if (!record) return null as never;
-                    args.where = { id: record.id };
-                }
-                return query(args);
-            },
-        },
-    },
-});
-
 type ExtendedSession = Parameters<typeof customSession>[0];
 
 /**
@@ -350,7 +310,7 @@ export const auth = betterAuth({
     /**
      * Database adapter using Prisma
      */
-    database: prismaAdapter(prismaInstanceWithWorkarounds, { provider: "postgresql" }),
+    database: prismaAdapter(PrismaInstance, { provider: "postgresql" }),
     /**
      * Extend user schema with custom fields
      */
