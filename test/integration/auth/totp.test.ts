@@ -42,6 +42,8 @@ describe("TOTP (2FA) — integration", () => {
     });
 
     afterAll(async () => {
+        // Wait for background callbacks (onTotpEnabled/Disabled fire-and-forget)
+        await new Promise((r) => setTimeout(r, 500));
         await PrismaInstance.user.deleteMany({ where: { email: TEST_EMAIL } });
     });
 

@@ -30,7 +30,7 @@ export default function RequestResetForm() {
 
         setEmailSent(true);
 
-        requestPasswordReset({
+        await requestPasswordReset({
             email: values.email,
             redirectTo: "/reset-password",
             ...captchaHeaders,

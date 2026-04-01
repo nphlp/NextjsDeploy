@@ -4,9 +4,22 @@
 
 ## Enhancements
 
+- [ ] Variable env "FIRST_ADMIN_PASSWORD=Password1234!"
+    - Pour toujours créer le `Password1234!` en développement local, même avec NODE_ENV=production
+    - Pour générer un mot de passe aléatoire en vériable production quand la variable est absente (et l'afficher dans les logs au démarrage)
+
 - [ ] Les pages de success avec bouton pour ouvrir le emails pourrait ouvrir l'application sur mobile ? Comme le fait Google, avec un deep link vers Gmail, Outlook, etc. (ex: `googlegmail://`, `ms-outlook://`, etc.)
 
 - [ ] Finir le plan d'audit de sécurité (Phase 3) — voir `docs/security/audit-plan.md`
+
+- [ ] Tester TOUS les emails (16 types) — vérifier que chaque email arrive avec le bon sujet/contenu
+    - verification, reset, magic-link, magic-link-no-account
+    - existing-account
+    - password-changed (reset + profile)
+    - change-requested, change-completed, change-success, change-canceled
+    - totp-enabled, totp-disabled
+    - passkey-added, passkey-deleted
+    - contact-confirmation
 
 ## Features
 

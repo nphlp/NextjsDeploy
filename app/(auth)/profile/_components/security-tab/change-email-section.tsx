@@ -6,7 +6,6 @@ import { useToast } from "@atoms/toast";
 import { changeEmail } from "@lib/auth-client";
 import { isValidationError, translateAuthError } from "@lib/auth-errors";
 import { Session } from "@lib/auth-server";
-import oRPC from "@lib/orpc";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
@@ -65,11 +64,6 @@ export default function ChangeEmailSection(props: ChangeEmailSectionProps) {
                 });
                 setIsSubmitting(false);
                 return;
-            }
-
-            // Store pending email in DB (only if change was actually initiated)
-            if (data) {
-                await oRPC.user.setPendingEmail({ newEmail: validated.newEmail });
             }
 
             // Reset form (delayed: SPA navigation can go back)

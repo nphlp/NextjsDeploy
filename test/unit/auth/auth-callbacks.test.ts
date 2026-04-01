@@ -36,10 +36,7 @@ describe("sendVerificationEmail", () => {
     beforeEach(() => mockSendEmail.mockReset());
 
     it("calls SendEmailAction with correct subject", async () => {
-        await sendVerificationEmail(
-            { user: { email: "user@test.com" } as never, url: "https://example.com/verify?token=abc", token: "abc" },
-            undefined,
-        );
+        await sendVerificationEmail({ user: { email: "user@test.com" }, url: "https://example.com/verify?token=abc" });
 
         expect(mockSendEmail).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -50,10 +47,7 @@ describe("sendVerificationEmail", () => {
     });
 
     it("uses emailType 'verification'", async () => {
-        await sendVerificationEmail(
-            { user: { email: "user@test.com" } as never, url: "https://example.com/verify", token: "abc" },
-            undefined,
-        );
+        await sendVerificationEmail({ user: { email: "user@test.com" }, url: "https://example.com/verify" });
 
         expect(mockSendEmail).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -63,10 +57,10 @@ describe("sendVerificationEmail", () => {
     });
 
     it("passes the verification URL to the template", async () => {
-        await sendVerificationEmail(
-            { user: { email: "user@test.com" } as never, url: "https://example.com/verify?token=xyz", token: "xyz" },
-            undefined,
-        );
+        await sendVerificationEmail({
+            user: { email: "user@test.com" },
+            url: "https://example.com/verify?token=xyz",
+        });
 
         expect(mockSendEmail).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -80,10 +74,7 @@ describe("sendResetPassword", () => {
     beforeEach(() => mockSendEmail.mockReset());
 
     it("calls SendEmailAction with correct subject", async () => {
-        await sendResetPassword(
-            { user: { email: "user@test.com" } as never, url: "https://example.com/reset?token=abc", token: "abc" },
-            undefined,
-        );
+        await sendResetPassword({ user: { email: "user@test.com" }, url: "https://example.com/reset?token=abc" });
 
         expect(mockSendEmail).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -94,10 +85,7 @@ describe("sendResetPassword", () => {
     });
 
     it("uses emailType 'reset'", async () => {
-        await sendResetPassword(
-            { user: { email: "user@test.com" } as never, url: "https://example.com/reset", token: "abc" },
-            undefined,
-        );
+        await sendResetPassword({ user: { email: "user@test.com" }, url: "https://example.com/reset" });
 
         expect(mockSendEmail).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -116,7 +104,7 @@ describe("sendMagicLink", () => {
     it("sends magic-link email when user exists", async () => {
         mockFindUnique.mockResolvedValue({ id: "1", email: "user@test.com" });
 
-        await sendMagicLink({ email: "user@test.com", url: "https://example.com/magic", token: "abc" });
+        await sendMagicLink({ email: "user@test.com", url: "https://example.com/magic" });
 
         expect(mockSendEmail).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -130,7 +118,7 @@ describe("sendMagicLink", () => {
     it("sends magic-link-no-account email when user does NOT exist (anti-enum)", async () => {
         mockFindUnique.mockResolvedValue(null);
 
-        await sendMagicLink({ email: "unknown@test.com", url: "https://example.com/magic", token: "abc" });
+        await sendMagicLink({ email: "unknown@test.com", url: "https://example.com/magic" });
 
         expect(mockSendEmail).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -144,7 +132,7 @@ describe("sendMagicLink", () => {
     it("uses /register URL for non-existing user (not the magic link URL)", async () => {
         mockFindUnique.mockResolvedValue(null);
 
-        await sendMagicLink({ email: "unknown@test.com", url: "https://example.com/magic", token: "abc" });
+        await sendMagicLink({ email: "unknown@test.com", url: "https://example.com/magic" });
 
         expect(mockSendEmail).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -156,7 +144,7 @@ describe("sendMagicLink", () => {
     it("uses the provided URL for existing user", async () => {
         mockFindUnique.mockResolvedValue({ id: "1", email: "user@test.com" });
 
-        await sendMagicLink({ email: "user@test.com", url: "https://example.com/magic?token=xyz", token: "xyz" });
+        await sendMagicLink({ email: "user@test.com", url: "https://example.com/magic?token=xyz" });
 
         expect(mockSendEmail).toHaveBeenCalledWith(
             expect.objectContaining({

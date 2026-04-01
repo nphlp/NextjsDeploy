@@ -84,10 +84,47 @@ This uses `Dockerfile.nextjs.submodules` which:
 
 When Better Auth merges your changes and publishes a new version:
 
-1. Update `package.json` to the new npm version
-2. Switch compose file path back to: `./compose.dokploy.yml`
-3. Disable **Enable Submodules**
-4. Remove the submodule: `git rm vendor/better-auth && rm -rf .git/modules/vendor`
+**1. Update dependencies:**
+
+```bash
+# Update to the npm version that includes the merged PRs
+bun add better-auth@latest @better-auth/passkey@latest
+```
+
+**2. Revert Docker config:**
+
+- `docker/compose.docker.yml` → change `Dockerfile.nextjs.submodules` back to `Dockerfile.nextjs`
+- Dokploy → change compose path back to `./compose.dokploy.yml`
+- Dokploy → disable **Enable Submodules**
+
+**3. Remove submodule:**
+
+```bash
+git rm vendor/better-auth
+rm -rf .git/modules/vendor
+```
+
+**4. Clean up submodule files:**
+
+```bash
+rm docker/Dockerfile.nextjs.submodules
+rm compose.dokploy.submodules.yml
+rm .gitmodules
+```
+
+**5. Revert Makefile:**
+
+- Remove the `Better Auth (fork)` section (better-auth-install, better-auth-build, better-auth-dev, better-auth-link)
+- Remove the `better-auth-link` call in `app-setup`
+
+**6. Files that can stay as-is** (no impact without `vendor/`):
+
+- `tsconfig.json` — `"vendor"` in exclude
+- `eslint.config.mjs` — `"vendor/**"` in globalIgnores
+- `.prettierignore` — `vendor/`
+- `vitest.config.mjs` — `"vendor/**"` in exclude
+
+**7. Update BETTER-AUTH.md** — move items from "Done" to archived, remove file if all PRs are merged
 
 ## Architecture
 

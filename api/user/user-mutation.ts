@@ -1,14 +1,7 @@
 import { os } from "@orpc/server";
 import "server-only";
-import { userCancelPendingEmail, userCreate, userDeleting, userSetPendingEmail, userUpdate } from "./user-action";
-import {
-    userCancelPendingEmailInputSchema,
-    userCreateInputSchema,
-    userDeleteInputSchema,
-    userOutputSchema,
-    userSetPendingEmailInputSchema,
-    userUpdateInputSchema,
-} from "./user-schema";
+import { userCreate, userDeleting, userUpdate } from "./user-action";
+import { userCreateInputSchema, userDeleteInputSchema, userOutputSchema, userUpdateInputSchema } from "./user-schema";
 
 export const create = os
     .route({
@@ -55,42 +48,10 @@ export const deleting = os
         return data;
     });
 
-export const setPendingEmail = os
-    .route({
-        method: "PUT",
-        path: "/users/pending-email",
-        summary: "USER Set Pending Email",
-        description: "Permission: owner (authenticated user)",
-    })
-    .input(userSetPendingEmailInputSchema)
-    .output(userOutputSchema)
-    .handler(async ({ input }) => {
-        const [error, data] = await userSetPendingEmail(input);
-        if (error) throw error;
-        return data;
-    });
-
-export const cancelPendingEmail = os
-    .route({
-        method: "DELETE",
-        path: "/users/pending-email",
-        summary: "USER Cancel Pending Email",
-        description: "Permission: owner (authenticated user)",
-    })
-    .input(userCancelPendingEmailInputSchema)
-    .output(userOutputSchema)
-    .handler(async ({ input }) => {
-        const [error, data] = await userCancelPendingEmail(input);
-        if (error) throw error;
-        return data;
-    });
-
 const userMutations = {
     create,
     update,
     delete: deleting,
-    setPendingEmail,
-    cancelPendingEmail,
 };
 
 export default userMutations;

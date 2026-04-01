@@ -42,32 +42,6 @@ describe("Security notification emails — integration", () => {
         await PrismaInstance.user.deleteMany({ where: { email: TEST_EMAIL } });
     });
 
-    it("setPendingEmail sends notification to old email", async () => {
-        // Import and call the oRPC action directly
-        const { userSetPendingEmail } = await import("@/api/user/user-action");
-        const newEmail = `notif-new-${timestamp}@gmail.com`;
-
-        // The action needs a session context — call it via the mock
-        // Since the action uses requiresSession middleware, we simulate by updating DB directly
-        // and calling SendEmailAction manually via the action
-        await PrismaInstance.user.update({
-            where: { email: TEST_EMAIL },
-            data: { pendingEmail: newEmail },
-        });
-
-        // The notification is sent by the oRPC action (fire-and-forget)
-        // In integration, the email should arrive in Mailpit
-        // However, calling the oRPC action directly requires session middleware
-        // This is better tested via the E2E test which already verifies it
-
-        // Verify DB state instead
-        const user = await PrismaInstance.user.findUnique({ where: { email: TEST_EMAIL } });
-        expect(user!.pendingEmail).toBe(newEmail);
-
-        // Cleanup
-        await PrismaInstance.user.update({ where: { email: TEST_EMAIL }, data: { pendingEmail: null } });
-    });
-
     it("changePassword notification email arrives in Mailpit", async () => {
         await deleteAllEmails();
 

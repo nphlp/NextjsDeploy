@@ -71,6 +71,9 @@ app-setup:
 	@if [ ! -f node_modules/.package-lock.json ] || [ bun.lock -nt node_modules/.package-lock.json ]; then \
 		bun install; \
 	fi
+	@if [ -d vendor/better-auth ]; then \
+		$(MAKE) better-auth-link > /dev/null 2>&1; \
+	fi
 	@bun run db:setup
 	@if [ ! -d prisma/client ] || [ prisma/schema.prisma -nt prisma/client ]; then \
 		bun run prisma:generate; \
@@ -123,17 +126,15 @@ test-unit-email:
 test-unit-contact:
 	@bun run test:unit -- test/unit/contact
 
-# Unit test coverage
-test-coverage:
-	@bun run test:unit:coverage
-
 # Integration tests (requires Docker: Postgres + Mailpit)
 # -> trap ensures Docker stops even on Ctrl+C
-test-integration: postgres
+test-integration: postgres app-setup
+	@bun run fixtures:reload
 	@bash -c 'trap "make postgres-stop" EXIT; bun run test:integration'
 
 # Functional tests (requires Docker + mocks external APIs via MSW)
-test-functional: postgres
+test-functional: postgres app-setup
+	@bun run fixtures:reload
 	@bash -c 'trap "make postgres-stop" EXIT; bun run test:functional'
 
 # E2E server (interactive: starts server, run tests manually in another terminal)
@@ -147,35 +148,13 @@ test: postgres app-setup
 	@echo "👉 Run 'bun run test:e2e' in another terminal"
 	@NODE_ENV=test bun run start; make postgres-stop
 
-# Kill Next.js server on port 3000 (used by test-e2e and test-all cleanup)
-kill-server:
-	@kill $$(lsof -ti :3000) 2>/dev/null || true
-
 # E2E tests (automated: build, start server, run tests, stop everything)
 # -> trap ensures server + Docker stop even on Ctrl+C or test failure
 test-e2e: postgres app-setup
 	@bun run fixtures:reload
 	@bun run build
 	@bash -c '\
-		trap "make kill-server; make postgres-stop" EXIT; \
-		NODE_ENV=test bun run start & \
-		sleep 3; \
-		bun run test:e2e'
-
-# All tests (automated: unit → integration → functional → e2e)
-# -> Docker stays up between integration/functional/e2e, stops at the end
-test-all: postgres app-setup
-	@bash -c '\
-		trap "make kill-server; make postgres-stop" EXIT; \
-		echo "━━━ Unit tests ━━━" && \
-		bun run test:unit && \
-		echo "" && echo "━━━ Integration tests ━━━" && \
-		bun run test:integration && \
-		echo "" && echo "━━━ Functional tests ━━━" && \
-		bun run test:functional && \
-		echo "" && echo "━━━ E2E tests ━━━" && \
-		bun run fixtures:reload && \
-		bun run build && \
+		trap "kill $$(lsof -ti :3000) 2>/dev/null; make postgres-stop" EXIT; \
 		NODE_ENV=test bun run start & \
 		sleep 3; \
 		bun run test:e2e'

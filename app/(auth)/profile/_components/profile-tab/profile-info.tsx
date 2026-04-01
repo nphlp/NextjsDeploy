@@ -4,9 +4,8 @@ import AlertDialog, { Backdrop, Close, Description, Popup, Portal, Title } from 
 import Button from "@atoms/button";
 import Card from "@atoms/card";
 import { useToast } from "@atoms/toast";
-import { sendVerificationEmail, useSession } from "@lib/auth-client";
+import { authClient, sendVerificationEmail, useSession } from "@lib/auth-client";
 import { Session } from "@lib/auth-server";
-import oRPC from "@lib/orpc";
 import { Role } from "@prisma/client/client";
 import { CircleCheck, CircleX, Clock, Mail } from "lucide-react";
 import { useState } from "react";
@@ -61,7 +60,7 @@ export default function ProfileInfo(props: ProfileInfoProps) {
         setIsCanceling(true);
 
         try {
-            await oRPC.user.cancelPendingEmail({});
+            await authClient.cancelEmailChange();
             toast.add({
                 title: "Changement annulé",
                 description: "La demande de changement d\u2019email a été annulée.",

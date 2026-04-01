@@ -29,7 +29,8 @@ type EmailType =
     | "totp-disabled"
     | "passkey-added"
     | "passkey-deleted"
-    | "contact-confirmation";
+    | "contact-confirmation"
+    | "existing-account";
 
 type EmailTemplateProps = {
     buttonUrl: string;
@@ -161,6 +162,14 @@ const content: Record<
         description:
             "Nous avons bien reçu votre message et reviendrons vers vous dès que possible. Merci de nous avoir contactés.",
         buttonText: "Retour au site",
+        buttonColor: "#000000",
+    },
+    "existing-account": {
+        preview: "Tentative de création de compte",
+        title: "Vous avez déjà un compte",
+        description:
+            "Une tentative de création de compte a été faite avec cette adresse email. Si c'est vous, connectez-vous ou réinitialisez votre mot de passe.",
+        buttonText: "Se connecter",
         buttonColor: "#000000",
     },
 };

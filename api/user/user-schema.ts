@@ -31,12 +31,6 @@ const userDeleteInputSchema = z.object({
     revalidatePaths: z.array(z.string()).optional().describe("Array of revalidation paths"),
 });
 
-const userSetPendingEmailInputSchema = z.object({
-    newEmail: z.string().describe("New email address to set as pending"),
-});
-
-const userCancelPendingEmailInputSchema = z.object({});
-
 const userOutputSchema: ZodType<User> = z.object({
     id: z.string().describe("Unique ID of the user (nanoid)"),
     name: z.string().describe("Firstname of the user"),
@@ -56,8 +50,6 @@ export {
     userCreateInputSchema,
     userUpdateInputSchema,
     userDeleteInputSchema,
-    userSetPendingEmailInputSchema,
-    userCancelPendingEmailInputSchema,
     // Output schema
     userOutputSchema,
 };

@@ -3,12 +3,10 @@ import { passkey } from "@better-auth/passkey";
 import EmailTemplate from "@comps/email-template";
 import PrismaInstance from "@lib/prisma";
 import { betterAuth } from "better-auth";
-import { BetterAuthOptions } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { APIError, createAuthMiddleware } from "better-auth/api";
+import { createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { captcha, customSession, haveIBeenPwned, magicLink, openAPI, twoFactor } from "better-auth/plugins";
-import { jwtVerify } from "jose";
 import { nanoid } from "nanoid";
 import { logActivity } from "./activity";
 import { authBeforeMiddleware } from "./auth-middleware";
@@ -16,14 +14,10 @@ import { BETTER_AUTH_SECRET, IS_DEV, IS_TEST, NEXT_PUBLIC_BASE_URL, TURNSTILE_SE
 
 const isRateLimitDisabled = IS_TEST === true;
 
-type SendResetPasswordProps = NonNullable<NonNullable<BetterAuthOptions["emailAndPassword"]>["sendResetPassword"]>;
-
 /**
- * Send reset password link to user email
+ * Callback: send reset password link
  */
-export const sendResetPassword: SendResetPasswordProps = async (data) => {
-    const { user, url } = data;
-
+export const sendResetPassword = async ({ user, url }: { user: { email: string }; url: string }) => {
     void SendEmailAction({
         subject: "Réinitialisez votre mot de passe",
         email: user.email,
@@ -31,16 +25,10 @@ export const sendResetPassword: SendResetPasswordProps = async (data) => {
     });
 };
 
-type SendVerificationEmailProps = NonNullable<
-    NonNullable<BetterAuthOptions["emailVerification"]>["sendVerificationEmail"]
->;
-
 /**
- * Send verification link to user email
+ * Callback: send verification link
  */
-export const sendVerificationEmail: SendVerificationEmailProps = async (data) => {
-    const { user, url } = data;
-
+export const sendVerificationEmail = async ({ user, url }: { user: { email: string }; url: string }) => {
     void SendEmailAction({
         subject: "Vérifiez votre adresse email",
         email: user.email,
@@ -49,13 +37,11 @@ export const sendVerificationEmail: SendVerificationEmailProps = async (data) =>
 };
 
 /**
- * Send magic link to user email
+ * Callback: send magic link
  * -> If user exists: send real magic link
- * -> If user doesn't exist: send "please register" email with link to register page
+ * -> If user doesn't exist: send "please register" email
  */
-export const sendMagicLink = async (data: { email: string; url: string; token: string }) => {
-    const { email, url } = data;
-
+export const sendMagicLink = async ({ email, url }: { email: string; url: string }) => {
     const user = await PrismaInstance.user.findUnique({ where: { email } });
 
     if (user) {
@@ -73,63 +59,183 @@ export const sendMagicLink = async (data: { email: string; url: string; token: s
     }
 };
 
-type AfterEmailVerificationProps = NonNullable<
-    NonNullable<BetterAuthOptions["emailVerification"]>["afterEmailVerification"]
->;
+/**
+ * Lifecycle: on successful sign-in
+ */
+const onLogin = async ({ user }: { user: { id: string } }) => {
+    void logActivity(user.id, "LOGIN");
+};
 
 /**
- * After email verification callback
- * -> Detects change-email verifications by decoding the JWT from the request URL
- * -> Clears pendingEmail and sends notification emails to old and new email
+ * Lifecycle: on password reset (forgot password flow)
+ * -> Also verify email if not yet verified
  */
-export const afterEmailVerification: AfterEmailVerificationProps = async (user, request) => {
-    if (!request) return;
+const onPasswordReset = async ({ user }: { user: { id: string } }) => {
+    const dbUser = await PrismaInstance.user.update({
+        where: { id: user.id },
+        data: { emailVerified: true },
+    });
+    void logActivity(user.id, "PASSWORD_CHANGED");
+    void SendEmailAction({
+        subject: "Votre mot de passe a été réinitialisé",
+        email: dbUser.email,
+        body: EmailTemplate({
+            buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
+            emailType: "password-changed",
+        }),
+    });
+};
 
-    const url = new URL(request.url);
-    const token = url.searchParams.get("token");
-    if (!token) return;
+/**
+ * Lifecycle: on password change from profile
+ */
+const onPasswordChanged = async ({ user }: { user: { id: string; email: string } }) => {
+    void logActivity(user.id, "PASSWORD_CHANGED");
+    void SendEmailAction({
+        subject: "Votre mot de passe a été modifié",
+        email: user.email,
+        body: EmailTemplate({
+            buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
+            emailType: "password-changed",
+        }),
+    });
+};
 
-    try {
-        const secret = new TextEncoder().encode(BETTER_AUTH_SECRET);
-        const { payload } = await jwtVerify(token, secret);
+/**
+ * Callback: existing user tries to sign up again
+ * -> Send email informing them they already have an account (anti-enumeration)
+ */
+const onExistingUserSignUp = async ({ user }: { user: { email: string } }) => {
+    void SendEmailAction({
+        subject: "Tentative de création de compte",
+        email: user.email,
+        body: EmailTemplate({
+            buttonUrl: `${NEXT_PUBLIC_BASE_URL}/login`,
+            emailType: "existing-account",
+        }),
+    });
+};
 
-        // Only process change-email verifications (JWT has updateTo field)
-        if (!payload.updateTo || typeof payload.email !== "string") return;
+/**
+ * Lifecycle: on email change requested
+ */
+const onChangeEmailRequested = async ({
+    user,
+    newEmail,
+}: {
+    user: { id: string; email: string };
+    newEmail: string;
+}) => {
+    void logActivity(user.id, "EMAIL_CHANGED", `${user.email} → ${newEmail}`);
+    void SendEmailAction({
+        subject: "Changement d\u2019email en cours",
+        email: user.email,
+        body: EmailTemplate({
+            buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
+            emailType: "change-requested",
+        }),
+    });
+};
 
-        const oldEmail = payload.email as string;
-        const newEmail = payload.updateTo as string;
+/**
+ * Lifecycle: on email change completed (verified)
+ */
+const onChangeEmailCompleted = async ({ oldEmail, newEmail }: { oldEmail: string; newEmail: string }) => {
+    void SendEmailAction({
+        subject: "Votre adresse email a été modifiée",
+        email: oldEmail,
+        body: EmailTemplate({
+            buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
+            emailType: "change-completed",
+        }),
+    });
+    void SendEmailAction({
+        subject: "Changement d\u2019email confirmé",
+        email: newEmail,
+        body: EmailTemplate({
+            buttonUrl: `${NEXT_PUBLIC_BASE_URL}/profile`,
+            emailType: "change-success",
+        }),
+    });
+};
 
-        // Clear pendingEmail
-        await PrismaInstance.user.update({
-            where: { id: user.id },
-            data: { pendingEmail: null },
-        });
+/**
+ * Lifecycle: on email change cancelled
+ */
+const onChangeEmailCancelled = async ({ user }: { user: { email: string } }) => {
+    void SendEmailAction({
+        subject: "Changement d\u2019email annulé",
+        email: user.email,
+        body: EmailTemplate({
+            buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
+            emailType: "change-canceled",
+        }),
+    });
+};
 
-        // Log activity
-        void logActivity(user.id, "EMAIL_CHANGED", `${oldEmail} → ${newEmail}`);
+/**
+ * Lifecycle: on TOTP enabled
+ */
+const onTotpEnabled = async ({ user }: { user: { id: string; email: string } }) => {
+    void logActivity(user.id, "TOTP_ENABLED");
+    void SendEmailAction({
+        subject: "Authentification à deux facteurs activée",
+        email: user.email,
+        body: EmailTemplate({
+            buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
+            emailType: "totp-enabled",
+        }),
+    });
+};
 
-        // Notify old email: "your email has been changed"
+/**
+ * Lifecycle: on TOTP disabled
+ */
+const onTotpDisabled = async ({ user }: { user: { id: string; email: string } }) => {
+    void logActivity(user.id, "TOTP_DISABLED");
+    void SendEmailAction({
+        subject: "Authentification à deux facteurs désactivée",
+        email: user.email,
+        body: EmailTemplate({
+            buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
+            emailType: "totp-disabled",
+        }),
+    });
+};
+
+/**
+ * Lifecycle: on passkey added
+ */
+const onPasskeyAdded = async ({ userId }: { userId: string }) => {
+    void logActivity(userId, "PASSKEY_ADDED");
+    const user = await PrismaInstance.user.findUnique({ where: { id: userId } });
+    if (user) {
         void SendEmailAction({
-            subject: "Votre adresse email a été modifiée",
-            email: oldEmail,
+            subject: "Nouvelle clé d\u2019accès ajoutée",
+            email: user.email,
             body: EmailTemplate({
                 buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
-                emailType: "change-completed",
+                emailType: "passkey-added",
             }),
         });
+    }
+};
 
-        // Notify new email: "change successful"
+/**
+ * Lifecycle: on passkey deleted
+ */
+const onPasskeyDeleted = async ({ userId }: { userId: string }) => {
+    void logActivity(userId, "PASSKEY_DELETED");
+    const user = await PrismaInstance.user.findUnique({ where: { id: userId } });
+    if (user) {
         void SendEmailAction({
-            subject: "Changement d\u2019email confirmé",
-            email: newEmail,
+            subject: "Clé d\u2019accès supprimée",
+            email: user.email,
             body: EmailTemplate({
-                buttonUrl: `${NEXT_PUBLIC_BASE_URL}/profile`,
-                emailType: "change-success",
+                buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
+                emailType: "passkey-deleted",
             }),
         });
-    } catch (error) {
-        if (error instanceof APIError) throw error;
-        console.error("afterEmailVerification error:", error);
     }
 };
 
@@ -147,6 +253,7 @@ export const customSyntheticUser = ({
     id: string;
 }) => ({
     ...coreFields,
+    pendingEmail: null,
     twoFactorEnabled: false,
     ...additionalFields,
     id,
@@ -239,12 +346,7 @@ export const auth = betterAuth({
      * Auth secret for signing tokens and encrypting data
      */
     secret: BETTER_AUTH_SECRET,
-    /**
-     * Lifecycle event: triggered on successful sign-in
-     */
-    onLogin: async ({ user }) => {
-        void logActivity(user.id, "LOGIN");
-    },
+    onLogin,
     /**
      * Database adapter using Prisma
      */
@@ -255,6 +357,10 @@ export const auth = betterAuth({
     user: {
         changeEmail: {
             enabled: true,
+            revokeOtherSessions: true,
+            onChangeEmailRequested,
+            onChangeEmailCompleted,
+            onChangeEmailCancelled,
         },
         additionalFields: {
             lastname: {
@@ -275,31 +381,9 @@ export const auth = betterAuth({
         sendResetPassword, // Email function for sending reset password emails
         resetPasswordTokenExpiresIn: 3600, // Reset password token expiration time in seconds (default 3600 = 1 hour)
         customSyntheticUser,
-        /**
-         * If user hasn't verified their email yet and he resets his password
-         * Automatically verify email on password reset
-         */
-        onPasswordReset: async ({ user }) => {
-            await PrismaInstance.user.update({
-                where: { id: user.id },
-                data: { emailVerified: true },
-            });
-            void logActivity(user.id, "PASSWORD_CHANGED");
-        },
-        /**
-         * Lifecycle event: triggered when user changes password from profile
-         */
-        onPasswordChanged: async ({ user }) => {
-            void logActivity(user.id, "PASSWORD_CHANGED");
-            void SendEmailAction({
-                subject: "Votre mot de passe a été modifié",
-                email: user.email,
-                body: EmailTemplate({
-                    buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
-                    emailType: "password-changed",
-                }),
-            });
-        },
+        onPasswordReset,
+        onPasswordChanged,
+        onExistingUserSignUp,
     },
     /**
      * Email verification
@@ -310,7 +394,6 @@ export const auth = betterAuth({
         autoSignInAfterVerification: true, // Automatically sign in user after email verification
         sendVerificationEmail, // Email function for sending verification emails
         expiresIn: 3600, // Verification token expiration time in seconds (default 3600 = 1 hour)
-        afterEmailVerification, // Clear pendingEmail and send notification emails after change-email
     },
     /**
      * Social providers (OAuth)
@@ -411,66 +494,13 @@ export const auth = betterAuth({
          * -> TOTP via authenticator app (Google Authenticator, Proton Pass, etc.)
          * -> Backup codes for recovery
          */
-        twoFactor({
-            issuer: "Nextjs Deploy",
-            onTotpEnabled: async ({ user }) => {
-                void logActivity(user.id, "TOTP_ENABLED");
-                void SendEmailAction({
-                    subject: "Authentification à deux facteurs activée",
-                    email: user.email,
-                    body: EmailTemplate({
-                        buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
-                        emailType: "totp-enabled",
-                    }),
-                });
-            },
-            onTotpDisabled: async ({ user }) => {
-                void logActivity(user.id, "TOTP_DISABLED");
-                void SendEmailAction({
-                    subject: "Authentification à deux facteurs désactivée",
-                    email: user.email,
-                    body: EmailTemplate({
-                        buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
-                        emailType: "totp-disabled",
-                    }),
-                });
-            },
-        }),
+        twoFactor({ issuer: "Nextjs Deploy", onTotpEnabled, onTotpDisabled }),
         /**
          * Passkey authentication (WebAuthn)
          * -> Touch ID, Windows Hello, FIDO keys
          * -> Passwordless login + 2FA
          */
-        passkey({
-            onPasskeyAdded: async ({ userId }) => {
-                void logActivity(userId, "PASSKEY_ADDED");
-                const user = await PrismaInstance.user.findUnique({ where: { id: userId } });
-                if (user) {
-                    void SendEmailAction({
-                        subject: "Nouvelle clé d\u2019accès ajoutée",
-                        email: user.email,
-                        body: EmailTemplate({
-                            buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
-                            emailType: "passkey-added",
-                        }),
-                    });
-                }
-            },
-            onPasskeyDeleted: async ({ userId }) => {
-                void logActivity(userId, "PASSKEY_DELETED");
-                const user = await PrismaInstance.user.findUnique({ where: { id: userId } });
-                if (user) {
-                    void SendEmailAction({
-                        subject: "Clé d\u2019accès supprimée",
-                        email: user.email,
-                        body: EmailTemplate({
-                            buttonUrl: `${NEXT_PUBLIC_BASE_URL}/contact?subject=security`,
-                            emailType: "passkey-deleted",
-                        }),
-                    });
-                }
-            },
-        }),
+        passkey({ onPasskeyAdded, onPasskeyDeleted }),
         /**
          * Magic Link authentication
          * -> Passwordless login via email link

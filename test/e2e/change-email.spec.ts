@@ -58,7 +58,7 @@ test.describe.serial("Change email", () => {
         await page.goto("/profile");
         const panel = profilePanel(page);
         await expect(panel.getByText("En attente")).toBeVisible();
-        await expect(panel.getByText(newEmail)).toBeVisible();
+        await expect(panel.getByText(newEmail).first()).toBeVisible();
     });
 
     test("cancel: alert dialog confirmation", async ({ page }) => {

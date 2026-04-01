@@ -78,6 +78,8 @@ describe("TOTP advanced — integration", () => {
         } catch {
             // Already disabled or cleanup
         }
+        // Wait for background callbacks (onTotpEnabled/Disabled fire-and-forget)
+        await new Promise((r) => setTimeout(r, 500));
         await PrismaInstance.user.deleteMany({ where: { email: TEST_EMAIL } });
     });
 

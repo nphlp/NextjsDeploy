@@ -39,9 +39,9 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 - [x] **Anti-énumération email** — empêche de savoir si un email est déjà utilisé
     - Inscription classique : proxy retourne fake 200 si l'email existe déjà (pas d'email envoyé)
     - Magic link : envoie "Créez votre compte" si l'email n'existe pas, sinon lien de connexion
-- [ ] **Email contextuel à l'inscription** — envoyer un email "vous avez déjà un compte" si l'email existe déjà
-    - Actuellement aucun email n'est envoyé lors de l'inscription avec un email existant
-    - Amélioration possible upstream par Better Auth ([#7972](https://github.com/better-auth/better-auth/issues/7972))
+- [x] **Email contextuel à l'inscription** — envoyer un email "vous avez déjà un compte" si l'email existe déjà
+    - Callback natif `onExistingUserSignUp` de Better Auth
+    - Envoie un email "existing-account" avec lien vers /login
 - [x] **Codes d'erreur standardisés** — auth-middleware → auth-errors.ts (traduction FR côté client)
 - [x] **IDs nanoid** — Better Auth utilise nanoid (cohérent avec Prisma @default(nanoid()))
 
@@ -72,9 +72,8 @@ Références : OWASP, CNIL, RGPD, ANSSI.
     - Emails de notification (ancien + nouveau, avant + après confirmation + annulation)
     - Indicateur "En attente" dans le profil avec annulation
     - Invalidation du token si changement annulé (custom GET handler)
-- [ ] **Session revocation après changement d'email** — `revokeOtherSessions` n'existe pas dans `changeEmail`
-    - Bloqué par Better Auth — voir `BETTER-AUTH.md`
-    - L'implémenter côté app serait trop bricolé (token stale dans `afterEmailVerification`, race conditions avec `refreshUserSessions`)
+- [x] **Session revocation après changement d'email** — `revokeOtherSessions: true` dans la config `changeEmail`
+    - Implémenté dans le fork Better Auth (branche `feat/change-email-native`)
 - [ ] **Last login method** — tracer la dernière méthode de connexion utilisée
     - Plugin Better Auth `lastLoginMethod` ([docs](https://www.better-auth.com/docs/plugins/last-login-method))
 
@@ -166,7 +165,7 @@ Références : OWASP, CNIL, RGPD, ANSSI.
 | Passkeys (WebAuthn)        | ✅ Ajout/suppression/connexion                                 |
 | Connexion par email        | ✅ Connexion sans mot de passe                                 |
 | Changement d'email         | ✅ OK (notifications, annulation, invalidation token)          |
-| Session revocation (email) | ❌ Bloqué par Better Auth — voir `BETTER-AUTH.md`              |
+| Session revocation (email) | ✅ `revokeOtherSessions: true` (fork Better Auth)              |
 | Notifications sécurité     | ✅ Emails fire-and-forget (email, mdp, TOTP, passkey)          |
 | Activity History           | ✅ 7 événements, rétention 90j, CRON cleanup, affichage profil |
 | Tests                      | ✅ 373 tests (228 unit, 63 integ, 8 func, 74 E2E)              |
