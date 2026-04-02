@@ -54,3 +54,8 @@
 
 - [x] Documentation
     - [x] `users-accounts.mdx` — section Change Email réécrite (flow natif, cancel, callbacks, revokeOtherSessions)
+
+### Branch `docs/lifecycle-callbacks`
+
+- [x] Documentation
+    - [x] `email.mdx` — beforeEmailVerification, onExistingUserSignUp

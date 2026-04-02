@@ -12,7 +12,7 @@
 
 - [ ] Finir le plan d'audit de sécurité (Phase 3) — voir `docs/security/audit-plan.md`
 
-- [ ] Ouvrir les PR Better Auth upstream (feat/lifecycle-hooks + feat/change-email-native)
+- [ ] Ouvrir les PR Better Auth upstream (feat/lifecycle-hooks + feat/change-email-native + docs/lifecycle-callbacks)
 
 - [ ] Tester TOUS les emails (16 types) — vérifier que chaque email arrive avec le bon sujet/contenu
     - verification, reset, magic-link, magic-link-no-account
