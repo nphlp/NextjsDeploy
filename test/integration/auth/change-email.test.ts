@@ -35,7 +35,7 @@ describe("Change email — integration", () => {
         expect(response.status).toBe(200);
 
         const email = await getLatestEmail(NEW_EMAIL);
-        expect(email.Subject).toContain("Vérifiez");
+        expect(email.Subject).toContain("Confirmez");
     });
 
     it("changeEmail with same email returns error", async () => {

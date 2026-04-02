@@ -52,7 +52,7 @@ const content: Record<
         title: "Bienvenue !",
         description: "Veuillez vérifier votre adresse email en cliquant sur le bouton ci-dessous.",
         buttonText: "Vérifier mon email",
-        buttonColor: "#000000",
+        buttonColor: "#47a1eb",
     },
     reset: {
         preview: "Réinitialisez votre mot de passe",
@@ -60,14 +60,14 @@ const content: Record<
         description:
             "Cliquez sur le bouton ci-dessous pour réinitialiser votre mot de passe. Ce lien expire dans 1 heure.",
         buttonText: "Réinitialiser mon mot de passe",
-        buttonColor: "#2563eb",
+        buttonColor: "#47a1eb",
     },
     "magic-link": {
         preview: "Votre lien de connexion",
         title: "Connexion rapide",
         description: "Cliquez sur le bouton ci-dessous pour vous connecter. Ce lien expire dans 5 minutes.",
         buttonText: "Se connecter",
-        buttonColor: "#7c3aed",
+        buttonColor: "#47a1eb",
     },
     "magic-link-no-account": {
         preview: "Créez votre compte",
@@ -75,14 +75,14 @@ const content: Record<
         description:
             "Une demande de connexion a été faite avec cette adresse email, mais aucun compte n\u2019y est associé. Inscrivez-vous pour commencer !",
         buttonText: "S\u2019inscrire",
-        buttonColor: "#1f2937",
+        buttonColor: "#47a1eb",
     },
     "change-verification": {
         preview: "Confirmez votre nouvelle adresse email",
         title: "Changement d\u2019email",
         description: "Veuillez confirmer votre nouvelle adresse email.",
         buttonText: "Confirmer mon email",
-        buttonColor: "#dc2626",
+        buttonColor: "#47a1eb",
     },
     "change-requested": {
         preview: "Un changement d\u2019email a été demandé",
@@ -114,7 +114,7 @@ const content: Record<
         description:
             "Votre nouvelle adresse email a été confirmée avec succès. Vous pouvez désormais l\u2019utiliser pour vous connecter.",
         buttonText: "Accéder au profil",
-        buttonColor: "#000000",
+        buttonColor: "#47a1eb",
     },
     "password-changed": {
         preview: "Votre mot de passe a été modifié",
@@ -162,7 +162,7 @@ const content: Record<
         description:
             "Nous avons bien reçu votre message et reviendrons vers vous dès que possible. Merci de nous avoir contactés.",
         buttonText: "Retour au site",
-        buttonColor: "#000000",
+        buttonColor: "#47a1eb",
     },
     "existing-account": {
         preview: "Tentative de création de compte",
@@ -170,7 +170,7 @@ const content: Record<
         description:
             "Une tentative de création de compte a été faite avec cette adresse email. Si c'est vous, connectez-vous ou réinitialisez votre mot de passe.",
         buttonText: "Se connecter",
-        buttonColor: "#000000",
+        buttonColor: "#47a1eb",
     },
 };
 

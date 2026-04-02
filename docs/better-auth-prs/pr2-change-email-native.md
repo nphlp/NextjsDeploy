@@ -28,6 +28,10 @@ Cette PR refactorise le changement d'email pour utiliser la **table `Verificatio
 - Ajouté conditionnellement à la table `user` quand `changeEmail.enabled: true`
 - Champ en lecture seule (`input: false`), non modifiable directement par l'API
 
+**Callback d'envoi dédié :**
+
+- `sendVerificationEmail` — dans `user.changeEmail`, remplace la dépendance sur `emailVerification.sendVerificationEmail`. Permet un template d'email distinct pour le changement d'email vs la vérification de compte.
+
 **Callbacks lifecycle :**
 
 - `onChangeEmailRequested({ user, newEmail }, request)` — quand le changement est demandé
@@ -66,11 +70,15 @@ Cette PR refactorise le changement d'email pour utiliser la **table `Verificatio
 
 ### Documentation
 
-- **`users-accounts.mdx`** : section "Change Email" entièrement réécrite — setup, flow, annulation, callbacks lifecycle, revokeOtherSessions, schéma pendingEmail, usage client
+- **`users-accounts.mdx`** : section "Change Email" entièrement réécrite — setup, flow, annulation, callbacks lifecycle, revokeOtherSessions, schéma pendingEmail, usage server + client
 
-### Fichiers modifiés (10 fichiers, +499 −448)
+### Note
 
-- `packages/core/src/types/init-options.ts` — types onLogout, onChangeEmail\*, changeEmail config
+> This could also be implemented as a plugin for consistency with 2FA/passkey — open to feedback.
+
+### Fichiers modifiés (11 fichiers, +536 −458)
+
+- `packages/core/src/types/init-options.ts` — types onLogout, onChangeEmail\*, changeEmail config + `sendVerificationEmail` dédié
 - `packages/core/src/db/get-tables.ts` — champ pendingEmail conditionnel
 - `packages/better-auth/src/api/routes/update-user.ts` — changeEmail, cancelEmailChange, verifyEmailChange
 - `packages/better-auth/src/api/routes/email-verification.ts` — suppression ancien flow JWT
@@ -110,6 +118,10 @@ This PR refactors change-email to use the **`Verification` table** (already used
 - Conditionally added to the `user` table when `changeEmail.enabled: true`
 - Read-only field (`input: false`), not directly modifiable via API
 
+**Dedicated sending callback:**
+
+- `sendVerificationEmail` — in `user.changeEmail`, replaces the dependency on `emailVerification.sendVerificationEmail`. Allows a distinct email template for email change vs account verification.
+
 **Lifecycle callbacks:**
 
 - `onChangeEmailRequested({ user, newEmail }, request)` — when the change is requested
@@ -148,11 +160,15 @@ This PR refactors change-email to use the **`Verification` table** (already used
 
 ### Documentation
 
-- **`users-accounts.mdx`**: "Change Email" section fully rewritten — setup, flow, cancellation, lifecycle callbacks, revokeOtherSessions, pendingEmail schema, client usage
+- **`users-accounts.mdx`**: "Change Email" section fully rewritten — setup, flow, cancellation, lifecycle callbacks, revokeOtherSessions, pendingEmail schema, server + client usage
 
-### Changed files (10 files, +499 −448)
+### Note
 
-- `packages/core/src/types/init-options.ts` — onLogout, onChangeEmail\*, changeEmail config types
+> This could also be implemented as a plugin for consistency with 2FA/passkey — open to feedback.
+
+### Changed files (11 files, +536 −458)
+
+- `packages/core/src/types/init-options.ts` — onLogout, onChangeEmail\*, changeEmail config types + dedicated `sendVerificationEmail`
 - `packages/core/src/db/get-tables.ts` — conditional pendingEmail field
 - `packages/better-auth/src/api/routes/update-user.ts` — changeEmail, cancelEmailChange, verifyEmailChange
 - `packages/better-auth/src/api/routes/email-verification.ts` — removed old JWT flow

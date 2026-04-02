@@ -117,6 +117,17 @@ const onExistingUserSignUp = async ({ user }: { user: { email: string } }) => {
 };
 
 /**
+ * Callback: send change-email verification link
+ */
+const sendChangeEmailVerification = async ({ user, url }: { user: { email: string }; url: string }) => {
+    void SendEmailAction({
+        subject: "Confirmez votre nouvelle adresse email",
+        email: user.email,
+        body: EmailTemplate({ buttonUrl: url, emailType: "change-verification" }),
+    });
+};
+
+/**
  * Lifecycle: on email change requested
  */
 const onChangeEmailRequested = async ({
@@ -317,6 +328,7 @@ export const auth = betterAuth({
     user: {
         changeEmail: {
             enabled: true,
+            sendVerificationEmail: sendChangeEmailVerification,
             revokeOtherSessions: true,
             onChangeEmailRequested,
             onChangeEmailCompleted,
