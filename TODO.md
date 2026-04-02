@@ -2,6 +2,12 @@
 
 ## Bugs
 
+- [ ] Change Email -> Click cancel link -> Click verify link
+    - Je suis redirigé sur /profile?error=INVALID_TOKEN&tab=security
+    - Pas d'erreur ? On fait un truc ?
+
+- [ ] Email qui confirme le changement d'email qui dit "Bienvenue" ?
+
 ## Enhancements
 
 - [ ] Variable env "FIRST_ADMIN_PASSWORD=Password1234!"
