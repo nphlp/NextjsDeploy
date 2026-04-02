@@ -42,10 +42,6 @@ Cette PR refactorise le changement d'email pour utiliser la **table `Verificatio
 
 - `revokeOtherSessions: true` — révoque toutes les autres sessions après un changement d'email
 
-**`onLogout`** (also in #PR1 — duplicated here for branch independence, trivial merge conflict):
-
-- Ajout du callback `onLogout` dans le endpoint `/sign-out` (récupère le `userId` avant suppression de la session)
-
 ### Cas d'usage
 
 - **Affichage de l'email en attente** : montrer `pendingEmail` dans le profil utilisateur avec un bouton "Annuler"
@@ -66,7 +62,6 @@ Cette PR refactorise le changement d'email pour utiliser la **table `Verificatio
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `update-user.test.ts`        | pendingEmail stocké, vérification via Verification table, revoke other sessions, annulation, reject après annulation, callbacks, anti-énumération |
 | `email-verification.test.ts` | change email via Verification table, onChangeEmailCompleted, emailVerified propagé sur toutes les sessions                                        |
-| `sign-out.test.ts`           | onLogout callback                                                                                                                                 |
 
 ### Documentation
 
@@ -78,11 +73,10 @@ Cette PR refactorise le changement d'email pour utiliser la **table `Verificatio
 
 ### Fichiers modifiés (11 fichiers, +536 −458)
 
-- `packages/core/src/types/init-options.ts` — types onLogout, onChangeEmail\*, changeEmail config + `sendVerificationEmail` dédié
+- `packages/core/src/types/init-options.ts` — types onChangeEmail\*, changeEmail config + `sendVerificationEmail` dédié
 - `packages/core/src/db/get-tables.ts` — champ pendingEmail conditionnel
 - `packages/better-auth/src/api/routes/update-user.ts` — changeEmail, cancelEmailChange, verifyEmailChange
 - `packages/better-auth/src/api/routes/email-verification.ts` — suppression ancien flow JWT
-- `packages/better-auth/src/api/routes/sign-out.ts` — onLogout
 - `packages/better-auth/src/api/index.ts` — enregistrement nouveaux endpoints
 - `packages/better-auth/src/client/config.ts` — pluginPathMethods + atomListeners
 - `packages/telemetry/src/detectors/detect-auth-config.ts` — détection changeEmail options
@@ -132,10 +126,6 @@ This PR refactors change-email to use the **`Verification` table** (already used
 
 - `revokeOtherSessions: true` — revokes all other sessions after email change
 
-**`onLogout`** (also in #PR1 — duplicated here for branch independence, trivial merge conflict):
-
-- Added `onLogout` callback in the `/sign-out` endpoint (retrieves `userId` before session deletion)
-
 ### Use cases
 
 - **Display pending email**: show `pendingEmail` in the user profile with a "Cancel" button
@@ -156,7 +146,6 @@ This PR refactors change-email to use the **`Verification` table** (already used
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | `update-user.test.ts`        | pendingEmail stored, verification via Verification table, revoke other sessions, cancellation, reject after cancel, callbacks, anti-enumeration |
 | `email-verification.test.ts` | change email via Verification table, onChangeEmailCompleted, emailVerified propagated to all sessions                                           |
-| `sign-out.test.ts`           | onLogout callback                                                                                                                               |
 
 ### Documentation
 
@@ -168,11 +157,10 @@ This PR refactors change-email to use the **`Verification` table** (already used
 
 ### Changed files (11 files, +536 −458)
 
-- `packages/core/src/types/init-options.ts` — onLogout, onChangeEmail\*, changeEmail config types + dedicated `sendVerificationEmail`
+- `packages/core/src/types/init-options.ts` — onChangeEmail\*, changeEmail config types + dedicated `sendVerificationEmail`
 - `packages/core/src/db/get-tables.ts` — conditional pendingEmail field
 - `packages/better-auth/src/api/routes/update-user.ts` — changeEmail, cancelEmailChange, verifyEmailChange
 - `packages/better-auth/src/api/routes/email-verification.ts` — removed old JWT flow
-- `packages/better-auth/src/api/routes/sign-out.ts` — onLogout
 - `packages/better-auth/src/api/index.ts` — register new endpoints
 - `packages/better-auth/src/client/config.ts` — pluginPathMethods + atomListeners
 - `packages/telemetry/src/detectors/detect-auth-config.ts` — changeEmail options detection
