@@ -45,3 +45,8 @@ export function removeCookieState(name: string) {
     deleteCookie(name);
     notify();
 }
+
+export function resetCookieState<T extends string | object>(name: string, value: T, options?: { path?: string }) {
+    writeCookie(name, value, { path: options?.path });
+    notify();
+}
