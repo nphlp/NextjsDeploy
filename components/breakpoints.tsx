@@ -86,7 +86,7 @@ export default function Breakpoints(props: BreakpointsProps) {
     return (
         <div
             className={cn(
-                "fixed right-2 bottom-2",
+                "pointer-events-none fixed right-2 bottom-2",
                 isVisible ? "opacity-100" : "opacity-0",
                 "transition-opacity duration-500",
             )}
