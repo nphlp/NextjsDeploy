@@ -6,6 +6,13 @@ import { ReactNode } from "react";
 type MainProps = {
     vertical?: "center" | "start" | "end" | "stretch";
     horizontal?: "center" | "start" | "end" | "stretch";
+    /**
+     * When true, Main takes exactly (100dvh - HEADER_HEIGHT rem) in height
+     * and cannot grow beyond. Children can then use flex-1 + overflow-y-auto
+     * to implement an internal scroll area with sticky footers.
+     * When false (default), Main uses minHeight so the page grows with content.
+     */
+    fill?: boolean;
     className?: {
         main?: string;
         div?: string;
@@ -14,15 +21,19 @@ type MainProps = {
 };
 
 export default function Main(props: MainProps) {
-    const { vertical = "center", horizontal = "center", className, children } = props;
+    const { vertical = "center", horizontal = "center", fill = false, className, children } = props;
+    const sizeStyle = fill
+        ? { height: `calc(100dvh - ${HEADER_HEIGHT}rem)` }
+        : { minHeight: `calc(100dvh - ${HEADER_HEIGHT}rem)` };
 
     return (
-        <main style={{ minHeight: `calc(100dvh - ${HEADER_HEIGHT}rem)` }} className={cn(DEBUG_LAYOUT && "bg-teal-100")}>
+        <main style={sizeStyle} className={cn(fill && "overflow-hidden", DEBUG_LAYOUT && "bg-teal-100")}>
             <div
-                style={{ minHeight: `calc(100dvh - ${HEADER_HEIGHT}rem)` }}
+                style={sizeStyle}
                 className={cn(
                     "flex flex-col items-center justify-start",
                     "mx-auto w-full max-w-225",
+                    fill && "overflow-hidden",
                     DEBUG_LAYOUT && "bg-green-100",
                     className?.main,
                 )}
@@ -36,6 +47,7 @@ export default function Main(props: MainProps) {
                         "flex flex-col gap-4",
                         "p-4 md:p-7",
                         "w-full flex-1",
+                        fill && "min-h-0",
                         DEBUG_LAYOUT && "bg-blue-100",
                         className?.div,
                     )}
