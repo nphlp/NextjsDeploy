@@ -13,7 +13,6 @@ function notify() {
 export function useCookieState<T extends string | object>(
     name: string,
     initialValue: T,
-    options?: { path?: string },
 ): [T, Dispatch<SetStateAction<T>>] {
     const initialValueRef = useRef(initialValue);
 
@@ -34,7 +33,7 @@ export function useCookieState<T extends string | object>(
     const setState: Dispatch<SetStateAction<T>> = (action) => {
         const currentValue = readCookie<T>(name) ?? initialValueRef.current;
         const newValue = typeof action === "function" ? (action as (prev: T) => T)(currentValue) : action;
-        writeCookie(name, newValue, { path: options?.path });
+        writeCookie(name, newValue);
         notify();
     };
 
@@ -46,7 +45,7 @@ export function removeCookieState(name: string) {
     notify();
 }
 
-export function resetCookieState<T extends string | object>(name: string, value: T, options?: { path?: string }) {
-    writeCookie(name, value, { path: options?.path });
+export function resetCookieState<T extends string | object>(name: string, value: T) {
+    writeCookie(name, value);
     notify();
 }
