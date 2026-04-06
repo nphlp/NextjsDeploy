@@ -31,6 +31,10 @@
 
 ## Features
 
+- [ ] Proxy.ts
+    - [ ] Protéger les pages qui nécessitent la session dans le proxy.ts (middleware)
+    - [ ] Mettre en place des tests + commit hooks de sécurité
+
 - Page Profil :
     - Télécharger mes données (RGPD)
     - Supprimer mon compte et mes données (RGPD)
