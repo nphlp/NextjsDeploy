@@ -10,6 +10,8 @@
 
 ## Enhancements
 
+- [ ] `setup-env`: validate that `env.config.mjs` and `env.config.example.mjs` have identical keys (detect mismatches on `make setup-env`)
+
 - [ ] Variable env "FIRST_ADMIN_PASSWORD=Password1234!"
     - Pour toujours créer le `Password1234!` en développement local, même avec NODE_ENV=production
     - Pour générer un mot de passe aléatoire en vériable production quand la variable est absente (et l'afficher dans les logs au démarrage)

@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { login, register } from "./helpers/auth";
+import { register } from "./helpers/auth";
 import { getLatestEmail } from "./helpers/mailpit";
 
 const timestamp = Date.now();

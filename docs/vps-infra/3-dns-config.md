@@ -17,17 +17,37 @@ Leave the default configuration:
 | NS   | your-domain.com | ns1.dns-parking.com | 86400 |
 | NS   | your-domain.com | ns2.dns-parking.com | 86400 |
 
-## Domain
+## Security-First DNS Pattern
 
-Point the domain and all subdomains to the VPS:
+The principle: **everything behind VPN by default**, explicitly expose only what needs to be public.
 
-| Type | Name | Content            | TTL   |
-| ---- | ---- | ------------------ | ----- |
-| A    | @    | `<vps-ip-address>` | 14400 |
-| A    | www  | `<vps-ip-address>` | 14400 |
-| A    | \*   | `<vps-ip-address>` | 14400 |
+- `*` (wildcard) → Tailscale IP (VPN) — all subdomains are private by default
+- `@` (root) → VPS public IP — production is publicly accessible
+- Specific records for public services override the wildcard
 
-## SMTP (Email)
+This prevents accidental exposure of admin tools, preview environments, or internal services. Any new subdomain automatically lands behind VPN.
+
+## Main Domain (your-domain.com)
+
+### A Records
+
+| Type | Name             | Content            | Access  | Purpose                              |
+| ---- | ---------------- | ------------------ | ------- | ------------------------------------ |
+| A    | @                | `<vps-ip-address>` | Public  | Root domain (your-domain.com)        |
+| A    | \*               | `<tailscale-ip>`   | **VPN** | Default: all subdomains behind VPN   |
+| A    | nextjs-deploy    | `<vps-ip-address>` | Public  | Production app (explicit override)   |
+| A    | \*.nextjs-deploy | `<tailscale-ip>`   | VPN     | Preview/experiment/prisma-studio     |
+
+Specific records have priority over wildcards. So `nextjs-deploy.your-domain.com` is public while `anything-else.your-domain.com` falls behind VPN.
+
+**What the wildcard covers automatically** (no individual records needed):
+
+- `dokploy.your-domain.com` → VPN
+- `traefik.your-domain.com` → VPN
+- `umami.your-domain.com` → VPN
+- Any other admin tool → VPN
+
+### SMTP (Email)
 
 1. Create an email address `hello@your-domain.com` from the Hostinger email panel
 2. Launch the automatic DNS configuration from Hostinger
@@ -46,45 +66,45 @@ This generates the following records automatically:
 | MX    | @                           | mx1.hostinger.com (priority 5)                 | 14400 |
 | MX    | @                           | mx2.hostinger.com (priority 10)                | 14400 |
 
-## VPN (Tailscale)
+## Dedicated Domains (e.g. my-project.com)
 
-> [!WARNING]
-> Configure these records **after** setting up Tailscale — see [Tailscale VPN](./9-tailscale-vpn.md).
+For projects with their own domain, the same security-first pattern applies:
 
-Get the Tailscale IP of the VPS:
+| Type | Name | Content            | Access  | Purpose                            |
+| ---- | ---- | ------------------ | ------- | ---------------------------------- |
+| A    | @    | `<vps-ip-address>` | Public  | Production (my-project.com)        |
+| A    | \*   | `<tailscale-ip>`   | **VPN** | Everything else behind VPN         |
+
+This automatically protects:
+
+- `experiment.my-project.com` → VPN
+- `preview.my-project.com` → VPN
+- `prisma-studio.my-project.com` → VPN
+- `prisma-experiment.my-project.com` → VPN
+- `prisma-preview.my-project.com` → VPN
+- Any unknown subdomain → VPN
+
+> **Important**: DNS wildcards only match **one level** of subdomain. `*.my-project.com` covers `experiment.my-project.com` but NOT `prisma-studio.experiment.my-project.com` (2 levels). That's why prisma-studio domains use **flat naming** with hyphens (`prisma-experiment.my-project.com`) instead of nested dots (`prisma-studio.experiment.my-project.com`).
+
+No `www` record needed — it's unnecessary and the wildcard catches it behind VPN anyway.
+
+### Adding a new dedicated domain (checklist)
+
+1. **Hostinger**: Add 2 DNS records (`@` → public IP, `*` → Tailscale IP)
+2. **Traefik**: SSL certificates are auto-provisioned via Let's Encrypt DNS challenge
+3. **Dokploy**: Configure the compose file with the new domain labels
+4. **Env config**: Set `VPS_NEXTJS_DOMAIN` to the new domain in `env/env.config.mjs`
+
+## Getting the IPs
+
+**VPS public IP**: check your hosting provider dashboard.
+
+**Tailscale VPN IP** (requires [Tailscale setup](./10-tailscale-vpn.md)):
 
 ```bash
 sudo tailscale ip -4
 # e.g., 100.x.x.x
 ```
-
-**Wildcards → Tailscale IP (VPN protected):**
-
-| Type | Name             | Content          | TTL   |
-| ---- | ---------------- | ---------------- | ----- |
-| A    | \*.nextjs-deploy | `<tailscale-ip>` | 14400 |
-| A    | \*.other-project | `<tailscale-ip>` | 14400 |
-
-**Productions → VPS public IP (publicly accessible):**
-
-| Type | Name          | Content            | TTL   |
-| ---- | ------------- | ------------------ | ----- |
-| A    | nextjs-deploy | `<vps-ip-address>` | 14400 |
-| A    | other-project | `<vps-ip-address>` | 14400 |
-
-**Admin tools → Tailscale IP (VPN protected):**
-
-| Type | Name      | Content          | TTL   |
-| ---- | --------- | ---------------- | ----- |
-| A    | dokploy   | `<tailscale-ip>` | 14400 |
-| A    | traefik   | `<tailscale-ip>` | 14400 |
-| A    | infisical | `<tailscale-ip>` | 14400 |
-| A    | umami     | `<tailscale-ip>` | 14400 |
-| A    | plausible | `<tailscale-ip>` | 14400 |
-| A    | signoz    | `<tailscale-ip>` | 14400 |
-| A    | glitchtip | `<tailscale-ip>` | 14400 |
-
-Specific records have priority over wildcards. Wildcards cover: `preview.*`, `experiment.*`, `prisma-studio.*`, etc.
 
 ---
 

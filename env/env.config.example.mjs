@@ -29,7 +29,7 @@ export default {
             },
             vps: {
                 comment: "VPS domains",
-                variables: ["VPS_NEXTJS_DOMAIN", "VPS_PRISMA_STUDIO_DOMAIN"],
+                variables: ["DOMAIN", "VPS_NEXTJS_DOMAIN", "VPS_PRISMA_STUDIO_DOMAIN"],
             },
             postgres: {
                 comment: "PostgreSQL database",
@@ -81,6 +81,10 @@ export default {
         nextjs: {
             NEXTJS_STANDALONE: true,
         },
+        vps: {
+            // TO UPDATE: Set your domain
+            DOMAIN: "domain.com",
+        },
         postgres: {
             POSTGRES_PORT: 5432,
             POSTGRES_DB: "nextjs-deploy-db",
@@ -88,15 +92,15 @@ export default {
         },
         smtp: {
             // TO UPDATE: Get SMTP configuration from your email provider
-            SMTP_FROM: "hello@domain.com",
+            SMTP_FROM: "hello@{{DOMAIN}}",
             SMTP_HOST: "smtp.hostinger.com",
             SMTP_PORT: 465,
             // TO UPDATE
-            SMTP_USER: "hello@domain.com",
+            SMTP_USER: "hello@{{DOMAIN}}",
             // TO UPDATE
             SMTP_PASSWORD: "",
             // TO UPDATE: Create an alias in your email provider
-            SUPPORT_EMAIL: "support@domain.com",
+            SUPPORT_EMAIL: "support@{{DOMAIN}}",
         },
         prismaStudio: {
             // TO UPDATE: Generate credentials for basic auth (docs: ./docs/prisma-studio/2-environment-variables.md)
@@ -148,7 +152,7 @@ export default {
                 // Hostinger (real email sending)
                 "#SMTP_HOST": "smtp.hostinger.com",
                 "#SMTP_PORT": 465,
-                "#SMTP_USER": "hello@domain.com",
+                "#SMTP_USER": "hello@{{DOMAIN}}",
                 "#SMTP_PASSWORD": "",
                 SMTP_FROM_NAME: "Nextjs Deploy ({{ENV}})",
             },
@@ -197,7 +201,7 @@ export default {
                 // Hostinger (real email sending)
                 "#SMTP_HOST": "smtp.hostinger.com",
                 "#SMTP_PORT": 465,
-                "#SMTP_USER": "hello@domain.com",
+                "#SMTP_USER": "hello@{{DOMAIN}}",
                 "#SMTP_PASSWORD": "",
                 SMTP_FROM_NAME: "Nextjs Deploy ({{ENV}})",
             },
@@ -214,8 +218,8 @@ export default {
             label: { ENV_LABEL: "{{ENV}}-{{projectName}}" },
             vps: {
                 // TO UPDATE
-                VPS_NEXTJS_DOMAIN: "experiment.domain.com",
-                VPS_PRISMA_STUDIO_DOMAIN: "prisma-studio.{{VPS_NEXTJS_DOMAIN}}",
+                VPS_NEXTJS_DOMAIN: "experiment.{{DOMAIN}}",
+                VPS_PRISMA_STUDIO_DOMAIN: "studio-experiment.{{DOMAIN}}",
             },
             nextjs: {
                 NEXT_PUBLIC_BASE_URL: "https://{{VPS_NEXTJS_DOMAIN}}",
@@ -250,8 +254,8 @@ export default {
             label: { ENV_LABEL: "{{ENV}}-{{projectName}}" },
             vps: {
                 // TO UPDATE
-                VPS_NEXTJS_DOMAIN: "preview.domain.com",
-                VPS_PRISMA_STUDIO_DOMAIN: "prisma-studio.{{VPS_NEXTJS_DOMAIN}}",
+                VPS_NEXTJS_DOMAIN: "preview.{{DOMAIN}}",
+                VPS_PRISMA_STUDIO_DOMAIN: "studio-preview.{{DOMAIN}}",
             },
             nextjs: {
                 NEXT_PUBLIC_BASE_URL: "https://{{VPS_NEXTJS_DOMAIN}}",
@@ -286,8 +290,8 @@ export default {
             label: { ENV_LABEL: "{{projectName}}" },
             vps: {
                 // TO UPDATE
-                VPS_NEXTJS_DOMAIN: "domain.com",
-                VPS_PRISMA_STUDIO_DOMAIN: "prisma-studio.{{VPS_NEXTJS_DOMAIN}}",
+                VPS_NEXTJS_DOMAIN: "{{DOMAIN}}",
+                VPS_PRISMA_STUDIO_DOMAIN: "studio.{{DOMAIN}}",
             },
             nextjs: {
                 NEXT_PUBLIC_BASE_URL: "https://{{VPS_NEXTJS_DOMAIN}}",

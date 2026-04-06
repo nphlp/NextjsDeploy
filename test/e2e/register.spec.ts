@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { register } from "./helpers/auth";
 import { extractLink } from "./helpers/mailpit";
 
 const timestamp = Date.now();
