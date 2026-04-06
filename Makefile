@@ -238,7 +238,7 @@ better-auth-install:
 
 # Build fork packages (core + telemetry + better-auth + passkey)
 better-auth-build:
-	@cd $(BA_DIR) && pnpm --filter @better-auth/core build && pnpm --filter @better-auth/telemetry build && pnpm --filter better-auth build && pnpm --filter @better-auth/passkey build
+	@cd $(BA_DIR) && pnpm --filter @better-auth/core build && pnpm --filter @better-auth/telemetry build && pnpm --filter @better-auth/kysely-adapter build && pnpm --filter @better-auth/prisma-adapter build && pnpm --filter @better-auth/memory-adapter build && pnpm --filter better-auth build && pnpm --filter @better-auth/passkey build
 
 # Watch mode (rebuild on changes)
 better-auth-dev:
