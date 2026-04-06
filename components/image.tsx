@@ -48,7 +48,7 @@ export default function ImageRatio(props: ImageRatioProps) {
 
     if (!src) {
         return (
-            <div className={cn("relative aspect-[3/2] overflow-hidden", className)}>
+            <div className={cn("relative aspect-3/2 overflow-hidden", className)}>
                 <ImageTemplate className="size-full" />
             </div>
         );
@@ -76,7 +76,7 @@ export default function ImageRatio(props: ImageRatioProps) {
         <div
             className={cn(
                 // Force a 3/2 ratio
-                "relative aspect-[3/2] overflow-hidden",
+                "relative aspect-3/2 overflow-hidden",
                 // Prevent stretching when used in flexbox
                 "shrink-0 grow-0",
                 className?.div,

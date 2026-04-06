@@ -2,18 +2,6 @@ import { Session } from "@lib/auth-server";
 import { Apple, Home, LucideIcon, Wrench } from "lucide-react";
 import { Route } from "next";
 
-/**
- * Height relative to font-size
- * -> 16px x 4rem = 64px
- */
-export const HEADER_HEIGHT = 4;
-
-/**
- * Debug layout colors
- * -> Use `/layout` page to see the colored layout
- */
-export const DEBUG_LAYOUT = false;
-
 export type LinkType = {
     label: string;
     href: Route;
