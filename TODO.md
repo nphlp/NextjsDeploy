@@ -6,7 +6,9 @@
     - Je suis redirigé sur /profile?error=INVALID_TOKEN&tab=security
     - Pas d'erreur ? On fait un truc ?
 
-- [ ] Email qui confirme le changement d'email qui dit "Bienvenue" ?
+- [ ] Email qui confirme le changement d'email qui dit "Bienvenue" au lieu de "Changement d'email confirmé" ?
+
+- [ ] Que se passe-t-il si un token est expiré ? ou déjà utilisé ? On devrait indiquer un vrai message explicite.
 
 ## Enhancements
 

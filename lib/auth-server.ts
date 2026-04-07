@@ -13,14 +13,16 @@ export const getSession = async (): Promise<InferredSession | null> => {
 
 export type Session = InferredSession | null;
 
+type InferredSessionData = typeof auth.$Infer.Session.session;
+
 export const getSessionList = async () => {
     const sessionList = await auth.api.listSessions({
         headers: await headers(),
     });
-    return sessionList;
+    return sessionList as InferredSessionData[];
 };
 
-export type SessionList = Awaited<ReturnType<typeof getSessionList>>;
+export type SessionList = InferredSessionData[];
 
 export const isPendingTwoFactor = async () => {
     const cookieStore = await cookies();

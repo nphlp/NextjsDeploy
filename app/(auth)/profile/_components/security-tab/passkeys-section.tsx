@@ -46,7 +46,7 @@ export default function PasskeysSection() {
     const isMounted = useRef(true);
     useEffect(() => {
         isMounted.current = true;
-        passkey.listUserPasskeys().then(({ data }) => {
+        passkey.listUserPasskeys().then(({ data }: { data: PasskeyData[] | null }) => {
             if (isMounted.current && data) setPasskeys(data);
         });
         return () => {

@@ -31,12 +31,12 @@ This prevents accidental exposure of admin tools, preview environments, or inter
 
 ### A Records
 
-| Type | Name             | Content            | Access  | Purpose                              |
-| ---- | ---------------- | ------------------ | ------- | ------------------------------------ |
-| A    | @                | `<vps-ip-address>` | Public  | Root domain (your-domain.com)        |
-| A    | \*               | `<tailscale-ip>`   | **VPN** | Default: all subdomains behind VPN   |
-| A    | nextjs-deploy    | `<vps-ip-address>` | Public  | Production app (explicit override)   |
-| A    | \*.nextjs-deploy | `<tailscale-ip>`   | VPN     | Preview/experiment/prisma-studio     |
+| Type | Name             | Content            | Access  | Purpose                            |
+| ---- | ---------------- | ------------------ | ------- | ---------------------------------- |
+| A    | @                | `<vps-ip-address>` | Public  | Root domain (your-domain.com)      |
+| A    | \*               | `<tailscale-ip>`   | **VPN** | Default: all subdomains behind VPN |
+| A    | nextjs-deploy    | `<vps-ip-address>` | Public  | Production app (explicit override) |
+| A    | \*.nextjs-deploy | `<tailscale-ip>`   | VPN     | Preview/experiment/prisma-studio   |
 
 Specific records have priority over wildcards. So `nextjs-deploy.your-domain.com` is public while `anything-else.your-domain.com` falls behind VPN.
 
@@ -70,10 +70,10 @@ This generates the following records automatically:
 
 For projects with their own domain, the same security-first pattern applies:
 
-| Type | Name | Content            | Access  | Purpose                            |
-| ---- | ---- | ------------------ | ------- | ---------------------------------- |
-| A    | @    | `<vps-ip-address>` | Public  | Production (my-project.com)        |
-| A    | \*   | `<tailscale-ip>`   | **VPN** | Everything else behind VPN         |
+| Type | Name | Content            | Access  | Purpose                     |
+| ---- | ---- | ------------------ | ------- | --------------------------- |
+| A    | @    | `<vps-ip-address>` | Public  | Production (my-project.com) |
+| A    | \*   | `<tailscale-ip>`   | **VPN** | Everything else behind VPN  |
 
 This automatically protects:
 

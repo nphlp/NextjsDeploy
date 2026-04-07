@@ -264,9 +264,9 @@ export const customSyntheticUser = ({
     id: string;
 }) => ({
     ...coreFields,
-    pendingEmail: null,
     twoFactorEnabled: false,
     ...additionalFields,
+    pendingEmail: null,
     id,
 });
 
