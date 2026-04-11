@@ -112,7 +112,7 @@ export const Positioner = (props: ComboboxPositionerProps) => {
 
     return (
         <ComboboxBaseUi.Positioner
-            className={cn("outline-none", className)}
+            className={cn("z-10 outline-none", className)}
             sideOffset={8}
             {...legacyProps}
             {...otherProps}

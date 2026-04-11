@@ -109,7 +109,7 @@ export const Positioner = (props: PopoverPositionerProps) => {
     const { className, children, legacyProps, ...otherProps } = props;
 
     return (
-        <PopoverBaseUi.Positioner sideOffset={8} className={cn(className)} {...legacyProps} {...otherProps}>
+        <PopoverBaseUi.Positioner sideOffset={8} className={cn("z-10", className)} {...legacyProps} {...otherProps}>
             {children}
         </PopoverBaseUi.Positioner>
     );
