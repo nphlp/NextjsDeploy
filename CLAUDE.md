@@ -10,7 +10,7 @@ Next.js 16 boilerplate with Docker, Dokploy deployment, and VPS infrastructure.
 - **Auth**: Better Auth
 - **API**: oRPC (with Zod validation + OpenAPI via Scalar)
 - **UI**: Tailwind CSS 4 + Base-UI + Motion
-- **State**: Zustand, Nuqs (query params)
+- **State**: Nuqs (query params), useCookieState (persisted settings)
 - **Forms**: Custom useForm hook (Zod validation, progressive schemas)
 - **Email**: Nodemailer + React Email
 - **DevOps**: Docker, Dokploy, Traefik, Tailscale VPN
@@ -97,7 +97,7 @@ bun run build && bun run start
 - **context7** - Up-to-date documentation for any library
 - **next-devtools** - Next.js dev server MCP (errors, routes, diagnostics)
 - **chrome-devtools** - Browser automation and debugging
-- **ide** (built-in) - VS Code LSP diagnostics via extension
+- **ide** (VS Code extension built-in, not in `.mcp.json`) - LSP diagnostics via `getDiagnostics`
 
 ## Project Files
 
