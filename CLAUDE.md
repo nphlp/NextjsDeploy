@@ -49,19 +49,32 @@ make postgres
 
 # Automated environments
 # -> Install deps, generate envs, setup db, insert fixtures and run server
-make dev          # Dev server (Next.js local + Postgres Docker)
-make start        # Test production build locally
-make docker       # Build and run Next.js Docker image
+make dev              # Dev server (Next.js local + Postgres Docker)
+make start            # Test production build locally
+make docker           # Build and run Next.js Docker image
+make test-unit        # Run unit tests
+make test-integration # Run integration tests (Docker required)
+make test-functional  # Run functional tests (Docker + MSW mocks)
+make test-e2e         # Run E2E tests (Docker + build + server)
+make ngrok            # Start Ngrok tunnel
 ```
+
+**Tests must run sequentially** (not in parallel) to avoid Docker port conflicts. Run one `make test-*` at a time.
 
 ### Code Quality & Tests
 
 ```bash
-bun run checks       # All checks (type + lint:fix + format:fix)
-bun run type         # TypeScript checking
-bun run lint:fix     # ESLint check/fix
-bun run format:fix   # Prettier check/fix
-bun run test:unit    # Unit tests
+bun run checks            # All checks (type + lint:fix + format:fix)
+bun run type              # TypeScript checking
+bun run lint:fix          # ESLint check/fix
+bun run format:fix        # Prettier check/fix
+bun run test:unit         # Unit tests
+bun run test:unit:watch   # Unit tests watch mode
+bun run test:unit:coverage # Unit tests with coverage
+bun run test:integration  # Integration tests (Docker required)
+bun run test:functional   # Functional tests (Docker + MSW mocks)
+bun run test:e2e          # Playwright E2E tests
+bun run test:e2e:ui       # E2E tests with UI
 ```
 
 ### Node, Database & Fixtures
@@ -76,16 +89,20 @@ bun run auto:start
 # Database setup
 bun run db:setup          # Setup database
 bun run db:reset          # Reset database
+bun run db:reload         # Reset + setup
 bun run db:execute        # Execute SQL query
 
 # Prisma client and migrations
 bun run prisma:generate   # Generate Prisma client
 bun run prisma:migrate    # Run migrations
 bun run prisma:deploy     # Deploy migrations
+bun run prisma:reset      # Reset all migrations
+bun run prisma:studio     # Open Prisma Studio
 
 # Fixtures management
 bun run fixtures:setup    # Load fixtures
 bun run fixtures:reset    # Reset fixtures
+bun run fixtures:reload   # Reset + setup
 
 # Nextjs Server
 bun run dev
@@ -221,7 +238,7 @@ See `docs/nextjs-deploy/12-better-auth-fork.md` for full documentation.
 
 - **Always use `bun`, never `npm`, `npx`, or `pnpm`.** Use `bunx` instead of `npx` when needed.
 - Always use pre-authorized commands to avoid prompting the user. Use `git status` not `git -C /path status`, use `bun run type` not `tsc --noEmit`, use `bun run lint:fix` not `eslint . --fix`, etc.
-- Do not run servers to avoid port conflicts. Developer handles these manually.
+- **Never start servers without explicit request.** `bun run dev`, `make postgres` (PostgreSQL + Prisma Studio + Mailpit) are managed manually by the developer and are already running.
 
 ### Git
 
