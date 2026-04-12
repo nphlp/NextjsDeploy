@@ -12,3 +12,7 @@ const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!;
 const NEXT_PUBLIC_TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!;
 
 export { NEXT_PUBLIC_BASE_URL, NEXT_PUBLIC_TURNSTILE_SITE_KEY };
+
+// Node.js environment (bundler inlines process.env.NODE_ENV at build time)
+export const IS_DEV = process.env.NODE_ENV === "development";
+export const IS_PROD = process.env.NODE_ENV === "production";
