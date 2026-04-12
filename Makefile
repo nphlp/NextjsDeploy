@@ -151,6 +151,7 @@ test: postgres app-setup
 # E2E tests (automated: build, start server, run tests, stop everything)
 # -> trap ensures server + Docker stop even on Ctrl+C or test failure
 test-e2e: postgres app-setup
+	@bunx playwright install --with-deps chromium > /dev/null 2>&1
 	@bun run fixtures:reload
 	@bun run build
 	@bash -c '\
