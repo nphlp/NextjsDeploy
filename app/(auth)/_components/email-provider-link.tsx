@@ -4,19 +4,19 @@ import { Link } from "@atoms/button";
 import { getEmailProvider } from "@utils/email-providers";
 import { ExternalLink } from "lucide-react";
 import { Route } from "next";
-import { useQueryParams } from "../_lib/use-query-params";
+import { useSuccessQueryParams } from "../_lib/use-success-query-params";
 
-export default function EmailProviderLink() {
-    const { email } = useQueryParams();
+type EmailProviderLinkProps = {
+    fallbackMessage: string;
+};
+
+export default function EmailProviderLink({ fallbackMessage }: EmailProviderLinkProps) {
+    const { email } = useSuccessQueryParams();
 
     const provider = getEmailProvider(email);
 
     if (!provider) {
-        return (
-            <p className="text-center text-sm text-gray-400">
-                Consultez votre bo&icirc;te de r&eacute;ception pour confirmer votre nouvelle adresse email.
-            </p>
-        );
+        return <p className="text-center text-sm text-gray-400">{fallbackMessage}</p>;
     }
 
     return (

@@ -1,5 +1,6 @@
 "use client";
 
+import { queryUrlSerializer } from "@app/(auth)/_lib/success-query-params";
 import Form, { FormInput, OnSubmit, emailSchema, emailSchemaProgressive, useForm } from "@atoms/_form";
 import Button from "@atoms/button";
 import { useToast } from "@atoms/toast";
@@ -9,7 +10,6 @@ import { Session } from "@lib/auth-server";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
-import { queryUrlSerializer } from "../../change-email/success/_lib/query-params";
 
 type ChangeEmailSectionProps = {
     session: NonNullable<Session>;

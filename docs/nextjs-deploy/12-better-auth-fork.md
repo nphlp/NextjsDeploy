@@ -17,7 +17,7 @@ See `BETTER-AUTH.md` at the project root for the list of planned upstream contri
 After cloning the project, initialize the submodule:
 
 ```bash
-git submodule update --init
+git submodule update --init --recursive
 ```
 
 Then install, build, and link the fork:

@@ -1,5 +1,6 @@
 "use client";
 
+import { queryUrlSerializer } from "@app/(auth)/_lib/success-query-params";
 import Form, {
     FormInput,
     FormInputPassword,
@@ -21,7 +22,6 @@ import { isValidationError, translateAuthError } from "@lib/auth-errors";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
-import { queryUrlSerializer } from "../success/_lib/query-params";
 
 export default function RegisterForm() {
     const router = useRouter();

@@ -92,6 +92,21 @@ bun run dev
 bun run build && bun run start
 ```
 
+### Better Auth Fork (git submodule)
+
+The project uses a fork of Better Auth in `vendor/better-auth/`. On first setup or after a fresh clone:
+
+```bash
+git submodule update --init --recursive   # Pull submodule
+make better-auth-install                  # Install fork dependencies (pnpm)
+make better-auth-build                    # Build all fork packages
+make better-auth-link                     # Symlink into node_modules/
+```
+
+`make dev` runs `better-auth-link` automatically, but NOT install/build. After `bun install`, re-link with `make better-auth-link`.
+
+See `docs/nextjs-deploy/12-better-auth-fork.md` for full documentation.
+
 ## MCP Servers (`.mcp.json`)
 
 - **context7** - Up-to-date documentation for any library

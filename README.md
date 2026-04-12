@@ -18,13 +18,25 @@ Full-stack Next.js 16 template with complete local development setup and Dokploy
 - [Docker](https://docs.docker.com/get-started/get-docker/)
 - [Make](https://www.gnu.org/software/make/)
 
+### First Setup
+
+After cloning, initialize the Better Auth fork submodule:
+
+```bash
+git submodule update --init --recursive
+make better-auth-install
+make better-auth-build
+```
+
+See [Better Auth Fork](./docs/nextjs-deploy/12-better-auth-fork.md) for details.
+
 ### Development
 
 ```bash
 make dev
 ```
 
-Next.js in terminal + Postgres in Docker. Installs dependencies, generates env files, sets up the database, loads fixtures and starts the server.
+Next.js in terminal + Postgres in Docker. Installs dependencies, generates env files, sets up the database, links the fork, loads fixtures and starts the server.
 
 ### Build (test production locally)
 

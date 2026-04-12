@@ -1,10 +1,10 @@
+import EmailProviderLink from "@app/(auth)/_components/email-provider-link";
 import { Link } from "@atoms/button";
 import Card from "@atoms/card";
 import Main from "@core/Main";
 import { SMTP_HOST } from "@lib/env";
 import { CircleCheck, ExternalLink, Mail } from "lucide-react";
 import type { Metadata, Route } from "next";
-import EmailProviderLink from "./_components/email-provider-link";
 
 export const metadata: Metadata = {
     title: "Changement d'email",
@@ -61,7 +61,7 @@ export default async function Page() {
                                 <ExternalLink className="size-4" />
                             </Link>
                         ) : (
-                            <EmailProviderLink />
+                            <EmailProviderLink fallbackMessage="Consultez votre bo&icirc;te de r&eacute;ception pour confirmer votre nouvelle adresse email." />
                         )}
 
                         {/* Back to profile */}

@@ -1,12 +1,12 @@
 "use client";
 
+import { queryUrlSerializer } from "@app/(auth)/_lib/success-query-params";
 import Form, { FormInput, OnSubmit, emailSchema, emailSchemaProgressive, useForm } from "@atoms/_form";
 import Button, { Link } from "@atoms/button";
 import { useTurnstile } from "@atoms/use-turnstile";
 import { requestPasswordReset } from "@lib/auth-client";
 import { useState } from "react";
 import z from "zod";
-import { queryUrlSerializer } from "../success/_lib/query-params";
 
 export default function RequestResetForm() {
     const [emailSent, setEmailSent] = useState(false);

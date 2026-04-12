@@ -1,7 +1,7 @@
 import { createSearchParamsCache, createSerializer, parseAsString } from "nuqs/server";
 
 /**
- * Query parameters for change email success page
+ * Query parameters for auth success pages (email-based)
  */
 export const queryParams = {
     email: parseAsString.withDefault(""),

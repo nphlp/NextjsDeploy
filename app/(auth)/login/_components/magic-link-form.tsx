@@ -1,6 +1,6 @@
 "use client";
 
-import { queryUrlSerializer } from "@app/(auth)/register/success/_lib/query-params";
+import { queryUrlSerializer } from "@app/(auth)/_lib/success-query-params";
 import Form, { FormInput, OnSubmit, emailSchema, emailSchemaProgressive, useForm } from "@atoms/_form";
 import Button from "@atoms/button";
 import { useToast } from "@atoms/toast";
