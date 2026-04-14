@@ -94,9 +94,10 @@ model Verification {
 }
 
 model TwoFactor {
-    id          String @id @default(nanoid())
+    id          String  @id @default(nanoid())
     secret      String
     backupCodes String
+    verified    Boolean @default(true)
 
     userId String
     User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -122,6 +123,7 @@ model Passkey {
     aaguid       String?
 
     createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
     // Indexes
     @@index([userId])
