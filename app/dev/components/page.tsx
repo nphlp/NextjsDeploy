@@ -1,5 +1,6 @@
 import Accordion from "@atoms/accordion";
 import AlertDialog from "@atoms/alert-dialog";
+import { CardButton, CardLink } from "@atoms/card";
 import Checkbox from "@atoms/checkbox";
 import CheckboxChip from "@atoms/checkbox/checkbox-chip";
 import Collapsible from "@atoms/collapsible";
@@ -41,6 +42,18 @@ export default async function ComponentsPage() {
             {/* ----- Trigger Variants ----- */}
             <Section title="Trigger Variants (buttonStyle)">
                 <TriggerVariants />
+            </Section>
+
+            {/* ----- Card ----- */}
+            <Section title="Card">
+                <div className="w-full max-w-md">
+                    <p className="mb-2 text-sm text-gray-500">CardLink (link overlay)</p>
+                    <CardLink />
+                </div>
+                <div className="w-full max-w-md">
+                    <p className="mb-2 text-sm text-gray-500">CardButton (button overlay)</p>
+                    <CardButton />
+                </div>
             </Section>
 
             {/* ----- Alert Dialog ----- */}

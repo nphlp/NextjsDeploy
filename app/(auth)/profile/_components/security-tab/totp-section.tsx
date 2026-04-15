@@ -74,6 +74,11 @@ export default function TotpSection(props: TotpSectionProps) {
             setIsSubmitting(false);
             return;
         }
+        if (data.method !== "totp") {
+            toast.add({ title: "Erreur", description: "Réponse 2FA inattendue.", type: "error" });
+            setIsSubmitting(false);
+            return;
+        }
         setTotpUri(data.totpURI);
         setBackupCodes(data.backupCodes);
         setStep("setup");

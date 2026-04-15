@@ -9,6 +9,7 @@ import { Menu as MenuBaseUi } from "@base-ui/react/menu";
 import cn from "@lib/cn";
 import { Check } from "lucide-react";
 import { ComponentProps, MouseEventHandler, ReactNode } from "react";
+import { ButtonStyleProps, buttonStyle } from "../_core/button-variants";
 
 export type MenuProps = {
     children?: ReactNode;
@@ -33,26 +34,31 @@ type MenuTriggerProps = {
 
     // Legacy props
     legacyProps?: LegacyProps<ButtonAttributes, "onClick">;
-} & BaseUiProps<typeof MenuBaseUi.Trigger, ButtonAttributes>;
+} & ButtonStyleProps &
+    BaseUiProps<typeof MenuBaseUi.Trigger, ButtonAttributes>;
 
 export const Trigger = (props: MenuTriggerProps) => {
-    const { className, children, legacyProps, ...otherProps } = props;
+    const {
+        className,
+        children,
+        // Style props
+        colors = "outline",
+        rounded = "md",
+        padding = "md",
+        noFlex = false,
+        noOutline = false,
+        noStyle = false,
+        // Others
+        legacyProps,
+        ...otherProps
+    } = props;
 
     return (
         <MenuBaseUi.Trigger
             className={cn(
-                // Layout
-                "flex h-10 items-center justify-center gap-1.5 px-3.5",
-                // Border
-                "rounded-md border border-gray-200",
-                // Outline
-                "outline-2 outline-transparent",
-                "focus-visible:outline-outline",
-                // Background
-                "bg-gray-50 hover:bg-gray-100 active:bg-gray-100 data-popup-open:bg-gray-100",
-                // Text
-                "text-foreground cursor-default text-base font-medium select-none",
-                // Overrides
+                buttonStyle({ colors, rounded, padding, noFlex, noOutline, noStyle }),
+                // Menu-specific overrides on top of buttonStyle
+                "text-foreground cursor-default gap-1.5 data-popup-open:bg-gray-100",
                 className,
             )}
             {...legacyProps}
