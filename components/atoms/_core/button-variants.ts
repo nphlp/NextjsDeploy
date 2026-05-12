@@ -22,8 +22,9 @@ const buttonVariants = cva(structure, {
                 "border border-gray-950",
                 // Border (hover)
                 "hover:border-gray-900",
-                // Border (active)
+                // Border (active / popup-open)
                 "active:border-gray-800",
+                "data-popup-open:border-gray-800",
                 // Border (disabled)
                 "data-disabled:border-gray-800",
                 "data-disabled:hover:border-gray-800",
@@ -33,8 +34,9 @@ const buttonVariants = cva(structure, {
                 "bg-gray-950",
                 // Background (hover)
                 "hover:bg-gray-900",
-                // Background (active)
+                // Background (active / popup-open)
                 "active:bg-gray-800",
+                "data-popup-open:bg-gray-800",
                 // Background (disabled)
                 "data-disabled:bg-gray-800",
                 "data-disabled:hover:bg-gray-800",
@@ -50,8 +52,9 @@ const buttonVariants = cva(structure, {
                 "border border-gray-200",
                 // Border (hover)
                 "hover:border-gray-300",
-                // Border (active)
+                // Border (active / popup-open)
                 "active:border-gray-400",
+                "data-popup-open:border-gray-400",
                 // Border (disabled)
                 "data-disabled:border-gray-200",
                 "data-disabled:hover:border-gray-200",
@@ -61,8 +64,9 @@ const buttonVariants = cva(structure, {
                 "bg-gray-50",
                 // Background (hover)
                 "hover:bg-gray-100",
-                // Background (active)
+                // Background (active / popup-open)
                 "active:bg-gray-200",
+                "data-popup-open:bg-gray-200",
                 // Background (disabled)
                 "data-disabled:bg-gray-100",
                 "data-disabled:hover:bg-gray-100",
@@ -78,23 +82,25 @@ const buttonVariants = cva(structure, {
                 "border border-transparent",
                 // Border (hover)
                 "hover:border-gray-50",
-                // Border (active)
+                // Border (active / popup-open)
                 "active:border-gray-100",
-                // Border (disabled)
-                "data-disabled:border-gray-100",
-                "data-disabled:hover:border-gray-100",
-                "data-disabled:active:border-gray-100",
+                "data-popup-open:border-gray-100",
+                // Border (disabled) — transparent so disabled doesn't mimic active/popup-open
+                "data-disabled:border-transparent",
+                "data-disabled:hover:border-transparent",
+                "data-disabled:active:border-transparent",
 
                 // Background
-                "bg-gray-transparent",
+                "bg-transparent",
                 // Background (hover)
                 "hover:bg-gray-50",
-                // Background (active)
+                // Background (active / popup-open)
                 "active:bg-gray-100",
-                // Background (disabled)
-                "data-disabled:bg-gray-100",
-                "data-disabled:hover:bg-gray-100",
-                "data-disabled:active:bg-gray-100",
+                "data-popup-open:bg-gray-100",
+                // Background (disabled) — transparent so disabled doesn't mimic active/popup-open
+                "data-disabled:bg-transparent",
+                "data-disabled:hover:bg-transparent",
+                "data-disabled:active:bg-transparent",
 
                 // Text
                 "text-gray-800",
@@ -106,8 +112,9 @@ const buttonVariants = cva(structure, {
                 "border border-primary",
                 // Border (hover)
                 "hover:border-primary-hover",
-                // Border (active)
+                // Border (active / popup-open)
                 "active:border-primary-active",
+                "data-popup-open:border-primary-active",
                 // Border (disabled)
                 "data-disabled:border-primary-active",
                 "data-disabled:hover:border-primary-active",
@@ -117,8 +124,9 @@ const buttonVariants = cva(structure, {
                 "bg-primary",
                 // Background (hover)
                 "hover:bg-primary-hover",
-                // Background (active)
+                // Background (active / popup-open)
                 "active:bg-primary-active",
+                "data-popup-open:bg-primary-active",
                 // Background (disabled)
                 "data-disabled:bg-primary-active",
                 "data-disabled:hover:bg-primary-active",
@@ -134,8 +142,9 @@ const buttonVariants = cva(structure, {
                 "border border-destructive",
                 // Border (hover)
                 "hover:border-destructive-hover",
-                // Border (active)
+                // Border (active / popup-open)
                 "active:border-destructive-active",
+                "data-popup-open:border-destructive-active",
                 // Border (disabled)
                 "data-disabled:border-destructive-active",
                 "data-disabled:hover:border-destructive-active",
@@ -145,8 +154,9 @@ const buttonVariants = cva(structure, {
                 "bg-destructive",
                 // Background (hover)
                 "hover:bg-destructive-hover",
-                // Background (active)
+                // Background (active / popup-open)
                 "active:bg-destructive-active",
+                "data-popup-open:bg-destructive-active",
                 // Background (disabled)
                 "data-disabled:bg-destructive-active",
                 "data-disabled:hover:bg-destructive-active",
@@ -186,6 +196,7 @@ const buttonVariants = cva(structure, {
             sm: "min-h-8 px-2 py-0.5",
             xs: "min-h-6 px-1",
             icon: "size-10",
+            iconSm: "size-8",
             false: "p-0",
         },
         flex: {
