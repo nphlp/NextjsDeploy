@@ -9,6 +9,7 @@
 import { copyFileSync, existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { checkSync } from "./check-env-sync.mjs";
 import { generate } from "./generate-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -20,8 +21,9 @@ const EXAMPLE_PATH = resolve(ENV_DIR, "env.config.example.mjs");
 const green = (s) => `\x1b[32m${s}\x1b[0m`;
 const yellow = (s) => `\x1b[33m${s}\x1b[0m`;
 
-// Already exists → generate
+// Already exists → check sync + generate
 if (existsSync(CONFIG_PATH)) {
+    await checkSync();
     await generate();
     process.exit(0);
 }
