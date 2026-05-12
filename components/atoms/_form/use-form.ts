@@ -21,7 +21,7 @@ type FieldConfig<V, S extends V = V> = {
     /**
      * Override schema
      * - for blur validation
-     * - useful to prevent showing errors if the user juste click in and out the field without filling it (e.g. firstname field in `/profile` page)
+     * - useful to prevent showing errors if the user juste click in and out the field without filling it (e.g. firstname field in `/account` page)
      */
     onBlurSchema?: ZodType;
     /**

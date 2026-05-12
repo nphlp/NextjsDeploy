@@ -38,7 +38,7 @@ export const SnapPopup = (props: DrawerPopupProps) => {
                 "pb-[max(0px,calc(var(--drawer-snap-point-offset)+var(--drawer-swipe-movement-y)))]",
                 "transform-[translateY(calc(var(--drawer-snap-point-offset)+var(--drawer-swipe-movement-y)))]",
                 // Border
-                "outline-1 outline-gray-200 dark:outline-gray-300",
+                "outline-1 outline-gray-200",
                 // Background
                 "bg-background",
                 // Text
@@ -84,7 +84,7 @@ export const DragHandle = (props: DragHandleProps) => {
                 // Layout
                 "shrink-0 touch-none px-6 pt-3.5 pb-3",
                 // Border
-                "border-b border-gray-200 dark:border-gray-300",
+                "border-b border-gray-200",
                 // Overrides
                 className,
             )}

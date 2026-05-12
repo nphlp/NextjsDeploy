@@ -140,7 +140,7 @@ export const Popup = (props: ComboboxPopupProps) => {
                 "max-h-92 w-(--anchor-width) max-w-(--available-width)",
                 // Border
                 "rounded-md",
-                "outline-1 outline-gray-200 dark:-outline-offset-1 dark:outline-gray-300",
+                "outline-1 outline-gray-200 dark:-outline-offset-1",
                 // Background
                 "bg-background",
                 // Text

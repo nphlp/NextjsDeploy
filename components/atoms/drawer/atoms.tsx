@@ -153,7 +153,7 @@ export const Popup = (props: DrawerPopupProps) => {
                 "supports-[-webkit-touch-callout:none]:rounded-[10px]",
                 "supports-[-webkit-touch-callout:none]:pr-6",
                 // Border
-                "outline-1 outline-gray-200 dark:outline-gray-300",
+                "outline-1 outline-gray-200",
                 // Background
                 "bg-background",
                 // Text

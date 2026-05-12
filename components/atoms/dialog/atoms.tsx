@@ -111,7 +111,7 @@ export const Popup = (props: DialogPopupProps) => {
                 // Layout
                 "fixed top-1/2 left-1/2 z-10 -mt-8 w-96 max-w-[calc(100vw-3rem)] -translate-x-1/2 -translate-y-1/2 p-6",
                 // Border
-                "rounded-lg outline-1 outline-gray-200 dark:outline-gray-300",
+                "rounded-lg outline-1 outline-gray-200",
                 // Background
                 "bg-background",
                 // Text

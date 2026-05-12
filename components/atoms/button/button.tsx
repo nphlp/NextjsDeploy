@@ -38,7 +38,7 @@ type ButtonProps = {
     legacyProps?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonProps>;
 
     // Others
-    ref?: RefObject<HTMLButtonElement>;
+    ref?: RefObject<HTMLButtonElement | null>;
     onClick?: (e: MouseEvent) => void;
     onFocus?: (e: FocusEvent) => void;
 };

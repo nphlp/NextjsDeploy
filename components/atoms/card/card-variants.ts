@@ -17,7 +17,7 @@ const cardVariants = cva(
     {
         variants: {
             colors: {
-                solid: cn("border border-gray-200 bg-white shadow-sm", "has-data-card-overlay:hover:border-gray-300"),
+                solid: cn("border border-gray-200 shadow-sm", "has-data-card-overlay:hover:border-gray-300"),
                 dashed: cn(
                     "border border-dashed border-gray-300 text-gray-600",
                     "has-data-card-overlay:hover:border-gray-500 has-data-card-overlay:hover:text-gray-800",

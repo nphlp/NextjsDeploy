@@ -138,7 +138,7 @@ export const Popup = (props: SelectPopupProps) => {
                 "group min-w-(--anchor-width) origin-(--transform-origin)",
                 "data-[side=none]:min-w-[calc(var(--anchor-width)+1rem)]",
                 // Border
-                "rounded-md outline-1 outline-gray-200 dark:outline-gray-300",
+                "rounded-md outline-1 outline-gray-200",
                 // Background
                 "bg-background bg-clip-padding",
                 // Text

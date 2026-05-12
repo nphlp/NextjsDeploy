@@ -120,7 +120,7 @@ export const Popup = (props: MenuPopupProps) => {
                 "origin-(--transform-origin) py-1",
                 // Border
                 "rounded-md outline-1 outline-gray-200",
-                "dark:-outline-offset-1 dark:outline-gray-300",
+                "dark:-outline-offset-1",
                 // Background
                 "bg-background",
                 // Text
@@ -366,6 +366,65 @@ export const SubmenuTrigger = (props: MenuSubmenuTriggerProps) => {
         >
             {children}
         </MenuBaseUi.SubmenuTrigger>
+    );
+};
+
+// ----- Composite items ----- //
+
+type SwitchItemProps = {
+    className?: string;
+    children: ReactNode;
+    checked?: boolean;
+    onCheckedChange?: (checked: boolean) => void;
+    defaultChecked?: boolean;
+};
+
+export const SwitchItem = (props: SwitchItemProps) => {
+    const { className, children, checked, onCheckedChange, defaultChecked } = props;
+
+    return (
+        <MenuBaseUi.CheckboxItem
+            checked={checked}
+            onCheckedChange={onCheckedChange}
+            defaultChecked={defaultChecked}
+            className={cn(
+                // Layout
+                "flex items-center gap-3 py-2 pr-8 pl-4",
+                "data-highlighted:relative data-highlighted:z-0",
+                "data-highlighted:before:absolute data-highlighted:before:inset-x-1 data-highlighted:before:inset-y-0 data-highlighted:before:z-[-1]",
+                // Border
+                "outline-none data-highlighted:before:rounded-sm",
+                // Background
+                "data-highlighted:before:bg-gray-900",
+                // Text
+                "cursor-default text-sm leading-4 select-none",
+                "data-highlighted:text-gray-50",
+                className,
+            )}
+        >
+            <span
+                className={cn(
+                    "relative flex h-6 w-10 flex-none rounded-full",
+                    "border",
+                    "border-gray-100 bg-gray-200",
+                    "inset-shadow-[1px_1px_3px_0px_var(--color-gray-500)]",
+                    "transition-all duration-150 ease-in-out",
+                    checked && "border-gray-300 bg-gray-500",
+                    checked && "inset-shadow-[1px_1px_3px_0px_var(--color-gray-700)]",
+                )}
+            >
+                <span
+                    className={cn(
+                        "aspect-square h-full rounded-full",
+                        "bg-white",
+                        "inset-shadow-[0px_0px_1.5px_1px_var(--color-gray-50)]",
+                        "transition-transform duration-150",
+                        checked && "translate-x-4",
+                    )}
+                />
+            </span>
+            {children}
+        </MenuBaseUi.CheckboxItem>
     );
 };
 

@@ -81,6 +81,11 @@ type CarouselProps = {
      */
     clippingOffset?: string;
     withArrows?: boolean;
+    /**
+     * Visualize the carousel internal layout with colored backgrounds —
+     * useful when tuning `gap` / `shadowSpace` / `manageLastCardOverflow`.
+     */
+    debug?: boolean;
     children: ReactNode;
 };
 
@@ -108,6 +113,7 @@ const Carousel = (props: CarouselProps) => {
         clippingOffset = "0.8rem",
         children,
         withArrows = false,
+        debug = false,
     } = props;
 
     const [emblaRef, emblaApi] = useEmblaCarousel({ slidesToScroll: 1, align: "start" });
@@ -116,7 +122,7 @@ const Carousel = (props: CarouselProps) => {
 
     return (
         <Provider value={{ gap, emblaApi }}>
-            <div className="bg.-red-50 relative max-w-full min-w-full">
+            <div className={cn("relative max-w-full min-w-full", debug && "bg-red-100")}>
                 <div
                     // Manage last card overflow: specify a clip-path to hide overflowed part
                     // Ideal for round slidePerView settings, problematic for float slidePerView settings
@@ -142,7 +148,10 @@ const Carousel = (props: CarouselProps) => {
                             ref={emblaRef}
                         >
                             <div
-                                className="bg.-green-50 grid touch-pan-y touch-pinch-zoom grid-flow-col backface-hidden"
+                                className={cn(
+                                    "grid touch-pan-y touch-pinch-zoom grid-flow-col backface-hidden",
+                                    debug && "bg-green-100",
+                                )}
                                 style={{
                                     gridAutoColumns: `calc(100% / ${slidePerView[breakpoint]})`,
                                     marginLeft: `calc(${gap} * -1)`,

@@ -86,7 +86,7 @@ export const Popup = (props: ContextMenuPopupProps) => {
                 "origin-(--transform-origin) py-1",
                 // Border
                 "rounded-md outline-1 outline-gray-200",
-                "dark:-outline-offset-1 dark:outline-gray-300",
+                "dark:-outline-offset-1",
                 // Background
                 "bg-background",
                 // Text
