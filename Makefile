@@ -71,9 +71,6 @@ app-setup:
 	@if [ ! -f node_modules/.package-lock.json ] || [ bun.lock -nt node_modules/.package-lock.json ]; then \
 		bun install; \
 	fi
-	@if [ -d vendor/better-auth ]; then \
-		$(MAKE) better-auth-link > /dev/null 2>&1; \
-	fi
 	@bun run db:setup
 	@if [ ! -d prisma/client ] || [ prisma/schema.prisma -nt prisma/client ]; then \
 		bun run prisma:generate; \
@@ -229,29 +226,25 @@ ngrok:
 #   Better Auth (fork)   #
 ##########################
 
-.PHONY: better-auth-install better-auth-build better-auth-dev better-auth-link
+# The fork is consumed via prebuilt artifacts in `vendor/better-auth-build/`,
+# committed to the repo. `bun install` resolves them via bun workspaces —
+# no submodule build needed for normal dev/CI/deploy.
+#
+# The `vendor/better-auth/` submodule is only required when modifying the fork.
+# After source changes, run `make better-auth-build` and commit the artefacts.
+
+.PHONY: better-auth-build better-auth-dev
 
 BA_DIR = vendor/better-auth
 
-# Install fork dependencies (pnpm monorepo)
-better-auth-install:
-	@cd $(BA_DIR) && pnpm install
-
-# Build fork packages (core + telemetry + better-auth + passkey)
+# Build fork → vendor/better-auth-build/ (run after fork source changes)
 better-auth-build:
-	@cd $(BA_DIR) && pnpm --filter @better-auth/core build && pnpm --filter @better-auth/telemetry build && pnpm --filter @better-auth/kysely-adapter build && pnpm --filter @better-auth/prisma-adapter build && pnpm --filter @better-auth/memory-adapter build && pnpm --filter better-auth build && pnpm --filter @better-auth/passkey build
+	@bun run scripts/better-auth-build.ts
+	@bun install
 
-# Watch mode (rebuild on changes)
+# Watch mode (rebuild fork packages on changes — for active fork dev)
 better-auth-dev:
 	@cd $(BA_DIR) && pnpm --filter @better-auth/core build && pnpm --filter @better-auth/telemetry build && pnpm --filter better-auth dev & pnpm --filter @better-auth/passkey dev
-
-# Link fork packages to this project (run after build)
-better-auth-link:
-	@cd $(BA_DIR)/packages/core && bun link
-	@cd $(BA_DIR)/packages/telemetry && bun link
-	@cd $(BA_DIR)/packages/better-auth && bun link
-	@cd $(BA_DIR)/packages/passkey && bun link
-	@bun link better-auth @better-auth/passkey @better-auth/core @better-auth/telemetry
 
 #####################
 #   Dump Database   #

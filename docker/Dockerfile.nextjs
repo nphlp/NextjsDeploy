@@ -18,6 +18,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends postgresql-clie
 FROM base AS dev-deps
 
 COPY package.json bun.lock ./
+# Required: vendor/better-auth-build/* are declared as bun workspaces in
+# package.json (consumed via `workspace:*`). The prebuilt fork must be
+# present before `bun install` so workspace members resolve.
+COPY vendor/better-auth-build ./vendor/better-auth-build
+
 RUN bun install --frozen-lockfile
 
 #########################
@@ -26,6 +31,9 @@ RUN bun install --frozen-lockfile
 FROM base AS prod-deps
 
 COPY package.json bun.lock ./
+# Same reason as dev-deps above: workspace members must exist at install.
+COPY vendor/better-auth-build ./vendor/better-auth-build
+
 RUN bun install --production --frozen-lockfile
 
 ####################

@@ -10,6 +10,9 @@ ARG DATABASE_URL
 COPY package.json bun.lock ./
 COPY prisma ./prisma
 COPY prisma.config.mts ./prisma.config.mts
+# Required: vendor/better-auth-build/* are bun workspace members.
+# Must be present before `bun install` so workspace:* refs resolve.
+COPY vendor/better-auth-build ./vendor/better-auth-build
 
 RUN bun install --frozen-lockfile
 RUN bun run prisma:generate

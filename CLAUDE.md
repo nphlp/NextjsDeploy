@@ -109,18 +109,26 @@ bun run dev
 bun run build && bun run start
 ```
 
-### Better Auth Fork (git submodule)
+### Better Auth Fork (prebuilt + vendored)
 
-The project uses a fork of Better Auth in `vendor/better-auth/`. On first setup or after a fresh clone:
+The fork lives at `vendor/better-auth/` (git submodule), but at install time we consume **prebuilt artefacts** from `vendor/better-auth-build/` (committed to the repo). The project declares `vendor/better-auth-build/*` as bun workspaces, and `better-auth` + `@better-auth/passkey` use `workspace:*`, so a normal `bun install` is enough — no submodule pull, no monorepo build, no symlink dance.
+
+**Default workflow (you don't modify the fork):**
 
 ```bash
-git submodule update --init --recursive   # Pull submodule
-make better-auth-install                  # Install fork dependencies (pnpm)
-make better-auth-build                    # Build all fork packages
-make better-auth-link                     # Symlink into node_modules/
+bun install   # Resolves better-auth + @better-auth/* via bun workspaces
 ```
 
-`make dev` runs `better-auth-link` automatically, but NOT install/build. After `bun install`, re-link with `make better-auth-link`.
+That's it. The submodule isn't required.
+
+**When modifying the fork:**
+
+1. `git submodule update --init vendor/better-auth` (only the BA submodule)
+2. Edit code in `vendor/better-auth/packages/...`
+3. `make better-auth-build` → re-runs the build, regenerates `vendor/better-auth-build/`, then `bun install`
+4. Commit both `vendor/better-auth` (submodule pointer bump) and `vendor/better-auth-build/` (artefacts)
+
+The build script is at `scripts/better-auth-build.ts`. It builds 9 packages with tsdown, copies `dist/` + rewritten `package.json` (resolves `catalog:` to concrete versions, keeps `workspace:*` for bun workspaces). `BUILD_INFO.json` records the fork commit + branch + timestamp.
 
 See `docs/nextjs-deploy/12-better-auth-fork.md` for full documentation.
 

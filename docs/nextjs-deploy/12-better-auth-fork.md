@@ -6,116 +6,129 @@
 
 # Better Auth Fork
 
-The project uses a fork of Better Auth as a git submodule to contribute upstream improvements. The fork lives in `vendor/better-auth/`.
+The project consumes a fork of Better Auth as **prebuilt artefacts** committed to the repo at `vendor/better-auth-build/`. The fork source itself lives at `vendor/better-auth/` (git submodule), but it is **only required when modifying the fork** — normal install/dev/CI/deploy go through the prebuilt artefacts via bun workspaces.
 
-See `BETTER-AUTH.md` at the project root for the list of planned upstream contributions.
+See `BETTER-AUTH.md` at the project root for the list of upstream contributions in flight.
+
+## How It Works
+
+`package.json` declares `vendor/better-auth-build/*` as bun workspaces. The deps `better-auth` + `@better-auth/passkey` use `workspace:*`, so `bun install` resolves them locally — no npm download, no symlinks, no build step.
+
+```
+vendor/
+├── better-auth/                    # Git submodule (fork source — optional)
+│   └── packages/...
+└── better-auth-build/              # Committed prebuilt artefacts (consumed by bun workspaces)
+    ├── better-auth/
+    │   ├── dist/
+    │   └── package.json            # workspace:* refs preserved, catalog: → versions
+    ├── @better-auth/{core,passkey,prisma-adapter,...}/
+    │   ├── dist/
+    │   └── package.json
+    └── BUILD_INFO.json             # fork commit + branch + timestamp
+```
 
 ## Local Development
 
-### First Setup
-
-After cloning the project, initialize the submodule:
+### Default Workflow (you don't modify the fork)
 
 ```bash
-git submodule update --init --recursive
+bun install   # Resolves better-auth + @better-auth/* via bun workspaces
 ```
 
-Then install, build, and link the fork:
+That's it. The submodule isn't required, no Makefile target needed.
+
+### Modifying the Fork
 
 ```bash
-make better-auth-install   # pnpm install in the monorepo
-make better-auth-build     # build all packages (core, telemetry, better-auth, passkey, adapters)
-make better-auth-link      # symlink fork packages into node_modules/
+git submodule update --init vendor/better-auth   # Pull the fork source
+# Edit code in vendor/better-auth/packages/...
+make better-auth-build                            # Regenerate vendor/better-auth-build/ + bun install
 ```
 
-### Development Workflow
+Commit **both**:
 
-1. Start the fork in watch mode (rebuilds on changes):
+- `vendor/better-auth` (submodule pointer bump)
+- `vendor/better-auth-build/` (artefacts)
 
-```bash
-make better-auth-dev
-```
+### Working on the Fork (upstream PRs)
 
-2. Edit files in `vendor/better-auth/packages/` — changes rebuild automatically
-
-3. If the symlinks are lost (after `bun install`), re-link:
-
-```bash
-make better-auth-link
-```
-
-### Working on the Fork
-
-The submodule is a full git repo. You can commit, branch, and push from inside it:
+The submodule is a full git repo. From inside it, branch + commit + push to the fork remote:
 
 ```bash
 cd vendor/better-auth
 git checkout -b feat/my-feature
-# make changes...
+# ... edits ...
 git add . && git commit -m "feat: my changes"
 git push origin feat/my-feature
 ```
 
-Then open a PR on the upstream repo from your fork.
+Then open a PR upstream from your fork.
+
+## Build Script
+
+`scripts/better-auth-build.ts` orchestrates the rebuild:
+
+1. `pnpm install` in the fork submodule (pnpm is the fork's native PM — bun would mutate `package.json` by ingesting `pnpm-workspace.yaml`, polluting upstream PRs)
+2. Build all 9 packages with tsdown (`@better-auth/core`, `@better-auth/telemetry`, `@better-auth/{kysely,prisma,memory,mongo,drizzle}-adapter`, `better-auth`, `@better-auth/passkey`)
+3. Copy `dist/` + rewritten `package.json` + `LICENSE.md` into `vendor/better-auth-build/<name>/`
+4. Rewrite each vendored `package.json`: drop `devDependencies` + `scripts`, keep `workspace:*`/`workspace:^`, resolve `catalog:` to concrete versions
+5. Write `BUILD_INFO.json` (fork commit + timestamp)
 
 ## Dokploy Deployment
 
-### 1. Enable Submodules
+No special config needed — deploys consume the committed `vendor/better-auth-build/` like any other repo file. Dokploy must have **Enable Submodules** disabled (the submodule is optional and only used by maintainers).
 
 In Dokploy > your compose service > **General** tab (Provider section):
 
-- Toggle **Enable Submodules** to `On`
+- Compose file path: `./compose.dokploy.yml`
+- Toggle **Enable Submodules**: `Off`
 
-This makes Dokploy run `git submodule update --init --recursive` when cloning.
+## Reverting to npm (when fork is merged upstream)
 
-### 2. Switch Compose File
-
-In Dokploy > your compose service > **General** tab (Provider section):
-
-- Change compose file path to: `./compose.dokploy.submodules.yml`
-
-This uses `Dockerfile.nextjs.submodules` which:
-
-1. Installs pnpm and builds the fork packages
-2. Creates symlinks in `node_modules/` pointing to the built fork
-3. Builds and runs Next.js as usual
-
-### 3. Revert to npm (when fork is merged upstream)
-
-When Better Auth merges your changes and publishes a new version:
+When Better Auth merges your changes and publishes new versions:
 
 **1. Update dependencies:**
 
 ```bash
-# Update to the npm version that includes the merged PRs
 bun add better-auth@latest @better-auth/passkey@latest
 ```
 
-**2. Revert Docker config:**
+This replaces `workspace:*` with `^x.y.z` ranges.
 
-- `docker/compose.docker.yml` → change `Dockerfile.nextjs.submodules` back to `Dockerfile.nextjs`
-- Dokploy → change compose path back to `./compose.dokploy.yml`
-- Dokploy → disable **Enable Submodules**
+**2. Drop the workspaces array** in `package.json`:
 
-**3. Remove submodule:**
-
-```bash
-git rm vendor/better-auth
-rm -rf .git/modules/vendor
+```diff
+- "workspaces": [
+-     "vendor/better-auth-build/better-auth",
+-     "vendor/better-auth-build/@better-auth/*"
+- ],
 ```
 
-**4. Clean up submodule files:**
+**3. Drop the prebuilt artefacts + submodule:**
 
 ```bash
-rm docker/Dockerfile.nextjs.submodules
-rm compose.dokploy.submodules.yml
+rm -rf vendor/better-auth-build
+git rm vendor/better-auth
+rm -rf .git/modules/vendor
 rm .gitmodules
 ```
 
-**5. Revert Makefile:**
+**4. Drop the build script + Makefile section:**
 
-- Remove the `Better Auth (fork)` section (better-auth-install, better-auth-build, better-auth-dev, better-auth-link)
-- Remove the `better-auth-link` call in `app-setup`
+```bash
+rm scripts/better-auth-build.ts
+```
+
+Remove the `Better Auth (fork)` section in `Makefile`.
+
+**5. Drop Dockerfile prebuilt COPY lines:**
+
+In `docker/Dockerfile.nextjs` + `docker/Dockerfile.prisma-studio`, remove:
+
+```dockerfile
+COPY vendor/better-auth-build ./vendor/better-auth-build
+```
 
 **6. Files that can stay as-is** (no impact without `vendor/`):
 
@@ -124,34 +137,14 @@ rm .gitmodules
 - `.prettierignore` — `vendor/`
 - `vitest.config.mjs` — `"vendor/**"` in exclude
 
-**7. Update BETTER-AUTH.md** — move items from "Done" to archived, remove file if all PRs are merged
-
-## Architecture
-
-```
-vendor/better-auth/              # Git submodule (fork)
-├── packages/
-│   ├── core/                    # @better-auth/core
-│   ├── telemetry/               # @better-auth/telemetry
-│   ├── better-auth/             # better-auth (main package)
-│   ├── passkey/                 # @better-auth/passkey
-│   ├── prisma-adapter/          # @better-auth/prisma-adapter
-│   └── ...                      # other adapters
-│
-node_modules/
-├── better-auth → symlink to vendor/better-auth/packages/better-auth
-├── @better-auth/passkey → symlink to vendor/better-auth/packages/passkey
-└── ...
-```
+**7. Update `BETTER-AUTH.md`** — move items from "Done" to archived, remove file if all PRs are merged.
 
 ## Makefile Commands
 
-| Command                    | Description                                 |
-| -------------------------- | ------------------------------------------- |
-| `make better-auth-install` | `pnpm install` in the fork monorepo         |
-| `make better-auth-build`   | Build all fork packages (generates `dist/`) |
-| `make better-auth-dev`     | Watch mode — rebuild on file changes        |
-| `make better-auth-link`    | Symlink fork packages into `node_modules/`  |
+| Command                  | Description                                                         |
+| ------------------------ | ------------------------------------------------------------------- |
+| `make better-auth-build` | Run `scripts/better-auth-build.ts` then `bun install` (fork → repo) |
+| `make better-auth-dev`   | Watch mode — rebuild fork packages on changes (active fork dev)     |
 
 ---
 
