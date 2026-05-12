@@ -1,5 +1,5 @@
 import Card from "@atoms/card";
-import Main from "@core/Main";
+import Main from "@core/main";
 import type { Metadata } from "next";
 import FormContact from "./_components/form-contact";
 import FormLogin from "./_components/form-login";

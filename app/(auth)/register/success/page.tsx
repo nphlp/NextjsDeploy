@@ -1,7 +1,7 @@
 import EmailProviderLink from "@app/(auth)/_components/email-provider-link";
 import { Link } from "@atoms/button";
 import Card from "@atoms/card";
-import Main from "@core/Main";
+import Main from "@core/main";
 import { SMTP_HOST } from "@lib/env";
 import { CircleCheck, ExternalLink, Mail } from "lucide-react";
 import type { Metadata, Route } from "next";

@@ -1,6 +1,6 @@
 import { queryUrlSerializer } from "@app/(auth)/_lib/query-params";
 import { Link } from "@atoms/button";
-import Main from "@core/Main";
+import Main from "@core/main";
 import { getSession } from "@lib/auth-server";
 import { ChevronRight } from "lucide-react";
 import type { Metadata } from "next";

@@ -1,5 +1,5 @@
 import Card from "@atoms/card";
-import Main from "@core/Main";
+import Main from "@core/main";
 import type { Metadata } from "next";
 import z, { ZodType } from "zod";
 import RequestResetForm from "./_components/request-reset-form";

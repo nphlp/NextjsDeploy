@@ -1,4 +1,4 @@
-import Main from "@core/Main";
+import Main from "@core/main";
 import { getCookieState } from "@lib/cookie-state-server";
 import type { Metadata } from "next";
 import { Suspense } from "react";

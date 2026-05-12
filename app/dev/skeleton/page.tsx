@@ -1,7 +1,7 @@
 import Input, { InputSkeleton } from "@atoms/input/input";
 import InputPassword, { InputPasswordSkeleton } from "@atoms/input/input-password";
 import TextArea, { TextAreaSkeleton } from "@atoms/input/text-area";
-import Main from "@core/Main";
+import Main from "@core/main";
 import type { Metadata } from "next";
 import SkeletonTextConfig from "./_components/skeleton-text-config";
 

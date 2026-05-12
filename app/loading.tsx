@@ -1,4 +1,4 @@
-import { MainSuspense } from "@core/Main";
+import { MainSuspense } from "@core/main";
 
 export default async function Loading() {
     return <MainSuspense />;

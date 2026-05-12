@@ -1,4 +1,4 @@
-import Main from "@core/Main";
+import Main from "@core/main";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

@@ -1,5 +1,5 @@
 import { Link } from "@atoms/button";
-import Main from "@core/Main";
+import Main from "@core/main";
 
 export default async function NotFound() {
     return (

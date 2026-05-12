@@ -1,6 +1,6 @@
 import { Link } from "@atoms/button";
 import Card from "@atoms/card";
-import Main from "@core/Main";
+import Main from "@core/main";
 import type { Metadata } from "next";
 import { devLinkGroups } from "./_config/links";
 

@@ -1,8 +1,8 @@
 import ToastProvider from "@atoms/toast";
 import Breakpoints from "@comps/breakpoints";
-import Footer from "@core/Footer";
-import Header from "@core/Header";
 import { DEBUG_LAYOUT } from "@core/config";
+import Footer from "@core/footer";
+import Header from "@core/header";
 import ThemeProvider from "@core/theme/_context/provider";
 import ThemeScript from "@core/theme/theme-script";
 import cn from "@lib/cn";

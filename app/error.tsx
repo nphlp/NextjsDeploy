@@ -2,7 +2,7 @@
 
 import Button from "@atoms/button";
 import Card from "@atoms/card";
-import Main from "@core/Main";
+import Main from "@core/main";
 import { useEffect } from "react";
 
 type ErrorProps = {

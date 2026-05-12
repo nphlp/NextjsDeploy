@@ -1,4 +1,4 @@
-import Main from "@core/Main";
+import Main from "@core/main";
 import { getSession } from "@lib/auth-server";
 import type { Metadata } from "next";
 import { unauthorized } from "next/navigation";

@@ -21,7 +21,7 @@ import Switch from "@atoms/switch";
 import SwitchChip from "@atoms/switch/switch-chip";
 import Tabs from "@atoms/tabs";
 import TabsVertical from "@atoms/tabs/tabs-vertical";
-import Main from "@core/Main";
+import Main from "@core/main";
 import type { Metadata } from "next";
 import ComboboxAsyncDemo from "./_components/combobox-async-demo";
 import ComboboxMultipleAsyncDemo from "./_components/combobox-multiple-async-demo";

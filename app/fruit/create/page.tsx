@@ -1,6 +1,6 @@
 import { Link } from "@atoms/button";
 import Card from "@atoms/card";
-import Main from "@core/Main";
+import Main from "@core/main";
 import { ChevronRight } from "lucide-react";
 import type { Metadata } from "next";
 import CreateFruitForm from "./_components/create-fruit-form";
