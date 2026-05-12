@@ -1,0 +1,49 @@
+{
+  "name": "@better-auth/kysely-adapter",
+  "version": "1.7.0-beta.3",
+  "description": "Kysely adapter for Better Auth",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://www.better-auth.com/docs/adapters/kysely",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/better-auth/better-auth.git",
+    "directory": "packages/kysely-adapter"
+  },
+  "keywords": [
+    "auth",
+    "kysely",
+    "adapter",
+    "typescript",
+    "better-auth"
+  ],
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "dev-source": "./src/index.ts",
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    },
+    "./node-sqlite-dialect": {
+      "dev-source": "./src/node-sqlite-dialect.ts",
+      "types": "./dist/node-sqlite-dialect.d.mts",
+      "default": "./dist/node-sqlite-dialect.mjs"
+    }
+  },
+  "peerDependencies": {
+    "@better-auth/core": "workspace:^",
+    "@better-auth/utils": "0.4.0",
+    "kysely": "^0.28.14"
+  },
+  "peerDependenciesMeta": {
+    "kysely": {
+      "optional": true
+    }
+  }
+}

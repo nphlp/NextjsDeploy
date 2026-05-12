@@ -1,0 +1,20 @@
+import { getClientConfig } from "../config.mjs";
+import { createDynamicPathProxy } from "../proxy.mjs";
+import { useStore } from "./solid-store.mjs";
+import { capitalizeFirstLetter } from "@better-auth/core/utils/string";
+//#region src/client/solid/index.ts
+function getAtomKey(str) {
+	return `use${capitalizeFirstLetter(str)}`;
+}
+function createAuthClient(options) {
+	const { pluginPathMethods, pluginsActions, pluginsAtoms, hydrateSession, $fetch, atomListeners } = getClientConfig(options);
+	const resolvedHooks = {};
+	for (const [key, value] of Object.entries(pluginsAtoms)) resolvedHooks[getAtomKey(key)] = () => useStore(value);
+	return createDynamicPathProxy({
+		...pluginsActions,
+		...resolvedHooks,
+		hydrateSession
+	}, $fetch, pluginPathMethods, pluginsAtoms, atomListeners);
+}
+//#endregion
+export { createAuthClient };

@@ -1,0 +1,16 @@
+{
+  "forkCommit": "31c7f56e9c9b1fd5c2b67c8744844ca291f5807f",
+  "forkBranch": "merge/nextjs-deploy",
+  "builtAt": "2026-05-12T08:20:08.414Z",
+  "packages": [
+    "@better-auth/core",
+    "@better-auth/telemetry",
+    "@better-auth/kysely-adapter",
+    "@better-auth/prisma-adapter",
+    "@better-auth/memory-adapter",
+    "@better-auth/drizzle-adapter",
+    "@better-auth/mongo-adapter",
+    "better-auth",
+    "@better-auth/passkey"
+  ]
+}
