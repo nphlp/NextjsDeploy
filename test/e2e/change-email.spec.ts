@@ -62,8 +62,11 @@ test.describe.serial("Change email", () => {
 
         await expect(page.getByText("En attente :").first()).toBeVisible({ timeout: 10_000 });
 
-        // Open AlertDialog (card button has aria-label="Annuler le changement", dialog confirm has text only)
-        await page.getByLabel("Annuler le changement", { exact: true }).click();
+        // Open AlertDialog. Use `.first()` because the card button (visible) and the
+        // dialog confirm button (off-screen until open) can both surface the same
+        // accessible name during a React 19 transition; the card trigger is always
+        // first in DOM order.
+        await page.getByLabel("Annuler le changement", { exact: true }).first().click();
         const dialog = page.getByRole("alertdialog");
         await expect(dialog.getByText("Annuler le changement d'email")).toBeVisible();
         await expect(dialog.getByText(newEmail)).toBeVisible();
@@ -73,7 +76,7 @@ test.describe.serial("Change email", () => {
         await expect(page.getByText("En attente :").first()).toBeVisible();
 
         // Re-open then confirm cancel (dialog button selected by text)
-        await page.getByLabel("Annuler le changement", { exact: true }).click();
+        await page.getByLabel("Annuler le changement", { exact: true }).first().click();
         await dialog.getByText("Annuler le changement", { exact: true }).click();
         await expect(page.getByText("La demande de changement")).toBeVisible();
         await expect(page.getByText("En attente :").first()).not.toBeVisible();

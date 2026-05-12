@@ -20,8 +20,8 @@ interface MailpitMessageDetail {
     HTML: string;
 }
 
-/** Fetch the latest email sent to an address (with retries for async delivery) */
-export async function getLatestEmail(to: string, retries = 10, delay = 500): Promise<MailpitMessageDetail> {
+/** Fetch the latest email sent to an address (with retries for fire-and-forget delivery) */
+export async function getLatestEmail(to: string, retries = 30, delay = 500): Promise<MailpitMessageDetail> {
     for (let i = 0; i < retries; i++) {
         const res = await fetch(`${MAILPIT_API}/search?query=to:${encodeURIComponent(to)}&limit=1`);
         const data: MailpitSearchResponse = await res.json();

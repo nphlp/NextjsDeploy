@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { extractLink } from "./helpers/mailpit";
+import { extractLink, getLatestEmail } from "./helpers/mailpit";
 
 const timestamp = Date.now();
 
@@ -48,6 +48,50 @@ test.describe("Reset Password", () => {
         // Assert success page content
         await expect(page.getByRole("heading", { name: "Email envoyé !" })).toBeVisible();
         await expect(page.getByText("Retour à la connexion")).toBeVisible();
+    });
+
+    test("request reset for unknown email sends 'create account' email", async ({ page }) => {
+        // Unique email per run so we can isolate this test's mail in Mailpit
+        const unknownEmail = `unknown-${Date.now()}@example.com`;
+
+        await page.goto("/reset-password");
+
+        // Intercept POST to ensure it completes before window.location.href cancels it
+        let resolveApiCall!: () => void;
+        const apiCallDone = new Promise<void>((resolve) => {
+            resolveApiCall = resolve;
+        });
+        await page.route("**/api/auth/**", async (route) => {
+            if (route.request().method() === "POST") {
+                try {
+                    const response = await route.fetch();
+                    await route.fulfill({ response });
+                } catch {
+                    // Page may navigate before fulfill — request was still sent
+                }
+                resolveApiCall();
+            } else {
+                await route.continue();
+            }
+        });
+
+        await page.fill('input[name="email"]', unknownEmail);
+        const submitButton = page.getByRole("button", { name: "Envoyer l'email" }).first();
+        await expect(submitButton).toBeEnabled({ timeout: 20_000 });
+        await submitButton.click();
+        await apiCallDone;
+        await page.unroute("**/api/auth/**");
+
+        // Anti-enumeration: same redirect as the known-email branch
+        await page.waitForURL(/\/reset-password\/success/);
+
+        // BA fork callback `sendResetPasswordNoAccount` fires for unknown emails:
+        // dedicated subject "Créez votre compte" and link to /register.
+        const email = await getLatestEmail(unknownEmail);
+        expect(email.Subject).toBe("Créez votre compte");
+
+        const registerLink = await extractLink(unknownEmail, /http[s]?:\/\/[^\s"<]+\/register\b/);
+        expect(registerLink).toMatch(/\/register$/);
     });
 
     test("full flow: register → verify → request reset → email → reset password", async ({ page }) => {
