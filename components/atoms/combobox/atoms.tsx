@@ -7,6 +7,7 @@
 import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/_core/types";
 import { Combobox as ComboboxBaseUi } from "@base-ui/react/combobox";
 import cn from "@lib/cn";
+import useCollisionPadding from "@utils/use-collision-padding";
 import { Check, ChevronDown, X } from "lucide-react";
 import { ComponentProps, MouseEventHandler, ReactNode } from "react";
 
@@ -109,11 +110,13 @@ type ComboboxPositionerProps = {
 
 export const Positioner = (props: ComboboxPositionerProps) => {
     const { className, children, legacyProps, ...otherProps } = props;
+    const collisionPadding = useCollisionPadding();
 
     return (
         <ComboboxBaseUi.Positioner
             className={cn("z-10 outline-none", className)}
             sideOffset={8}
+            collisionPadding={collisionPadding}
             {...legacyProps}
             {...otherProps}
         >

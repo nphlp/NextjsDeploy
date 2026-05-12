@@ -7,6 +7,7 @@
 import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/_core/types";
 import { Menu as MenuBaseUi } from "@base-ui/react/menu";
 import cn from "@lib/cn";
+import useCollisionPadding from "@utils/use-collision-padding";
 import { Check } from "lucide-react";
 import { ComponentProps, MouseEventHandler, ReactNode } from "react";
 import { ButtonStyleProps, buttonStyle } from "../_core/button-variants";
@@ -89,10 +90,12 @@ type MenuPositionerProps = {
 
 export const Positioner = (props: MenuPositionerProps) => {
     const { className, children, legacyProps, ...otherProps } = props;
+    const collisionPadding = useCollisionPadding();
 
     return (
         <MenuBaseUi.Positioner
             sideOffset={8}
+            collisionPadding={collisionPadding}
             className={cn("z-10 outline-none", className)}
             {...legacyProps}
             {...otherProps}
@@ -116,6 +119,10 @@ export const Popup = (props: MenuPopupProps) => {
     return (
         <MenuBaseUi.Popup
             className={cn(
+                // Edge gutter — mirrors `useCollisionPadding` (16/28) so the popup
+                // never overflows the page gutter even with very wide content
+                // (Base UI's `collisionPadding` only shifts, it doesn't resize).
+                "max-w-[calc(100vw-2rem)] md:max-w-[calc(100vw-3.5rem)]",
                 // Layout
                 "origin-(--transform-origin) py-1",
                 // Border

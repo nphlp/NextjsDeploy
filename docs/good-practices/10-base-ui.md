@@ -165,6 +165,57 @@ export const Popup = (props: AlertDialogPopupProps) => {
 
 ---
 
+## Anchored popups: collision padding + edge gutter
+
+For atoms with a `Trigger` / `Positioner` / `Popup` triplet (`menu`, `popover`, `select`, `combobox`), combine two complementary mechanisms so the popup never overflows the page gutter:
+
+**1. `Positioner.collisionPadding` — shifts the popup back into view**
+
+Use the `useCollisionPadding` hook from `@utils/use-collision-padding`. It returns `16` on mobile and `28` from `md` — mirroring the `p-4 md:p-7` padding of `core/main.tsx`.
+
+```tsx
+import useCollisionPadding from "@utils/use-collision-padding";
+
+export const Positioner = (props: MenuPositionerProps) => {
+    const { className, children, legacyProps, ...otherProps } = props;
+    const collisionPadding = useCollisionPadding();
+
+    return (
+        <MenuBaseUi.Positioner
+            sideOffset={8}
+            collisionPadding={collisionPadding}
+            className={cn("z-10 outline-none", className)}
+            {...legacyProps}
+            {...otherProps}
+        >
+            {children}
+        </MenuBaseUi.Positioner>
+    );
+};
+```
+
+**2. `Popup` `max-w` — caps the popup width to match the gutter**
+
+Base UI's `collisionPadding` only **shifts** the popup back into view — it doesn't **resize** it. Without a `max-w` cap, a very wide popup will overflow the gutter even after collision shifting. The cap mirrors `useCollisionPadding` (16/28 px ≈ `2rem` / `3.5rem`).
+
+The same single line applies uniformly to **every popup atom** — anchored (`menu`, `popover`, `select`, `combobox`) **and** fixed-position dialogs (`alert-dialog`, `dialog`). Keep it on its own line at the top of the `cn()` block, with a dedicated comment, so the rule is easy to spot and copy:
+
+```tsx
+<MenuBaseUi.Popup
+    className={cn(
+        // Edge gutter — mirrors `useCollisionPadding` (16/28) so the popup
+        // never overflows the page gutter even with very wide content
+        // (Base UI's `collisionPadding` only shifts, it doesn't resize).
+        "max-w-[calc(100vw-2rem)] md:max-w-[calc(100vw-3.5rem)]",
+        // Layout
+        "origin-(--transform-origin) py-1",
+        // ...
+    )}
+/>
+```
+
+---
+
 ## Step-by-step
 
 ### 1. Copy the Tailwind example
@@ -214,7 +265,9 @@ className={cn(
 | `text-red-800`               | `text-destructive` |
 | `outline-blue-800`           | `outline-outline`  |
 
-**Keep as-is:** `bg-black` (overlays), `dark:opacity-70`, `dark:outline-gray-300`, `gray-*` classes (100–800).
+**Keep as-is:** `bg-black` (overlays), `dark:opacity-70`, `gray-*` classes (100–800).
+
+> Don't add `dark:outline-gray-*` / `dark:border-gray-*` variants on top of a `gray-*` base — `public/globals.css` already inverts the `gray-*` scale in dark mode, so the explicit dark variant doubles the override.
 
 ### 6. Focus outline offset
 

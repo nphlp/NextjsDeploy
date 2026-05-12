@@ -7,6 +7,7 @@
 import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/_core/types";
 import { Popover as PopoverBaseUi } from "@base-ui/react/popover";
 import cn from "@lib/cn";
+import useCollisionPadding from "@utils/use-collision-padding";
 import { ComponentProps, MouseEventHandler, ReactNode } from "react";
 import { ButtonStyleProps, buttonStyle } from "../_core/button-variants";
 
@@ -107,9 +108,16 @@ type PopoverPositionerProps = {
 
 export const Positioner = (props: PopoverPositionerProps) => {
     const { className, children, legacyProps, ...otherProps } = props;
+    const collisionPadding = useCollisionPadding();
 
     return (
-        <PopoverBaseUi.Positioner sideOffset={8} className={cn("z-10", className)} {...legacyProps} {...otherProps}>
+        <PopoverBaseUi.Positioner
+            sideOffset={8}
+            collisionPadding={collisionPadding}
+            className={cn("z-10", className)}
+            {...legacyProps}
+            {...otherProps}
+        >
             {children}
         </PopoverBaseUi.Positioner>
     );
@@ -129,6 +137,10 @@ export const Popup = (props: PopoverPopupProps) => {
     return (
         <PopoverBaseUi.Popup
             className={cn(
+                // Edge gutter — mirrors `useCollisionPadding` (16/28) so the popup
+                // never overflows the page gutter even with very wide content
+                // (Base UI's `collisionPadding` only shifts, it doesn't resize).
+                "max-w-[calc(100vw-2rem)] md:max-w-[calc(100vw-3.5rem)]",
                 // Layout
                 "px-6 py-4",
                 // Border

@@ -108,8 +108,12 @@ export const Popup = (props: DialogPopupProps) => {
     return (
         <DialogBaseUi.Popup
             className={cn(
+                // Edge gutter — mirrors `useCollisionPadding` (16/28) so the popup
+                // never overflows the page gutter even with very wide content
+                // (Base UI's `collisionPadding` only shifts, it doesn't resize).
+                "max-w-[calc(100vw-2rem)] md:max-w-[calc(100vw-3.5rem)]",
                 // Layout
-                "fixed top-1/2 left-1/2 z-10 -mt-8 w-96 max-w-[calc(100vw-3rem)] -translate-x-1/2 -translate-y-1/2 p-6",
+                "fixed top-1/2 left-1/2 z-10 -mt-8 w-96 -translate-x-1/2 -translate-y-1/2 p-6",
                 // Border
                 "rounded-lg outline-1 outline-gray-200",
                 // Background
