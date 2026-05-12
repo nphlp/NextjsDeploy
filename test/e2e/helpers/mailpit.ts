@@ -20,8 +20,10 @@ interface MailpitMessageDetail {
     HTML: string;
 }
 
-/** Fetch the latest email sent to an address (with retries for fire-and-forget delivery) */
-export async function getLatestEmail(to: string, retries = 30, delay = 500): Promise<MailpitMessageDetail> {
+/** Fetch the latest email sent to an address (with retries for fire-and-forget delivery).
+ *  60 retries × 500ms = 30s — generous enough for 10-worker Playwright runs where
+ *  Node.js event loop saturation can delay the queued `void SendEmailAction(...)`. */
+export async function getLatestEmail(to: string, retries = 60, delay = 500): Promise<MailpitMessageDetail> {
     for (let i = 0; i < retries; i++) {
         const res = await fetch(`${MAILPIT_API}/search?query=to:${encodeURIComponent(to)}&limit=1`);
         const data: MailpitSearchResponse = await res.json();
