@@ -42,8 +42,8 @@ test.describe.serial("Logout", () => {
         await reloadDone;
 
         // Navigate to protected route — should redirect to login
-        await page.goto("/profile");
+        await page.goto("/account");
         await page.waitForURL(/\/login\?redirect=/);
-        await expect(page).toHaveURL("/login?redirect=%2Fprofile");
+        await expect(page).toHaveURL("/login?redirect=%2Faccount");
     });
 });

@@ -13,7 +13,7 @@ let cdpClient: CDPSession;
 let authenticatorId: string;
 
 async function addPasskey() {
-    await page.goto("/profile?tab=security");
+    await page.goto("/account/passkey");
     await page.getByRole("button", { name: "Ajouter une clé d'accès" }).click();
     await expect(page.getByRole("heading", { name: "Ajouter une clé d'accès" })).toBeVisible();
     await page.getByRole("button", { name: "Ajouter la clé" }).click();
@@ -25,7 +25,7 @@ async function addPasskey() {
 
     if (await error.isVisible()) {
         await page.waitForTimeout(500);
-        await page.goto("/profile?tab=security");
+        await page.goto("/account/passkey");
         await page.getByRole("button", { name: "Ajouter une clé d'accès" }).click();
         await expect(page.getByRole("heading", { name: "Ajouter une clé d'accès" })).toBeVisible();
         await page.getByRole("button", { name: "Ajouter la clé" }).click();
@@ -85,7 +85,7 @@ test("login with passkey → redirect /", async () => {
 });
 
 test("delete passkey from profile → list updated", async () => {
-    await page.goto("/profile?tab=security");
+    await page.goto("/account/passkey");
 
     const deleteButtons = page.getByRole("button", { name: "Supprimer la clé d'accès" });
     await expect(deleteButtons.first()).toBeVisible();

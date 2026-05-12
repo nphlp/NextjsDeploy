@@ -84,9 +84,11 @@ test.describe("Contact page", () => {
     });
 
     test("footer link navigates to contact page", async ({ page }) => {
+        // Footer is hidden on the home route (see core/footer.tsx — `pathname === "/"` returns null);
+        // visit any other public page to access it.
         await page.goto("/login");
 
-        // Click footer link
+        // Click footer link (label is "Nous contacter" in core/footer.tsx)
         await page.getByRole("link", { name: "Nous contacter" }).click();
         await page.waitForURL("/contact");
 

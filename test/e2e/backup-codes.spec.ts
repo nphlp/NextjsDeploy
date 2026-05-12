@@ -15,7 +15,7 @@ test.describe.serial("Backup Codes", () => {
     test("view backup codes during 2FA setup", async ({ page }) => {
         await register(page, credentials.email, credentials.password);
 
-        await page.goto("/profile?tab=security");
+        await page.goto("/account/totp");
 
         // Enable 2FA — wait for section to load then click switch
         const totpSwitch = page.getByRole("switch");
@@ -101,7 +101,7 @@ test.describe.serial("Backup Codes", () => {
         await page.waitForURL("/");
 
         // Go to profile security tab
-        await page.goto("/profile?tab=security");
+        await page.goto("/account/totp");
 
         // Regenerate backup codes
         await page.getByRole("button", { name: "Régénérer mes codes de secours" }).click();

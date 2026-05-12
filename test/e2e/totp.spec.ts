@@ -27,9 +27,9 @@ test.describe.serial("TOTP", () => {
 
     test("enable 2FA from profile", async ({ page }) => {
         await login(page, credentials.email, credentials.password);
-        await page.goto("/profile?tab=security");
+        await page.goto("/account/totp");
 
-        await expect(page.getByRole("tabpanel").getByText("Inactif")).toBeVisible();
+        await expect(page.getByText("Inactif").first()).toBeVisible();
         await page.getByRole("switch").first().click();
 
         await page.fill('input[name="password"]', credentials.password);
@@ -51,7 +51,7 @@ test.describe.serial("TOTP", () => {
         await page.getByRole("button", { name: "Terminer" }).click();
         await page.getByRole("button", { name: "Confirmer" }).click();
 
-        await expect(page.getByRole("tabpanel").getByText("Activé")).toBeVisible();
+        await expect(page.getByText("Activé").first()).toBeVisible();
 
         // Check security notification email
         const notif = await getLatestEmailBySubject(credentials.email, "deux facteurs");
@@ -122,14 +122,14 @@ test.describe.serial("TOTP", () => {
             await page.waitForURL("/");
         }
 
-        await page.goto("/profile?tab=security");
-        await expect(page.getByRole("tabpanel").getByText("Activé")).toBeVisible();
+        await page.goto("/account/totp");
+        await expect(page.getByText("Activé").first()).toBeVisible();
         await page.getByRole("switch").first().click();
 
         await page.fill('input[name="password"]', credentials.password);
         await page.getByRole("button", { name: "Désactiver" }).click();
 
-        await expect(page.getByRole("tabpanel").getByText("Inactif")).toBeVisible();
+        await expect(page.getByText("Inactif").first()).toBeVisible();
 
         // Check security notification email
         const notif = await getLatestEmailBySubject(credentials.email, "deux facteurs");

@@ -38,19 +38,19 @@ test.describe.serial("Login", () => {
     });
 
     test("protected guard redirects unauthenticated users", async ({ page }) => {
-        await page.goto("/fruit/create");
+        await page.goto("/account");
         await page.waitForURL(/\/login\?redirect=/);
-        await expect(page).toHaveURL("/login?redirect=%2Ffruit%2Fcreate");
+        await expect(page).toHaveURL("/login?redirect=%2Faccount");
     });
 
     test("login with redirect query param", async ({ page }) => {
-        await page.goto("/login?redirect=/fruit/create");
+        await page.goto("/login?redirect=/account");
         await page.fill('input[name="email"]', credentials.email);
         await page.fill('input[name="password"]', credentials.password);
         await page.click('button[type="submit"]');
 
-        await page.waitForURL("/fruit/create");
-        await expect(page).toHaveURL("/fruit/create");
+        await page.waitForURL("/account");
+        await expect(page).toHaveURL("/account");
     });
 
     test("guest-only guard redirects authenticated users", async ({ page }) => {

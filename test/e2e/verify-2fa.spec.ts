@@ -12,7 +12,7 @@ const credentials = {
 let totpSecret = "";
 
 async function enableTwoFactor(page: Page, password: string): Promise<{ secret: string; backupCodes: string[] }> {
-    await page.goto("/profile?tab=security");
+    await page.goto("/account/totp");
 
     await page.getByRole("switch").first().click();
     await page.fill('input[name="password"]', password);
