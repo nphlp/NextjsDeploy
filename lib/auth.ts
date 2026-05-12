@@ -26,6 +26,19 @@ export const sendResetPassword = async ({ user, url }: { user: { email: string }
 };
 
 /**
+ * Callback: send "create your account" email when /request-password-reset
+ * is called for an unknown email. Anti-enumeration is preserved by the fork:
+ * HTTP response stays identical regardless of whether the email exists.
+ */
+export const sendResetPasswordNoAccount = async ({ email }: { email: string }) => {
+    void SendEmailAction({
+        subject: "Créez votre compte",
+        email,
+        body: EmailTemplate({ buttonUrl: `${NEXT_PUBLIC_BASE_URL}/register`, emailType: "reset-no-account" }),
+    });
+};
+
+/**
  * Callback: send verification link
  */
 export const sendVerificationEmail = async ({ user, url }: { user: { email: string }; url: string }) => {
@@ -351,6 +364,7 @@ export const auth = betterAuth({
         maxPasswordLength: 128, // Maximum password length (default 128)
         autoSignIn: false, // Disabled because we require email verification
         sendResetPassword, // Email function for sending reset password emails
+        sendResetPasswordNoAccount, // Email sent when /request-password-reset receives an unknown email
         resetPasswordTokenExpiresIn: 3600, // Reset password token expiration time in seconds (default 3600 = 1 hour)
         customSyntheticUser,
         onPasswordReset,

@@ -17,6 +17,7 @@ import {
 type EmailType =
     | "verification"
     | "reset"
+    | "reset-no-account"
     | "magic-link"
     | "magic-link-no-account"
     | "change-verification"
@@ -60,6 +61,14 @@ const content: Record<
         description:
             "Cliquez sur le bouton ci-dessous pour réinitialiser votre mot de passe. Ce lien expire dans 1 heure.",
         buttonText: "Réinitialiser mon mot de passe",
+        buttonColor: "#47a1eb",
+    },
+    "reset-no-account": {
+        preview: "Créez votre compte",
+        title: "Créer un compte",
+        description:
+            "Une demande de réinitialisation de mot de passe a été faite avec cette adresse email, mais aucun compte n’y est associé. Inscrivez-vous pour commencer !",
+        buttonText: "S’inscrire",
         buttonColor: "#47a1eb",
     },
     "magic-link": {
