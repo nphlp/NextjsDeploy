@@ -2,20 +2,18 @@
 
 import { Separator } from "@base-ui/react/separator";
 import { useSession } from "@lib/auth-client";
-import { Session } from "@lib/auth-server";
-import { UpdateFirstnameForm } from "./edition-tab/update-firstname-form";
-import { UpdateLastnameForm } from "./edition-tab/update-lastname-form";
-import { UpdatePasswordForm } from "./edition-tab/update-password-form";
+import type { Session } from "@lib/auth-server";
+import { UpdateFirstnameForm } from "./update-firstname-form";
+import { UpdateLastnameForm } from "./update-lastname-form";
 
-type EditionTabProps = {
+type ContactFormsProps = {
     serverSession: NonNullable<Session>;
 };
 
-export default function EditionTab(props: EditionTabProps) {
+export default function ContactForms(props: ContactFormsProps) {
     const { serverSession } = props;
     const { data: clientSession, isPending, refetch } = useSession();
 
-    // SSR session
     const session = isPending || !clientSession ? serverSession : clientSession;
 
     return (
@@ -23,8 +21,6 @@ export default function EditionTab(props: EditionTabProps) {
             <UpdateLastnameForm session={session} refetch={refetch} />
             <Separator className="h-px bg-gray-200" />
             <UpdateFirstnameForm session={session} refetch={refetch} />
-            <Separator className="h-px bg-gray-200" />
-            <UpdatePasswordForm />
         </div>
     );
 }

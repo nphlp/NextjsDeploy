@@ -64,14 +64,14 @@ export default async function Page() {
                             <EmailProviderLink fallbackMessage="Consultez votre bo&icirc;te de r&eacute;ception pour confirmer votre nouvelle adresse email." />
                         )}
 
-                        {/* Back to profile */}
+                        {/* Back to account */}
                         <Link
-                            href="/profile?tab=security"
-                            label="Retour au profil"
+                            href="/account/email"
+                            label="Retour au compte"
                             className="text-sm text-gray-500"
                             colors="link"
                         >
-                            Retour au profil
+                            Retour au compte
                         </Link>
                     </div>
                 </div>

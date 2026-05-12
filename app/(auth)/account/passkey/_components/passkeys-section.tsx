@@ -8,7 +8,7 @@ import AlertDialog, {
     Portal as AlertPortal,
     Title as AlertTitle,
 } from "@atoms/alert-dialog";
-import Button from "@atoms/button";
+import Button, { Link } from "@atoms/button";
 import Collapsible from "@atoms/collapsible";
 import { Panel, Trigger } from "@atoms/collapsible";
 import Dialog, {
@@ -24,6 +24,7 @@ import { useToast } from "@atoms/toast";
 import { passkey } from "@lib/auth-client";
 import dayjs from "dayjs";
 import { ChevronRight, Fingerprint, Info, Trash2 } from "lucide-react";
+import type { Route } from "next";
 import { useEffect, useRef, useState } from "react";
 
 type PasskeyData = {
@@ -73,7 +74,7 @@ export default function PasskeysSection() {
             return;
         }
 
-        // Update with the manager name (shown in our passkey list on /profile)
+        // Update with the manager name (shown in our passkey list on /account)
         const trimmedManagerName = managerName.trim();
         if (trimmedManagerName) {
             await passkey.updatePasskey({ id: data.id, name: trimmedManagerName });
@@ -213,23 +214,25 @@ export default function PasskeysSection() {
                         {/* Reference link */}
                         <p className="text-gray-500">
                             En savoir plus :{" "}
-                            <a
-                                href="https://proton.me/fr/blog/what-is-a-passkey"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="underline"
+                            <Link
+                                href={"https://proton.me/fr/blog/what-is-a-passkey" as Route}
+                                label="Qu'est-ce qu'une clé d'accès ? — Proton (FR)"
+                                legacyProps={{ target: "_blank", rel: "noopener noreferrer" }}
+                                noStyle
+                                className="inline text-xs font-normal underline"
                             >
                                 Qu&apos;est-ce qu&apos;une clé d&apos;accès ? — Proton (FR)
-                            </a>
+                            </Link>
                             {" | "}
-                            <a
-                                href="https://proton.me/blog/what-is-a-passkey"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="underline"
+                            <Link
+                                href={"https://proton.me/blog/what-is-a-passkey" as Route}
+                                label="Qu'est-ce qu'une clé d'accès ? — Proton (EN)"
+                                legacyProps={{ target: "_blank", rel: "noopener noreferrer" }}
+                                noStyle
+                                className="inline text-xs font-normal underline"
                             >
                                 EN
-                            </a>
+                            </Link>
                         </p>
                     </div>
                 </Panel>
@@ -317,7 +320,7 @@ export default function PasskeysSection() {
                                     }}
                                 />
                                 <p className="text-xs text-gray-500">
-                                    C&apos;est le nom attribué à cette clé sur cette page (/profile) pour la
+                                    C&apos;est le nom attribué à cette clé sur cette page (/account) pour la
                                     différencier des autres clés si vous en avez plusieurs.
                                 </p>
                             </div>

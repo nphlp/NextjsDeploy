@@ -1,8 +1,9 @@
 "use client";
 
 import Form, { FormInputPassword, OnSubmit, useForm } from "@atoms/_form";
-import { Root as AlertDialogRoot, Backdrop, Close, Description, Popup, Portal, Title } from "@atoms/alert-dialog";
+import AlertDialog, { Backdrop, Close, Description, Popup, Portal, Title } from "@atoms/alert-dialog";
 import Button from "@atoms/button";
+import Input from "@atoms/input";
 import InputOtp from "@atoms/input/input-otp";
 import Switch, { Thumb } from "@atoms/switch";
 import { useToast } from "@atoms/toast";
@@ -23,6 +24,7 @@ const extractSecret = (totpUri: string): string => {
 
 type TotpSectionProps = {
     twoFactorEnabled: boolean;
+    email: string;
     onStatusChange: () => void;
 };
 
@@ -35,8 +37,33 @@ type Step =
     | "regenerate-password"
     | "regenerate-codes";
 
+type Tone = "pending" | "active" | "inactive";
+
+const getTotpTone = (step: Step, checked: boolean): Tone => {
+    if (step !== "idle") return "pending";
+    return checked ? "active" : "inactive";
+};
+
+const TONE_LABEL: Record<Tone, string> = {
+    pending: "En cours",
+    active: "Activé",
+    inactive: "Inactif",
+};
+
+const TONE_TEXT_CLASS: Record<Tone, string> = {
+    pending: "text-amber-700",
+    active: "text-green-800",
+    inactive: "text-red-700",
+};
+
+const TONE_SWITCH_CLASS: Record<Tone, string> = {
+    pending: "border-amber-500 bg-amber-500 data-checked:border-amber-500 data-checked:bg-amber-500",
+    active: "border-green-700 bg-green-700 data-checked:border-green-700 data-checked:bg-green-700",
+    inactive: "border-red-700 bg-red-700 data-checked:border-red-700 data-checked:bg-red-700",
+};
+
 export default function TotpSection(props: TotpSectionProps) {
-    const { twoFactorEnabled, onStatusChange } = props;
+    const { twoFactorEnabled, email, onStatusChange } = props;
 
     const toast = useToast();
     const [step, setStep] = useState<Step>("idle");
@@ -132,6 +159,8 @@ export default function TotpSection(props: TotpSectionProps) {
     };
 
     const secret = extractSecret(totpUri);
+    const tone = getTotpTone(step, switchChecked);
+    const isTransitioning = step !== "idle";
 
     return (
         <section className="space-y-4">
@@ -144,24 +173,14 @@ export default function TotpSection(props: TotpSectionProps) {
                     </p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <span
-                        className={`text-sm font-medium text-nowrap ${
-                            step !== "idle" ? "text-amber-700" : switchChecked ? "text-green-800" : "text-red-700"
-                        }`}
-                    >
-                        {step !== "idle" ? "En cours" : switchChecked ? "Activé" : "Inactif"}
+                    <span className={`text-sm font-medium text-nowrap ${TONE_TEXT_CLASS[tone]}`}>
+                        {TONE_LABEL[tone]}
                     </span>
                     <Switch
                         checked={switchChecked}
                         onCheckedChange={handleSwitchChange}
-                        disabled={step !== "idle"}
-                        className={
-                            step !== "idle"
-                                ? "border-amber-500 bg-amber-500 data-checked:border-amber-500 data-checked:bg-amber-500"
-                                : switchChecked
-                                  ? "border-green-700 bg-green-700 data-checked:border-green-700 data-checked:bg-green-700"
-                                  : "border-red-700 bg-red-700 data-checked:border-red-700 data-checked:bg-red-700"
-                        }
+                        disabled={isTransitioning}
+                        className={TONE_SWITCH_CLASS[tone]}
                     >
                         <Thumb />
                     </Switch>
@@ -172,6 +191,7 @@ export default function TotpSection(props: TotpSectionProps) {
             {step === "enable-password" && (
                 <PasswordForm
                     title="Confirmez votre mot de passe pour activer la 2FA."
+                    email={email}
                     onSubmit={handleEnable}
                     onCancel={cancelFlow}
                     isSubmitting={isSubmitting}
@@ -241,7 +261,7 @@ export default function TotpSection(props: TotpSectionProps) {
                     <div className="flex justify-center">
                         <Button label="Terminer" colors="solid" onClick={() => setAlertOpen(true)} />
                     </div>
-                    <AlertDialogRoot open={alertOpen} onOpenChange={setAlertOpen}>
+                    <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
                         <Portal>
                             <Backdrop />
                             <Popup>
@@ -261,7 +281,7 @@ export default function TotpSection(props: TotpSectionProps) {
                                 </div>
                             </Popup>
                         </Portal>
-                    </AlertDialogRoot>
+                    </AlertDialog>
                 </div>
             )}
 
@@ -269,6 +289,7 @@ export default function TotpSection(props: TotpSectionProps) {
             {step === "disable-password" && (
                 <PasswordForm
                     title="Confirmez votre mot de passe pour désactiver la 2FA."
+                    email={email}
                     onSubmit={handleDisable}
                     onCancel={cancelFlow}
                     isSubmitting={isSubmitting}
@@ -297,6 +318,7 @@ export default function TotpSection(props: TotpSectionProps) {
             {step === "regenerate-password" && (
                 <PasswordForm
                     title="Confirmez votre mot de passe pour régénérer vos codes de secours."
+                    email={email}
                     onSubmit={handleRegenerate}
                     onCancel={cancelFlow}
                     isSubmitting={isSubmitting}
@@ -322,7 +344,7 @@ export default function TotpSection(props: TotpSectionProps) {
                     <div className="flex justify-center">
                         <Button label="Terminé" colors="solid" onClick={() => setAlertOpen(true)} />
                     </div>
-                    <AlertDialogRoot open={alertOpen} onOpenChange={setAlertOpen}>
+                    <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
                         <Portal>
                             <Backdrop />
                             <Popup>
@@ -342,7 +364,7 @@ export default function TotpSection(props: TotpSectionProps) {
                                 </div>
                             </Popup>
                         </Portal>
-                    </AlertDialogRoot>
+                    </AlertDialog>
                 </div>
             )}
         </section>
@@ -353,6 +375,7 @@ export default function TotpSection(props: TotpSectionProps) {
 
 type PasswordFormProps = {
     title: string;
+    email: string;
     onSubmit: (password: string) => Promise<void>;
     onCancel: () => void;
     isSubmitting: boolean;
@@ -361,7 +384,7 @@ type PasswordFormProps = {
 };
 
 function PasswordForm(props: PasswordFormProps) {
-    const { title, onSubmit, onCancel, isSubmitting, submitLabel = "Confirmer", submitColors = "solid" } = props;
+    const { title, email, onSubmit, onCancel, isSubmitting, submitLabel = "Confirmer", submitColors = "solid" } = props;
 
     const { register, submit } = useForm({
         password: {
@@ -382,6 +405,15 @@ function PasswordForm(props: PasswordFormProps) {
         <div className="space-y-3">
             <p className="text-sm text-gray-600">{title}</p>
             <Form register={register} onSubmit={handleSubmit}>
+                {/* Gives password managers the username context so they propose current-password, not new-password */}
+                <Input
+                    type="email"
+                    name="email"
+                    autoComplete="username"
+                    value={email}
+                    disabled
+                    className="pointer-events-none absolute h-0 w-fit overflow-hidden opacity-0"
+                />
                 <FormInputPassword
                     name="password"
                     label="Mot de passe"

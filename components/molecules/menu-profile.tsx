@@ -38,10 +38,10 @@ export default function MenuProfile() {
                         <Arrow />
                         {session ? (
                             <>
-                                <Link href="/profile" aria-label="Profile">
+                                <Link href="/account" aria-label="Account">
                                     <Item>
                                         <UserRound className="size-4" />
-                                        <span>Profile</span>
+                                        <span>Account</span>
                                     </Item>
                                 </Link>
                                 <Item onClick={handleLogout}>

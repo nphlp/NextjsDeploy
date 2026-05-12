@@ -1,4 +1,5 @@
 import { cookies, headers } from "next/headers";
+import { cache } from "react";
 import "server-only";
 import { auth } from "./auth";
 
@@ -10,6 +11,9 @@ export const getSession = async (): Promise<InferredSession | null> => {
     });
     return session as InferredSession | null;
 };
+
+// Deduplicate across layout + page + nested RSC within a single request.
+export const getCachedSession = cache(getSession);
 
 export type Session = InferredSession | null;
 

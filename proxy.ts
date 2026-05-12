@@ -22,7 +22,7 @@ const protectedRoutes = new Set([
     // Routes requiring auth
     "/baskets",
     "/fruit/create",
-    "/profile",
+    "/account",
 ]);
 
 export default async function proxy(request: NextRequest) {

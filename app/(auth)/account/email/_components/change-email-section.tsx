@@ -52,7 +52,7 @@ export default function ChangeEmailSection(props: ChangeEmailSectionProps) {
             // Async submission
             const { data, error } = await changeEmail({
                 newEmail: validated.newEmail,
-                callbackURL: "/profile?tab=security",
+                callbackURL: "/account/email",
             });
 
             if (!data && isValidationError(error?.message)) {
@@ -73,7 +73,7 @@ export default function ChangeEmailSection(props: ChangeEmailSectionProps) {
             }, 1000);
 
             // Always redirect to success page (anti-enumeration: hide "email already in use")
-            router.push(queryUrlSerializer("/profile/change-email/success", { email: validated.newEmail }));
+            router.push(queryUrlSerializer("/account/email/success", { email: validated.newEmail }));
         } catch {
             // Toast error
             toast.add({ title: "Erreur", description: "Une erreur est survenue.", type: "error" });
