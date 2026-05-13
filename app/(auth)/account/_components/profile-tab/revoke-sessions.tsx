@@ -1,6 +1,6 @@
 "use client";
 
-import AlertDialog, { Backdrop, Close, Description, Popup, Portal, Title } from "@atoms/alert-dialog";
+import AlertDialog, { Backdrop, Close, Description, Footer, Header, Popup, Portal, Title } from "@atoms/alert-dialog";
 import Button from "@atoms/button";
 import { revokeOtherSessions } from "@lib/auth-client";
 import { useSessionContext } from "./_context/use-context";
@@ -25,9 +25,11 @@ export default function RevokeSessions() {
                 <Portal>
                     <Backdrop />
                     <Popup>
-                        <Title>Déconnexion globale</Title>
-                        <Description>Souhaitez-vous vraiment déconnecter toutes vos autres sessions ?</Description>
-                        <div className="flex justify-end gap-4">
+                        <Header>
+                            <Title>Déconnexion globale</Title>
+                            <Description>Souhaitez-vous vraiment déconnecter toutes vos autres sessions ?</Description>
+                        </Header>
+                        <Footer>
                             <Close>Annuler</Close>
                             <Close
                                 className="text-destructive"
@@ -38,7 +40,7 @@ export default function RevokeSessions() {
                             >
                                 Déconnecter
                             </Close>
-                        </div>
+                        </Footer>
                     </Popup>
                 </Portal>
             </AlertDialog>

@@ -1,10 +1,12 @@
 /**
  * @see https://base-ui.com/react/components/dialog
  */
+"use client";
+
 import { BaseUiProps, ButtonAttributes, LegacyProps, StandardAttributes } from "@atoms/_core/types";
 import { Dialog as DialogBaseUi } from "@base-ui/react/dialog";
 import cn from "@lib/cn";
-import { ComponentProps, MouseEventHandler, ReactNode } from "react";
+import { ComponentProps, MouseEventHandler, ReactNode, createContext, useContext } from "react";
 import { ButtonStyleProps, buttonStyle } from "../_core/button-variants";
 
 export type DialogProps = {
@@ -69,7 +71,13 @@ export const Backdrop = (props: DialogBackdropProps) => {
     return (
         <DialogBaseUi.Backdrop
             className={cn(
-                // Layout
+                // Layout — `body` has `position: relative` (set in
+                // `app/layout.tsx`) so Base UI's iOS 26+ progressive
+                // enhancement can cover the visual viewport behind the
+                // liquid-glass URL bar. The `supports-[-webkit-touch-callout:none]:absolute`
+                // + `min-h-dvh` switch is a defensive fallback for older
+                // WebKit builds where `position: fixed` is clipped to the
+                // visual viewport (Backdrop wouldn't reach below the chrome).
                 "fixed inset-0 z-10 min-h-dvh supports-[-webkit-touch-callout:none]:absolute",
                 // Background
                 "bg-black opacity-20 dark:opacity-70",
@@ -97,13 +105,27 @@ export const Portal = (props: DialogPortalProps) => {
 type DialogPopupProps = {
     className?: string;
     children?: ReactNode;
+    /** Visualize Header / Content / Footer regions with colored backgrounds. Dev only. */
+    debug?: boolean;
 
     // Legacy props
     legacyProps?: LegacyProps<StandardAttributes>;
 } & BaseUiProps<typeof DialogBaseUi.Popup, StandardAttributes>;
 
+/** Propagates the Popup `debug` flag down to Header / Content / Footer so they
+ *  can paint their region with a colored background — useful when tuning
+ *  paddings and gaps inside a long composed dialog. */
+const DialogDebugContext = createContext(false);
+
+/**
+ * Always wrap children in `<Content>` (and optionally `<Header>` / `<Footer>`).
+ * The Popup itself only owns layout / border / background — `<Content>`
+ * provides the inner padding and the scroll. This mirrors how Portal /
+ * Positioner are structurally required: Popup is a frame, Content is the
+ * scrollable canvas.
+ */
 export const Popup = (props: DialogPopupProps) => {
-    const { className, children, legacyProps, ...otherProps } = props;
+    const { className, children, legacyProps, debug = false, ...otherProps } = props;
 
     return (
         <DialogBaseUi.Popup
@@ -112,11 +134,17 @@ export const Popup = (props: DialogPopupProps) => {
                 // never overflows the page gutter even with very wide content
                 // (Base UI's `collisionPadding` only shifts, it doesn't resize).
                 "max-w-[calc(100vw-2rem)] md:max-w-[calc(100vw-3.5rem)]",
-                // Layout
-                "fixed top-1/2 left-1/2 z-10 -mt-8 w-96 -translate-x-1/2 -translate-y-1/2 p-6",
+                // Vertical cap — keeps the popup inside the viewport on every
+                // device. `<Content>`'s `flex-1 min-h-0 overflow-y-auto` then
+                // takes care of scrolling when the inner content overflows.
+                "max-h-[calc(100dvh-8rem)]",
+                // Layout — perfectly centered (no `-mt-*` offset).
+                "fixed top-1/2 left-1/2 z-10 flex w-96 -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden",
                 // Border
-                "rounded-lg outline-1 outline-gray-200",
-                // Background
+                "rounded-lg p-4 outline-1 outline-gray-200",
+                // Background — kept on the popup so macOS rubber-band on
+                // `<Content>`'s scroll never reveals transparency behind the
+                // bouncing content.
                 "bg-background",
                 // Text
                 "text-foreground",
@@ -128,8 +156,70 @@ export const Popup = (props: DialogPopupProps) => {
             {...legacyProps}
             {...otherProps}
         >
-            {children}
+            <DialogDebugContext.Provider value={debug}>{children}</DialogDebugContext.Provider>
         </DialogBaseUi.Popup>
+    );
+};
+
+/**
+ * Optional sticky top region above `<Content>`. Stays fixed while the body
+ * scrolls. Holds the title / description / close button. Carries only
+ * top + horizontal padding so `<Content>`'s own padding handles the
+ * separation — no double padding between Header and Content.
+ */
+type DialogHeaderProps = {
+    className?: string;
+    children?: ReactNode;
+};
+
+export const Header = (props: DialogHeaderProps) => {
+    const { className, children } = props;
+    const debug = useContext(DialogDebugContext);
+    return <div className={cn("flex flex-col gap-2 pb-4", debug && "bg-blue-100", className)}>{children}</div>;
+};
+
+/**
+ * Required scrollable inner region — the only child that can grow beyond
+ * the popup's `max-h`, with `overflow-y-auto` enabling scroll.
+ * `flex-1 min-h-0` makes it fill the remaining vertical space inside the
+ * popup. Owns the full inner padding (`p-4 sm:p-6`); when `<Header>` /
+ * `<Footer>` siblings exist, they only carry the outer-edge padding so
+ * the rhythm stays uniform (16 / 24 px on every side).
+ */
+type DialogContentProps = {
+    className?: string;
+    children?: ReactNode;
+};
+
+export const Content = (props: DialogContentProps) => {
+    const { className, children } = props;
+    const debug = useContext(DialogDebugContext);
+    return (
+        <div className={cn("flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto", debug && "bg-green-100", className)}>
+            {children}
+        </div>
+    );
+};
+
+/**
+ * Optional sticky bottom region below `<Content>`. Stays fixed while the
+ * body scrolls. Holds the action buttons (Cancel / Save / Delete / …).
+ * Default `flex justify-end gap-2` matches the "buttons on the right"
+ * pattern; override `className` for split layouts. Carries only bottom +
+ * horizontal padding — `<Content>` handles the separation above.
+ */
+type DialogFooterProps = {
+    className?: string;
+    children?: ReactNode;
+};
+
+export const Footer = (props: DialogFooterProps) => {
+    const { className, children } = props;
+    const debug = useContext(DialogDebugContext);
+    return (
+        <div className={cn("flex items-center justify-end gap-2 pt-4", debug && "bg-pink-100", className)}>
+            {children}
+        </div>
     );
 };
 
@@ -147,8 +237,6 @@ export const Title = (props: DialogTitleProps) => {
     return (
         <DialogBaseUi.Title
             className={cn(
-                // Layout
-                "-mt-1.5 mb-1",
                 // Text
                 "text-lg font-medium",
                 // Overrides
@@ -176,8 +264,6 @@ export const Description = (props: DialogDescriptionProps) => {
     return (
         <DialogBaseUi.Description
             className={cn(
-                // Layout
-                "mb-6",
                 // Text
                 "text-base text-gray-600",
                 // Overrides

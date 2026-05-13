@@ -1,6 +1,16 @@
 "use client";
 
-import AlertDialog, { Backdrop, Close, Description, Popup, Portal, Title } from "@atoms/alert-dialog";
+import AlertDialog, {
+    Backdrop,
+    Close,
+    Content,
+    Description,
+    Footer,
+    Header,
+    Popup,
+    Portal,
+    Title,
+} from "@atoms/alert-dialog";
 import Button from "@atoms/button";
 import { revokeSession } from "@lib/auth-client";
 import { SessionList } from "@lib/auth-server";
@@ -55,8 +65,13 @@ export default function SessionItem(props: SessionItemProps) {
                 <Portal>
                     <Backdrop />
                     <Popup>
-                        <Title className="text-center">Déconnexion</Title>
-                        <Description className="flex flex-col items-center gap-4" render={<div />}>
+                        <Header>
+                            <Title className="text-center">Déconnexion</Title>
+                            <Description className="text-center text-sm">
+                                Souhaitez-vous déconnecter cette session ?
+                            </Description>
+                        </Header>
+                        <Content>
                             <div className="flex flex-row justify-center">
                                 <div className="w-fit rounded-lg border border-gray-200 px-7 py-2 text-center">
                                     <div className="text-xs">Dernière activité le</div>
@@ -65,9 +80,8 @@ export default function SessionItem(props: SessionItemProps) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="text-sm">Souhaitez-vous déconnecter cette session ?</div>
-                        </Description>
-                        <div className="flex justify-end gap-4">
+                        </Content>
+                        <Footer>
                             <Close>Annuler</Close>
                             <Close
                                 className="text-destructive"
@@ -78,7 +92,7 @@ export default function SessionItem(props: SessionItemProps) {
                             >
                                 Déconnecter
                             </Close>
-                        </div>
+                        </Footer>
                     </Popup>
                 </Portal>
             </AlertDialog>

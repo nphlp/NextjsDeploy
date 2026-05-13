@@ -50,9 +50,10 @@ export default async function Layout(props: LayoutProps) {
                     geistMono.variable,
                     "bg-background text-foreground",
                     "isolate", // Base UI for portaled elements
+                    "relative", // Base UI for dialog Backdrop progressive enhancement on iOS 26+ Safari
                     "antialiased", // Nextjs recommendation for font rendering
                     "min-h-dvh",
-                    DEBUG_LAYOUT && "bg-red-100",
+                    DEBUG_LAYOUT && "bg-teal-100",
                 )}
             >
                 <ToastProvider>

@@ -1,6 +1,6 @@
 "use client";
 
-import AlertDialog, { Backdrop, Close, Description, Popup, Portal, Title } from "@atoms/alert-dialog";
+import AlertDialog, { Backdrop, Close, Description, Footer, Header, Popup, Portal, Title } from "@atoms/alert-dialog";
 import Button from "@atoms/button";
 import { useToast } from "@atoms/toast";
 import { authClient } from "@lib/auth-client";
@@ -61,18 +61,20 @@ export default function PendingEmailRow(props: PendingEmailRowProps) {
                 <Portal>
                     <Backdrop />
                     <Popup>
-                        <Title>Annuler le changement d&apos;email</Title>
-                        <Description>
-                            Souhaitez-vous annuler la demande de changement d&apos;email vers{" "}
-                            <span className="font-medium">{pendingEmail}</span> ? Le lien de vérification envoyé sera
-                            invalidé.
-                        </Description>
-                        <div className="flex justify-end gap-4">
+                        <Header>
+                            <Title>Annuler le changement d&apos;email</Title>
+                            <Description>
+                                Souhaitez-vous annuler la demande de changement d&apos;email vers{" "}
+                                <span className="font-medium">{pendingEmail}</span> ? Le lien de vérification envoyé
+                                sera invalidé.
+                            </Description>
+                        </Header>
+                        <Footer>
                             <Close>Fermer</Close>
                             <Close className="text-destructive" onClick={handleCancelPendingEmail}>
                                 Annuler le changement
                             </Close>
-                        </div>
+                        </Footer>
                     </Popup>
                 </Portal>
             </AlertDialog>

@@ -1,5 +1,5 @@
 import Accordion from "@atoms/accordion";
-import AlertDialog from "@atoms/alert-dialog";
+import AlertDialog, { AlertDialogLongContent } from "@atoms/alert-dialog";
 import { CardButton, CardLink } from "@atoms/card";
 import Checkbox from "@atoms/checkbox";
 import CheckboxChip from "@atoms/checkbox/checkbox-chip";
@@ -7,7 +7,7 @@ import Collapsible from "@atoms/collapsible";
 import Combobox from "@atoms/combobox";
 import ComboboxMultiple from "@atoms/combobox/combobox-multiple";
 import ContextMenu from "@atoms/context-menu";
-import Dialog from "@atoms/dialog";
+import Dialog, { DialogLongContent } from "@atoms/dialog";
 import Drawer from "@atoms/drawer";
 import DrawerNonModal from "@atoms/drawer/drawer-non-modal";
 import DrawerSnapPoints from "@atoms/drawer/drawer-snap-points";
@@ -58,12 +58,30 @@ export default async function ComponentsPage() {
 
             {/* ----- Alert Dialog ----- */}
             <Section title="Alert Dialog">
-                <AlertDialog />
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">Default — short body</p>
+                    <AlertDialog />
+                </div>
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">
+                        Long content — Content scrolls under sticky Header / Footer
+                    </p>
+                    <AlertDialogLongContent />
+                </div>
             </Section>
 
             {/* ----- Dialog ----- */}
             <Section title="Dialog">
-                <Dialog />
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">Default — short body</p>
+                    <Dialog />
+                </div>
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">
+                        Long content — Content scrolls under sticky Header / Footer
+                    </p>
+                    <DialogLongContent />
+                </div>
             </Section>
 
             {/* ----- Collapsible ----- */}

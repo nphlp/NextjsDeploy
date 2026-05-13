@@ -1,7 +1,7 @@
 "use client";
 
 import Form, { FormInputPassword, OnSubmit, useForm } from "@atoms/_form";
-import AlertDialog, { Backdrop, Close, Description, Popup, Portal, Title } from "@atoms/alert-dialog";
+import AlertDialog, { Backdrop, Close, Description, Footer, Header, Popup, Portal, Title } from "@atoms/alert-dialog";
 import Button from "@atoms/button";
 import Input from "@atoms/input";
 import InputOtp from "@atoms/input/input-otp";
@@ -265,12 +265,14 @@ export default function TotpSection(props: TotpSectionProps) {
                         <Portal>
                             <Backdrop />
                             <Popup>
-                                <Title>Confirmer</Title>
-                                <Description>
-                                    Vous ne pourrez plus les consulter après cette étape. De nouveaux codes peuvent être
-                                    générés à tout moment en cas de perte.
-                                </Description>
-                                <div className="flex justify-end gap-4">
+                                <Header>
+                                    <Title>Confirmer</Title>
+                                    <Description>
+                                        Vous ne pourrez plus les consulter après cette étape. De nouveaux codes peuvent
+                                        être générés à tout moment en cas de perte.
+                                    </Description>
+                                </Header>
+                                <Footer>
                                     <Close>Annuler</Close>
                                     <Close
                                         onClick={resetState}
@@ -278,7 +280,7 @@ export default function TotpSection(props: TotpSectionProps) {
                                     >
                                         Confirmer
                                     </Close>
-                                </div>
+                                </Footer>
                             </Popup>
                         </Portal>
                     </AlertDialog>
@@ -348,12 +350,14 @@ export default function TotpSection(props: TotpSectionProps) {
                         <Portal>
                             <Backdrop />
                             <Popup>
-                                <Title>Confirmer</Title>
-                                <Description>
-                                    Avez-vous bien enregistré vos nouveaux codes ? Vous ne pourrez plus les consulter
-                                    après cette étape.
-                                </Description>
-                                <div className="flex justify-end gap-4">
+                                <Header>
+                                    <Title>Confirmer</Title>
+                                    <Description>
+                                        Avez-vous bien enregistré vos nouveaux codes ? Vous ne pourrez plus les
+                                        consulter après cette étape.
+                                    </Description>
+                                </Header>
+                                <Footer>
                                     <Close>Annuler</Close>
                                     <Close
                                         onClick={resetState}
@@ -361,7 +365,7 @@ export default function TotpSection(props: TotpSectionProps) {
                                     >
                                         Confirmer
                                     </Close>
-                                </div>
+                                </Footer>
                             </Popup>
                         </Portal>
                     </AlertDialog>

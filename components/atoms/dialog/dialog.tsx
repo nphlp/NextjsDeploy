@@ -1,7 +1,25 @@
 "use client";
 
-import { Backdrop, Close, Description, DialogProps, Popup, Portal, Root, Title, Trigger } from "./atoms";
+import {
+    Backdrop,
+    Close,
+    Description,
+    DialogProps,
+    Footer,
+    Header,
+    Popup,
+    Portal,
+    Root,
+    Title,
+    Trigger,
+} from "./atoms";
 
+/**
+ * Demo: short Dialog with Header + Footer only — `<Content>` is skipped on
+ * mini dialogs (single message + actions) to avoid the empty `flex-1`
+ * region between the two sticky bars. See `DialogLongContent` for the
+ * full triplet with a scrollable Content.
+ */
 export default function Dialog(props: DialogProps) {
     const { children, ...otherProps } = props;
 
@@ -15,11 +33,13 @@ export default function Dialog(props: DialogProps) {
             <Portal>
                 <Backdrop />
                 <Popup>
-                    <Title>Notifications</Title>
-                    <Description>You are all caught up. Good job!</Description>
-                    <div className="flex justify-end gap-4">
+                    <Header>
+                        <Title>Notifications</Title>
+                        <Description>You are all caught up. Good job!</Description>
+                    </Header>
+                    <Footer>
                         <Close>Close</Close>
-                    </div>
+                    </Footer>
                 </Popup>
             </Portal>
         </Root>

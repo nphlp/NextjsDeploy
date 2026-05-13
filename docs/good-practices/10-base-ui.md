@@ -163,6 +163,62 @@ export const Popup = (props: AlertDialogPopupProps) => {
 };
 ```
 
+#### Dialog / AlertDialog anatomy: Popup → Header / [Content] / Footer
+
+Both `@atoms/dialog` and `@atoms/alert-dialog` follow a single anatomy. The `<Popup>` is a frame (border + bg + viewport-bound `max-h`, `flex flex-col overflow-hidden`). Two valid layouts depending on the dialog's purpose:
+
+**1. Mini confirmation** — `Header` + `Footer` only (skip `<Content>`)
+
+For dialogs that ship a single Title + Description + actions (e.g. "Discard draft?", "Revoke session", delete confirmations). Skipping `<Content>` avoids an empty `flex-1 min-h-0` region between the two sticky bars.
+
+```tsx
+<Popup>
+    <Header>
+        <Title>Discard draft?</Title>
+        <Description>You can't undo this action.</Description>
+    </Header>
+    <Footer>
+        <Close>Cancel</Close>
+        <Close colors="destructive">Discard</Close>
+    </Footer>
+</Popup>
+```
+
+**2. Long content** — `Header` + `Content` + `Footer`
+
+For dialogs whose body can grow (forms, scrollable lists, Terms of Service before a destructive confirm). `<Content>` owns the inner padding, the inter-child `gap-2`, and the scroll (`flex-1 min-h-0 overflow-y-auto`). Header / Footer stick to the top / bottom while the body scrolls under them.
+
+```tsx
+<Popup>
+    <Header>
+        <Title>Edit profile</Title>
+        <Description>Update your name and bio.</Description>
+    </Header>
+    <Content>{/* form fields, list, paragraphs… scrolls when tall */}</Content>
+    <Footer>
+        <Close>Cancel</Close>
+        <Button>Save</Button>
+    </Footer>
+</Popup>
+```
+
+**Forms across regions** — when the submit button lives in `<Footer>` and the inputs in `<Content>`, wrap Header / Content / Footer with `<form className="contents">`. `display: contents` keeps the Popup's flex layout intact while letting the form collect all inputs and the submit button trigger natively.
+
+```tsx
+<Popup>
+    <form onSubmit={handleSubmit} className="contents">
+        <Header>...</Header>
+        <Content>{/* inputs */}</Content>
+        <Footer>
+            <Close>Cancel</Close>
+            <Button type="submit">Save</Button>
+        </Footer>
+    </form>
+</Popup>
+```
+
+This whole anatomy mirrors the `Portal` / `Positioner` requirement from anchored popups: the inner structure isn't a bag of children, it's a small grammar.
+
 ---
 
 ## Anchored popups: collision padding + edge gutter

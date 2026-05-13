@@ -1,7 +1,26 @@
 "use client";
 
-import { AlertDialogProps, Backdrop, Close, Description, Popup, Portal, Root, Title, Trigger } from "./atoms";
+import {
+    AlertDialogProps,
+    Backdrop,
+    Close,
+    Description,
+    Footer,
+    Header,
+    Popup,
+    Portal,
+    Root,
+    Title,
+    Trigger,
+} from "./atoms";
 
+/**
+ * Demo: short AlertDialog with Header + Footer only — `<Content>` is
+ * skipped on mini confirmations (single question + Cancel/Confirm) to
+ * avoid the empty `flex-1` region between the two sticky bars. See
+ * `AlertDialogLongContent` for the full triplet with a scrollable body
+ * (e.g. Terms of Service excerpt before a destructive confirm).
+ */
 export default function AlertDialog(props: AlertDialogProps) {
     const { children, ...otherProps } = props;
 
@@ -15,12 +34,14 @@ export default function AlertDialog(props: AlertDialogProps) {
             <Portal>
                 <Backdrop />
                 <Popup>
-                    <Title>Discard draft?</Title>
-                    <Description>You can&apos;t undo this action.</Description>
-                    <div className="flex justify-end gap-4">
+                    <Header>
+                        <Title>Discard draft?</Title>
+                        <Description>You can&apos;t undo this action.</Description>
+                    </Header>
+                    <Footer>
                         <Close>Cancel</Close>
                         <Close colors="destructive">Discard</Close>
-                    </div>
+                    </Footer>
                 </Popup>
             </Portal>
         </Root>

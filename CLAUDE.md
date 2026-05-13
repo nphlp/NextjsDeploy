@@ -215,6 +215,7 @@ See `docs/nextjs-deploy/12-better-auth-fork.md` for full documentation.
 - **Import pattern**: Always import atoms via `index.ts` — default export for the composable component, named exports for sub-components: `import Popover, { Arrow, Popup, Portal, Trigger } from "@atoms/popover"`.
 - **Guide**: Follow `docs/good-practices/10-base-ui.md` (patterns, typing, step-by-step, component inventory) when creating or modifying atoms. Use the `context7` MCP server for up-to-date Base UI documentation.
 - **Anchored popups (`Trigger`/`Positioner`/`Popup`)**: pair `useCollisionPadding` (from `@utils/use-collision-padding`) on the Positioner with a `max-w-[calc(100vw-2rem)] md:max-w-[calc(100vw-3.5rem)]` line on the Popup. Base UI's `collisionPadding` only **shifts** the popup, the `max-w` cap **resizes** it so wide content can't overflow the page gutter. Apply uniformly across menu/popover/select/combobox and fixed dialogs (alert-dialog/dialog).
+- **Dialog / AlertDialog anatomy**: the `<Popup>` is a frame. Two valid layouts: (1) **mini confirmation** = `Header` + `Footer` only — skip `<Content>` to avoid an empty `flex-1` region; (2) **long content** = `Header` + `Content` + `Footer`, where `<Content>` carries the inner padding, the `gap-2`, and the scroll. For forms whose submit button sits in the `Footer`, wrap Header/Content/Footer with `<form className="contents">`. See the "Dialog / AlertDialog anatomy" section in `docs/good-practices/10-base-ui.md`.
 
 ### Forms
 

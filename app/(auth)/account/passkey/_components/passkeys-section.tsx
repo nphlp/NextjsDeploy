@@ -4,6 +4,8 @@ import AlertDialog, {
     Backdrop as AlertBackdrop,
     Close as AlertClose,
     Description as AlertDescription,
+    Footer as AlertFooter,
+    Header as AlertHeader,
     Popup as AlertPopup,
     Portal as AlertPortal,
     Title as AlertTitle,
@@ -14,7 +16,10 @@ import { Panel, Trigger } from "@atoms/collapsible";
 import Dialog, {
     Backdrop as DialogBackdrop,
     Close as DialogClose,
+    Content as DialogContent,
     Description as DialogDescription,
+    Footer as DialogFooter,
+    Header as DialogHeader,
     Popup as DialogPopup,
     Portal as DialogPortal,
     Title as DialogTitle,
@@ -280,15 +285,16 @@ export default function PasskeysSection() {
                 <DialogPortal>
                     <DialogBackdrop />
                     <DialogPopup>
-                        <div className="flex items-center gap-3">
-                            <Fingerprint className="size-5 text-gray-500" />
-                            <DialogTitle>Ajouter une clé d&apos;accès</DialogTitle>
-                        </div>
-                        <DialogDescription>
-                            Configurez le nom de votre clé d&apos;accès pour votre gestionnaire et pour ce site.
-                        </DialogDescription>
-
-                        <div className="mt-4 space-y-4">
+                        <DialogHeader>
+                            <DialogTitle className="flex items-center gap-3">
+                                <Fingerprint className="size-5 text-gray-500" />
+                                Ajouter une clé d&apos;accès
+                            </DialogTitle>
+                            <DialogDescription>
+                                Configurez le nom de votre clé d&apos;accès pour votre gestionnaire et pour ce site.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogContent>
                             <div className="space-y-2">
                                 <label className="text-sm font-medium">
                                     Nom de la clé <span className="font-normal text-gray-400">— facultatif</span>
@@ -324,14 +330,13 @@ export default function PasskeysSection() {
                                     différencier des autres clés si vous en avez plusieurs.
                                 </p>
                             </div>
-                        </div>
-
-                        <div className="mt-6 flex justify-end gap-2">
+                        </DialogContent>
+                        <DialogFooter>
                             <DialogClose>Annuler</DialogClose>
                             <Button label="Ajouter la clé" colors="solid" onClick={handleAdd} loading={isAdding}>
                                 Ajouter la clé
                             </Button>
-                        </div>
+                        </DialogFooter>
                     </DialogPopup>
                 </DialogPortal>
             </Dialog>
@@ -341,20 +346,22 @@ export default function PasskeysSection() {
                 <AlertPortal>
                     <AlertBackdrop />
                     <AlertPopup>
-                        <AlertTitle className="flex items-center gap-3">
-                            <Fingerprint className="size-5 text-gray-500" />
-                            Supprimer la clé d&apos;accès
-                        </AlertTitle>
-                        <AlertDescription className="text-sm">
-                            Cette action est irréversible. Vous ne pourrez plus vous connecter avec cette clé
-                            d&apos;accès.
-                        </AlertDescription>
-                        <div className="flex justify-end gap-4">
+                        <AlertHeader>
+                            <AlertTitle className="flex items-center gap-3">
+                                <Fingerprint className="size-5 text-gray-500" />
+                                Supprimer la clé d&apos;accès
+                            </AlertTitle>
+                            <AlertDescription className="text-sm">
+                                Cette action est irréversible. Vous ne pourrez plus vous connecter avec cette clé
+                                d&apos;accès.
+                            </AlertDescription>
+                        </AlertHeader>
+                        <AlertFooter>
                             <AlertClose>Annuler</AlertClose>
                             <Button label="Supprimer" colors="destructive" onClick={handleDelete}>
                                 Supprimer
                             </Button>
-                        </div>
+                        </AlertFooter>
                     </AlertPopup>
                 </AlertPortal>
             </AlertDialog>
