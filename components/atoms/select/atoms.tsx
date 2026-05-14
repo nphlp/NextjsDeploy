@@ -46,9 +46,13 @@ export const Trigger = (props: SelectTriggerProps) => {
                 "outline-2 outline-transparent",
                 "focus-visible:outline-outline",
                 // Background
-                "bg-background hover:bg-gray-100 data-popup-open:bg-gray-100",
+                "bg-background hover:bg-gray-50 data-popup-open:bg-gray-50",
                 // Text
-                "cursor-default text-base text-gray-900 select-none",
+                "cursor-pointer text-base text-gray-900 select-none",
+                // Transition — align with button / atom conventions
+                "transition-all duration-100 ease-in-out",
+                // Disabled state — suppress hover affordance so a disabled trigger feels inert.
+                "data-disabled:cursor-not-allowed data-disabled:bg-gray-50 data-disabled:text-gray-500 data-disabled:hover:bg-gray-50",
                 // Form Field state
                 "group-data-disabled/field:bg-gray-50",
                 "group-data-invalid/field:border-red-800",
@@ -264,7 +268,7 @@ export const Item = (props: SelectItemProps) => {
                 // Background
                 "data-highlighted:before:bg-gray-900",
                 // Text
-                "cursor-default text-sm leading-4 select-none",
+                "cursor-pointer text-sm leading-4 select-none",
                 "group-data-[side=none]:text-base group-data-[side=none]:leading-4",
                 "data-highlighted:text-gray-50",
                 "pointer-coarse:text-[0.925rem]",
