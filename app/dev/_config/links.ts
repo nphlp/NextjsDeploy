@@ -4,6 +4,7 @@ import {
     Combine,
     Copy,
     FormInput,
+    GripVertical,
     Layers,
     LayoutDashboard,
     LucideIcon,
@@ -74,6 +75,17 @@ export const devLinkGroups: DevLinkGroup[] = [
                 description: "Loading skeleton components",
                 href: "/dev/skeleton",
                 icon: Copy,
+            },
+        ],
+    },
+    {
+        label: "Tools",
+        links: [
+            {
+                label: "Sortable",
+                description: "Drag-and-drop sandbox for the @atoms/sortable atom",
+                href: "/dev/sortable",
+                icon: GripVertical,
             },
         ],
     },
