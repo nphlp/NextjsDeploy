@@ -23,8 +23,11 @@ import Tabs from "@atoms/tabs";
 import TabsVertical from "@atoms/tabs/tabs-vertical";
 import Main from "@core/main";
 import type { Metadata } from "next";
+import CarouselDemo from "./_components/carousel-demo";
 import ComboboxAsyncDemo from "./_components/combobox-async-demo";
 import ComboboxMultipleAsyncDemo from "./_components/combobox-multiple-async-demo";
+import InputDemo from "./_components/input-demo";
+import KbdDemo from "./_components/kbd-demo";
 import Section from "./_components/section";
 import TriggerVariants from "./_components/trigger-variants";
 
@@ -203,6 +206,21 @@ export default async function ComponentsPage() {
             {/* ----- Context Menu ----- */}
             <Section title="Context Menu">
                 <ContextMenu />
+            </Section>
+
+            {/* ----- Input ----- */}
+            <Section title="Input">
+                <InputDemo />
+            </Section>
+
+            {/* ----- Carousel ----- */}
+            <Section title="Carousel">
+                <CarouselDemo />
+            </Section>
+
+            {/* ----- Kbd ----- */}
+            <Section title="Kbd">
+                <KbdDemo />
             </Section>
         </Main>
     );

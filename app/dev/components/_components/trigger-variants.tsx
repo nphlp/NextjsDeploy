@@ -73,6 +73,18 @@ export default function TriggerVariants() {
                             <Star className="size-5" />
                         </Button>
                     </div>
+                    <div className="flex flex-col items-center gap-1">
+                        <span className="text-xs text-gray-400">iconSm</span>
+                        <Button label="Star" padding="iconSm">
+                            <Star className="size-4" />
+                        </Button>
+                    </div>
+                    <div className="flex flex-col items-center gap-1">
+                        <span className="text-xs text-gray-400">false</span>
+                        <Button label="Label" padding={false}>
+                            Label
+                        </Button>
+                    </div>
                 </div>
             </div>
 
