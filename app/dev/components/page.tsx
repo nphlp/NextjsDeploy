@@ -5,6 +5,7 @@ import Checkbox from "@atoms/checkbox";
 import CheckboxChip from "@atoms/checkbox/checkbox-chip";
 import Collapsible from "@atoms/collapsible";
 import Combobox from "@atoms/combobox";
+import ComboboxCreatable from "@atoms/combobox/combobox-creatable";
 import ComboboxMultiple from "@atoms/combobox/combobox-multiple";
 import ContextMenu from "@atoms/context-menu";
 import Dialog, { DialogLongContent } from "@atoms/dialog";
@@ -166,6 +167,10 @@ export default async function ComponentsPage() {
                 <div>
                     <p className="mb-2 text-sm text-gray-500">Multiple Async</p>
                     <ComboboxMultipleAsyncDemo />
+                </div>
+                <div>
+                    <p className="mb-2 text-sm text-gray-500">Creatable</p>
+                    <ComboboxCreatable />
                 </div>
             </Section>
 
