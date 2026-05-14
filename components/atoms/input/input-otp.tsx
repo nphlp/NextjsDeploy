@@ -2,10 +2,9 @@
 
 import Button from "@atoms/button";
 import { useToast } from "@atoms/toast";
+import { OTPFieldPreview as OTPField } from "@base-ui/react/otp-field";
 import cn from "@lib/cn";
 import { ClipboardPaste } from "lucide-react";
-import { ClipboardEvent, KeyboardEvent, useRef } from "react";
-import { Root } from "./atoms";
 
 type InputOtpProps = {
     length?: number;
@@ -18,97 +17,24 @@ type InputOtpProps = {
     onChange?: (value: string) => void;
 };
 
+/**
+ * Wrapper around Base UI's `OTPField`. Renders `length` digit cells with
+ * built-in keyboard / paste / focus management; the only thing we keep on
+ * top is the explicit "Coller" button (clipboard read with a permission
+ * fallback toast) since `navigator.clipboard.readText` requires a user
+ * gesture and isn't covered by the in-field paste handler on every browser.
+ */
 export default function InputOtp(props: InputOtpProps) {
     const { length = 6, onComplete, disabled = false, className, value, onChange } = props;
-
     const toast = useToast();
-
-    const resolvedValue: string = value ?? "";
-    const digits = resolvedValue
-        .padEnd(length, " ")
-        .slice(0, length)
-        .split("")
-        .map((c) => (c === " " ? "" : c));
-
-    const containerRef = useRef<HTMLDivElement>(null);
-    const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
-
-    const focusInput = (index: number) => {
-        if (index >= 0 && index < length) {
-            inputsRef.current[index]?.focus();
-        }
-    };
-
-    const updateDigits = (newDigits: string[]) => {
-        const newValue = newDigits.join("");
-        onChange?.(newValue);
-        if (newDigits.every((d) => d !== "")) {
-            onComplete(newValue);
-        }
-    };
-
-    const handleKeyDown = (index: number, e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Backspace") {
-            e.preventDefault();
-            const newDigits = [...digits];
-            if (newDigits[index]) {
-                newDigits[index] = "";
-                updateDigits(newDigits);
-            } else if (index > 0) {
-                newDigits[index - 1] = "";
-                updateDigits(newDigits);
-                focusInput(index - 1);
-            }
-            return;
-        }
-
-        if (e.key === "ArrowLeft") {
-            e.preventDefault();
-            focusInput(index - 1);
-            return;
-        }
-
-        if (e.key === "ArrowRight") {
-            e.preventDefault();
-            focusInput(index + 1);
-            return;
-        }
-
-        // Only allow digits
-        if (/^\d$/.test(e.key)) {
-            e.preventDefault();
-            const newDigits = [...digits];
-            newDigits[index] = e.key;
-            updateDigits(newDigits);
-            focusInput(index + 1);
-        }
-    };
-
-    const handlePaste = (e: ClipboardEvent<HTMLInputElement>) => {
-        e.preventDefault();
-        const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, length);
-        if (pasted.length === 0) return;
-
-        const newDigits = [...digits];
-        for (let i = 0; i < pasted.length; i++) {
-            newDigits[i] = pasted[i];
-        }
-        updateDigits(newDigits);
-        focusInput(Math.min(pasted.length, length - 1));
-    };
 
     const handlePasteFromClipboard = async () => {
         try {
             const text = await navigator.clipboard.readText();
-            const pasted = text.replace(/\D/g, "").slice(0, length);
-            if (pasted.length === 0) return;
-
-            const newDigits = [...digits];
-            for (let i = 0; i < pasted.length; i++) {
-                newDigits[i] = pasted[i];
-            }
-            updateDigits(newDigits);
-            focusInput(Math.min(pasted.length, length - 1));
+            const cleaned = text.replace(/\D/g, "").slice(0, length);
+            if (cleaned.length === 0) return;
+            onChange?.(cleaned);
+            if (cleaned.length === length) onComplete(cleaned);
         } catch {
             toast.add({
                 title: "Accès au presse-papier refusé",
@@ -120,40 +46,41 @@ export default function InputOtp(props: InputOtpProps) {
 
     return (
         <div className={cn("flex flex-col items-center gap-2", className)}>
-            <div ref={containerRef} className="flex gap-2">
-                {digits.map((digit, index) => (
-                    <Root
-                        key={index}
-                        ref={(el) => {
-                            inputsRef.current[index] = el;
-                        }}
-                        type="text"
-                        value={digit}
-                        disabled={disabled}
+            <OTPField.Root
+                length={length}
+                value={value}
+                onValueChange={onChange}
+                onValueComplete={onComplete}
+                disabled={disabled}
+                validationType="numeric"
+                inputMode="numeric"
+                className="flex gap-2"
+            >
+                {Array.from({ length }).map((_, i) => (
+                    <OTPField.Input
+                        key={i}
                         autoComplete="one-time-code"
-                        autoFocus={index === 0}
-                        onFocus={(e) => e.target.select()}
-                        onChange={() => {}}
                         className={cn(
                             // Layout
                             "size-12 p-0",
+                            // Border
+                            "rounded-md border border-gray-200",
+                            // Outline
+                            "outline-2 outline-transparent",
+                            "focus-visible:outline-outline",
+                            // Background
+                            "bg-background",
                             // Text
-                            "text-center text-lg font-semibold",
+                            "text-center text-lg font-semibold text-gray-900",
                             // State
-                            "disabled:bg-gray-50",
+                            "data-disabled:bg-gray-50",
                             // Form Field state
                             "group-data-disabled/field:bg-gray-50",
                             "group-data-invalid/field:border-red-800",
                         )}
-                        legacyProps={{
-                            inputMode: "numeric",
-                            maxLength: 1,
-                            onKeyDown: (e) => handleKeyDown(index, e),
-                            onPaste: handlePaste,
-                        }}
                     />
                 ))}
-            </div>
+            </OTPField.Root>
             <Button label="Coller" onClick={handlePasteFromClipboard} disabled={disabled} colors="outline" padding="sm">
                 Coller
                 <ClipboardPaste className="size-4" />
