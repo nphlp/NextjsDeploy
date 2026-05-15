@@ -71,6 +71,10 @@ export default {
                 comment: "IDE configuration",
                 variables: ["REACT_EDITOR"],
             },
+            dbPullProd: {
+                comment: "Production DB pull (dev-only, used by scripts/db-pull-prod.sh)",
+                variables: ["PROD_SSH_HOST", "PROD_DB_CONTAINER"],
+            },
         },
     },
 
@@ -157,6 +161,12 @@ export default {
                 SMTP_FROM_NAME: "Nextjs Deploy ({{ENV}})",
             },
             ide: { REACT_EDITOR: "code" },
+            dbPullProd: {
+                // TO UPDATE: SSH alias from ~/.ssh/config (e.g. behind Tailscale VPN)
+                PROD_SSH_HOST: "your-ssh-alias",
+                // TO UPDATE: Prefix matched by `docker ps --filter name=...` on the VPS
+                PROD_DB_CONTAINER: "your-prod-db-container-prefix",
+            },
             EXCLUDE: [
                 "VPS_NEXTJS_DOMAIN",
                 "VPS_PRISMA_STUDIO_DOMAIN",
@@ -211,6 +221,8 @@ export default {
                 "PRISMA_STUDIO_AUTH",
                 "UMAMI_URL",
                 "UMAMI_WEBSITE_ID",
+                "PROD_SSH_HOST",
+                "PROD_DB_CONTAINER",
             ],
         },
 
@@ -247,7 +259,7 @@ export default {
             smtp: {
                 SMTP_FROM_NAME: "Nextjs Deploy ({{ENV}})",
             },
-            EXCLUDE: ["UMAMI_URL", "UMAMI_WEBSITE_ID"],
+            EXCLUDE: ["UMAMI_URL", "UMAMI_WEBSITE_ID", "PROD_SSH_HOST", "PROD_DB_CONTAINER"],
         },
 
         preview: {
@@ -283,7 +295,7 @@ export default {
             smtp: {
                 SMTP_FROM_NAME: "Nextjs Deploy ({{ENV}})",
             },
-            EXCLUDE: ["UMAMI_URL", "UMAMI_WEBSITE_ID"],
+            EXCLUDE: ["UMAMI_URL", "UMAMI_WEBSITE_ID", "PROD_SSH_HOST", "PROD_DB_CONTAINER"],
         },
 
         production: {
@@ -324,6 +336,7 @@ export default {
                 // TO UPDATE: Get website ID from Umami dashboard after creating a new website
                 UMAMI_WEBSITE_ID: "your-website-id",
             },
+            EXCLUDE: ["PROD_SSH_HOST", "PROD_DB_CONTAINER"],
         },
     },
 };

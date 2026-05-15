@@ -133,6 +133,7 @@ export const SYNC_ENTRIES: SyncEntry[] = [
 
     // ─── Scripts core (excluding Cubiing-specific generators) ──
     { path: "scripts/cron.ts" },
+    { path: "scripts/db-pull-prod.sh" },
     { path: "scripts/fixtures.ts" },
     {
         path: "scripts/fixtures/",

@@ -28,6 +28,7 @@
         "db:reset": "./scripts/db.sh reset",
         "db:reload": "./scripts/db.sh reload",
         "db:execute": "./scripts/db.sh execute",
+        "db:pull-prod": "./scripts/db-pull-prod.sh",
         "prisma:generate": "bunx prisma generate",
         "prisma:migrate": "bunx prisma migrate dev",
         "prisma:deploy": "bunx prisma migrate deploy",
